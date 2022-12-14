@@ -1,0 +1,36 @@
+name: MerissaRobot
+
+on: push
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Find and Replace
+
+        uses: jacobtomlinson/gha-find-replace@master
+
+        with:
+
+          find: " & ~filters.edited"
+
+          replace: ""
+
+      - name: Create Pull Request
+        uses: stefanzweifel/git-auto-commit-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        with:
+          commit_message: 'Fix Bot'
+          commit_options: '--no-verify'
+          repository: .
+          file_pattern: 'MerissaRobot/*'      
+          commit_user_name: Hunter-XD
+          commit_user_email: 85411336+Hunter-XD@users.noreply.github.com
+          commit_author: Hunter-XD <85411336+Hunter-XD@users.noreply.github.com>

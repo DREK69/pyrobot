@@ -1,0 +1,224 @@
+import logging
+import os
+import sys
+import time
+from inspect import getfullargspec
+
+import spamwatch
+import telegram.ext as tg
+from aiohttp import ClientSession
+from loguru import logger
+from pyrogram import Client, errors
+from pyrogram.types import Message
+from Python_ARQ import ARQ
+from redis import StrictRedis
+from telethon import TelegramClient
+from telethon.sessions import MemorySession, StringSession
+
+from config import *
+from config import BOT_USERNAME
+from config import EVENT_LOGS as ERROR_LOG
+from config import OWNER_ID
+
+StartTime = time.time()
+
+# logging enable
+
+LOGGER = logging.getLogger(__name__)
+
+# if version < 3.6, stop bot.
+if sys.version_info[0] < 3 or sys.version_info[1] < 6:
+    LOGGER.error(
+        "You MUST have a python version of at least 3.6! Multiple features depend on this. Bot quitting."
+    )
+    quit(1)
+
+    from config import *
+
+    TOKEN = TOKEN
+    OWNER_ID = OWNER_ID
+    try:
+        OWNER_ID = int(OWNER_ID)
+    except ValueError:
+        raise Exception("Your OWNER_ID variable is not a valid integer.")
+
+    try:
+        DRAGONS = {int(x) for x in os.environ.get("DRAGONS", "1218405248").split()}
+        DEV_USERS = {int(x) for x in os.environ.get("DEV_USERS", "2030709195").split()}
+    except ValueError:
+        raise Exception("Your sudo or dev users list does not contain valid integers.")
+
+    try:
+        DEMONS = {int(x) for x in os.environ.get("DEMONS", "1218405248").split()}
+    except ValueError:
+        raise Exception("Your support users list does not contain valid integers.")
+
+    try:
+        WOLVES = {int(x) for x in os.environ.get("WOLVES", "1218405248").split()}
+    except ValueError:
+        raise Exception("Your whitelisted users list does not contain valid integers.")
+
+    try:
+        TIGERS = {int(x) for x in os.environ.get("TIGERS", "1218405248").split()}
+    except ValueError:
+        raise Exception("Your tiger users list does not contain valid integers.")
+
+    try:
+        BL_CHATS = {int(x) for x in os.environ.get("BL_CHATS", "").split()}
+    except ValueError:
+        raise Exception("Your blacklisted chats list does not contain valid integers.")
+
+    JOIN_LOGGER = JOIN_LOGGER
+    OWNER_USERNAME = OWNER_USERNAME
+    ALLOW_CHATS = ALLOW_CHATS
+    DRAGONS = {int(x) for x in os.environ.get("DRAGONS", "1218405248").split()}
+    EVENT_LOGS = EVENT_LOGS
+    WEBHOOK = WEBHOOK
+    URL = URL
+    PORT = PORT
+    CERT_PATH = CERT_PATH
+    API_ID = API_ID
+    API_HASH = API_HASH
+    BOT_USERNAME = BOT_USERNAME
+    DB_URI = SQLALCHEMY_DATABASE_URI
+    MONGO_DB_URI = MONGO_DB_URI
+    ARQ_API_KEY = ARQ_API_KEY
+    ARQ_API_URL = ARQ_API_URL
+    HEROKU_API_KEY = HEROKU_API_KEY
+    HEROKU_APP_NAME = HEROKU_APP_NAME
+    TEMP_DOWNLOAD_DIRECTORY = TEMP_DOWNLOAD_DIRECTORY
+    OPENWEATHERMAP_ID = OPENWEATHERMAP_ID
+    BOT_ID = BOT_ID
+    API_ID = API_ID
+    API_HASH = API_HASH
+    STRING_SESSION = STRING_SESSION
+    MERISSA_TOKEN = MERISSA_TOKEN
+    STRICT_GMUTE = STRICT_GMUTE
+    VIRUS_API_KEY = VIRUS_API_KEY
+    DONATION_LINK = DONATION_LINK
+    LOAD = LOAD
+    NO_LOAD = NO_LOAD
+    DEL_CMDS = DEL_CMDS
+    STRICT_GBAN = STRICT_GBAN
+    STRING_SESSION = STRING_SESSION
+    WORKERS = WORKERS
+    BAN_STICKER = AN_STICKER
+    ALLOW_EXCL = ALLOW_EXCL
+    CASH_API_KEY = CASH_API_KEY
+    TIME_API_KEY = TIME_API_KEY
+    AI_API_KEY = AI_API_KEY
+    WALL_API = WALL_API
+    SUPPORT_CHAT = SUPPORT_CHAT
+    SPAMWATCH_SUPPORT_CHAT = SPAMWATCH_SUPPORT_CHAT
+    SPAMWATCH_API = SPAMWATCH_API
+    INFOPIC = INFOPIC
+
+    try:
+        BL_CHATS = set(int(x) for x in Config.BL_CHATS or [])
+    except ValueError:
+        raise Exception("Your blacklisted chats list does not contain valid integers.")
+
+DEV_USERS.add(OWNER_ID)
+
+if not SPAMWATCH_API:
+    sw = None
+    LOGGER.warning("SpamWatch API key missing! recheck your config.")
+else:
+    try:
+        sw = spamwatch.Client(SPAMWATCH_API)
+    except:
+        sw = None
+        LOGGER.warning("Can't connect to SpamWatch!")
+
+
+updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
+telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
+dispatcher = updater.dispatcher
+aiohttpsession = ClientSession()
+ubot = TelegramClient(StringSession(STRING_SESSION), API_ID, API_HASH)
+try:
+    ubot.start()
+except BaseException:
+    print("Userbot Error ! Have you added a STRING_SESSION in deploying??")
+    sys.exit(1)
+pbot = Client(
+    ":memory:",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=TOKEN,
+    plugins=dict(root="MerissaRobot.Modules"),
+)
+
+# ARQ Client
+LOGGER.info("[ARQ CLIENT] Checking Arq Connections...")
+
+arq = ARQ("https://arq.hamker.in", "ERUOGT-KHSTDT-RUYZKQ-FZNSHO-ARQ", aiohttpsession)
+
+
+class InterceptHandler(logging.Handler):
+    LEVELS_MAP = {
+        logging.CRITICAL: "CRITICAL",
+        logging.ERROR: "ERROR",
+        logging.WARNING: "WARNING",
+        logging.INFO: "INFO",
+        logging.DEBUG: "DEBUG",
+    }
+
+    def _get_level(self, record):
+        return self.LEVELS_MAP.get(record.levelno, record.levelno)
+
+    def emit(self, record):
+        logger_opt = logger.opt(
+            depth=6, exception=record.exc_info, ansi=True, lazy=True
+        )
+        logger_opt.log(self._get_level(record), record.getMessage())
+
+
+logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
+log = logging.getLogger(__name__)
+logger.add(
+    "logs/asuna.log",
+    rotation="1 d",
+    compression="tar.xz",
+    backtrace=True,
+    diagnose=True,
+    level="INFO",
+)
+log.info("Enabled logging intro Merissa.log file.")
+
+REDIS = StrictRedis.from_url(REDIS_URL, decode_responses=True)
+try:
+    REDIS.ping()
+    LOGGER.info("Connecting To Redis Database")
+except BaseException:
+    raise Exception(
+        "[MerissaRobot Error]: Your Redis Database Is Not Alive, Please Check Again."
+    )
+finally:
+    REDIS.ping()
+    LOGGER.info("Connection To The Redis Database Established Successfully!")
+
+
+async def eor(msg: Message, **kwargs):
+    func = msg.edit_text if msg.from_user.is_self else msg.reply
+    spec = getfullargspec(func.__wrapped__).args
+    return await func(**{k: v for k, v in kwargs.items() if k in spec})
+
+
+DRAGONS = list(DRAGONS) + list(DEV_USERS)
+DEV_USERS = list(DEV_USERS)
+WOLVES = list(WOLVES)
+DEMONS = list(DEMONS)
+TIGERS = list(TIGERS)
+
+# Load at end to ensure all prev variables have been set
+from MerissaRobot.Handler.handlers import (
+    CustomCommandHandler,
+    CustomMessageHandler,
+    CustomRegexHandler,
+)
+
+# make sure the regex handler can take extra kwargs
+tg.RegexHandler = CustomRegexHandler
+tg.CommandHandler = CustomCommandHandler
+tg.MessageHandler = CustomMessageHandler

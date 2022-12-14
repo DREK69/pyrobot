@@ -1,0 +1,21 @@
+name: darkflow
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Find and Replace
+        uses: nguyenvanuyn96/str-find-and-replace-action@master
+        with:
+          find: "Masha"
+          replace: "Merissa"
+      - name: Pull All Updates
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'MerissaRobot'
+          commit_options: '--no-verify'
+          repository: .
+          commit_user_name: MrDarkPrince
+          commit_user_email: 107061556+MrDarkPrince@users.noreply.github.com
+          commit_author: MrDarkPrince <107061556+MrDarkPrince@users.noreply.github.com>

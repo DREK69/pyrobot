@@ -1,0 +1,61 @@
+from pyrogram import filters
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from requests import get
+
+from MerissaRobot import pbot
+
+
+@pbot.on_message(filters.command("rlogo"))
+async def movie(_, message):
+    logo = await message.reply_text("Creating your logo...wait!")
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "Give me some text to make logo\n\nEx. /logohq MerissaRobot"
+        )
+    name = (
+        message.text.split(None, 1)[1]
+        if len(message.command) < 3
+        else message.text.split(None, 1)[1].replace(" ", "%20")
+    )
+    url = get(f"https://api.prince-xd.ml/logohq?text={name}").json()["url"]
+    button = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Telegraph Link 🔗", url=f"{url}"),
+            ],
+        ]
+    )
+    await message.reply_photo(
+        photo=url,
+        caption="Powered by @MerissaRobot",
+        reply_markup=button,
+    )
+    await logo.delete()
+
+
+@pbot.on_message(filters.command("alogo"))
+async def movie(_, message):
+    logo = await message.reply_text("Creating your logo...wait!")
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "Give me some text to make logo\n\nEx. /alogo MerissaRobot"
+        )
+    name = (
+        message.text.split(None, 1)[1]
+        if len(message.command) < 3
+        else message.text.split(None, 1)[1].replace(" ", "%20")
+    )
+    url = get(f"https://api.prince-xd.ml/anime-logo?text={name}").json()["url"]
+    button = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Telegraph Link 🔗", url=f"{url}"),
+            ],
+        ]
+    )
+    await message.reply_photo(
+        photo=url,
+        caption="Powered by @MerissaRobot",
+        reply_markup=button,
+    )
+    await logo.delete()
