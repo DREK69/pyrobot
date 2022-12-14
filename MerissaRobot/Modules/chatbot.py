@@ -140,7 +140,7 @@ def chatbot(update: Update, context: CallbackContext):
         ).replace(" ", "%20")
         text = trtoen.replace(" ", "%20") if len(message.text) < 2 else trtoen
         Merissa = requests.get(
-            f"https://merissachatbot.tk/api/apikey=2030709195-MERISSAZz9tEl4ru4/Merissa/Prince/message={text}"
+            f"https://merissachatbot.tk/api/apikey=2030709195-MERISSATR4DLs5vu8/Merissa/Prince/message={text}"
         ).json()
         merissa = Merissa["reply"]
         msg = tr.translate(merissa, src="en", dest=lang)
