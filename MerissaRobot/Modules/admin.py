@@ -560,7 +560,6 @@ def set_title(update: Update, context: CallbackContext):
 
 @bot_admin
 @can_pin
-@user_admin
 @loggable
 def pin(update: Update, context: CallbackContext) -> str:
     bot, args = context.bot, context.args
@@ -621,7 +620,6 @@ def pin(update: Update, context: CallbackContext) -> str:
 
 @bot_admin
 @can_pin
-@user_admin
 @loggable
 def unpin(update: Update, context: CallbackContext):
     chat = update.effective_chat
