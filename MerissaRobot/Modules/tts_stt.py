@@ -10,7 +10,7 @@ from telethon.tl.types import *
 from MerissaRobot import *
 from MerissaRobot import telethn as tbot
 from MerissaRobot.events import register
-from MerissaRobot.merissa import get_str_key
+
 
 @register(pattern="^/tts (.*)")
 async def _(event):
