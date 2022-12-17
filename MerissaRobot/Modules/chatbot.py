@@ -127,9 +127,8 @@ def chatbot(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     bot = context.bot
     is_merissa = sql.is_merissa(chat_id)
-    if is_merissa:
+    if not is_merissa:
         return
-
     if message.text and not message.document:
         if not merissa_message(context, message):
             return
