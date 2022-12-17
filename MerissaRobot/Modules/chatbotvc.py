@@ -4,7 +4,7 @@ import aiofiles
 import aiohttp
 from pyrogram import filters
 
-from MerissaRobot import pbot 
+from MerissaRobot import pbot
 
 
 async def fetch(url):
