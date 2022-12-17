@@ -38,10 +38,10 @@ async def Lycia(_, message):
     m = await message.reply_text("Merissa Is Best...")
     try:
         L = await fetch(
-            f"https://api.affiliateplus.xyz/api/chatbot?message={lycia}&botname=Merissa&ownername=Prince&user=1"
+            f"https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message={m}"
         )
-        chatbot = L["message"]
-        VoiceAi = f"https://lyciavoice.herokuapp.com/lycia?text={chatbot}&lang=hi"
+        chatbot = L["reply"]
+        VoiceAi = f"https://serverless-tts.vercel.app/api/demo?voice=en-US_LisaExpressive&text={chatbot}"
         name = "Merissa"
     except Exception as e:
         await m.edit(str(e))
