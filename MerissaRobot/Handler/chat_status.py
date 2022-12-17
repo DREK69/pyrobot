@@ -414,7 +414,8 @@ def can_pin(func):
 
         if chat.get_member(bot.id).can_pin_messages:
             return func(update, context, *args, **kwargs)
-        update.effective_message.reply_text(cant_pin, parse_mode=ParseMode.HTML)
+        else:
+            update.effective_message.reply_text(cant_pin, parse_mode=ParseMode.HTML)
 
     return pin_rights
 
