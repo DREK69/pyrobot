@@ -12,10 +12,6 @@ from MerissaRobot import telethn as tbot
 from MerissaRobot.events import register
 from MerissaRobot.merissa import get_str_key
 
-IBM_WATSON_CRED_PASSWORD = get_str_key("IBM_WATSON_CRED_PASSWORD", required=False)
-IBM_WATSON_CRED_URL = get_str_key("IBM_WATSON_CRED_URL", required=False)
-
-
 @register(pattern="^/tts (.*)")
 async def _(event):
     if event.fwd_from:
