@@ -127,24 +127,18 @@ def chatbot(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     bot = context.bot
     is_merissa = sql.is_merissa(chat_id)
-    if not is_merissa:
+    if is_merissa:
         return
 
     if message.text and not message.document:
         if not merissa_message(context, message):
             return
         bot.send_chat_action(chat_id, action="typing")
-        lang = tr.translate(message.text).src
-        trtoen = (
-            message.text if lang == "en" else tr.translate(message.text, dest="en").text
-        ).replace(" ", "%20")
-        text = trtoen.replace(" ", "%20") if len(message.text) < 2 else trtoen
-        Merissa = requests.get(
-            f"https://merissachatbot.tk/api/apikey=2030709195-MERISSATR4DLs5vu8/Merissa/Prince/message={text}"
-        ).json()
-        merissa = Merissa["reply"]
-        msg = tr.translate(merissa, src="en", dest=lang)
-        message.reply_text(msg.text)
+        url = f"https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message={message.text}"
+        request = requests.get(url)
+        results = json.loads(request.text)
+        sleep(0.5)
+        message.reply_text(results['reply'])
 
 
 def list_all_chats(update: Update, context: CallbackContext):
