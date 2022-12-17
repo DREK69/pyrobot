@@ -4,7 +4,7 @@ import aiofiles
 import aiohttp
 from pyrogram import filters
 
-from MerissaRobot import pbot as LYCIA
+from MerissaRobot import pbot 
 
 
 async def fetch(url):
@@ -17,7 +17,7 @@ async def fetch(url):
     return data
 
 
-async def ai_lycia(url):
+async def ai_merissa(url):
     ai_name = "Merissa.mp3"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
@@ -28,17 +28,17 @@ async def ai_lycia(url):
     return ai_name
 
 
-@LYCIA.on_message(filters.command("merissa"))
-async def Lycia(_, message):
+@pbot.on_message(filters.command("merissa"))
+async def merissa(_, message):
     if len(message.command) < 2:
         await message.reply_text("Merissa AI Voice Chatbot")
         return
     text = message.text.split(None, 1)[1]
-    text.replace(" ", "%20")
-    m = await message.reply_text("Merissa Is Best...")
+    merissa = text.replace(" ", "%20")
+    m = await message.reply_text("Replying...")
     try:
         L = await fetch(
-            f"https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message={m}"
+            f"https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message={merissa}"
         )
         chatbot = L["reply"]
         VoiceAi = f"https://serverless-tts.vercel.app/api/demo?voice=en-US_LisaExpressive&text={chatbot}"
@@ -47,8 +47,7 @@ async def Lycia(_, message):
         await m.edit(str(e))
         return
     await m.edit("Powered By @MerissaRobot...")
-    LyciaVoice = await ai_lycia(VoiceAi)
-    await m.edit("Replying...")
-    await message.reply_audio(audio=LyciaVoice, title=chatbot, performer=name)
-    os.remove(LyciaVoice)
+    MerissaVoice = await ai_merissa(VoiceAi)
+    await message.reply_audio(audio=MerissaVoice, title=chatbot, performer=name)
+    os.remove(MerissaVoice)
     await m.delete()
