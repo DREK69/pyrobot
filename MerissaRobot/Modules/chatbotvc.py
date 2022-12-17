@@ -34,7 +34,7 @@ async def Lycia(_, message):
         await message.reply_text("Merissa AI Voice Chatbot")
         return
     text = message.text.split(None, 1)[1]
-    lycia = text.replace(" ", "%20")
+    text.replace(" ", "%20")
     m = await message.reply_text("Merissa Is Best...")
     try:
         L = await fetch(
