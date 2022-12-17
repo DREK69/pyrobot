@@ -138,7 +138,7 @@ def chatbot(update: Update, context: CallbackContext):
         request = requests.get(url)
         results = json.loads(request.text)
         sleep(0.5)
-        message.reply_text(results['reply'])
+        message.reply_text(results["reply"])
 
 
 def list_all_chats(update: Update, context: CallbackContext):
