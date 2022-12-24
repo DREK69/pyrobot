@@ -24,6 +24,7 @@ from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 from MerissaRobot import pbot as app
+from config import OWNER_ID as SUDOERS
 
 
 async def aexec(code, client, message):
