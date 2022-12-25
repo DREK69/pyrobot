@@ -1,12 +1,6 @@
-from typing import Dict, Union
-
-
-
 from MerissaRobot.Database.mongo import db
 
-
 coupledb = db.couple
-
 
 
 async def _get_lovers(chat_id: int):
