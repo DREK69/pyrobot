@@ -1,9 +1,7 @@
-import codecs
-import pickle
-from typing import Dict, List, Union
 from MerissaRobot.Database.mongo import db
 
 nsfwdb = db.nsfw
+
 
 async def is_nsfw_on(chat_id: int) -> bool:
     chat = nsfwdb.find_one({"chat_id": chat_id})
