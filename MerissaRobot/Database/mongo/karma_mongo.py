@@ -1,10 +1,9 @@
 from typing import Dict, Union
 
-from pymongo import MongoClient
-
 from MerissaRobot.Database.mongo import db
 
 karmadb = db.karma
+
 
 async def get_karmas_count() -> dict:
     chats = karmadb.find({"chat_id": {"$lt": 0}})
