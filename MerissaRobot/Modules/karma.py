@@ -49,7 +49,7 @@ async def upvote(_, message):
     if not message.from_user:
         return
     if message.reply_to_message.from_user.id == OWNER_ID:
-        await message.reply_text("ʜᴏᴡ sᴏ ᴘʀᴏ ?")
+        await message.reply_text("How so Pro ?")
         return
     if message.reply_to_message.from_user.id == message.from_user.id:
         return
@@ -88,7 +88,7 @@ async def downvote(_, message):
     if not message.from_user:
         return
     if message.reply_to_message.from_user.id == OWNER_ID:
-        await message.reply_text("ɪ ᴋɴᴏᴡ ʜɪᴍ, sᴏ ɪ'ᴍ ɴᴏᴛ ɢᴏɴɴᴀ ᴅᴏ ᴛʜᴀᴛ ʙᴀʙʏ.")
+        await message.reply_text("I know him, So I'm not gonna do that baby.")
         return
     if message.reply_to_message.from_user.id == message.from_user.id:
         return
