@@ -4,7 +4,7 @@ from datetime import datetime
 from pyrogram import filters
 
 from MerissaRobot import pbot
-from MerissaRobot.Utils.dbfunctions import get_couple, save_couple
+from MerissaRobot.Database.mongo.couple_mongo import get_couple, save_couple
 
 
 # Date and time
