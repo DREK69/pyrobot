@@ -9,7 +9,7 @@ from time import time
 
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
-from Rani import app
+from MerissaRobot import pbot as app
 
 from config import OWNER_ID as SUDO_USER
 
