@@ -65,7 +65,7 @@ async def upvote(_, message):
     new_karma = {"karma": karma}
     await update_karma(chat_id, await int_to_alpha(user_id), new_karma)
     await message.reply_text(
-        f"ɪɴᴄʀᴇᴍᴇɴᴛᴇᴅ ᴋᴀʀᴍᴀ ᴏғ {user_mention} ʙʏ 1.\n**ᴛᴏᴛᴀʟ ᴩᴏɪɴᴛs :** {karma}"
+        f"Incremented Karma of {user_mention} by 1.\n**Total Points:** {karma}"
     )
 
 
@@ -103,7 +103,7 @@ async def downvote(_, message):
     new_karma = {"karma": karma}
     await update_karma(message.chat.id, await int_to_alpha(user_id), new_karma)
     await message.reply_text(
-        f"ᴅᴇᴄʀᴇᴍᴇɴᴛᴇᴅ ᴋᴀʀᴍᴀ ᴏғ {user_mention} ʙʏ 1.\n**ᴛᴏᴛᴀʟ ᴩᴏɪɴᴛs :** {karma}"
+        f"Decremented Incremented Karma of {user_mention} by 1.\n**Total Points:** {karma}"
     )
 
 
@@ -147,7 +147,7 @@ async def karma(_, message):
         user_id = message.reply_to_message.from_user.id
         karma = await get_karma(message.chat.id, await int_to_alpha(user_id))
         karma = karma["karma"] if karma else 0
-        await message.reply_text(f"**ᴛᴏᴛᴀʟ ᴩᴏɪɴᴛs :** {karma}")
+        await message.reply_text(f"**Total Points :** {karma}")
 
 
 @pbot.on_message(filters.command("karma") & ~filters.private)
