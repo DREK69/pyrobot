@@ -4,7 +4,7 @@ from pyrogram import filters
 
 from MerissaRobot import BOT_USERNAME as bn
 from MerissaRobot import arq, pbot
-from MerissaRobot.Utils.dbfunctions import is_nsfw_on, nsfw_off, nsfw_on
+from MerissaRobot.Database.mongo.antinsfw_mongo import is_nsfw_on, nsfw_off, nsfw_on
 from MerissaRobot.Utils.errors import capture_err
 from MerissaRobot.Utils.permissions import adminsOnly
 
