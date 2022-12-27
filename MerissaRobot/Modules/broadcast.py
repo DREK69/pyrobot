@@ -13,9 +13,9 @@ import asyncio
 
 from pyrogram import filters
 from pyrogram.errors import FloodWait
-from pyrogram.types import Message
 
-from MerissaRobot import OWNER_ID as SUDOERS, app
+from MerissaRobot import OWNER_ID as SUDOERS
+from MerissaRobot import app
 from MerissaRobot.Database.mongo.chats import get_served_chats
 
 
@@ -39,9 +39,7 @@ async def broadcast(_, message):
         try:
             await app.forward_messages(
                 i, y, x
-            ) if message.reply_to_message else await app.send_message(
-                i, text=query
-            )
+            ) if message.reply_to_message else await app.send_message(i, text=query)
             sent += 1
         except FloodWait as e:
             flood_time = int(e.x)
@@ -51,8 +49,6 @@ async def broadcast(_, message):
         except Exception:
             continue
     try:
-        await message.reply_text(
-            f"**Broadcasted Message In {sent} Chats.**"
-        )
+        await message.reply_text(f"**Broadcasted Message In {sent} Chats.**")
     except:
         pass
