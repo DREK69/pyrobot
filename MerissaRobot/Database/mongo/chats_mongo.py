@@ -2,6 +2,7 @@ from MerissaRobot.Database.mongo import db
 
 chatsdb = db.chats
 
+
 async def get_served_chats() -> list:
     chats = chatsdb.find({"chat_id": {"$lt": 0}})
     if not chats:
