@@ -15,7 +15,7 @@ from pyrogram import filters
 from pyrogram.errors import FloodWait
 
 from MerissaRobot import OWNER_ID as SUDOERS
-from MerissaRobot import app
+from MerissaRobot import pbot as app
 from MerissaRobot.Database.mongo.chats_mongo import get_served_chats
 
 
