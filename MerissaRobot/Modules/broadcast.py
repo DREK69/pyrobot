@@ -16,7 +16,7 @@ from pyrogram.errors import FloodWait
 
 from MerissaRobot import OWNER_ID as SUDOERS
 from MerissaRobot import app
-from MerissaRobot.Database.mongo.chats import get_served_chats
+from MerissaRobot.Database.mongo.chats_mongo import get_served_chats
 
 
 @app.on_message(filters.command("broadcast") & filters.user(SUDOERS))
