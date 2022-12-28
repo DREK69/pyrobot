@@ -1,5 +1,6 @@
 import requests
 from pyrogram import filters
+from pyrogram.enums import ChatAction
 
 from MerissaRobot import pbot
 
