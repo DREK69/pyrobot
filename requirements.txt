@@ -79,7 +79,7 @@ speedtest-cli
 spongemock
 SQLAlchemy==1.4.40
 telegraph
-telethon
+telethon==1.26.1
 textblob 
 TgCrypto
 tswift
