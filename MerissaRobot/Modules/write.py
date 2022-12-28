@@ -16,7 +16,7 @@ async def handwriting(_, message):
     )
     merissa = requests.get(f"https://api.prince-xd.ml/write?text={name}").json()["url"]
     await m.edit("Uᴩʟᴏᴀᴅɪɴɢ...")
-    await pbot.send_chat_action(message.chat.id, "upload_photo")
+    await pbot.send_chat_action(message.chat.id, ChatAction.UPLOAD_PHOTO)
     await message.reply_photo(
         merissa, caption="Wʀɪᴛᴛᴇɴ Wɪᴛʜ 🖊 Bʏ [Merissa](t.me/MerissaRobot)"
     )
