@@ -1,6 +1,6 @@
 import os
 
-TOKEN = os.environ.get("TOKEN", "5294959338:AAEwl0HAvnp5nAW_6eDV4AndNUAay8PLqLQ")
+TOKEN = os.environ.get("TOKEN", "5294959338:AAHZZpoCciSC43h_5wUWF2lvdF6qTjoEmlU")
 INFOPIC = bool(os.environ.get("INFOPIC", True))
 BOT_USERNAME = os.environ.get("BOT_USERNAME", "MerissaRobot")
 EVENT_LOGS = os.environ.get("EVENT_LOGS", "-1001325865052")
