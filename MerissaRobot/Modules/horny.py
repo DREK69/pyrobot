@@ -203,7 +203,7 @@ async def boobs(client, message):
 async def memess(_, query: CallbackQuery):
     query = query.message
     await query.delete()
-    res = requests.get("https://api.prince-xd.ml/boobs").json()["url"]
+    res = requests.get("https://api.prince-xd.ml/boobs").json()
     await query.reply_photo(
         res,
         caption="Powered By @MerissaRobot",
