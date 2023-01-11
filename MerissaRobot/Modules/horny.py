@@ -201,10 +201,9 @@ async def boobs(client, message):
 
 @bot.on_callback_query(filters.regex("boob"))
 async def memess(_, query: CallbackQuery):
-    query = query.message
-    await query.delete()
+    query = query.message    
     res = requests.get("https://api.prince-xd.ml/boobs").json()
-    await query.reply_photo(
+    await query.edit_message_media(
         res,
         caption="Powered By @MerissaRobot",
         reply_markup=InlineKeyboardMarkup(
