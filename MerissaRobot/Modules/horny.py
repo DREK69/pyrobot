@@ -213,5 +213,5 @@ async def memess(_, query: CallbackQuery):
                     ),
                 ],
             ],
-        ).
+        )
     )
