@@ -568,6 +568,8 @@ def pin(update: Update, context: CallbackContext) -> str:
     chat = update.effective_chat
     msg = update.effective_message
     msg_id = msg.reply_to_message.message_id if msg.reply_to_message else msg.message_id
+    unpinner = chat.get_member(user.id)
+
     if (
         not (unpinner.can_pin_messages or unpinner.status == "creator")
         and user.id not in DRAGONS
