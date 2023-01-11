@@ -203,6 +203,4 @@ async def boobs(client, message):
 async def memess(_, query: CallbackQuery):
     query = query.message
     res = requests.get("https://api.prince-xd.ml/boobs").json()
-    await query.edit_message_media(
-        res      
-    )
+    await query.edit_message_media(res)
