@@ -4,7 +4,7 @@ from enum import Enum
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.ext import CallbackContext
 
-from MerissaRobot import DEV_USERS, dispatcher
+from MerissaRobot import DEV_USERS, DRAGONS, dispatcher
 from MerissaRobot.Handler.decorators import merissacallback
 
 
@@ -67,7 +67,7 @@ def user_admin(permission: AdminPerms):
                 if (
                     getattr(mem, permission.value) is True
                     or mem.status == "creator"
-                    or user_id in DEV_USERS
+                    or user_id in DRAGONS
                 ):
                     return func(update, context, *args, **kwargs)
                 else:
