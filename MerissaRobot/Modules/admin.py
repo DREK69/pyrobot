@@ -574,9 +574,7 @@ def pin(update: Update, context: CallbackContext) -> str:
         not (unpinner.can_pin_messages or unpinner.status == "creator")
         and user.id not in DRAGONS
     ):
-        msg.reply_text(
-            "» You Don't Have Permission To Pin/Unpin Message In This Chat."
-        )
+        msg.reply_text("» You Don't Have Permission To Pin/Unpin Message In This Chat.")
         return
 
     if msg.chat.username:
@@ -644,9 +642,7 @@ def unpin(update: Update, context: CallbackContext):
         not (unpinner.can_pin_messages or unpinner.status == "creator")
         and user.id not in DRAGONS
     ):
-        msg.reply_text(
-            "» You Don't Have Permission To Pin/Unpin Message In This Chat."
-        )
+        msg.reply_text("» You Don't Have Permission To Pin/Unpin Message In This Chat.")
         return
 
     if msg.chat.username:
