@@ -204,16 +204,5 @@ async def memess(_, query: CallbackQuery):
     query = query.message
     res = requests.get("https://api.prince-xd.ml/boobs").json()
     await query.edit_message_media(
-        res,
-        caption="Powered By @MerissaRobot",
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        text="Change 🔂",
-                        callback_data="boob",
-                    ),
-                ],
-            ],
-        ),
+        res      
     )
