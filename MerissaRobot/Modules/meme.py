@@ -1,6 +1,6 @@
 import requests
 from pyrogram import filters
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import *
 
 from MerissaRobot import pbot as bot
 
@@ -35,9 +35,9 @@ async def ameme(_, query: CallbackQuery):
     url = res["url"]
     text = res["title"]
     link = res["postLink"]
-    await query.reply_photo(
-        url,
-        caption=f"[{text}]({link})",
+    await query.edit_message_media(
+        InputMediaPhoto(url, 
+        caption=f"[{text}]({link})"),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -81,9 +81,9 @@ async def memess(_, query: CallbackQuery):
     url = res["url"]
     text = res["title"]
     link = res["postLink"]
-    await query.reply_photo(
-        url,
-        caption=f"[{text}]({link})",
+    await query.edit_message_media(
+        InputMediaPhoto(url, 
+        caption=f"[{text}]({link})"),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -127,9 +127,9 @@ async def hmeme(_, query: CallbackQuery):
     url = res["url"]
     text = res["title"]
     link = res["postLink"]
-    await query.reply_photo(
-        url,
-        caption=f"[{text}]({link})",
+    await query.edit_message_media(
+        InputMediaPhoto(url, 
+        caption=f"[{text}]({link})"),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
