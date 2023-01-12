@@ -175,9 +175,6 @@ async def boobs(client, message):
     if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
         os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
     pic_loc = os.path.join(TEMP_DOWNLOAD_DIRECTORY, "bobs.jpg")
-    a = await message.reply_text("📥 Downloading")
-    await asyncio.sleep(0.5)
-    await a.edit("📤 Uploading")
     nsfw = requests.get("http://api.oboobs.ru/noise/1").json()[0]["preview"]
     urllib.request.urlretrieve("http://media.oboobs.ru/{}".format(nsfw), pic_loc)
     await client.send_photo(
@@ -195,9 +192,7 @@ async def boobs(client, message):
             ],
         ),
     )
-    os.remove(pic_loc)
-    await a.delete()
-
+    os.remove(pic_loc)    
 
 @bot.on_callback_query(filters.regex("boob"))
 async def memess(_, query: CallbackQuery):
