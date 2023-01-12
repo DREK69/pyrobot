@@ -36,8 +36,7 @@ async def ameme(_, query: CallbackQuery):
     text = res["title"]
     link = res["postLink"]
     await query.edit_message_media(
-        InputMediaPhoto(url, 
-        caption=f"[{text}]({link})"),
+        InputMediaPhoto(url, caption=f"[{text}]({link})"),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -82,8 +81,7 @@ async def memess(_, query: CallbackQuery):
     text = res["title"]
     link = res["postLink"]
     await query.edit_message_media(
-        InputMediaPhoto(url, 
-        caption=f"[{text}]({link})"),
+        InputMediaPhoto(url, caption=f"[{text}]({link})"),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -128,8 +126,7 @@ async def hmeme(_, query: CallbackQuery):
     text = res["title"]
     link = res["postLink"]
     await query.edit_message_media(
-        InputMediaPhoto(url, 
-        caption=f"[{text}]({link})"),
+        InputMediaPhoto(url, caption=f"[{text}]({link})"),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
