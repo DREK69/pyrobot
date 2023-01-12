@@ -19,6 +19,7 @@ async def instadown(_, message):
         caption="Powered by @MerissaRobot",
     )
 
+
 @pbot.on_message(filters.command("insta2"))
 async def instadown(_, message):
     if len(message.command) < 2:
