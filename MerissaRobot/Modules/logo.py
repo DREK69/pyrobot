@@ -45,7 +45,7 @@ async def movie(_, message):
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    url = get(f"https://api.princexd.tech/anime-logo?text={name}").json()["url"]
+    url = get(f"https://api.princexd.tech/alogo?text={name}").json()["url"]
     button = InlineKeyboardMarkup(
         [
             [
