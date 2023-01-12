@@ -32,4 +32,3 @@ async def instadown(_, message):
     x = get(f"https://api.princexd.tech/igdown?link={name}").json()[0]
     await message.reply_text(
         text=f"{x}\n\nPowered By @MerissaRobot")      
-    )
