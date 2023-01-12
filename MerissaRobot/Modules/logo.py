@@ -5,19 +5,19 @@ from requests import get
 from MerissaRobot import pbot
 
 
-@pbot.on_message(filters.command("rlogo"))
+@pbot.on_message(filters.command("hqlogo"))
 async def movie(_, message):
     logo = await message.reply_text("Creating your logo...wait!")
     if len(message.command) < 2:
         return await message.reply_text(
-            "Give me some text to make logo\n\nEx. /logohq MerissaRobot"
+            "Give me some text to make logo\n\nEx. /hqlogo MerissaRobot"
         )
     name = (
         message.text.split(None, 1)[1]
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    url = get(f"https://api.prince-xd.ml/logohq?text={name}").json()["url"]
+    url = get(f"https://api.princexd.tech/logohq?text={name}").json()["url"]
     button = InlineKeyboardMarkup(
         [
             [
@@ -45,7 +45,7 @@ async def movie(_, message):
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    url = get(f"https://api.prince-xd.ml/anime-logo?text={name}").json()["url"]
+    url = get(f"https://api.princexd.tech/anime-logo?text={name}").json()["url"]
     button = InlineKeyboardMarkup(
         [
             [
