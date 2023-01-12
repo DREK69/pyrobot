@@ -17,12 +17,15 @@ async def movie(_, message):
         [
             [
                 InlineKeyboardButton(
-                    "📥 Download Movie 🎥", url=f"https://m.vegamovies.lol/?s={name}"
+                    "Link", url=f"https://vegamovies.page/?s={name}"
+                ),
+                InlineKeyboardButton(
+                    "Link", url=f"https://dotmovies.xyz/?s={name}"
                 ),
             ],
         ]
     )
     await message.reply_text(
-        f"Hi Dear, Your Movie Download link is Ready\n\nClick Below Button To Download Your Movie 🎥\n\nPowered by @MerissaRobot",
+        f"Hi Dear, Your Movie Download link is Ready\n\nTry Both Links\n\nPowered by @MerissaRobot",
         reply_markup=button,
     )
