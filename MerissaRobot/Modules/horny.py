@@ -1,4 +1,3 @@
-import asyncio
 import os
 import random
 import time
@@ -192,7 +191,8 @@ async def boobs(client, message):
             ],
         ),
     )
-    os.remove(pic_loc)    
+    os.remove(pic_loc)
+
 
 @bot.on_callback_query(filters.regex("boob"))
 async def memess(_, query: CallbackQuery):
