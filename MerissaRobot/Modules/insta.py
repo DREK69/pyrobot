@@ -29,5 +29,5 @@ async def instadown(_, message):
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    x = get(f"https://api.princexd.tech/igdown?link={name}").json()[0]
+    x = get(f"https://api.princexd.tech/igdown?link={name}").json()
     await message.reply_text(text=f"{x}\n\nPowered By @MerissaRobot")
