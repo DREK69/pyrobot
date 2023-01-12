@@ -16,12 +16,8 @@ async def movie(_, message):
     button = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton(
-                    "Link", url=f"https://vegamovies.page/?s={name}"
-                ),
-                InlineKeyboardButton(
-                    "Link", url=f"https://dotmovies.xyz/?s={name}"
-                ),
+                InlineKeyboardButton("Link", url=f"https://vegamovies.page/?s={name}"),
+                InlineKeyboardButton("Link", url=f"https://dotmovies.xyz/?s={name}"),
             ],
         ]
     )
