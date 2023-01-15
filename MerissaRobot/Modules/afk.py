@@ -1,10 +1,12 @@
 import time
 
-from MerissaRobot import BOT_USERNAME, pbot as app
-from MerissaRobot.Handler.readable_time import get_readable_time
-from MerissaRobot.Database.mongo.afk_mongo import add_afk, is_afk, remove_afk
 from pyrogram import filters
 from pyrogram.types import Message
+
+from MerissaRobot import BOT_USERNAME
+from MerissaRobot import pbot as app
+from MerissaRobot.Database.mongo.afk_mongo import add_afk, is_afk, remove_afk
+from MerissaRobot.Handler.readable_time import get_readable_time
 
 
 @app.on_message(filters.command(["afk", f"afk@{BOT_USERNAME}"]))
