@@ -4,11 +4,15 @@ import time
 from pyrogram import filters
 from pyrogram.types import Message
 
-from MerissaRobot import pbot as app, botid, botname, botusername
+from MerissaRobot import pbot as app
 from MerissaRobot.Database.mongo.afk_mongo import add_served_chat, is_afk, remove_afk
 from MerissaRobot.Handler.readable_time import get_readable_time
 
 chat_watcher_group = 1
+
+botid = "5294959338"
+botname = "merissa"
+botusername = "merissarobot"
 
 @app.on_message(
     ~filters.edited & ~filters.me & ~filters.bot & ~filters.via_bot,
