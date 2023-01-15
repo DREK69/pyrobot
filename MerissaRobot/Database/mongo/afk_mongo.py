@@ -1,4 +1,4 @@
-from MerissaRobot.Database.mongo import db
+from MerissaRobot.Database.mongo import afkdb as db
 
 afkdb = db.afk
 
