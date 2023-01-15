@@ -77,7 +77,7 @@ secureme
 spamwatch
 speedtest-cli
 spongemock
-SQLAlchemy==1.4.40
+SQLAlchemy==1.4.46
 telegraph
 telethon==1.26.1
 textblob 
