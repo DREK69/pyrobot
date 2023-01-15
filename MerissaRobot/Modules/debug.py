@@ -5,7 +5,9 @@ from telegram import Update
 from telegram.ext import CommandHandler, ContextTypes
 from telethon import events
 
-from MerissaRobot import LOGGER, telethn, dispatcher as application
+from MerissaRobot import LOGGER
+from MerissaRobot import dispatcher as application
+from MerissaRobot import telethn
 from MerissaRobot.Handler.chat_status import dev_plus
 
 DEBUG_MODE = False
