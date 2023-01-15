@@ -8,7 +8,7 @@ from telethon import events
 from MerissaRobot import dispatcher, telethn
 from MerissaRobot.Handler.chat_status import dev_plus
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 
 @dev_plus
