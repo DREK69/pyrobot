@@ -1,13 +1,12 @@
 import time
 
-from Exon import BOT_USERNAME, app
-from Exon.modules.helper_funcs import get_readable_time
-from Exon.modules.sql.mongo.afk_db import add_afk, is_afk, remove_afk
+from MerissaRobot import BOT_USERNAME, pbot as app
+from MerissaRobot.Handler.readable_time import get_readable_time
+from MerissaRobot.Database.mongo.afk_mongo import add_afk, is_afk, remove_afk
 from pyrogram import filters
 from pyrogram.types import Message
 
 
-# bug :- /afk with bot username afk back in 2 sec.
 @app.on_message(filters.command(["afk", f"afk@{BOT_USERNAME}"]))
 async def active_afk(_, message: Message):
     if message.sender_chat:
@@ -163,7 +162,8 @@ async def active_afk(_, message: Message):
 
 __mod_name__ = "Afk 👋"
 __help__ = """
-Away from group
+Away from Keyboard 
  ❍ /afk <reason>: mark yourself as AFK(away from keyboard).
  ❍ brb <reason>: same as the afk command - but not a command.
+
 When marked as AFK, any mentions will be replied to with a message to say you're not available!"""
