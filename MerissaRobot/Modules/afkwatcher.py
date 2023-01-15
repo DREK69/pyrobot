@@ -15,7 +15,7 @@ botname = "merissa"
 botusername = "merissarobot"
 
 @app.on_message(
-    ~filters.edited & ~filters.me & ~filters.bot & ~filters.via_bot,
+    ~filters.me & ~filters.bot & ~filters.via_bot,
     group=chat_watcher_group,
 )
 async def chat_watcher_func(_, message):
