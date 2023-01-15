@@ -8,7 +8,6 @@ from MerissaRobot import pbot as app
 from MerissaRobot.Database.mongo.afk_mongo import add_afk, is_afk, remove_afk
 from MerissaRobot.Handler.readable_time import get_readable_time
 
-
 @app.on_message(filters.command(["afk", f"afk@{BOT_USERNAME}"]))
 async def active_afk(_, message: Message):
     if message.sender_chat:
@@ -25,42 +24,41 @@ async def active_afk(_, message: Message):
             seenago = get_readable_time((int(time.time() - timeafk)))
             if afktype == "text":
                 send = await message.reply_text(
-                    f"**{message.from_user.first_name}** ɪs ʙᴀᴄᴋ ᴏɴʟɪɴᴇ ᴀɴᴅ ᴡᴀs ᴀᴡᴀʏ ғᴏʀ {seenago}",
+                    f"**{message.from_user.first_name}** is back online and was away for {seenago}",
                     disable_web_page_preview=True,
                 )
             if afktype == "text_reason":
                 send = await message.reply_text(
-                    f"**{message.from_user.first_name}** ɪs ʙᴀᴄᴋ ᴏɴʟɪɴᴇ ᴀɴᴅ ᴡᴀs ᴀᴡᴀʏ ғᴏʀ {seenago}\n\nʀᴇᴀsᴏɴ: `{reasonafk}`",
+                    f"**{message.from_user.first_name}** is back online and was away for {seenago}\n\nReason: `{reasonafk}`",
                     disable_web_page_preview=True,
                 )
             if afktype == "animation":
                 if str(reasonafk) == "None":
-                    send = await message.reply_animation(
+                    send =  await message.reply_animation(
                         data,
-                        caption=f"**{message.from_user.first_name}** ɪs ʙᴀᴄᴋ ᴏɴʟɪɴᴇ ᴀɴᴅ ᴡᴀs ᴀᴡᴀʏ ғᴏʀ {seenago}",
+                        caption=f"**{message.from_user.first_name}** is back online and was away for {seenago}",
                     )
                 else:
                     send = await message.reply_animation(
                         data,
-                        caption=f"**{message.from_user.first_name}** ɪs ʙᴀᴄᴋ ᴏɴʟɪɴᴇ ᴀɴᴅ ᴡᴀs ᴀᴡᴀʏ ғᴏʀ {seenago}\n\nʀᴇᴀsᴏɴ: `{reasonafk}`",
+                        caption=f"**{message.from_user.first_name}** is back online and was away for {seenago}\n\nReason: `{reasonafk}`",
                     )
             if afktype == "photo":
                 if str(reasonafk) == "None":
                     send = await message.reply_photo(
                         photo=f"downloads/{user_id}.jpg",
-                        caption=f"**{message.from_user.first_name}** ɪs ʙᴀᴄᴋ ᴏɴʟɪɴᴇ ᴀɴᴅ ᴡᴀs ᴀᴡᴀʏ ғᴏʀ {seenago}",
+                        caption=f"**{message.from_user.first_name}** is back online and was away for {seenago}",
                     )
                 else:
                     send = await message.reply_photo(
                         photo=f"downloads/{user_id}.jpg",
-                        caption=f"**{message.from_user.first_name}** ɪs ʙᴀᴄᴋ ᴏɴʟɪɴᴇ ᴀɴᴅ ᴡᴀs ᴀᴡᴀʏ ғᴏʀ {seenago}\n\nʀᴇᴀsᴏɴ: `{reasonafk}`",
+                        caption=f"**{message.from_user.first_name}** is back online and was away for {seenago}\n\nReason: `{reasonafk}`",
                     )
-        except Exception:
-            send = await message.reply_text(
-                f"**{message.from_user.first_name}** ɪs ʙᴀᴄᴋ ᴏɴʟɪɴᴇ",
+        except Exception as e:
+            send =  await message.reply_text(
+                f"**{message.from_user.first_name}** is back online",
                 disable_web_page_preview=True,
             )
-
     if len(message.command) == 1 and not message.reply_to_message:
         details = {
             "type": "text",
@@ -76,7 +74,10 @@ async def active_afk(_, message: Message):
             "data": None,
             "reason": _reason,
         }
-    elif len(message.command) == 1 and message.reply_to_message.animation:
+    elif (
+        len(message.command) == 1
+        and message.reply_to_message.animation
+    ):
         _data = message.reply_to_message.animation.file_id
         details = {
             "type": "animation",
@@ -84,7 +85,10 @@ async def active_afk(_, message: Message):
             "data": _data,
             "reason": None,
         }
-    elif len(message.command) > 1 and message.reply_to_message.animation:
+    elif (
+        len(message.command) > 1
+        and message.reply_to_message.animation
+    ):
         _data = message.reply_to_message.animation.file_id
         _reason = (message.text.split(None, 1)[1].strip())[:100]
         details = {
@@ -94,7 +98,9 @@ async def active_afk(_, message: Message):
             "reason": _reason,
         }
     elif len(message.command) == 1 and message.reply_to_message.photo:
-        await app.download_media(message.reply_to_message, file_name=f"{user_id}.jpg")
+        await app.download_media(
+            message.reply_to_message, file_name=f"{user_id}.jpg"
+        )
         details = {
             "type": "photo",
             "time": time.time(),
@@ -102,7 +108,9 @@ async def active_afk(_, message: Message):
             "reason": None,
         }
     elif len(message.command) > 1 and message.reply_to_message.photo:
-        await app.download_media(message.reply_to_message, file_name=f"{user_id}.jpg")
+        await app.download_media(
+            message.reply_to_message, file_name=f"{user_id}.jpg"
+        )
         _reason = message.text.split(None, 1)[1].strip()
         details = {
             "type": "photo",
@@ -110,7 +118,9 @@ async def active_afk(_, message: Message):
             "data": None,
             "reason": _reason,
         }
-    elif len(message.command) == 1 and message.reply_to_message.sticker:
+    elif (
+        len(message.command) == 1 and message.reply_to_message.sticker
+    ):
         if message.reply_to_message.sticker.is_animated:
             details = {
                 "type": "text",
@@ -128,7 +138,9 @@ async def active_afk(_, message: Message):
                 "data": None,
                 "reason": None,
             }
-    elif len(message.command) > 1 and message.reply_to_message.sticker:
+    elif (
+        len(message.command) > 1 and message.reply_to_message.sticker
+    ):
         _reason = (message.text.split(None, 1)[1].strip())[:100]
         if message.reply_to_message.sticker.is_animated:
             details = {
@@ -156,16 +168,6 @@ async def active_afk(_, message: Message):
         }
 
     await add_afk(user_id, details)
-    await message.reply_sticker(
-        "CAACAgUAAx0CUgguZAABAdegY2N5paaiPapUxRm0RYy9Xf6dPEYAAisIAAJ2PRlXxkn7UgOIdewqBA"
-    )
-    await message.reply_text(f"{message.from_user.first_name} ɪs ɴᴏᴡ ᴀғᴋ!")
-
-
-__mod_name__ = "Afk 👋"
-__help__ = """
-Away from Keyboard 
- ❍ /afk <reason>: mark yourself as AFK(away from keyboard).
- ❍ brb <reason>: same as the afk command - but not a command.
-
-When marked as AFK, any mentions will be replied to with a message to say you're not available!"""
+    send = await message.reply_text(
+        f"{message.from_user.first_name} is now afk!"
+    )   
