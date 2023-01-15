@@ -182,7 +182,6 @@ class InterceptHandler(logging.Handler):
         logger_opt.log(self._get_level(record), record.getMessage())
 
 
-logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
 log = logging.getLogger(__name__)
 logger.add(
     "logs/asuna.log",
