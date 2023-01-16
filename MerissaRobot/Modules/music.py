@@ -177,7 +177,7 @@ async def callback_query(Client, CallbackQuery):
         download_aud = aud.download()
         med = InputMediaAudio(
             media=download_aud,
-            caption=youtube_audio.title,        
+            caption=youtube_audio.title,
             title=youtube_audio.title,
         )
         try:
