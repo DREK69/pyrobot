@@ -177,7 +177,8 @@ async def callback_query(Client, CallbackQuery):
         try:
             await Client.send_audio(
                 chat_id,
-                download_aud(file_name=f"{youtube_audio.title}.mp3"),
+                download_aud,
+                file_name=f"{youtube_audio.title}.mp3",
                 caption=youtube_audio.title,
             )
         except Exception as error:
