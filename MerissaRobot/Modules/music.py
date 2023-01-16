@@ -175,7 +175,11 @@ async def callback_query(Client, CallbackQuery):
         m = await CallbackQuery.edit_message_text("Downloading...")
         download_aud = aud.download()
         try:
-            await Client.send_audio(chat_id, download_aud(file_name=f"{youtube_audio.title}.mp3"), caption=youtube_audio.title)
+            await Client.send_audio(
+                chat_id,
+                download_aud(file_name=f"{youtube_audio.title}.mp3"),
+                caption=youtube_audio.title,
+            )
         except Exception as error:
             await Client.send_message(chat_id, f"Something happened!\n<i>{error}</i>")
         os.remove(download_aud)
