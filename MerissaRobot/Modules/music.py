@@ -130,7 +130,7 @@ async def yt_download(bot, message):
     chat_id = message.chat.id
     global link
     link = message.text
-    search = VideosSearch(query, limit=1).result()
+    search = VideosSearch(link, limit=1).result()
     data = search["result"][0]
     data["title"]
     data["link"]
