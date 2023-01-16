@@ -132,8 +132,8 @@ async def yt_download(bot, message):
     link = message.text
     search = VideosSearch(query, limit=1).result()
     data = search["result"][0]
-    songname = data["title"]
-    url = data["link"]
+    data["title"]
+    data["link"]
     duration = data["duration"]
     reply_markup = QUALITY_BUTTONS
     await bot.send_photo(
