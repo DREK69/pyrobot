@@ -167,13 +167,13 @@ async def callback_query(Client, CallbackQuery):
         m = await CallbackQuery.edit_message_text(
             "Downloading..."
         )
+        download_aud = aud.download()
         med = InputMediaAudio(
-            media=filename,
+            media=download_aud,
             caption=youtube_audio.title,
             thumb=thumb_image_path,
             title=youtube_audio.title,           
-        )
-        download_aud = aud.download()
+        )        
         try:
             await CallbackQuery.edit_message_media(media=med)(chat_id, download_aud, caption=youtube_audio.title)
         except Exception as error:
