@@ -1,5 +1,5 @@
 from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputMediaAudio
 from pyrogram.types import InlineQueryResultArticle, InputTextMessageContent
 from youtubesearchpython import VideosSearch
 from pytube import YouTube
@@ -167,9 +167,15 @@ async def callback_query(Client, CallbackQuery):
         m = await CallbackQuery.edit_message_text(
             "Downloading..."
         )
+        med = InputMediaAudio(
+            media=filename,
+            caption=youtube_audio.title,
+            thumb=thumb_image_path,
+            title=youtube_audio.title,           
+        )
         download_aud = aud.download()
         try:
-            await Client.send_audio(chat_id, download_aud, caption=youtube_audio.title)
+            await CallbackQuery.edit_message_media(media=med)(chat_id, download_aud, caption=youtube_audio.title)
         except Exception as error:
             await Client.send_message(chat_id, f"Something happened!\n<i>{error}</i>")
         os.remove(download_aud)
