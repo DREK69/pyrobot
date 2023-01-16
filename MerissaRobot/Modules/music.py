@@ -1,177 +1,235 @@
-from __future__ import unicode_literals
-
-import asyncio
+from pyrogram import Client, filters
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.types import InlineQueryResultArticle, InputTextMessageContent
+from youtubesearchpython import VideosSearch
+from pytube import YouTube
+from MerissaRobot import pbot as Client
 import os
-import time
-from urllib.parse import urlparse
-
-import requests
-import wget
-import yt_dlp
-from pyrogram import filters
-from pyrogram.types import Message
-from youtube_search import YoutubeSearch
-from youtubesearchpython import SearchVideos
-from yt_dlp import YoutubeDL
-
-from MerissaRobot import pbot
 
 
-def get_file_extension_from_url(url):
-    url_path = urlparse(url).path
-    basename = os.path.basename(url_path)
-    return basename.split(".")[-1]
+START_BUTTONS = InlineKeyboardMarkup(
+    [
+        [
+            InlineKeyboardButton("🔍Search YouTube", switch_inline_query_current_chat="")
+        ]
+    ]
+)
 
 
-def get_text(message: Message) -> [None, str]:
-    """Extract Text From Commands"""
-    text_to_return = message.text
-    if message.text is None:
-        return None
-    if " " in text_to_return:
+@Client.on_inline_query()
+async def inlinequery(client, inline_query):
+    global search_yt
+    search_yt = inline_query.query
+    answer = []
+    video = VideosSearch(search_yt, limit=10).result()
+    yt_title = video["result"][0]["title"]
+    yt_views = video["result"][0]["viewCount"]["short"]
+    yt_duration = video["result"][0]["duration"]
+    yt_publish = video["result"][0]["publishedTime"]
+    yt_channel = video["result"][4]["channel"]["name"]
+    global yt_link
+    yt_link = video["result"][0]["link"]
+    if inline_query.query == "":
+        await inline_query.answer(
+            results=[
+                InlineQueryResultArticle(
+                    title="Search any YouTube video...",
+                    input_message_content=InputTextMessageContent("Search Youtube Videos..."),
+                    description="Type to search!",
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [
+                                InlineKeyboardButton("Search Videos...", switch_inline_query_current_chat="")
+                            ]
+                        ]
+                    )
+                )
+            ]
+        )
+    elif inline_query.chat_type == inline_query.chat_type.BOT:
+        for i in range(7):
+            answer.append(
+                InlineQueryResultArticle(
+                    title=video["result"][0]["title"],
+                    thumb_url=video["result"][1]["thumbnails"][0]["url"],
+                    description=video["result"][0]["viewCount"]["short"],
+                    input_message_content=InputTextMessageContent(
+                        f"📝**Title:-** {yt_title}\n👁️‍🗨️**Views:-** {yt_views}\n⌛**Duration:-** {yt_duration}\n📅**Published:-** {yt_publish}\n📢**Published by:-** {yt_channel}\n📽️**Watch Video:-** <a href={yt_link}>Click here</a>"),
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [
+                                InlineKeyboardButton("🎥Watch on YouTube", url=yt_link),
+                                InlineKeyboardButton("🔍Search again", switch_inline_query_current_chat="")
+                            ],
+                            [
+                                InlineKeyboardButton("📁Download", callback_data="link_down")
+                            ]
+                        ]
+                    ),
+                )
+
+            ),
+    elif inline_query.chat_type != inline_query.chat_type.BOT:
+        for i in range(7):
+            answer.append(
+                InlineQueryResultArticle(
+                    title=video["result"][0]["title"],
+                    thumb_url=video["result"][1]["thumbnails"][0]["url"],
+                    description=video["result"][0]["viewCount"]["short"],
+                    input_message_content=InputTextMessageContent(
+                        f"📝**Title:-** {yt_title}\n👁️‍🗨️**Views:-** {yt_views}\n⌛**Duration:-** {yt_duration}\n📅**Published:-** {yt_publish}\n📢**Published by:-** {yt_channel}\n📽️**Watch Video:-** <a href={yt_link}>Click here</a>"),
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [
+                                InlineKeyboardButton("🎥Watch on YouTube", url=yt_link),
+                                InlineKeyboardButton("🔍Search again", switch_inline_query_current_chat="")
+                            ]
+                        ]
+                    ),
+                )
+
+            )
+    await inline_query.answer(
+        results=answer,
+        cache_time=1
+    )
+
+
+QUALITY_BUTTONS = InlineKeyboardMarkup(
+    [
+        [
+            InlineKeyboardButton("📽️High Quality", callback_data="highest_res"),
+            InlineKeyboardButton("📽️720p", callback_data="720p")
+        ],
+        [
+            InlineKeyboardButton("📽️Low Quality", callback_data="lowest_res"),
+            InlineKeyboardButton("📽️480p", callback_data="480p")
+        ],
+        [
+            InlineKeyboardButton("🎵Audio", callback_data="audio"),
+            InlineKeyboardButton("📽️360p", callback_data="360p")
+        ]
+    ]
+)
+
+yt_regex = r'(.*)youtube.com/(.*)[&|?]v=(?P<video>[^&]*)(.*)'
+
+
+@Client.on_message(filters.regex(yt_regex))
+async def yt_download(bot, message):
+    global chat_id
+    chat_id = message.chat.id
+    global link
+    link = message.text
+    dur = VideosSearch(link, limit=1).result()
+    _duration = dur["result"][0]["duration"]
+    reply_markup = QUALITY_BUTTONS
+    await bot.send_message(message.chat.id, f"Select your preferred format\n\nDuration: {str(_duration)}",
+                           reply_markup=reply_markup)
+
+
+@Client.on_callback_query()
+async def callback_query(Client, CallbackQuery):
+    ## Download videos at the highest resolution
+    if CallbackQuery.data == "highest_res":
+        youtube_high = YouTube(link)
+        high_vid = youtube_high.streams.get_highest_resolution()
+        m = await CallbackQuery.edit_message_text(
+            "Downloading."
+        )
+        download_high = high_vid.download()
+        m.delete()
         try:
-            return message.text.split(None, 1)[1]
-        except IndexError:
-            return None
-    else:
-        return None
-
-
-def time_to_seconds(time):
-    stringt = str(time)
-    return sum(int(x) * 60**i for i, x in enumerate(reversed(stringt.split(":"))))
-
-
-@pbot.on_message(filters.command(["s", "music"]))
-def song(client, message):
-    user_id = message.from_user.id
-    user_name = message.from_user.first_name
-    user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
-
-    query = ""
-    for i in message.command[1:]:
-        query += " " + str(i)
-    print(query)
-    s = message.reply("🔎 Finding...")
-    ydl_opts = {"format": "bestaudio[ext=m4a]"}
-    try:
-        results = YoutubeSearch(query, max_results=1).to_dict()
-        link = f"https://youtube.com{results[0]['url_suffix']}"
-        # print(results)
-        title = results[0]["title"][:40]
-        thumbnail = results[0]["thumbnails"][0]
-        thumb_name = f"thumb{title}.jpg"
-        thumb = requests.get(thumbnail, allow_redirects=True)
-        open(thumb_name, "wb").write(thumb.content)
-        duration = results[0]["duration"]
-        results[0]["url_suffix"]
-        views = results[0]["views"]
-    except Exception as e:
-        m.edit(
-            "**😴 sᴏɴɢ ɴᴏᴛ ғᴏᴜɴᴅ ᴏɴ ʏᴏᴜᴛᴜʙᴇ.**\n\n» ᴍᴀʏʙᴇ ᴛᴜɴᴇ ɢᴀʟᴛɪ ʟɪᴋʜᴀ ʜᴏ, ᴩᴀᴅʜᴀɪ - ʟɪᴋʜᴀɪ ᴛᴏʜ ᴋᴀʀᴛᴀ ɴᴀʜɪ ᴛᴜ !"
+            await Client.send_video(chat_id, download_high, caption=youtube_high.title)
+            print("success")
+        except Exception as error:
+            await Client.send_message(chat_id, f"Error occurred:\n<i>{error}</i>")
+        os.remove(download_high)
+        await m.delete()
+    ## Download videos at the lowest resolution
+    elif CallbackQuery.data == "lowest_res":
+        youtube_less = YouTube(link)
+        less_vid = youtube_less.streams.get_lowest_resolution()
+        m = await CallbackQuery.edit_message_text(
+            "Downloading..."
         )
-        print(str(e))
-        return
-    s.delete()
-    d = message.reply_photo(
-        thumb_name,
-        caption=f"Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on..",
-    )
-    try:
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info_dict = ydl.extract_info(link, download=False)
-            audio_file = ydl.prepare_filename(info_dict)
-            ydl.process_info(info_dict)
-        secmul, dur, dur_arr = 1, 0, duration.split(":")
-        for i in range(len(dur_arr) - 1, -1, -1):
-            dur += int(dur_arr[i]) * secmul
-            secmul *= 60
-        message.reply_audio(
-            audio_file,
-            caption=f"{title}",
-            thumb=thumb_name,
-            title=title,
-            duration=dur,
+        download_less = less_vid.download()
+        try:
+            await Client.send_video(chat_id, download_less, caption=youtube_less.title)
+        except Exception as error:
+            await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
+        os.remove(download_less)
+        await m.delete()
+    ## Download audio
+    elif CallbackQuery.data == "audio":
+        youtube_audio = YouTube(link)
+        aud = youtube_audio.streams.get_audio_only()
+        m = await CallbackQuery.edit_message_text(
+            "Downloading..."
         )
-    except Exception as e:
-        m.edit(
-            f"**» ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴇʀʀᴏʀ, ʀᴇᴩᴏʀᴛ ᴛʜɪs ᴀᴛ​ » [sᴜᴩᴩᴏʀᴛ ᴄʜᴀᴛ](t.me/MerissaxSupport) 💕**\n\**ᴇʀʀᴏʀ :** {e}"
+        download_aud = aud.download()
+        try:
+            await Client.send_audio(chat_id, download_aud, caption=youtube_audio.title)
+        except Exception as error:
+            await Client.send_message(chat_id, f"Something happened!\n<i>{error}</i>")
+        os.remove(download_aud)
+        await m.delete()
+    ## 720p
+    elif CallbackQuery.data == "720p":
+        youtube_720 = YouTube(link)
+        vid_720 = youtube_720.streams.get_by_resolution("720p")
+        m = await CallbackQuery.edit_message_text(
+            "Downloading..."
         )
-        print(e)
-    d.edit_caption(
-        f"**Title:** {title[:25]}\n**Duration:** `{duration}`\n**Views:** `{views}`\n**Requested By:** {user}"
-    )
-    try:
-        os.remove(audio_file)
-        os.remove(thumb_name)
-    except Exception as e:
-        print(e)
-
-
-@pbot.on_message(filters.command(["v", "vsong", "video"]))
-async def ytmusic(client, message):
-    urlissed = get_text(message)
-    await message.delete()
-    user_id = message.from_user.id
-    user_name = message.from_user.first_name
-    chutiya = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
-
-    m = await client.send_message(message.chat.id, f"🔎 Searching...")
-    if not urlissed:
-        await m.edit(
-            "😴 sᴏɴɢ ɴᴏᴛ ғᴏᴜɴᴅ ᴏɴ ʏᴏᴜᴛᴜʙᴇ.\n\n» ᴍᴀʏʙᴇ ᴛᴜɴᴇ ɢᴀʟᴛɪ ʟɪᴋʜᴀ ʜᴏ, ᴩᴀᴅʜᴀɪ - ʟɪᴋʜᴀɪ ᴛᴏʜ ᴋᴀʀᴛᴀ ɴᴀʜɪ ᴛᴜ !"
+        download_720 = vid_720.download()
+        try:
+            await Client.send_video(chat_id, download_720, caption=youtube_720.title)
+        except Exception as error:
+            await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
+        os.remove(download_720)
+        await m.delete()
+    ## 360p
+    elif CallbackQuery.data == "360p":
+        youtube_360 = YouTube(link)
+        vid_360 = youtube_360.streams.get_lowest_resolution()
+        m = await CallbackQuery.edit_message_text(
+            "Downloading..."
         )
-        return
-    await m.delete()
-    search = SearchVideos(f"{urlissed}", offset=1, mode="dict", max_results=1)
-    mi = search.result()
-    mio = mi["search_result"]
-    mo = mio[0]["link"]
-    thum = mio[0]["title"]
-    fridayz = mio[0]["id"]
-    thums = mio[0]["channel"]
-    kekme = f"https://img.youtube.com/vi/{fridayz}/hqdefault.jpg"
-    await asyncio.sleep(0.6)
-    url = mo
-    sedlyf = wget.download(kekme)
-    d = await client.send_photo(
-        message.chat.id,
-        photo=sedlyf,
-        caption=f"Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on..",
-    )
-    opts = {
-        "format": "best",
-        "addmetadata": True,
-        "key": "FFmpegMetadata",
-        "prefer_ffmpeg": True,
-        "geo_bypass": True,
-        "nocheckcertificate": True,
-        "postprocessors": [{"key": "FFmpegVideoConvertor", "preferedformat": "mp4"}],
-        "outtmpl": "%(id)s.mp4",
-        "logtostderr": False,
-        "quiet": True,
-    }
-    try:
-        with YoutubeDL(opts) as ytdl:
-            infoo = ytdl.extract_info(url, False)
-            round(infoo["duration"] / 60)
-            ytdl_data = ytdl.extract_info(url, download=True)
+        download_360 = vid_360.download()
+        try:
+            await Client.send_video(chat_id, download_360, caption=youtube_360.title)
+        except Exception as error:
+            await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
+        os.remove(download_360)
+        await m.delete()
+    ## 480p
+    elif CallbackQuery.data == "480p":
+        youtube_480 = YouTube(link)
+        vid_480 = youtube_480.streams.get_lowest_resolution()
+        m = await CallbackQuery.edit_message_text(
+            "Downloading..."
+        )
+        download_480 = vid_480.download()
+        try:
+            await Client.send_video(chat_id, download_480, caption=youtube_480.title)
+        except Exception as error:
+            await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
+        os.remove(download_480)
+        await m.delete()
+    elif CallbackQuery.data == "link_down":
+        youtube_down = YouTube(yt_link)
+        vid_down = youtube_down.streams.get_lowest_resolution()
+        await CallbackQuery.edit_message_text(
+            f"Downloading...\n\nFile name:- {youtube_down.title}\nDuration:- {youtube_down.length}\nWatch on YouTube:- <a href={yt_link}>Click here</a>"
+        )
+        download_vid = vid_down.download()
+        m = await CallbackQuery.edit_message_text(f"**Uploading to Telegram...**\n\nIf this is getting too much time,"
+                                                  f" copy `{yt_link}` and send it directly.")
+        try:
+            await CallbackQuery.edit_message_media(
+                media=download_vid
+            )
+        except Exception as error:
+            await Client.answer_callback_query(CallbackQuery.id, text=f"Error occurred!!\n<i>{error}</i>")
+        os.remove(download_vid)
 
-    except Exception as e:
-        await pablo.edit(f"**ғᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ.** \n**ᴇʀʀᴏʀ :** `{str(e)}`")
-        return
-    time.time()
-    file_stark = f"{ytdl_data['id']}.mp4"
-    await client.send_video(
-        message.chat.id,
-        video=open(file_stark, "rb"),
-        duration=int(ytdl_data["duration"]),
-        file_name=str(ytdl_data["title"]),
-        caption=f"**Title :** [{thum}]({mo})\n💫 **Channel :** {thums}\n✨ **Search:** {urlissed}\n🥀 **Requested By:** {chutiya}",
-        thumb=sedlyf,
-        supports_streaming=True,
-    )
-    await d.delete()
-    for files in (sedlyf, file_stark):
-        if files and os.path.exists(files):
-            os.remove(files)
