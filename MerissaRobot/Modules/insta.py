@@ -23,11 +23,12 @@ async def instadown(_, message):
 @pbot.on_message(filters.command("insta2"))
 async def instadown(_, message):
     if len(message.command) < 2:
-        return await message.reply_text("Give me some link\n\nEx. /insta link")
+        return await message.reply_text("Give me some link\n\nEx. /insta link")   
     name = (
-        message.text.split(None, 1)[1]
-        if len(message.command) < 3
-        else message.text.split(None, 1)[1].replace(" ", "%20")
+        message.text.split(None, 1)[2]                
     )
-    x = get(f"https://api.princexd.tech/igdown?link={name}").json()
+    POST = (
+        message.text.split(None, 1)[1]                
+    )
+    x = get(f"https://api.princexd.tech/igdown?link={name}").json()[POST]
     await message.reply_text(text=f"{x}\n\nPowered By @MerissaRobot")
