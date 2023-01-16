@@ -2,6 +2,7 @@ from MerissaRobot.Database.mongo import afkdb as db
 
 afkdb = db.afkdb
 
+
 async def is_afk(user_id: int) -> bool:
     user = await afkdb.find_one({"user_id": user_id})
     if not user:

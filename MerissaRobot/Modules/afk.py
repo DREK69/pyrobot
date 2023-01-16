@@ -55,7 +55,7 @@ async def active_afk(_, message: Message):
                         photo=f"downloads/{user_id}.jpg",
                         caption=f"**{message.from_user.first_name}** is back online and was away for {seenago}\n\nReason: `{reasonafk}`",
                     )
-        except Exception as e:
+        except Exception:
             send = await message.reply_text(
                 f"**{message.from_user.first_name}** is back online",
                 disable_web_page_preview=True,
@@ -155,4 +155,4 @@ async def active_afk(_, message: Message):
         }
 
     await add_afk(user_id, details)
-    send = await message.reply_text(f"{message.from_user.first_name} is now afk!")
+    await message.reply_text(f"{message.from_user.first_name} is now afk!")
