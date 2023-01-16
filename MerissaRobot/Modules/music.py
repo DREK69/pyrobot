@@ -130,12 +130,16 @@ async def yt_download(bot, message):
     chat_id = message.chat.id
     global link
     link = message.text
-    dur = VideosSearch(link, limit=1).result()
-    _duration = dur["result"][0]["duration"]
+    search = VideosSearch(query, limit=1).result()
+    data = search["result"][0]
+    songname = data["title"]
+    url = data["link"]
+    duration = data["duration"]
     reply_markup = QUALITY_BUTTONS
-    await bot.send_message(
+    await bot.send_photo(
         message.chat.id,
-        f"Select your preferred format\n\nDuration: {str(_duration)}",
+        photo=f"https://i.ytimg.com/vi/{data['id']}/hqdefault.jpg",
+        caption=f"Select your preferred format\n\nDuration: {str(duration)}",
         reply_markup=reply_markup,
     )
 
