@@ -10,7 +10,7 @@ from pyrogram.errors import (
     SessionPasswordNeeded,
 )
 from pyrogram.types import *
-from pyromod import listen  # ignore
+
 from telethon import TelegramClient
 from telethon.errors import (
     ApiIdInvalidError,
