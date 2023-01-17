@@ -1,14 +1,11 @@
-import os
 import random
 import time
-import urllib
 
 import requests
 from pyrogram import filters
 from pyrogram.types import *
 from telethon import Button, events
 
-from MerissaRobot import TEMP_DOWNLOAD_DIRECTORY
 from MerissaRobot import pbot as bot
 from MerissaRobot import telethn as asst
 
@@ -186,7 +183,8 @@ async def boobs(client, message):
                 ],
             ],
         ),
-    )   
+    )
+
 
 @bot.on_callback_query(filters.regex("boob"))
 async def memess(_, query: CallbackQuery):
