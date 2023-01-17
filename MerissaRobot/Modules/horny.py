@@ -171,14 +171,10 @@ async def cute(e):
 
 @bot.on_message(filters.command("boob"))
 async def boobs(client, message):
-    if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
-        os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
-    pic_loc = os.path.join(TEMP_DOWNLOAD_DIRECTORY, "bobs.jpg")
-    nsfw = requests.get("http://api.oboobs.ru/noise/1").json()[0]["preview"]
-    urllib.request.urlretrieve("http://media.oboobs.ru/{}".format(nsfw), pic_loc)
+    pic = requests.get("https://api.princexd.tech/boobs").json()
     await client.send_photo(
         message.chat.id,
-        pic_loc,
+        pic,
         caption="Powered By @MerissaRobot",
         reply_markup=InlineKeyboardMarkup(
             [
@@ -190,9 +186,7 @@ async def boobs(client, message):
                 ],
             ],
         ),
-    )
-    os.remove(pic_loc)
-
+    )   
 
 @bot.on_callback_query(filters.regex("boob"))
 async def memess(_, query: CallbackQuery):
