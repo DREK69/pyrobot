@@ -19,7 +19,7 @@ PHONE_NUMBER_TEXT = (
     "Press /cancel to Cancel."
 )
 
-cli = Client(":memory:", api_id=API_ID, api_hash=API_HASH)
+client = Client(":memory:", api_id=API_ID, api_hash=API_HASH)
 
 
 @pbot.on_message(filters.private & filters.command("genstr"))
@@ -82,7 +82,7 @@ async def generate_str(c, m):
     await otp.delete()
     await otp.request.delete()
     try:
-        await cli.sign_in(
+        await client.sign_in(
             phone_number, code.phone_code_hash, phone_code=" ".join(str(otp_code))
         )
     except PhoneCodeInvalid:
@@ -109,7 +109,7 @@ async def generate_str(c, m):
         await two_step_code.delete()
         await two_step_code.request.delete()
         try:
-            await cli.check_password(new_code)
+            await client.check_password(new_code)
         except Exception as e:
             await m.reply(f"**⚠️ ERROR:** `{str(e)}`")
             return
