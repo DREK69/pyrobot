@@ -206,7 +206,7 @@ async def boobsc(_, query: CallbackQuery):
 
 @bot.on_message(filters.command("animepfp"))
 async def animepfp(client, message):
-    pic = requests.get("https://api.princexd.tech/anime").json()["url"]
+    pic = requests.get("https://api.princexd.tech/animepfp").json()["url"]
     await client.send_photo(
         message.chat.id,
         pic,
@@ -226,7 +226,7 @@ async def animepfp(client, message):
 
 @bot.on_callback_query(filters.regex("animepfp"))
 async def animepfpc(_, query: CallbackQuery):
-    res = requests.get("https://api.princexd.tech/boobs").json()["url"]
+    res = requests.get("https://api.princexd.tech/animepfp").json()["url"]
     await query.edit_message_media(
         InputMediaPhoto(res, caption="Powered By @MerissaRobot"),
         reply_markup=InlineKeyboardMarkup(
