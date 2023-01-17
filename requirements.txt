@@ -62,7 +62,7 @@ pymongo==3.12.1
 pynewtonmath
 pyrate-limiter
 pyrogram>=2.0.93
-pyromod==1.5
+pyromod
 pySmartDL
 python-arq
 python-barcode==0.14.0
