@@ -187,7 +187,7 @@ async def boobs(client, message):
 
 
 @bot.on_callback_query(filters.regex("boob"))
-async def memess(_, query: CallbackQuery):
+async def boobsc(_, query: CallbackQuery):
     res = requests.get("https://api.princexd.tech/boobs").json()
     await query.edit_message_media(
         InputMediaPhoto(res, caption="Powered By @MerissaRobot"),
@@ -197,6 +197,43 @@ async def memess(_, query: CallbackQuery):
                     InlineKeyboardButton(
                         text="Change 🔂",
                         callback_data="boob",
+                    ),
+                ],
+            ],
+        ),
+    )
+
+@bot.on_message(filters.command("boob"))
+async def animepfp(client, message):
+    pic = requests.get("https://api.princexd.tech/anime").json()["url"]
+    await client.send_photo(
+        message.chat.id,
+        pic,
+        caption="Powered By @MerissaRobot",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Change 🔂",
+                        callback_data="animepfp",
+                    ),
+                ],
+            ],
+        ),
+    )
+
+
+@bot.on_callback_query(filters.regex("animepfp"))
+async def animepfpc(_, query: CallbackQuery):
+    res = requests.get("https://api.princexd.tech/boobs").json()["url"]
+    await query.edit_message_media(
+        InputMediaPhoto(res, caption="Powered By @MerissaRobot"),
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Change 🔂",
+                        callback_data="animepfp",
                     ),
                 ],
             ],
