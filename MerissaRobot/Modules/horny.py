@@ -203,6 +203,7 @@ async def boobsc(_, query: CallbackQuery):
         ),
     )
 
+
 @bot.on_message(filters.command("boob"))
 async def animepfp(client, message):
     pic = requests.get("https://api.princexd.tech/anime").json()["url"]
