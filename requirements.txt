@@ -61,7 +61,7 @@ pykeyboard
 pymongo==3.12.1
 pynewtonmath
 pyrate-limiter
-pyrogram1==1.4.16
+pyrogram1
 pyrogram>=2.0.93
 pyromod==1.5
 pySmartDL
