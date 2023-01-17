@@ -2,7 +2,6 @@ import traceback
 from asyncio.exceptions import TimeoutError
 
 from pyrogram import Client, filters
-from MerissaRobot import pbot as Client 
 from pyrogram1 import Client as Client1
 from pyrogram1.errors import ApiIdInvalid as ApiIdInvalid1
 from pyrogram1.errors import PasswordHashInvalid as PasswordHashInvalid1
@@ -35,6 +34,8 @@ from telethon.errors import (
     SessionPasswordNeededError,
 )
 from telethon.sessions import StringSession
+
+from MerissaRobot import pbot as Client
 
 
 # Callbacks
