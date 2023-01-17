@@ -10,7 +10,6 @@ from pyrogram.errors import (
     SessionPasswordNeeded,
 )
 from pyrogram.types import *
-
 from telethon import TelegramClient
 from telethon.errors import (
     ApiIdInvalidError,
