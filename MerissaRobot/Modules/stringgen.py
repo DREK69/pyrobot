@@ -2,6 +2,7 @@ import traceback
 from asyncio.exceptions import TimeoutError
 
 from pyrogram import Client, filters
+from MerissaRobot import pbot as Client 
 from pyrogram1 import Client as Client1
 from pyrogram1.errors import ApiIdInvalid as ApiIdInvalid1
 from pyrogram1.errors import PasswordHashInvalid as PasswordHashInvalid1
