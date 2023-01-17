@@ -10,6 +10,7 @@ from MerissaRobot.Handler.readable_time import get_readable_time
 
 
 @app.on_message(filters.command(["afk", f"afk@{BOT_USERNAME}"]))
+@app.on_message(filters.regex("^brb"))
 async def active_afk(_, message: Message):
     if message.sender_chat:
         return
