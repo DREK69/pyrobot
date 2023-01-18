@@ -64,12 +64,11 @@ def no_longer_afk(update, _):
     the_heck = REDIS.get(f"afk_time_{user.id}")
     if not the_heck:
         return
-
+    if "#afk" in str(message.text):
+        return
     end_afk_time = get_readable_time((time.time() - float(the_heck)))
     REDIS.delete(f"afk_time_{user.id}")
     res = end_afk(user.id)
-    if "#afk" in str(message.text):
-        return
     if res:
         if message.new_chat_members:  # dont say msg
             return
