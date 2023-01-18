@@ -22,6 +22,7 @@ AFK_VID = "https://telegra.ph/file/876136efcfeaea800052d.mp4"
 AWAKE_VID = "https://telegra.ph/file/e859c38504b90d89b5635.mp4"
 AFKTAG_VID = "https://te.legra.ph/file/1c537f083abb8f3c5bf36.mp4"
 
+
 @merissacmd(command="afk", group=AFK_GROUP)
 @merissamsg(Filters.regex("(?i)^brb"), friendly="afk", group=AFK_GROUP)
 def afk(update, _):
@@ -158,7 +159,9 @@ def check_afk(update, _, user_id: int, fst_name: int, userc_id: int):
         else:
             res = f"<code>{fst_name}</code> is now away!\nReason: <code>{reason}</code>\n\nLast seen: <code>{since_afk}</code>"
 
-        update.effective_message.reply_video(AFKTAG_VID, caption=res, parse_mode=ParseMode.HTML)
+        update.effective_message.reply_video(
+            AFKTAG_VID, caption=res, parse_mode=ParseMode.HTML
+        )
 
 
 def __gdpr__(user_id):
