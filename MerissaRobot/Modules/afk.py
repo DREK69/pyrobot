@@ -20,7 +20,7 @@ AFK_REPLY_GROUP = 8
 
 AFK_VID = "https://telegra.ph/file/876136efcfeaea800052d.mp4"
 AWAKE_VID = "https://telegra.ph/file/e859c38504b90d89b5635.mp4"
-
+AFKTAG_VID = "https://te.legra.ph/file/1c537f083abb8f3c5bf36.mp4"
 
 @merissacmd(command="afk", group=AFK_GROUP)
 @merissamsg(Filters.regex("(?i)^brb"), friendly="afk", group=AFK_GROUP)
@@ -67,6 +67,8 @@ def no_longer_afk(update, _):
     end_afk_time = get_readable_time((time.time() - float(the_heck)))
     REDIS.delete(f"afk_time_{user.id}")
     res = end_afk(user.id)
+    if "#afk" in str(message.text):
+        return
     if res:
         if message.new_chat_members:  # dont say msg
             return
@@ -156,7 +158,7 @@ def check_afk(update, _, user_id: int, fst_name: int, userc_id: int):
         else:
             res = f"<code>{fst_name}</code> is now away!\nReason: <code>{reason}</code>\n\nLast seen: <code>{since_afk}</code>"
 
-        update.effective_message.reply_text(res, parse_mode=ParseMode.HTML)
+        update.effective_message.reply_video(AFKTAG_VID, caption=res, parse_mode=ParseMode.HTML)
 
 
 def __gdpr__(user_id):
