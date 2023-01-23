@@ -11,12 +11,7 @@ from pyrogram.errors import (
 
 from MerissaRobot import pbot as app
 from MerissaRobot.Utils.errors import capture_err
-
-"""
-Credits:
-    This module belongs to https://github.com/AbirHasan2005/TG-String-Session/blob/main/genStr.py
-"""
-
+from pyromod import listen # ignore it
 
 @app.on_message(filters.command("genstr") & filters.private)
 @capture_err
