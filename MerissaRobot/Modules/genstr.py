@@ -2,11 +2,14 @@ import asyncio
 from asyncio.exceptions import TimeoutError
 
 from pyrogram import Client, filters
-from pyrogram.errors import (PhoneCodeExpired, PhoneCodeInvalid,
-                             PhoneNumberInvalid, SessionPasswordNeeded)
+from pyrogram.errors import (
+    PhoneCodeExpired,
+    PhoneCodeInvalid,
+    PhoneNumberInvalid,
+    SessionPasswordNeeded,
+)
 
 from MerissaRobot import pbot as app
-from pyromod import listen
 from MerissaRobot.Utils.errors import capture_err
 
 """
@@ -65,9 +68,7 @@ async def genstr(_, message):
         )
 
     except TimeoutError:
-        await message.reply_text(
-            "Time limit reached of 5 min. Process Cancelled."
-        )
+        await message.reply_text("Time limit reached of 5 min. Process Cancelled.")
         return
     otp_code = otp.text
     try:
