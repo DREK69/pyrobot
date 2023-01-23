@@ -8,10 +8,11 @@ from pyrogram.errors import (
     PhoneNumberInvalid,
     SessionPasswordNeeded,
 )
+from pyromod import listen  # ignore it
 
 from MerissaRobot import pbot as app
 from MerissaRobot.Utils.errors import capture_err
-from pyromod import listen # ignore it
+
 
 @app.on_message(filters.command("genstr") & filters.private)
 @capture_err
