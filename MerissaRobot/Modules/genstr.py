@@ -2,137 +2,110 @@ import asyncio
 from asyncio.exceptions import TimeoutError
 
 from pyrogram import Client, filters
-from pyrogram.errors import (
-    FloodWait,
-    PhoneCodeExpired,
-    PhoneCodeInvalid,
-    PhoneNumberInvalid,
-    SessionPasswordNeeded,
-)
-from pyrogram.types import Message
+from pyrogram.errors import (PhoneCodeExpired, PhoneCodeInvalid,
+                             PhoneNumberInvalid, SessionPasswordNeeded)
 
-from MerissaRobot import API_HASH, API_ID, pbot
+from MerissaRobot import pbot as app
+from pyromod import listen
+from MerissaRobot.Utils.errors import capture_err
 
-PHONE_NUMBER_TEXT = (
-    "📞__ Send your Phone number to Continue"
-    " include Country code.__\n**Eg:** `+13124562345`\n\n"
-    "Press /cancel to Cancel."
-)
-
-client = Client(":memory:", api_id=API_ID, api_hash=API_HASH)
+"""
+Credits:
+    This module belongs to https://github.com/AbirHasan2005/TG-String-Session/blob/main/genStr.py
+"""
 
 
-@pbot.on_message(filters.private & filters.command("genstr"))
-async def generate_str(c, m):
-    get_phone_number = await c.ask(chat_id=m.chat.id, text=PHONE_NUMBER_TEXT)
-    phone_number = get_phone_number.text
-    if await is_cancel(m, phone_number):
-        return
-    await get_phone_number.delete()
-    await get_phone_number.request.delete()
-
-    confirm = await c.ask(
-        chat_id=m.chat.id,
-        text=f"🤔 Is `{phone_number}` correct? (y/n): \n\ntype: `y` (If Yes)\ntype: `n` (If No)",
-    )
-    if await is_cancel(m, confirm.text):
-        return
-    if "y" in confirm.text.lower():
-        await confirm.delete()
-        await confirm.request.delete()
-    try:
-        code = await client.send_code(phone_number)
-        await asyncio.sleep(1)
-    except FloodWait as e:
-        await m.reply(
-            f"__Sorry to say you that you have floodwait of {e.x} Seconds 😞__"
+@app.on_message(filters.command("genstr") & filters.private)
+@capture_err
+async def genstr(_, message):
+    chat = message.chat
+    while True:
+        number = await app.ask(
+            chat.id, "Send Your Phone Number In International Format."
         )
+        if not number.text:
+            continue
+        phone = number.text.strip()
+        if phone.startswith("/"):
+            continue
+        confirm = await app.ask(
+            chat.id, f'`Is "{phone}" correct?` \n\nSend: `y`\nSend: `n`'
+        )
+        if confirm.text.startswith("/"):
+            continue
+        if "y" in confirm.text.lower():
+            break
+    try:
+        temp_client = Client(
+            ":memory:", api_id=6, api_hash="eb06d4abfb49dc3eeb1aeb98ae0f581e"
+        )
+    except Exception as e:
+        await app.send_message(chat.id, f"**ERROR:** `{str(e)}`")
         return
+    try:
+        await temp_client.connect()
+    except ConnectionError:
+        await temp_client.disconnect()
+        await temp_client.connect()
+    try:
+        code = await temp_client.send_code(phone)
+        await asyncio.sleep(2)
     except PhoneNumberInvalid:
-        await m.reply(
-            "☎ Your Phone Number is Invalid.`\n\nPress /genstr to create again."
-        )
+        await message.reply_text("Phone Number is Invalid")
         return
 
     try:
-        sent_type = {
-            "app": "Telegram App 💌",
-            "sms": "SMS 💬",
-            "call": "Phone call 📱",
-            "flash_call": "phone flash call 📲",
-        }[code.type]
-        otp = await c.ask(
-            chat_id=m.chat.id,
-            text=(
-                f"I had sent an OTP to the number `{phone_number}` through {sent_type}\n\n"
-                "Please enter the OTP in the format `1 2 3 4 5` __(provied white space between numbers)__\n\n"
-                "If Bot not sending OTP then try /genstr to restart the module.\n"
-                "Press /cancel to Cancel."
+        otp = await app.ask(
+            chat.id,
+            (
+                "An OTP is sent to your phone number, "
+                "Please enter OTP in `1 2 3 4 5` format. __(Space between each numbers!)__"
             ),
             timeout=300,
         )
+
     except TimeoutError:
-        await m.reply(
-            "**⏰ TimeOut Error:** You reached Time limit of 5 min.\nPress /genstr to create again."
+        await message.reply_text(
+            "Time limit reached of 5 min. Process Cancelled."
         )
-        return
-    if await is_cancel(m, otp.text):
         return
     otp_code = otp.text
-    await otp.delete()
-    await otp.request.delete()
     try:
-        await client.sign_in(
-            phone_number, code.phone_code_hash, phone_code=" ".join(str(otp_code))
+        await temp_client.sign_in(
+            phone, code.phone_code_hash, phone_code=" ".join(str(otp_code))
         )
     except PhoneCodeInvalid:
-        await m.reply("**📵 Invalid Code**\n\nPress /genstr to create again.")
+        await message.reply_text("Invalid OTP.")
         return
     except PhoneCodeExpired:
-        await m.reply("**⌚ Code is Expired**\n\nPress /genstr to create again.")
+        await message.reply_text("OTP is Expired.")
         return
     except SessionPasswordNeeded:
         try:
-            two_step_code = await c.ask(
-                chat_id=m.chat.id,
-                text="`🔐 This account have two-step verification code.\nPlease enter your second factor authentication code.`\nPress /cancel to Cancel.",
+            two_step_code = await app.ask(
+                chat.id,
+                "Your account have Two-Step Verification.\nPlease enter your Password.",
                 timeout=300,
             )
         except TimeoutError:
-            await m.reply(
-                "**⏰ TimeOut Error:** You reached Time limit of 5 min.\nPress /start to create again."
-            )
-            return
-        if await is_cancel(m, two_step_code.text):
+            await message.reply_text("Time limit reached of 5 min.")
             return
         new_code = two_step_code.text
-        await two_step_code.delete()
-        await two_step_code.request.delete()
         try:
-            await client.check_password(new_code)
+            await temp_client.check_password(new_code)
         except Exception as e:
-            await m.reply(f"**⚠️ ERROR:** `{str(e)}`")
+            await message.reply_text(f"**ERROR:** `{str(e)}`")
             return
-        except Exception as e:
-            await c.send_message(m.chat.id, f"**⚠️ ERROR:** `{str(e)}`")
-            return
-        try:
-            session_string = await client.export_session_string()
-            await client.send_message(
-                m.chy.id,
-                f"**Your String Session 👇**\n\n`{session_string}`\n\nThanks For using {(await c.get_me()).mention(style='md')}",
-            )
-        except Exception as e:
-            await c.send_message(m.chat.id, f"**⚠️ ERROR:** `{str(e)}`")
-            return
-        try:
-            await client.stop()
-        except:
-            pass
-
-
-async def is_cancel(msg: Message, text: str):
-    if text.startswith("/cancel"):
-        await msg.reply("⛔ Process Cancelled.")
-        return True
-    return False
+    except Exception as e:
+        await app.send_message(chat.id, f"**ERROR:** `{str(e)}`")
+        return
+    try:
+        session_string = await temp_client.export_session_string()
+        await temp_client.disconnect()
+        await app.send_message(
+            chat.id,
+            text=f"**HERE IS YOUR STRING SESSION:**\n```{session_string}```",
+        )
+    except Exception as e:
+        await app.send_message(chat.id, f"**ERROR:** `{str(e)}`")
+        return
