@@ -9,8 +9,8 @@ from pyrogram.errors import (
     PhoneNumberInvalid,
     SessionPasswordNeeded,
 )
-from pyromod import listen  # ignore it
 from pyrogram.types import *
+from pyromod import listen  # ignore it
 from telethon import TelegramClient
 from telethon.errors import (
     ApiIdInvalidError,
