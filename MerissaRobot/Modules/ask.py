@@ -3,7 +3,6 @@ from requests import get
 
 from MerissaRobot import pbot
 
-
 @pbot.on_message(filters.command("ask"))
 async def instadown(_, message):
     if len(message.command) < 2:
