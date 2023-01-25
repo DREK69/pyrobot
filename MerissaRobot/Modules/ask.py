@@ -14,4 +14,4 @@ async def instadown(_, message):
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
     x = get(f"https://api.princexd.tech/ask?text={query}").json()["answer"]
-    await message.reply_rext(f"{x}\n\nPowered by @MerissaRobot")
+    await message.reply_text(f"{x}\n\nPowered by @MerissaRobot")
