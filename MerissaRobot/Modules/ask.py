@@ -15,5 +15,5 @@ async def instadown(_, message):
     )
     x = get(f"https://api.princexd.tech/ask?text={query}").json()["answer"]
     await message.reply_text(
-        f"{x}\n\nPowered by @MerissaRobot", disable_web_page_preview=True
+        f"{x}\nPowered by @MerissaRobot", disable_web_page_preview=True
     )
