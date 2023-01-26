@@ -13,7 +13,7 @@ def rename(_, message):
 
     except AttributeError:
         update.message.reply_text("pls report @MerissaxSupport")
-    
+
     document = message.reply_to_message.document
     if document:
         if document.file_size > 10485760:
