@@ -35,8 +35,8 @@ generate_button = [[InlineKeyboardButton("Generate Session", callback_data="gene
 # Callbacks
 @pbot.on_callback_query()
 async def _callbacks(pbot, callback_query):
-    user = await pbot.get_me()
-    # user_id = callback_query.from_user.id    
+    await pbot.get_me()
+    # user_id = callback_query.from_user.id
     query = callback_query.data.lower()
     if query.startswith("generate"):
         if query == "generate":
