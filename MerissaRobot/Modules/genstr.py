@@ -1,6 +1,6 @@
 from asyncio.exceptions import TimeoutError
 
-from pyrogram import filters, Client
+from pyrogram import Client, filters
 from pyrogram.errors import (
     ApiIdInvalid,
     PasswordHashInvalid,
