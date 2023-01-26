@@ -36,8 +36,7 @@ generate_button = [[InlineKeyboardButton("Generate Session", callback_data="gene
 @pbot.on_callback_query()
 async def _callbacks(pbot, callback_query):
     user = await pbot.get_me()
-    # user_id = callback_query.from_user.id
-    user["mention"]
+    # user_id = callback_query.from_user.id    
     query = callback_query.data.lower()
     if query.startswith("generate"):
         if query == "generate":
@@ -94,8 +93,11 @@ async def _callbacks(pbot, callback_query):
 async def main(_, msg):
     await msg.reply(
         """Welcome to Merissa Pyrogram and Telethon String Session Generator.
+
 You can procees with bot's api values if you want , else you can proceed with your api values
+
 Bot has over 100+ API ID and HASH Saved , You can use them. 
+
 Press Button Below to Start Generating Session!""",
         reply_markup=InlineKeyboardMarkup(
             [
