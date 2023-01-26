@@ -232,10 +232,3 @@ from MerissaRobot.Handler.handlers import (
 tg.RegexHandler = CustomRegexHandler
 tg.CommandHandler = CustomCommandHandler
 tg.MessageHandler = CustomMessageHandler
-
-
-async def initiate_bot():
-    await pbot.start()
-
-
-loop.run_until_complete(initiate_bot())
