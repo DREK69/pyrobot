@@ -3,6 +3,7 @@ import os
 import sys
 import time
 from inspect import getfullargspec
+import asyncio
 
 import spamwatch
 import telegram.ext as tg
@@ -22,6 +23,7 @@ from config import EVENT_LOGS as ERROR_LOG
 from config import OWNER_ID
 
 StartTime = time.time()
+loop = asyncio.get_event_loop()
 
 # logging enable
 # enable logging
@@ -234,3 +236,5 @@ tg.MessageHandler = CustomMessageHandler
 
 async def initiate_bot():
     await pbot.start()
+
+loop.run_until_complete(initiate_bot())
