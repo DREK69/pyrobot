@@ -35,6 +35,7 @@ from MerissaRobot import (
     SUPPORT_CHAT,
     TOKEN,
     URL,
+    pbot,
     WEBHOOK,
     StartTime,
     dispatcher,
@@ -1012,5 +1013,5 @@ def main():
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
     telethn.start(bot_token=TOKEN)
-    await pbot.start()
+    pbot.start()
     main()
