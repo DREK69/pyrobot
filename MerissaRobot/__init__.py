@@ -15,6 +15,7 @@ from redis import StrictRedis
 from telethon import TelegramClient
 from telethon.sessions import MemorySession, StringSession
 
+from pyromod import listen # ignore it
 from config import *
 from config import BOT_USERNAME
 from config import EVENT_LOGS as ERROR_LOG
