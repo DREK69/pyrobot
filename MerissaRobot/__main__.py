@@ -38,7 +38,6 @@ from MerissaRobot import (
     WEBHOOK,
     StartTime,
     dispatcher,
-    pbot,
     telethn,
     updater,
 )
