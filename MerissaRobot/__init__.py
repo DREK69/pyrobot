@@ -22,7 +22,6 @@ from config import EVENT_LOGS as ERROR_LOG
 from config import OWNER_ID
 
 StartTime = time.time()
-loop = asyncio.get_event_loop()
 
 # logging enable
 # enable logging
