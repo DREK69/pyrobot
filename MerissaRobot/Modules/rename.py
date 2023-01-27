@@ -14,12 +14,12 @@ def rename(_, message):
     except AttributeError:
         update.message.reply_text("pls report @MerissaxSupport")
 
-    document = message.reply_to_message.document
+    reply = message.reply_to_message
     if document:
-        if document.file_size > 10485760:
+        if reply.document.file_size > 10485760:
             return message.reply_text("You can only rename files smaller than 10MB.")
         x = message.reply_text("📥 Downloading.....")
-        path = document.download(file_name=filename)
+        path = reply.download(file_name=filename)
         x.edit("📤 Uploading.....")
         message.reply_document(path)
         os.remove(path)
