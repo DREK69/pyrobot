@@ -1,14 +1,16 @@
+import random
+
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from requests import get
-import random 
 
 from MerissaRobot import pbot
 
 link = [
-          "https://en.ephoto360.com/create-digital-glitch-text-effects-online-767.html"
-          "https://en.ephoto360.com/online-blackpink-style-logo-maker-effect-711.html"
-       ]
+    "https://en.ephoto360.com/create-digital-glitch-text-effects-online-767.html"
+    "https://en.ephoto360.com/online-blackpink-style-logo-maker-effect-711.html"
+]
+
 
 @pbot.on_message(filters.command("hqlogo"))
 async def movie(_, message):
@@ -23,7 +25,9 @@ async def movie(_, message):
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
     ranlink = random.choice(link)
-    url = get(f"https://api.akuari.my.id/ephoto/scraper-1?text={name}&link={ranlink}").json()["url"]
+    url = get(
+        f"https://api.akuari.my.id/ephoto/scraper-1?text={name}&link={ranlink}"
+    ).json()["url"]
     button = InlineKeyboardMarkup(
         [
             [
