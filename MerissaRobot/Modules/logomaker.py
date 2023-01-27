@@ -49,18 +49,17 @@ async def makelogo(event):
     quew = event.pattern_match.group(1).strip()
     if not quew:
         await event.reply("Provide Some Text To Draw! Example: /logo <your name>")
-        return
-    randBg, randFont = "", ""
+        return    
     if event.reply_to_msg_id:
         temp = await event.get_reply_message()
         if temp.media:
             if hasattr(temp.media, "document"):
                 if "font" in temp.file.mime_type:
-                    randFont = await temp.download_media()
+                    font_ = await temp.download_media()
                 elif (".ttf" in temp.file.name) or (".otf" in temp.file.name):
-                    randFont = await temp.download_media()
+                    font_ = await temp.download_media()
             elif "pic" in mediainfo(temp.media):
-                randBg = await temp.download_media()
+                bg_ = await temp.download_media()
     else:
         pass
     msg = await event.reply("Creating your logo...wait!")
@@ -135,8 +134,6 @@ async def makelogo(event):
             "https://telegra.ph/file/550aa046ab930967bc377.jpg",
             "https://telegra.ph/file/7c1696bc94225779d656a.jpg",
         ]
-        if not randBg:
-            randBg = random.choice(bg)
 
         allFonts = [
             "font(1).otf",
@@ -271,6 +268,35 @@ async def makelogo(event):
         if os.path.exists(fname2):
             os.remove(fname2)
 
+        if bg_:
+            img = Image.open(bg_)
+            blueimg = img.filter(ImageFilter.BoxBlur(1))
+            draw = ImageDraw.Draw(blueimg)
+            imgSize = blueimg.size
+            image_widthz, image_heightz = img.size
+            font = ImageFont.truetype(
+                f"./MerissaRobot/Utils/Resources/font/{randFont}", fontSize
+            )
+            textSize = font.getsize(upper_text)
+            while textSize[0] > imgSize[0] - 100:
+                fontSize -= 1
+                font = ImageFont.truetype(
+                    f"./MerissaRobot/Utils/Resources/font/{randFont}", fontSize
+                )
+                textSize = font.getsize(upper_text)
+            w, h = draw.textsize(upper_text, font=font)
+            h += int(h * 0.5)
+            image_width, image_height = blueimg.size
+            x = (image_widthz - w) / 2
+            y = (image_heightz - h) / 1.9 + 6
+            draw.text(
+                (x, y),
+                upper_text,
+                font=font,
+                fill="white",
+                stroke_width=1,
+                stroke_fill="black",
+            )                
     except Exception:
         await msg.edit(
             f"Please Try Again! \nif you're getting Error again and again then Report @MerissaxSupport"
