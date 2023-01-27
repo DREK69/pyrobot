@@ -27,7 +27,7 @@ async def movie(_, message):
     ranlink = random.choice(link)
     url = get(
         f"https://api.akuari.my.id/ephoto/scraper-1?text={name}&link={ranlink}"
-    ).json()["url"]
+    ).json()["respon"]
     button = InlineKeyboardMarkup(
         [
             [
