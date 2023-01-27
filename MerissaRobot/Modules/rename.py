@@ -15,7 +15,7 @@ def rename(_, message):
         update.message.reply_text("pls report @MerissaxSupport")
 
     reply = message.reply_to_message
-    if document:
+    if reply:
         if reply.document.file_size > 10485760:
             return message.reply_text("You can only rename files smaller than 10MB.")
         x = message.reply_text("📥 Downloading.....")
