@@ -49,15 +49,15 @@ async def makelogo(event):
     quew = event.pattern_match.group(1).strip()
     if not quew:
         await event.reply("Provide Some Text To Draw! Example: /logo <your name>")
-        return    
+        return
     if event.reply_to_msg_id:
         temp = await event.get_reply_message()
         if temp.media:
             if hasattr(temp.media, "document"):
                 if "font" in temp.file.mime_type:
-                    font_ = await temp.download_media()
+                    await temp.download_media()
                 elif (".ttf" in temp.file.name) or (".otf" in temp.file.name):
-                    font_ = await temp.download_media()
+                    await temp.download_media()
             elif "pic" in mediainfo(temp.media):
                 bg_ = await temp.download_media()
     else:
@@ -296,7 +296,7 @@ async def makelogo(event):
                 fill="white",
                 stroke_width=1,
                 stroke_fill="black",
-            )                
+            )
     except Exception:
         await msg.edit(
             f"Please Try Again! \nif you're getting Error again and again then Report @MerissaxSupport"
