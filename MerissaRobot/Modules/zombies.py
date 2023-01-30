@@ -1,11 +1,12 @@
+import asyncio
 from asyncio import sleep
 
 from telethon import events
 from telethon.errors import ChatAdminRequiredError, UserAdminInvalidError
 from telethon.tl.functions.channels import EditBannedRequest
-from telethon.tl.types import ChannelParticipantsAdmins, ChatBannedRights
+from telethon.tl.types import ChatBannedRights, ChannelParticipantsAdmins
 
-from MerissaRobot import DEMONS, DEV_USERS, DRAGONS, OWNER_ID, telethn
+from MerissaRobot import telethn, OWNER_ID, DEV_USERS, DRAGONS, DEMONS
 
 # =================== CONSTANT ===================
 
@@ -36,8 +37,6 @@ UNBAN_RIGHTS = ChatBannedRights(
 OFFICERS = [OWNER_ID] + DEV_USERS + DRAGONS + DEMONS
 
 # Check if user has admin rights
-
-
 async def is_administrator(user_id: int, message):
     admin = False
     async for user in telethn.iter_participants(
@@ -49,57 +48,115 @@ async def is_administrator(user_id: int, message):
     return admin
 
 
-@telethn.on(events.NewMessage(pattern="^[!/]zombies ?(.*)"))
-async def rm_deletedacc(show):
-    con = show.pattern_match.group(1).lower()
+
+@telethn.on(events.NewMessage(pattern=f"^[!/]zombies ?(.*)"))
+async def zombies(event):
+    """ For .zombies command, list all the zombies in a chat. """
+
+    con = event.pattern_match.group(1).lower()
     del_u = 0
-    del_status = "**Group clean, not found the deleted account.**"
+    del_status = "No Deleted Accounts Found, Group Is Clean."
+
     if con != "clean":
-        kontol = await show.reply("`Searching deleted account...`")
-        async for user in show.client.iter_participants(show.chat_id):
+        find_zombies = await event.respond("Searching For Zombies...")
+        async for user in event.client.iter_participants(event.chat_id):
+
             if user.deleted:
                 del_u += 1
                 await sleep(1)
         if del_u > 0:
-            del_status = (
-                f"**Founding** `{del_u}` **Deleted account/Zombie On this group,"
-                "\nClean it with command** `/zombies clean`"
-            )
-        return await kontol.edit(del_status)
-    chat = await show.get_chat()
+            del_status = f"Found **{del_u}** Zombies In This Group.\
+            \nClean Them By Using - `/zombies clean`"
+        await find_zombies.edit(del_status)
+        return
+
+    # Here laying the sanity check
+    chat = await event.get_chat()
     admin = chat.admin_rights
     creator = chat.creator
+
+    # Well
+    if not await is_administrator(user_id=event.from_id, message=event):
+        await event.respond("You're Not An Admin!")
+        return
+
     if not admin and not creator:
-        return await show.reply("**Sorry you're not admin!**")
-    memek = await show.reply("`Deleting deleted account...`")
+        await event.respond("I Am Not An Admin Here!")
+        return
+
+    cleaning_zombies = await event.respond("Cleaning Zombies...")
     del_u = 0
     del_a = 0
-    async for user in telethn.iter_participants(show.chat_id):
+
+    async for user in event.client.iter_participants(event.chat_id):
         if user.deleted:
             try:
-                await show.client(
-                    EditBannedRequest(show.chat_id, user.id, BANNED_RIGHTS)
+                await event.client(
+                    EditBannedRequest(event.chat_id, user.id, BANNED_RIGHTS)
                 )
             except ChatAdminRequiredError:
-                return await show.edit("`Not have a banned rights on this group`")
+                await cleaning_zombies.edit("I Don't Have Ban Rights In This Group.")
+                return
             except UserAdminInvalidError:
                 del_u -= 1
                 del_a += 1
-            await telethn(EditBannedRequest(show.chat_id, user.id, UNBAN_RIGHTS))
+            await event.client(EditBannedRequest(event.chat_id, user.id, UNBAN_RIGHTS))
             del_u += 1
+
     if del_u > 0:
-        del_status = f"**Cleaned** `{del_u}` **Zombies**"
+        del_status = f"Cleaned `{del_u}` Zombies"
+
     if del_a > 0:
-        del_status = (
-            f"**Cleaned** `{del_u}` **Zombies** "
-            f"\n`{del_a}` **Admin zombies not deleted.**"
-        )
-    await memek.edit(del_status)
+        del_status = f"Cleaned `{del_u}` Zombies \
+        \n`{del_a}` Zombie Admin Accounts Are Not Removed!"
 
+    await cleaning_zombies.edit(del_status)
+    
+    
+from telethon.tl.types import UserStatusLastMonth, UserStatusLastWeek, ChatBannedRights
+from Sophia.events import register
+from telethon import *
+from telethon.tl.functions.channels import (EditBannedRequest)
+                                            
 
-__mod_name__ = "Zombies ☠️"
+@register(pattern="^/kickthefools")
+async def _(event):
+    if event.fwd_from:
+        return
+    chat = await event.get_chat()
+    admin = chat.admin_rights
+    creator = chat.creator
+    if not event.chat.admin_rights.ban_users:
+        return
+    if not admin and not creator:
+        await event.reply("I am not admin here !")
+        return
+    c = 0
+    KICK_RIGHTS = ChatBannedRights(until_date=None, view_messages=True)
+    await event.reply("Searching Participant Lists...")
+    async for i in event.client.iter_participants(event.chat_id):
+
+        if isinstance(i.status, UserStatusLastMonth):
+            status = await event.client(EditBannedRequest(event.chat_id, i, KICK_RIGHTS))
+            if not status:
+               return
+            else:
+               c = c + 1
+                    
+        if isinstance(i.status, UserStatusLastMonth):
+            status = await event.client(EditBannedRequest(event.chat_id, i, KICK_RIGHTS))
+            if not status:
+               return
+            else:
+               c = c + 1                    
+
+    required_string = "Successfully Kicked **{}** users"
+    await event.reply(required_string.format(c))
 
 __help__ = """
-Remove Deleted Accounts
- ❍ /zombies : Starts searching for deleted accounts in the group.
- ❍ /zombies clean : Removes the deleted accounts from the group."""
+ - /zombies : Searching For Deleted Account
+ - /zombies clean :  Clean The Deleted Account In The Group 
+ - /kickthefools :  Kicking The Foolers In Group
+ """
+
+__mod_name__ = "Zombies ☠️"
