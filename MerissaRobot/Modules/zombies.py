@@ -3,10 +3,14 @@ from asyncio import sleep
 from telethon import events
 from telethon.errors import ChatAdminRequiredError, UserAdminInvalidError
 from telethon.tl.functions.channels import EditBannedRequest
-from telethon.tl.types import ChannelParticipantsAdmins, ChatBannedRights, UserStatusLastMonth
+from telethon.tl.types import (
+    ChannelParticipantsAdmins,
+    ChatBannedRights,
+    UserStatusLastMonth,
+)
 
-from MerissaRobot.events import register
 from MerissaRobot import DEMONS, DEV_USERS, DRAGONS, OWNER_ID, telethn
+from MerissaRobot.events import register
 
 # =================== CONSTANT ===================
 
@@ -110,6 +114,7 @@ async def zombies(event):
         \n`{del_a}` Zombie Admin Accounts Are Not Removed!"
 
     await cleaning_zombies.edit(del_status)
+
 
 @register(pattern="^/kickthefools")
 async def _(event):
