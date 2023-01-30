@@ -1,12 +1,11 @@
-import asyncio
 from asyncio import sleep
 
 from telethon import events
 from telethon.errors import ChatAdminRequiredError, UserAdminInvalidError
 from telethon.tl.functions.channels import EditBannedRequest
-from telethon.tl.types import ChatBannedRights, ChannelParticipantsAdmins
+from telethon.tl.types import ChannelParticipantsAdmins, ChatBannedRights
 
-from MerissaRobot import telethn, OWNER_ID, DEV_USERS, DRAGONS, DEMONS
+from MerissaRobot import DEMONS, DEV_USERS, DRAGONS, OWNER_ID, telethn
 
 # =================== CONSTANT ===================
 
@@ -48,10 +47,9 @@ async def is_administrator(user_id: int, message):
     return admin
 
 
-
 @telethn.on(events.NewMessage(pattern=f"^[!/]zombies ?(.*)"))
 async def zombies(event):
-    """ For .zombies command, list all the zombies in a chat. """
+    """For .zombies command, list all the zombies in a chat."""
 
     con = event.pattern_match.group(1).lower()
     del_u = 0
@@ -111,13 +109,12 @@ async def zombies(event):
         \n`{del_a}` Zombie Admin Accounts Are Not Removed!"
 
     await cleaning_zombies.edit(del_status)
-    
-    
-from telethon.tl.types import UserStatusLastMonth, UserStatusLastWeek, ChatBannedRights
+
+
 from Sophia.events import register
-from telethon import *
-from telethon.tl.functions.channels import (EditBannedRequest)
-                                            
+from telethon.tl.functions.channels import EditBannedRequest
+from telethon.tl.types import ChatBannedRights, UserStatusLastMonth
+
 
 @register(pattern="^/kickthefools")
 async def _(event):
@@ -137,21 +134,26 @@ async def _(event):
     async for i in event.client.iter_participants(event.chat_id):
 
         if isinstance(i.status, UserStatusLastMonth):
-            status = await event.client(EditBannedRequest(event.chat_id, i, KICK_RIGHTS))
+            status = await event.client(
+                EditBannedRequest(event.chat_id, i, KICK_RIGHTS)
+            )
             if not status:
-               return
+                return
             else:
-               c = c + 1
-                    
+                c = c + 1
+
         if isinstance(i.status, UserStatusLastMonth):
-            status = await event.client(EditBannedRequest(event.chat_id, i, KICK_RIGHTS))
+            status = await event.client(
+                EditBannedRequest(event.chat_id, i, KICK_RIGHTS)
+            )
             if not status:
-               return
+                return
             else:
-               c = c + 1                    
+                c = c + 1
 
     required_string = "Successfully Kicked **{}** users"
     await event.reply(required_string.format(c))
+
 
 __help__ = """
  - /zombies : Searching For Deleted Account
