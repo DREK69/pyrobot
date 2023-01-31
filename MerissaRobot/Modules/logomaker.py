@@ -221,6 +221,11 @@ async def makelogo(event):
         if os.path.exists(fname2):
             os.remove(fname2)
 
+    except Exception:
+        await msg.edit(
+            f"Please Try Again! \nif you're getting Error again and again then Report @MerissaxSupport"
+        )
+
 __mod_name__ = "Logo 🎇"
 
 __help__ = """ 
