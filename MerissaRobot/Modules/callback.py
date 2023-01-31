@@ -296,21 +296,26 @@ Voice Chat Invite Members Allerts ETC..
         )
     elif query.data == "cb_fed":
         query.message.edit_text(
-            text="""──「 Help of Feds Module 」──
-
-Everything is fun, until a spammer starts entering your group, and you have to block it. Then you need to start banning more, and more, and it hurts.
-But then you have many groups, and you don't want this spammer to be in one of your groups - how can you deal? Do you have to manually block it, in all your groups?
-
-No longer! With Federation, you can make a ban in one chat overlap with all other chats.
-
-You can even designate federation admins, so your trusted admin can ban all the spammers from chats you want to protect.
+            text="""Ah, group management. It's all fun and games, until you start getting spammers in, and you need to ban them. Then you need to start banning more, and more, and it gets painful.
+But then you have multiple groups, and you don't want these spammers in any of your groups - how can you deal? Do you have to ban them manually, in all your groups?
+No more! With federations, you can make a ban in one chat overlap to all your other chats.
+You can even appoint federation admins, so that your trustworthy admins can ban across all the chats that you want to protect.
 
 Commands:
-
-Feds are now divided into 3 sections for your ease.
-• /fedownerhelp: Provides help for fed creation and owner only commands
-• /fedadminhelp: Provides help for fed administration commands
-• /feduserhelp: Provides help for commands anyone can use""",
+ - /newfed <fedname>: creates a new federation with the given name. Users are only allowed to own one federation. This method can also be used to change the federation name. (max 64 characters)
+ - /delfed: deletes your federation, and any information relating to it. Will not unban any banned users.
+ - /fedinfo <FedID>: information about the specified federation.
+ - /joinfed <FedID>: joins the current chat to the federation. Only chat owners can do this. Each chat can only be in one federation.
+ - /leavefed <FedID>: leaves the given federation. Only chat owners can do this.
+ - /fpromote <user>: promotes the user to fed admin. Fed owner only.
+ - /fdemote <user>: demotes the user from fed admin to normal user. Fed owner only.
+ - /fban <user>: bans a user from all federations that this chat is in, and that the executor has control over.
+ - /unfban <user>: unbans a user from all federations that this chat is in, and that the executor has control over.
+ - /setfrules: Set federation rules
+ - /frules: Show federation rules
+ - /chatfed: Show the federation the chat is in
+ - /fedadmins: Show the federation admins
+""",
             reply_markup=InlineKeyboardMarkup(
                 [[InlineKeyboardButton("🔙 Back", callback_data="cb_admin")]]
             ),
