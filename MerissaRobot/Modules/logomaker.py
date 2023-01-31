@@ -9,59 +9,12 @@ from MerissaRobot import telethn as bot
 from MerissaRobot.events import register
 
 
-def mediainfo(media):
-    xx = str((str(media)).split("(", maxsplit=1)[0])
-    m = ""
-    if xx == "MessageMediaDocument":
-        mim = media.document.mime_type
-        if mim == "application/x-tgsticker":
-            m = "sticker animated"
-        elif "image" in mim:
-            if mim == "image/webp":
-                m = "sticker"
-            elif mim == "image/gif":
-                m = "gif as doc"
-            else:
-                m = "pic as doc"
-        elif "video" in mim:
-            if "DocumentAttributeAnimated" in str(media):
-                m = "gif"
-            elif "DocumentAttributeVideo" in str(media):
-                i = str(media.document.attributes[0])
-                if "supports_streaming=True" in i:
-                    m = "video"
-                m = "video as doc"
-            else:
-                m = "video"
-        elif "audio" in mim:
-            m = "audio"
-        else:
-            m = "document"
-    elif xx == "MessageMediaPhoto":
-        m = "pic"
-    elif xx == "MessageMediaWebPage":
-        m = "web"
-    return m
-
-
 @register(pattern="^/logo ?(.*)")
 async def makelogo(event):
     quew = event.pattern_match.group(1).strip()
     if not quew:
         await event.reply("Provide Some Text To Draw! Example: /logo <your name>")
         return
-    if event.reply_to_msg_id:
-        temp = await event.get_reply_message()
-        if temp.media:
-            if hasattr(temp.media, "document"):
-                if "font" in temp.file.mime_type:
-                    await temp.download_media()
-                elif (".ttf" in temp.file.name) or (".otf" in temp.file.name):
-                    await temp.download_media()
-            elif "pic" in mediainfo(temp.media):
-                bg_ = await temp.download_media()
-    else:
-        pass
     msg = await event.reply("Creating your logo...wait!")
     try:
         text = quew
@@ -267,47 +220,6 @@ async def makelogo(event):
         await bot.send_file(event.chat_id, fname2, caption="Made By @MerissaRobot")
         if os.path.exists(fname2):
             os.remove(fname2)
-
-        if bg_:
-            img = Image.open(bg_)
-            blueimg = img.filter(ImageFilter.BoxBlur(1))
-            draw = ImageDraw.Draw(blueimg)
-            imgSize = blueimg.size
-            image_widthz, image_heightz = img.size
-            font = ImageFont.truetype(
-                f"./MerissaRobot/Utils/Resources/font/{randFont}", fontSize
-            )
-            textSize = font.getsize(upper_text)
-            while textSize[0] > imgSize[0] - 100:
-                fontSize -= 1
-                font = ImageFont.truetype(
-                    f"./MerissaRobot/Utils/Resources/font/{randFont}", fontSize
-                )
-                textSize = font.getsize(upper_text)
-            w, h = draw.textsize(upper_text, font=font)
-            h += int(h * 0.5)
-            image_width, image_height = blueimg.size
-            x = (image_widthz - w) / 2
-            y = (image_heightz - h) / 1.9 + 6
-            draw.text(
-                (x, y),
-                upper_text,
-                font=font,
-                fill="white",
-                stroke_width=1,
-                stroke_fill="black",
-            )
-        fname2 = "logo.png"
-        blueimg.save(fname2, "png")
-        await msg.delete()
-        await bot.send_file(event.chat_id, fname2, caption="Made By @MerissaRobot")
-        if os.path.exists(fname2):
-            os.remove(fname2)
-    except Exception:
-        await msg.edit(
-            f"Please Try Again! \nif you're getting Error again and again then Report @MerissaxSupport"
-        )
-
 
 __mod_name__ = "Logo 🎇"
 
