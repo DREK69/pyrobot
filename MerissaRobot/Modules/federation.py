@@ -1081,3 +1081,28 @@ async def sk(event):
 
         except Exception as e:
             await event.reply(f"{e}")
+
+
+__mod_name__ = "Federations"
+
+__help__ = """
+Ah, group management. It's all fun and games, until you start getting spammers in, and you need to ban them. Then you need to start banning more, and more, and it gets painful.
+But then you have multiple groups, and you don't want these spammers in any of your groups - how can you deal? Do you have to ban them manually, in all your groups?
+No more! With federations, you can make a ban in one chat overlap to all your other chats.
+You can even appoint federation admins, so that your trustworthy admins can ban across all the chats that you want to protect.
+
+Commands:
+ - /newfed <fedname>: creates a new federation with the given name. Users are only allowed to own one federation. This method can also be used to change the federation name. (max 64 characters)
+ - /delfed: deletes your federation, and any information relating to it. Will not unban any banned users.
+ - /fedinfo <FedID>: information about the specified federation.
+ - /joinfed <FedID>: joins the current chat to the federation. Only chat owners can do this. Each chat can only be in one federation.
+ - /leavefed <FedID>: leaves the given federation. Only chat owners can do this.
+ - /fpromote <user>: promotes the user to fed admin. Fed owner only.
+ - /fdemote <user>: demotes the user from fed admin to normal user. Fed owner only.
+ - /fban <user>: bans a user from all federations that this chat is in, and that the executor has control over.
+ - /unfban <user>: unbans a user from all federations that this chat is in, and that the executor has control over.
+ - /setfrules: Set federation rules
+ - /frules: Show federation rules
+ - /chatfed: Show the federation the chat is in
+ - /fedadmins: Show the federation admins
+"""
