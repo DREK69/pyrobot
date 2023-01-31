@@ -7,11 +7,11 @@ from requests import get
 from MerissaRobot import pbot
 
 link = [
-    "https://en.ephoto360.com/create-digital-glitch-text-effects-online-767.html"
-    "https://en.ephoto360.com/online-blackpink-style-logo-maker-effect-711.html"
-    "https://en.ephoto360.com/create-impressive-neon-glitch-text-effects-online-768.html"
-    "https://en.ephoto360.com/create-blackpink-logo-online-free-607.html"
-    "https://en.ephoto360.com/create-3d-gradient-text-effect-online-600.html"
+    "https://en.ephoto360.com/create-digital-glitch-text-effects-online-767.html",
+    "https://en.ephoto360.com/online-blackpink-style-logo-maker-effect-711.html",
+    "https://en.ephoto360.com/create-impressive-neon-glitch-text-effects-online-768.html",
+    "https://en.ephoto360.com/create-blackpink-logo-online-free-607.html",
+    "https://en.ephoto360.com/create-3d-gradient-text-effect-online-600.html",
     "https://en.ephoto360.com/neon-devil-wings-text-effect-online-683.html"
 ]
 
