@@ -1,3 +1,4 @@
+from requests import get
 from pyrogram import filters
 
 from MerissaRobot import pbot
