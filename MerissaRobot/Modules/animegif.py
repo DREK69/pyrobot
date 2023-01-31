@@ -1,7 +1,7 @@
-import requests 
-
 from pyrogram import filters
+
 from MerissaRobot import pbot
+
 
 @pbot.on_message(filters.command("hug"))
 async def animegif(_, message):
@@ -9,7 +9,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("cuddle"))
 async def animegif(_, message):
@@ -17,7 +18,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("poke"))
 async def animegif(_, message):
@@ -25,7 +27,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("facepalm"))
 async def animegif(_, message):
@@ -33,7 +36,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("stare"))
 async def animegif(_, message):
@@ -41,7 +45,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("pout"))
 async def animegif(_, message):
@@ -49,7 +54,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("handhold"))
 async def animegif(_, message):
@@ -57,7 +63,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("wave"))
 async def animegif(_, message):
@@ -65,7 +72,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("blush"))
 async def animegif(_, message):
@@ -73,7 +81,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("dance"))
 async def animegif(_, message):
@@ -81,7 +90,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("baka"))
 async def animegif(_, message):
@@ -89,7 +99,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("bore"))
 async def animegif(_, message):
@@ -97,7 +108,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("laugh"))
 async def animegif(_, message):
@@ -105,7 +117,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("smug"))
 async def animegif(_, message):
@@ -113,7 +126,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("thumbsup"))
 async def animegif(_, message):
@@ -121,7 +135,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("shoot"))
 async def animegif(_, message):
@@ -129,7 +144,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("tickle"))
 async def animegif(_, message):
@@ -137,7 +153,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("feed"))
 async def animegif(_, message):
@@ -145,7 +162,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("think"))
 async def animegif(_, message):
@@ -153,7 +171,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("wink"))
 async def animegif(_, message):
@@ -161,7 +180,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("sleep"))
 async def animegif(_, message):
@@ -169,7 +189,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("punch"))
 async def animegif(_, message):
@@ -177,7 +198,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("cry"))
 async def animegif(_, message):
@@ -185,7 +207,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("kill"))
 async def animegif(_, message):
@@ -193,7 +216,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("smile"))
 async def animegif(_, message):
@@ -201,7 +225,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("highfive"))
 async def animegif(_, message):
@@ -209,7 +234,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("kick"))
 async def animegif(_, message):
@@ -217,7 +243,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("slap"))
 async def animegif(_, message):
@@ -225,7 +252,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("pat"))
 async def animegif(_, message):
@@ -233,7 +261,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("boobs"))
 async def animegif(_, message):
@@ -241,7 +270,8 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
+
 
 @pbot.on_message(filters.command("hentai"))
 async def animegif(_, message):
@@ -249,4 +279,4 @@ async def animegif(_, message):
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
-    ) 
+    )
