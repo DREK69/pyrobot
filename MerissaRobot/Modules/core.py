@@ -11,8 +11,7 @@ async def Prof(event):
     if event.sender_id == OWNER_ID:
         pass
     else:
-        return
-    thumb = water
+        return    
     message_id = event.message.id
     input_str = event.pattern_match.group(1)
     the_plugin_file = "./MerissaRobot/Modules/{}.py".format(input_str)
