@@ -48,7 +48,6 @@ def clean_blue_text_must_click(update: Update, context: CallbackContext):
         if len(fst_word) > 1 and any(
             fst_word.startswith(start) for start in CMD_STARTERS
         ):
-
             command = fst_word[1:].split("@")
             chat = update.effective_chat
 
@@ -182,7 +181,6 @@ def remove_bluetext_ignore_global(update: Update, context: CallbackContext):
 
 @dev_plus
 def bluetext_ignore_list(update: Update, context: CallbackContext):
-
     message = update.effective_message
     chat = update.effective_chat
 

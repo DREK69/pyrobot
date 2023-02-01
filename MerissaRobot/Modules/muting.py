@@ -32,7 +32,6 @@ from MerissaRobot.Modules.log_channel import loggable
 
 
 def check_user(user_id: int, bot: Bot, chat: Chat) -> Optional[str]:
-
     if not user_id:
         reply = "⚠️ User not found"
         return reply

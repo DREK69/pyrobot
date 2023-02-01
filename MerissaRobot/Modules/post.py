@@ -6,7 +6,6 @@ from MerissaRobot import pbot
 
 @pbot.on_message(filters.private & filters.reply & filters.command(["post"]), group=1)
 async def post(bot, update):
-
     if (update.text == "post") or (" " not in update.text):
         return
 
@@ -42,7 +41,6 @@ async def post(bot, update):
 
 @pbot.on_message(filters.private & filters.reply & filters.command(["edit"]), group=2)
 async def edit(bot, update):
-
     if update.text == "/edit":
         return
 

@@ -7,7 +7,6 @@ from MerissaRobot import pbot as bot
 
 @bot.on_message(filters.command("rename"))
 def rename(_, message):
-
     try:
         filename = message.text.replace(message.text.split(" ")[0], "")
 

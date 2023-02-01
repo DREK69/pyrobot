@@ -290,7 +290,6 @@ def kang(update, context):
                 )
 
             except OSError as e:
-
                 print(e)
                 return
 

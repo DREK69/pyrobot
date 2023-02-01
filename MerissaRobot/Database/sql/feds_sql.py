@@ -739,7 +739,6 @@ def subs_fed(fed_id, my_fed):
 
 
 def add_sub(my_fed, fed_id):  # LEGENDX22 IS BEST
-
     mime = FedSubs(my_fed, fed_id)
 
     SESSION.merge(mime)  # merge to avoid duplicate key issues
@@ -768,7 +767,6 @@ def unsubs_fed(fed_id, my_fed):
 
 
 def rem_sub(my_fed, fed_id):
-
     sox = SESSION.query(FedSubs).get((my_fed, fed_id))
     if sox:
         if fed_id in MYFEDS_SUBSCRIBER.get(my_fed, set()):  # sanity check

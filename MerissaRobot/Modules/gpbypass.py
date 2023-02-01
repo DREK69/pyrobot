@@ -34,7 +34,6 @@ def gp(url):
 
 @bot.on_message(filters.command("gp", prefixes=["/", ".", "?", "-"]) & ~filters.private)
 async def gplink(_, message):
-
     link = message.command[1]
 
     gpLink = gp(url=link)

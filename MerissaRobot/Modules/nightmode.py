@@ -14,7 +14,6 @@ from MerissaRobot.events import register
 
 async def is_register_admin(chat, user):
     if isinstance(chat, (types.InputPeerChannel, types.InputChannel)):
-
         return isinstance(
             (
                 await tbot(functions.channels.GetParticipantRequest(chat, user))
@@ -22,7 +21,6 @@ async def is_register_admin(chat, user):
             (types.ChannelParticipantAdmin, types.ChannelParticipantCreator),
         )
     elif isinstance(chat, types.InputPeerChat):
-
         ui = await tbot.get_peer_id(user)
         ps = (
             await tbot(functions.messages.GetFullChatRequest(chat.chat_id))

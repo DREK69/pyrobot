@@ -32,7 +32,6 @@ async def _(event):
     if nbx == "0":
         await event.reply("No Books Found with that name.")
     else:
-
         for tr in soup.find_all("td"):
             for td in tr.find_all("h3"):
                 for ts in td.find_all("a"):

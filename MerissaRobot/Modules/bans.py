@@ -329,7 +329,6 @@ def dkick(update, context):
 
     res = chat.unban_member(user_id)  # unban on current user = kick
     if res:
-
         context.bot.sendMessage(
             chat.id,
             "Admin {} has successfully kicked {} in <b>{}</b>!".format(
