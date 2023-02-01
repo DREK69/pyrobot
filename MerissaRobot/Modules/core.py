@@ -4,9 +4,7 @@ from MerissaRobot import OWNER_ID
 from MerissaRobot import telethn as tbot
 from MerissaRobot.events import register
 
-water = "./Downloads/innexia.png"
 client = tbot
-
 
 @register(pattern=r"^/send ?(.*)")
 async def Prof(event):
@@ -24,8 +22,7 @@ async def Prof(event):
             event.chat_id,
             the_plugin_file,
             force_document=True,
-            allow_cache=False,
-            thumb=thumb,
+            allow_cache=False,           
             reply_to=message_id,
         )
     else:
