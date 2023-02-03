@@ -7,8 +7,10 @@ from MerissaRobot import pbot
 @pbot.on_message(filters.command("genmail"))
 async def gen_mail(_, message):
     x = get(f"https://api.princexd.tech/emailgen").json()["email"]
-    await message.reply_text(f"Email - {x}\n\nPowered by @MerissaRobot",
+    await message.reply_text(
+        f"Email - {x}\n\nPowered by @MerissaRobot",
     )
+
 
 @pbot.on_message(filters.command("mails"))
 async def movie(_, message):
@@ -21,7 +23,9 @@ async def movie(_, message):
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    url = get(f"https://api.princexd.tech/receivedmails?email={email}").json()[0]["body_text"]
+    url = get(f"https://api.princexd.tech/receivedmails?email={email}").json()[0][
+        "body_text"
+    ]
     await message.reply_text(
-        text=body_text,       
+        text=body_text,
     )
