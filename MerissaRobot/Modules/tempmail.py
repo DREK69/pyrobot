@@ -23,9 +23,7 @@ async def movie(_, message):
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    x = get(f"https://api.princexd.tech/receivedmails?email={email}").json()[0][
-        "body_text"
-    ]
+    x = get(f"https://api.princexd.tech/receivedmails?email={email}").json()[0]
     cu = x["from"]
     from = cu.replace("<","").replace(">", "")
     to = x["to"]
