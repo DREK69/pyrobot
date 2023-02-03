@@ -25,10 +25,10 @@ async def movie(_, message):
     )
     x = get(f"https://api.princexd.tech/receivedmails?email={email}").json()[0]
     cu = x["from"]
-    from = cu.replace("<","").replace(">", "")
+    fr = cu.replace("<","").replace(">", "")
     to = x["to"]
     subject = x["subject"]
     text = x["body_text"]
     await message.reply_text(
-        text=f"From = {from}\nTo = {to}\n\nSubject = {subject}\nBody = {text}\n\nPowered By @MerissaRobot",
+        text=f"From = {fr}\nTo = {to}\n\nSubject = {subject}\nBody = {text}\n\nPowered By @MerissaRobot",
     )
