@@ -27,10 +27,10 @@ async def movie(_, message):
         "body_text"
     ]
     cu = x["from"]
-    From = cu.replace("<","").replace(">", "")
+    from = cu.replace("<","").replace(">", "")
     to = x["to"]
     subject = x["subject"]
     text = x["body_text"]
     await message.reply_text(
-        text=f"From = {fr}\nTo = {to}\n\nSubject = {subject}\nBody = {text}\n\nPowered By @MerissaRobot",
+        text=f"From = {from}\nTo = {to}\n\nSubject = {subject}\nBody = {text}\n\nPowered By @MerissaRobot",
     )
