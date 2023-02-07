@@ -76,7 +76,7 @@ def movie_result(update, context) -> None:
     caption = f"⚡ Fast Download Links :-\n\n{link}"
     if len(caption) > 4095:
         for x in range(0, len(caption), 4095):
-            query.message.edit_text(
+            query.message.reply_text(
                 text=caption[x : x + 4095],
                 reply_markup=None,
                 parse_mode=ParseMode.MARKDOWN,
