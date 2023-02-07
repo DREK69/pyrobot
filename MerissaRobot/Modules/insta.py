@@ -13,10 +13,8 @@ async def instadown(_, message):
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    x = get(f"https://api.princexd.tech/igdown?link={name}").json()
-    for i in x:
-        links = i
+    x = get(f"https://api.princexd.tech/igdown?link={name}").json()["media"]
     await message.reply_video(
-        links,
+        x,
         caption="Powered by @MerissaRobot",
     )
