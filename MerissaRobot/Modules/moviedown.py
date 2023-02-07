@@ -76,9 +76,9 @@ def movie_result(update, context) -> None:
     caption = f"⚡ Fast Download Links :-\n\n{link}"
     if len(caption) > 4095:
         for x in range(0, len(caption), 4095):
-            query.message.reply_text(text=caption[x : x + 4095])
+            query.message.ediy_text(text=caption[x : x + 4095], reply_markup=None)
     else:
-        query.message.reply_text(text=caption)
+        query.message.edit_text(text=caption, reply_markup=None)
 
 
 dispatcher.add_handler(CommandHandler("movie", find_movie))
