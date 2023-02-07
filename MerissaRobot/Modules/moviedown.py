@@ -53,7 +53,9 @@ def find_movie(update, context):
     if movies_list:
         keyboards = []
         for movie in movies_list:
-            keyboard = InlineKeyboardButton(movie["title"], callback_data=f"id_{movie['id']}")
+            keyboard = InlineKeyboardButton(
+                movie["title"], callback_data=f"id_{movie['id']}"
+            )
             keyboards.append([keyboard])
         reply_markup = InlineKeyboardMarkup(keyboards)
         search_results.edit_text("Search Results...", reply_markup=reply_markup)
