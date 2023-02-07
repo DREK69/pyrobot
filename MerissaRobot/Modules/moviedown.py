@@ -41,10 +41,7 @@ def get_movie(query):
         )
         final_links = {}
         for i in links:
-            url = f"https://api.princexd.tech/shorturl?link={i['href']}"
-            response = requests.get(url)
-            link = response.json()
-            final_links[f"{i.text}"] = link["tinyurlCom"]
+            final_links[f"{i.text}"] = links["href"]
         movie_details["links"] = final_links
     return movie_details
 
@@ -72,7 +69,7 @@ def movie_result(update, context) -> None:
     link = ""
     links = s["links"]
     for i in links:
-        link += "🎬" + i + "\n" + links[i] + "\n\n"
+        link += "🎬" + i + "\n" + [Click Here To Download](links[i]) + "\n\n"
     caption = f"⚡ Fast Download Links :-\n\n{link}"
     if len(caption) > 4095:
         for x in range(0, len(caption), 4095):
