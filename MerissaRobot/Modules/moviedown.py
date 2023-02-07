@@ -1,5 +1,5 @@
 from io import BytesIO
-
+from bs4 import BeautifulSoup
 import requests
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, CommandHandler
