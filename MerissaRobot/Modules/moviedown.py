@@ -81,6 +81,7 @@ def movie_result(update, context) -> None:
                 reply_markup=None,
                 parse_mode=ParseMode.MARKDOWN,
             )
+            query.message.delete()
     else:
         query.message.edit_text(
             text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
