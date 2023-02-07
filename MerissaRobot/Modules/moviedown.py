@@ -41,7 +41,7 @@ def get_movie(query):
         )
         final_links = {}
         for i in links:
-            final_links[f"{i.text}"] = links
+            final_links[f"{i.text}"] = i['href']
         movie_details["links"] = final_links
     return movie_details
 
