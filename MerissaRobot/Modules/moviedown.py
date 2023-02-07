@@ -1,8 +1,9 @@
+import pyshorteners
 import requests
 from bs4 import BeautifulSoup
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
 from telegram.ext import CallbackQueryHandler, CommandHandler
-import pyshorteners
+
 from MerissaRobot import dispatcher
 
 url_list = {}
@@ -41,7 +42,7 @@ def get_movie(query):
         )
         final_links = {}
         for i in links:
-            s = pyshorteners.Shortener()   
+            s = pyshorteners.Shortener()
             url = s.tinyurl.short(i["href"])
             final_links[f"{i.text}"] = url
         movie_details["links"] = final_links
