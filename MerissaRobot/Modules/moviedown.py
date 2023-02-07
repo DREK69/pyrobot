@@ -72,7 +72,7 @@ def movie_result(update, context) -> None:
     link = ""
     links = s["links"]
     for i in links:
-        link += f"🎬{i}\n[Click Here To Download]({links[i]})\n\n"        
+        link += f"🎬{i}\n[Click Here To Download]({links[i]})\n\n"
     caption = f"⚡ Fast Download Links :-\n\n{link}\n\nCredits To MKVCinemas\nPowered By @MerissaRobot"
     if len(caption) > 4095:
         for x in range(0, len(caption), 4095):
