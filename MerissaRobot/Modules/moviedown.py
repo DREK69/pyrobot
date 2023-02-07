@@ -1,5 +1,3 @@
-from io import BytesIO
-
 import requests
 from bs4 import BeautifulSoup
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
