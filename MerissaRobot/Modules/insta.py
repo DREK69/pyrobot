@@ -14,17 +14,9 @@ async def instadown(_, message):
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
     x = get(f"https://api.princexd.tech/igdown?link={name}").json()
+    for i in x: 
+        links = i
     await message.reply_video(
-        x,
+        links,
         caption="Powered by @MerissaRobot",
     )
-
-
-@pbot.on_message(filters.command("insta2"))
-async def instadown(_, message):
-    if len(message.command) < 2:
-        return await message.reply_text("Give me some link\n\nEx. /insta link")
-    name = message.text.split(None, 1)[2]
-    POST = message.text.split(None, 1)[1]
-    x = get(f"https://api.princexd.tech/igdown?link={name}").json()[POST]
-    await message.reply_text(text=f"{x}\n\nPowered By @MerissaRobot")
