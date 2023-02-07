@@ -14,7 +14,7 @@ async def instadown(_, message):
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
     x = get(f"https://api.princexd.tech/igdown?link={name}").json()
-    for i in x: 
+    for i in x:
         links = i
     await message.reply_video(
         links,
