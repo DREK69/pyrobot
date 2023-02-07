@@ -53,7 +53,7 @@ def find_movie(update, context):
     if movies_list:
         keyboards = []
         for movie in movies_list:
-            keyboard = InlineKeyboardButton(movie["title"], callback_data=movie["id"])
+            keyboard = InlineKeyboardButton(movie["title"], callback_data=f"id_{movie['id']}")
             keyboards.append([keyboard])
         reply_markup = InlineKeyboardMarkup(keyboards)
         search_results.edit_text("Search Results...", reply_markup=reply_markup)
@@ -65,7 +65,8 @@ def find_movie(update, context):
 
 def movie_result(update, context) -> None:
     query = update.callback_query
-    s = get_movie(query.data)
+    id = query.data.split("_")[1]
+    s = get_movie(id)
     link = ""
     links = s["links"]
     for i in links:
@@ -79,4 +80,4 @@ def movie_result(update, context) -> None:
 
 
 dispatcher.add_handler(CommandHandler("movie", find_movie))
-dispatcher.add_handler(CallbackQueryHandler(movie_result))
+dispatcher.add_handler(CallbackQueryHandler(movie_result, pattern=r"id_"))
