@@ -73,7 +73,9 @@ def find_movie(update, context):
 def movie_result(update, context) -> None:
     query = update.callback_query
     id = query.data.split("_")[1]
-    query.message.edit_text(text="Please Wait Movie Details Fetching From MKVCinemas", reply_markup=None)
+    query.message.edit_text(
+        text="Please Wait Movie Details Fetching From MKVCinemas", reply_markup=None
+    )
     s = get_movie(id)
     link = ""
     links = s["links"]
