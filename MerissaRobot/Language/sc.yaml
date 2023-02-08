@@ -1,7 +1,7 @@
 # Language name in their native
 language: "English 🇬🇧"
 # name of people(s) who worked on this translation
-authors: "Yumiko_help_bot"
+authors: "NotReallyPrince"
 
 # languages
 curr_chat_lang: "ʜᴇʏ. ʏᴏᴜʀ ᴄᴜʀʀᴇɴᴛ ʟᴀɴɢᴜᴀɢᴇ ɪs {}, sᴇʟᴇᴄᴛ ᴛʜᴇ ᴏɴᴇ ʏᴏᴜ ᴡᴀɴᴛ ғʀᴏᴍ ᴛʜᴇ ʙᴜᴛᴛᴏɴs ʙᴇʟᴏᴡ :)"
@@ -40,7 +40,7 @@ pm_about_support_text: |
 pm_help_text: |
   ᴄʟɪᴄᴋ ᴏɴ ᴛʜᴇ ʙᴜᴛᴛᴏɴ ʙᴇʟʟᴏᴡ ᴛᴏ ɢᴇᴛ ᴅᴇsᴄʀɪᴘᴛɪᴏɴ ᴀʙᴏᴜᴛ sᴘᴇᴄɪғɪᴄs ᴄᴏᴍᴍᴀɴᴅ.
 
-ᴘᴍ_ʜᴇʟᴘ_ᴍᴏᴅᴜʟᴇ_ᴛᴇxᴛ: "──「 ʜᴇʟᴘ ᴏғ {} ᴍᴏᴅᴜʟᴇ 」── \ɴ"
+pm_help_module_text: "──「 ʜᴇʟᴘ ᴏғ {} ᴍᴏᴅᴜʟᴇ 」── \n"
 
 # Group Help Text
 group_start_text: |
