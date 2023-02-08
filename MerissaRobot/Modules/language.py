@@ -183,8 +183,10 @@ def font_callback(update: Update, context: CallbackContext):
                     InlineKeyboardButton(text="Simple", callback_data="lang_cs"),
                     InlineKeyboardButton(text="Special", callback_data="lang_cf"),
                 ],
-                [InlineKeyboardButton(text="Sᴍᴀʟʟ Cᴀᴘs", callback_data="lang_sc"),
-                 InlineKeyboardButton(text="¢нαяιту", callback_data="lang_cr")],
+                [
+                    InlineKeyboardButton(text="Sᴍᴀʟʟ Cᴀᴘs", callback_data="lang_sc"),
+                    InlineKeyboardButton(text="¢нαяιту", callback_data="lang_cr"),
+                ],
                 [
                     InlineKeyboardButton(text="🔙 Back", callback_data="merissa_back"),
                     InlineKeyboardButton(text="Close 🗑", callback_data="cb_close"),
