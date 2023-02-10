@@ -8,6 +8,7 @@ from MerissaRobot import dispatcher
 
 url_list = {}
 
+
 def search_movies(query):
     movies_list = []
     movies_details = {}
@@ -93,6 +94,7 @@ def movie_result(update, context) -> None:
         query.message.edit_text(
             text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
         )
+
 
 def search_anime(query):
     movies_list = []
