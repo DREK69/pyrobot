@@ -139,7 +139,7 @@ def get_anime(query):
 def find_anime(update, context):
     search_results = update.message.reply_text("Processing...")
     query = update.message.text.split(None, 1)[1]
-    movies_list = search_animw(query)
+    movies_list = search_anime(query)
     if movies_list:
         keyboards = []
         for movie in movies_list:
