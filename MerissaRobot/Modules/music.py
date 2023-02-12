@@ -178,13 +178,14 @@ async def callback_query(Client, CallbackQuery):
         aud = youtube_audio.streams.get_audio_only()
         m = await CallbackQuery.edit_message_text("Downloading...")
         download_aud = aud.download()
+        title = youtube_audio.title
+        med = InputMediaAudio(
+            media=download_aud,
+            caption=title,         
+            title=title        
+        )
         try:
-            await Client.send_audio(
-                chat_id,
-                download_aud,
-                file_name=f"{youtube_audio.title}.mp3",
-                caption=youtube_audio.title,
-            )
+            await CallbackQuery.edit_message_media(media=med)               )
         except Exception as error:
             await Client.send_message(chat_id, f"Something happened!\n<i>{error}</i>")
         os.remove(download_aud)
