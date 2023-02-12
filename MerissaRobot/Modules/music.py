@@ -176,7 +176,7 @@ async def callback_query(Client, CallbackQuery):
     ## Download audio
     elif CallbackQuery.data == "audio":
         youtube_audio = YouTube(link)
-        audio = youtube_audio.streams.filter(type='audio')
+        audio = youtube_audio.streams.filter(type="audio")
         m = await CallbackQuery.edit_message_text("Downloading...")
         download_aud = audio.download()
         title = youtube_audio.title
