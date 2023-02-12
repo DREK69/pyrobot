@@ -6,6 +6,7 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     InlineQueryResultArticle,
     InputTextMessageContent,
+    InputMediaAudio,
 )
 from pytube import YouTube
 from youtubesearchpython import VideosSearch
@@ -185,7 +186,7 @@ async def callback_query(Client, CallbackQuery):
             title=title        
         )
         try:
-            await CallbackQuery.edit_message_media(media=med)               )
+            await CallbackQuery.edit_message_media(media=med)
         except Exception as error:
             await Client.send_message(chat_id, f"Something happened!\n<i>{error}</i>")
         os.remove(download_aud)
