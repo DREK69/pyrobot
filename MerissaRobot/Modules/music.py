@@ -185,8 +185,7 @@ async def callback_query(Client, CallbackQuery):
             await CallbackQuery.edit_message_media(media=med)
         except Exception as error:
             await Client.send_message(chat_id, f"Something happened!\n<i>{error}</i>")
-        os.remove(download_aud)
-        await m.delete()
+        os.remove(download_aud)       
     ## 720p
     elif CallbackQuery.data == "720p":
         youtube_720 = YouTube(link)
