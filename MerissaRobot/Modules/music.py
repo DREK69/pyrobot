@@ -28,7 +28,7 @@ QUALITY_BUTTONS = InlineKeyboardMarkup(
 )
 
 
-@Client.on_message(filters.command(["music", "ytdl"]))
+@Client.on_message(filters.command(["music", "ytdl", "song"]))
 def song(client, message):
     global chat_id
     chat_id = message.chat.id
