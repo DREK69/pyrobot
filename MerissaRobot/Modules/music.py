@@ -33,6 +33,7 @@ def song(client, message):
     chat_id = message.chat.id
     global link
     global thumbnail
+    global duration 
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
@@ -47,8 +48,7 @@ def song(client, message):
         data = search["result"][0]
         songname = data["title"]
         link = data["link"]
-        duration = data["duration"]
-        data["id"]
+        duration = data["duration"]               
     except Exception as e:
         message.reply(
             "**😴 sᴏɴɢ ɴᴏᴛ ғᴏᴜɴᴅ ᴏɴ ʏᴏᴜᴛᴜʙᴇ.**\n\n» ᴍᴀʏʙᴇ ᴛᴜɴᴇ ɢᴀʟᴛɪ ʟɪᴋʜᴀ ʜᴏ, ᴩᴀᴅʜᴀɪ - ʟɪᴋʜᴀɪ ᴛᴏʜ ᴋᴀʀᴛᴀ ɴᴀʜɪ ᴛᴜ !"
@@ -59,7 +59,7 @@ def song(client, message):
     reply_markup = QUALITY_BUTTONS
     message.reply_photo(
         thumbnail,
-        caption=f"Title: {songname}\nDuration: {str(duration)}\n\nSelect Your Preferred Format from Below:",
+        caption=f"**Title**: {songname}\n**Duration**: {str(duration)}\n\n**Select Your Preferred Format from Below*":",
         reply_markup=reply_markup,
     )
 
@@ -78,8 +78,10 @@ async def callback_query(Client, CallbackQuery):
             "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
         )
         title = youtube_audio.title
+        dur = info_dict["duration"]
+        uploader = info_dict["uploader"]
         med = InputMediaAudio(
-            media=audio_file, caption=title, title=title, thumb=thumbnail
+            media=audio_file, caption=title, title=title, thumb=thumbnail, duration=dur, performer=uploader
         )
         try:
             await CallbackQuery.edit_message_media(media=med)
