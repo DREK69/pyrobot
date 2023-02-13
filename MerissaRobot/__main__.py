@@ -933,7 +933,7 @@ def main():
     if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
         try:
             dispatcher.bot.sendMessage(
-                "@NotReallyPrince",
+                2030709195,
                 "👋 Hi, I am Successfully Updated.",
                 parse_mode=ParseMode.MARKDOWN,
             )
