@@ -1,4 +1,5 @@
 import os
+import yt_dlp
 
 from pyrogram import Client, filters
 from pyrogram.types import (
@@ -176,16 +177,19 @@ async def callback_query(Client, CallbackQuery):
     ## Download audio
     elif CallbackQuery.data == "audio":
         youtube_audio = YouTube(link)
-        audio = youtube_audio.streams.filter(type="audio")
-        m = await CallbackQuery.edit_message_text("Downloading...")
-        download_aud = audio.download()
+        ydl_opts = {"format": "bestaudio[ext=m4a]"}
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:          
+            info_dict = ydl.extract_info(link, download=False)          
+            audio_file = ydl.prepare_filename(info_dict)
+            ydl.process_info(info_dict)
+        m = await CallbackQuery.edit_message_text("Downloading...")        
         title = youtube_audio.title
-        med = InputMediaAudio(media=download_aud, caption=title, title=title)
+        med = InputMediaAudio(media=audio_file, caption=title, title=title)
         try:
             await CallbackQuery.edit_message_media(media=med)
         except Exception as error:
             await Client.send_message(chat_id, f"Something happened!\n<i>{error}</i>")
-        os.remove(download_aud)
+        os.remove(audio_file)
     ## 720p
     elif CallbackQuery.data == "720p":
         youtube_720 = YouTube(link)
