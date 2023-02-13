@@ -1,5 +1,5 @@
 import os
-
+import wget
 import yt_dlp
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaAudio
@@ -31,9 +31,9 @@ QUALITY_BUTTONS = InlineKeyboardMarkup(
 def song(client, message):
     global chat_id
     chat_id = message.chat.id
-    global link
-    global thumbnail
+    global link    
     global duration
+    global thumb
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
@@ -55,7 +55,9 @@ def song(client, message):
         )
         print(str(e))
         return
+    thumb = "thumbnail.jpg"
     thumbnail = f"https://i.ytimg.com/vi/{data['id']}/hqdefault.jpg"
+    wget.download(thumbnail, thumb)
     reply_markup = QUALITY_BUTTONS
     message.reply_photo(
         thumbnail,
@@ -84,7 +86,7 @@ async def callback_query(Client, CallbackQuery):
             media=audio_file,
             caption=title,
             title=title,
-            thumb=thumbnail,
+            thumb=thumb,
             duration=dur,
             performer=uploader,
         )
