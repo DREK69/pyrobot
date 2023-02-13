@@ -163,7 +163,7 @@ def song(client, message):
         data = search["result"][0]
         songname = data["title"]
         link = data["link"]
-        duration = data["duration"]        
+        duration = data["duration"]
         videoid = data["id"]
     except Exception as e:
         m.edit(
