@@ -7,10 +7,10 @@ from MerissaRobot import pbot as bot
 
 @bot.on_message(filters.command(["ameme", "animememe"]))
 async def animememes(_, m):
-    res = requests.get("https://meme-api.herokuapp.com/gimme/animememes").json()
-    url = res["url"]
+    res = requests.get("https://api.princexd.tech/reddit?query=Animememe").json()["data"]
+    url = res["image_url"]
     text = res["title"]
-    link = res["postLink"]
+    link = res["post_url"]
     await m.reply_photo(
         url,
         caption=f"[{text}]({link})",
@@ -31,10 +31,10 @@ async def animememes(_, m):
 async def ameme(_, query: CallbackQuery):
     query = query.message
     await query.delete()
-    res = requests.get("https://meme-api.herokuapp.com/gimme/animememes").json()
-    url = res["url"]
+    res = requests.get("https://api.princexd.tech/reddit?query=Animememe").json()["data"]
+    url = res["image_url"]
     text = res["title"]
-    link = res["postLink"]
+    link = res["post_url"]
     await query.edit_message_media(
         InputMediaPhoto(url, caption=f"[{text}]({link})"),
         reply_markup=InlineKeyboardMarkup(
@@ -52,8 +52,8 @@ async def ameme(_, query: CallbackQuery):
 
 @bot.on_message(filters.command("meme"))
 async def memes(_, m):
-    res = requests.get("https://meme-api.herokuapp.com/gimme/memes").json()
-    url = res["url"]
+    res = requests.get("https://api.princexd.tech/meme").json()
+    url = res["image"]
     text = res["title"]
     link = res["postLink"]
     await m.reply_photo(
@@ -76,8 +76,8 @@ async def memes(_, m):
 async def memess(_, query: CallbackQuery):
     query = query.message
     await query.delete()
-    res = requests.get("https://meme-api.herokuapp.com/gimme/memes").json()
-    url = res["url"]
+    res = requests.get("https://api.princexd.tech/meme").json()
+    url = res["image"]
     text = res["title"]
     link = res["postLink"]
     await query.edit_message_media(
