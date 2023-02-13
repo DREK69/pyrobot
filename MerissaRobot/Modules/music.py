@@ -96,6 +96,7 @@ async def callback_query(Client, CallbackQuery):
         except Exception as error:
             await Client.send_message(chat_id, f"Something happened!\n<i>{error}</i>")
         os.remove(audio_file)
+        os.remove(thumb)
     ## 720p
     elif CallbackQuery.data == "720p":
         youtube_720 = YouTube(link)
@@ -114,6 +115,7 @@ async def callback_query(Client, CallbackQuery):
         except Exception as error:
             await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
         os.remove(download_720)
+        os.remove(thumb)
         await m.delete()
     ## 360p
     elif CallbackQuery.data == "360p":
@@ -133,4 +135,5 @@ async def callback_query(Client, CallbackQuery):
         except Exception as error:
             await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
         os.remove(download_360)
-        await m.delete()
+        os.remove(thumb)
+        await m.delete()       
