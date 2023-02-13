@@ -19,8 +19,7 @@ QUALITY_BUTTONS = InlineKeyboardMarkup(
             InlineKeyboardButton("🎵 Audio", callback_data="audio"),
             InlineKeyboardButton("📽️ 360p", callback_data="360p"),
         ],
-        [
-            InlineKeyboardButton("📽️ 480p", callback_data="480p"),
+        [           
             InlineKeyboardButton("📽️ 720p", callback_data="720p"),
         ],
     ]
@@ -63,34 +62,8 @@ def song(client, message):
 
 @Client.on_callback_query()
 async def callback_query(Client, CallbackQuery):
-    ## Download videos at the highest resolution
-    if CallbackQuery.data == "highest_res":
-        youtube_high = YouTube(link)
-        high_vid = youtube_high.streams.get_highest_resolution()
-        m = await CallbackQuery.edit_message_text("Downloading.")
-        download_high = high_vid.download()
-        m.delete()
-        try:
-            await Client.send_video(chat_id, download_high, caption=youtube_high.title)
-            print("success")
-        except Exception as error:
-            await Client.send_message(chat_id, f"Error occurred:\n<i>{error}</i>")
-        os.remove(download_high)
-        await m.delete()
-    ## Download videos at the lowest resolution
-    elif CallbackQuery.data == "lowest_res":
-        youtube_less = YouTube(link)
-        less_vid = youtube_less.streams.get_lowest_resolution()
-        m = await CallbackQuery.edit_message_text("Downloading...")
-        download_less = less_vid.download()
-        try:
-            await Client.send_video(chat_id, download_less, caption=youtube_less.title)
-        except Exception as error:
-            await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
-        os.remove(download_less)
-        await m.delete()
     ## Download audio
-    elif CallbackQuery.data == "audio":
+    if CallbackQuery.data == "audio":
         youtube_audio = YouTube(link)
         ydl_opts = {"format": "bestaudio[ext=m4a]"}
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -129,33 +102,3 @@ async def callback_query(Client, CallbackQuery):
             await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
         os.remove(download_360)
         await m.delete()
-    ## 480p
-    elif CallbackQuery.data == "480p":
-        youtube_480 = YouTube(link)
-        vid_480 = youtube_480.streams.get_lowest_resolution()
-        m = await CallbackQuery.edit_message_text("Downloading...")
-        download_480 = vid_480.download()
-        try:
-            await Client.send_video(chat_id, download_480, caption=youtube_480.title)
-        except Exception as error:
-            await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
-        os.remove(download_480)
-        await m.delete()
-    elif CallbackQuery.data == "link_down":
-        youtube_down = YouTube(yt_link)
-        vid_down = youtube_down.streams.get_lowest_resolution()
-        await CallbackQuery.edit_message_text(
-            f"Downloading...\n\nFile name:- {youtube_down.title}\nDuration:- {youtube_down.length}\nWatch on YouTube:- <a href={yt_link}>Click here</a>"
-        )
-        download_vid = vid_down.download()
-        m = await CallbackQuery.edit_message_text(
-            f"**Uploading to Telegram...**\n\nIf this is getting too much time,"
-            f" copy `{yt_link}` and send it directly."
-        )
-        try:
-            await CallbackQuery.edit_message_media(media=download_vid)
-        except Exception as error:
-            await Client.answer_callback_query(
-                CallbackQuery.id, text=f"Error occurred!!\n<i>{error}</i>"
-            )
-        os.remove(download_vid)
