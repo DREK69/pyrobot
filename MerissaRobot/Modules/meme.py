@@ -7,7 +7,9 @@ from MerissaRobot import pbot as bot
 
 @bot.on_message(filters.command(["ameme", "animememe"]))
 async def animememes(_, m):
-    res = requests.get("https://api.princexd.tech/reddit?query=Animememe").json()["data"]
+    res = requests.get("https://api.princexd.tech/reddit?query=Animememe").json()[
+        "data"
+    ]
     url = res["image_url"]
     text = res["title"]
     link = res["post_url"]
@@ -31,7 +33,9 @@ async def animememes(_, m):
 async def ameme(_, query: CallbackQuery):
     query = query.message
     await query.delete()
-    res = requests.get("https://api.princexd.tech/reddit?query=Animememe").json()["data"]
+    res = requests.get("https://api.princexd.tech/reddit?query=Animememe").json()[
+        "data"
+    ]
     url = res["image_url"]
     text = res["title"]
     link = res["post_url"]
