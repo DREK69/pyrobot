@@ -19,135 +19,22 @@ START_BUTTONS = InlineKeyboardMarkup(
 )
 
 
-@Client.on_inline_query()
-async def inlinequery(client, inline_query):
-    global search_yt
-    search_yt = inline_query.query
-    answer = []
-    video = VideosSearch(search_yt, limit=10).result()
-    yt_title = video["result"][0]["title"]
-    yt_views = video["result"][0]["viewCount"]["short"]
-    yt_duration = video["result"][0]["duration"]
-    yt_publish = video["result"][0]["publishedTime"]
-    yt_channel = video["result"][4]["channel"]["name"]
-    global yt_link
-    yt_link = video["result"][0]["link"]
-    if inline_query.query == "":
-        await inline_query.answer(
-            results=[
-                InlineQueryResultArticle(
-                    title="Search any YouTube video...",
-                    input_message_content=InputTextMessageContent(
-                        "Search Youtube Videos..."
-                    ),
-                    description="Type to search!",
-                    reply_markup=InlineKeyboardMarkup(
-                        [
-                            [
-                                InlineKeyboardButton(
-                                    "Search Videos...",
-                                    switch_inline_query_current_chat="",
-                                )
-                            ]
-                        ]
-                    ),
-                )
-            ]
-        )
-    elif inline_query.chat_type == inline_query.chat_type.BOT:
-        for i in range(7):
-            answer.append(
-                InlineQueryResultArticle(
-                    title=video["result"][0]["title"],
-                    thumb_url=video["result"][1]["thumbnails"][0]["url"],
-                    description=video["result"][0]["viewCount"]["short"],
-                    input_message_content=InputTextMessageContent(
-                        f"📝**Title:-** {yt_title}\n👁️‍🗨️**Views:-** {yt_views}\n⌛**Duration:-** {yt_duration}\n📅**Published:-** {yt_publish}\n📢**Published by:-** {yt_channel}\n📽️**Watch Video:-** <a href={yt_link}>Click here</a>"
-                    ),
-                    reply_markup=InlineKeyboardMarkup(
-                        [
-                            [
-                                InlineKeyboardButton("🎥Watch on YouTube", url=yt_link),
-                                InlineKeyboardButton(
-                                    "🔍Search again", switch_inline_query_current_chat=""
-                                ),
-                            ],
-                            [
-                                InlineKeyboardButton(
-                                    "📁Download", callback_data="link_down"
-                                )
-                            ],
-                        ]
-                    ),
-                )
-            ),
-    elif inline_query.chat_type != inline_query.chat_type.BOT:
-        for i in range(7):
-            answer.append(
-                InlineQueryResultArticle(
-                    title=video["result"][0]["title"],
-                    thumb_url=video["result"][1]["thumbnails"][0]["url"],
-                    description=video["result"][0]["viewCount"]["short"],
-                    input_message_content=InputTextMessageContent(
-                        f"📝**Title:-** {yt_title}\n👁️‍🗨️**Views:-** {yt_views}\n⌛**Duration:-** {yt_duration}\n📅**Published:-** {yt_publish}\n📢**Published by:-** {yt_channel}\n📽️**Watch Video:-** <a href={yt_link}>Click here</a>"
-                    ),
-                    reply_markup=InlineKeyboardMarkup(
-                        [
-                            [
-                                InlineKeyboardButton("🎥Watch on YouTube", url=yt_link),
-                                InlineKeyboardButton(
-                                    "🔍Search again", switch_inline_query_current_chat=""
-                                ),
-                            ]
-                        ]
-                    ),
-                )
-            )
-    await inline_query.answer(results=answer, cache_time=1)
-
-
 QUALITY_BUTTONS = InlineKeyboardMarkup(
     [
         [
-            InlineKeyboardButton("📽️High Quality", callback_data="highest_res"),
-            InlineKeyboardButton("📽️720p", callback_data="720p"),
+            InlineKeyboardButton("🎵 Audio", callback_data="audio"),
+            InlineKeyboardButton("📽️ 360p", callback_data="360p"),
         ],
         [
-            InlineKeyboardButton("📽️Low Quality", callback_data="lowest_res"),
-            InlineKeyboardButton("📽️480p", callback_data="480p"),
-        ],
-        [
-            InlineKeyboardButton("🎵Audio", callback_data="audio"),
-            InlineKeyboardButton("📽️360p", callback_data="360p"),
+            InlineKeyboardButton("📽️ 480p", callback_data="480p"),
+            InlineKeyboardButton("📽️ 720p", callback_data="720p"),
         ],
     ]
 )
 
-yt_regex = r"^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
-
-
-@Client.on_message(filters.regex(yt_regex))
-async def yt_download(bot, message):
-    global chat_id
-    chat_id = message.chat.id
-    global link
-    link = message.text
-    search = VideosSearch(link, limit=1).result()
-    data = search["result"][0]
-    data["title"]
-    data["link"]
-    duration = data["duration"]
-    reply_markup = QUALITY_BUTTONS
-    await bot.send_photo(
-        message.chat.id,
-        photo=f"https://i.ytimg.com/vi/{data['id']}/hqdefault.jpg",
-        caption=f"Select your preferred format\n\nDuration: {str(duration)}",
-        reply_markup=reply_markup,
-    )
-
-
 @Client.on_message(filters.command(["music", "ytdl"]))
 def song(client, message):
+    global link
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
@@ -172,8 +59,7 @@ def song(client, message):
         print(str(e))
         return
     thumbnail = f"https://i.ytimg.com/vi/{data['id']}/hqdefault.jpg"
-    link = f"https://youtube.com/{videoid}"
-    global link
+    link = f"https://youtube.com/{videoid}"    
     reply_markup = QUALITY_BUTTONS
     message.reply_photo(
         thumbnail,
