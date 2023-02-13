@@ -59,7 +59,7 @@ def song(client, message):
     reply_markup = QUALITY_BUTTONS
     message.reply_photo(
         thumbnail,
-        caption=f"**Title**: {songname}\n**Duration**: {str(duration)}\n\n**Select Your Preferred Format from Below*":",
+        caption=f"**Title**: {songname}\n**Duration**: {str(duration)}\n\n**Select Your Preferred Format from Below**:",
         reply_markup=reply_markup,
     )
 
