@@ -1,6 +1,6 @@
 import os
-import yt_dlp
 
+import yt_dlp
 from pyrogram import Client, filters
 from pyrogram.types import (
     InlineKeyboardButton,
@@ -178,11 +178,11 @@ async def callback_query(Client, CallbackQuery):
     elif CallbackQuery.data == "audio":
         youtube_audio = YouTube(link)
         ydl_opts = {"format": "bestaudio[ext=m4a]"}
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:          
-            info_dict = ydl.extract_info(link, download=False)          
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info_dict = ydl.extract_info(link, download=False)
             audio_file = ydl.prepare_filename(info_dict)
             ydl.process_info(info_dict)
-        m = await CallbackQuery.edit_message_text("Downloading...")        
+        m = await CallbackQuery.edit_message_text("Downloading...")
         title = youtube_audio.title
         med = InputMediaAudio(media=audio_file, caption=title, title=title)
         try:
