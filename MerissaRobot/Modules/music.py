@@ -132,7 +132,7 @@ async def callback_query(Client, CallbackQuery):
                 caption=youtube_360.title,
                 duration=duration,
                 thumb=thumb,
-                supports_streaming=True,       
+                supports_streaming=True,
             )
         except Exception as error:
             await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
