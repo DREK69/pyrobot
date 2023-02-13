@@ -172,6 +172,7 @@ def song(client, message):
         print(str(e))
         return
     thumbnail = f"https://i.ytimg.com/vi/{data['id']}/hqdefault.jpg"
+    global link
     link = f"https://youtube.com/{videoid}"
     reply_markup = QUALITY_BUTTONS
     message.reply_photo(
