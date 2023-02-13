@@ -32,7 +32,7 @@ def song(client, message):
     global chat_id
     chat_id = message.chat.id
     global link
-    global thumbnail 
+    global thumbnail
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
@@ -78,7 +78,9 @@ async def callback_query(Client, CallbackQuery):
             "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
         )
         title = youtube_audio.title
-        med = InputMediaAudio(media=audio_file, caption=title, title=title, thumb=thumbnail)
+        med = InputMediaAudio(
+            media=audio_file, caption=title, title=title, thumb=thumbnail
+        )
         try:
             await CallbackQuery.edit_message_media(media=med)
         except Exception as error:
