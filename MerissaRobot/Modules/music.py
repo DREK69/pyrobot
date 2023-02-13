@@ -19,7 +19,7 @@ QUALITY_BUTTONS = InlineKeyboardMarkup(
             InlineKeyboardButton("🎵 Audio", callback_data="audio"),
             InlineKeyboardButton("📽️ 360p", callback_data="360p"),
         ],
-        [           
+        [
             InlineKeyboardButton("📽️ 720p", callback_data="720p"),
         ],
     ]
