@@ -163,8 +163,7 @@ def song(client, message):
         data = search["result"][0]
         songname = data["title"]
         link = data["link"]
-        duration = data["duration"]
-        thumbnail = f"https://i.ytimg.com/vi/{data['id']}/hqdefault.jpg"
+        duration = data["duration"]        
         videoid = data["id"]
     except Exception as e:
         m.edit(
@@ -172,9 +171,10 @@ def song(client, message):
         )
         print(str(e))
         return
+    thumbnail = f"https://i.ytimg.com/vi/{data['id']}/hqdefault.jpg"
     link = f"https://youtube.com/{videoid}"
     reply_markup = QUALITY_BUTTONS
-    await message.reply_photo(
+    message.reply_photo(
         thumbnail,
         caption=f"Select your preferred format\n\nTitle: {songname}\nDuration: {str(duration)}",
         reply_markup=reply_markup,
