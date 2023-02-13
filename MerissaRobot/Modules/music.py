@@ -123,8 +123,7 @@ QUALITY_BUTTONS = InlineKeyboardMarkup(
     ]
 )
 
-yt_regex = r"(.*)youtube.com/(.*)[&|?]v=(?P<video>[^&]*)(.*)"
-
+yt_regex = r"^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
 @Client.on_message(filters.regex(yt_regex))
 async def yt_download(bot, message):
@@ -145,6 +144,39 @@ async def yt_download(bot, message):
         reply_markup=reply_markup,
     )
 
+@Client.on_message(filters.command(["music", "ytdl"]))
+def song(client, message):
+    user_id = message.from_user.id
+    user_name = message.from_user.first_name
+    user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
+
+    query = ""
+    for i in message.command[1:]:
+        query += " " + str(i)
+    print(query)
+    s = message.reply("🔎 Finding...")
+    ydl_opts = {"format": "bestaudio[ext=m4a]"}
+    try:
+        search = VideosSearch(query, limit=1).result()
+        data = search["result"][0]
+        songname = data["title"]
+        link = data["link"]
+        duration = data["duration"]
+        thumbnail = f"https://i.ytimg.com/vi/{data['id']}/hqdefault.jpg"
+        videoid = data["id"]     
+    except Exception as e:
+        m.edit(
+            "**😴 sᴏɴɢ ɴᴏᴛ ғᴏᴜɴᴅ ᴏɴ ʏᴏᴜᴛᴜʙᴇ.**\n\n» ᴍᴀʏʙᴇ ᴛᴜɴᴇ ɢᴀʟᴛɪ ʟɪᴋʜᴀ ʜᴏ, ᴩᴀᴅʜᴀɪ - ʟɪᴋʜᴀɪ ᴛᴏʜ ᴋᴀʀᴛᴀ ɴᴀʜɪ ᴛᴜ !"
+        )
+        print(str(e))
+        return
+    link = f"https://youtube.com/{videoid}"
+    reply_markup = QUALITY_BUTTONS
+    await message.reply_photo(
+        thumbnail,
+        caption=f"Select your preferred format\n\nTitle: {songname}\nDuration: {str(duration)}",
+        reply_markup=reply_markup,
+    )
 
 @Client.on_callback_query()
 async def callback_query(Client, CallbackQuery):
