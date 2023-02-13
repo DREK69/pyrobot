@@ -73,7 +73,9 @@ async def callback_query(Client, CallbackQuery):
             info_dict = ydl.extract_info(link, download=False)
             audio_file = ydl.prepare_filename(info_dict)
             ydl.process_info(info_dict)
-        m = await CallbackQuery.edit_message_text("Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on..")
+        m = await CallbackQuery.edit_message_text(
+            "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
+        )
         title = youtube_audio.title
         med = InputMediaAudio(media=audio_file, caption=title, title=title)
         try:
@@ -85,7 +87,9 @@ async def callback_query(Client, CallbackQuery):
     elif CallbackQuery.data == "720p":
         youtube_720 = YouTube(link)
         vid_720 = youtube_720.streams.get_by_resolution("720p")
-        m = await CallbackQuery.edit_message_text("Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on..")
+        m = await CallbackQuery.edit_message_text(
+            "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
+        )
         download_720 = vid_720.download()
         try:
             await Client.send_video(chat_id, download_720, caption=youtube_720.title)
@@ -97,7 +101,9 @@ async def callback_query(Client, CallbackQuery):
     elif CallbackQuery.data == "360p":
         youtube_360 = YouTube(link)
         vid_360 = youtube_360.streams.get_lowest_resolution()
-        m = await CallbackQuery.edit_message_text("Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on..")
+        m = await CallbackQuery.edit_message_text(
+            "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
+        )
         download_360 = vid_360.download()
         try:
             await Client.send_video(chat_id, download_360, caption=youtube_360.title)
