@@ -37,7 +37,7 @@ def song(client, message):
     query = ""
     for i in message.command[1:]:
         query += " " + str(i)
-    print(query)    
+    print(query)
     ydl_opts = {"format": "bestaudio[ext=m4a]"}
     try:
         search = VideosSearch(query, limit=1).result()
@@ -45,14 +45,14 @@ def song(client, message):
         songname = data["title"]
         link = data["link"]
         duration = data["duration"]
-        videoid = data["id"]
+        data["id"]
     except Exception as e:
         message.reply(
             "**😴 sᴏɴɢ ɴᴏᴛ ғᴏᴜɴᴅ ᴏɴ ʏᴏᴜᴛᴜʙᴇ.**\n\n» ᴍᴀʏʙᴇ ᴛᴜɴᴇ ɢᴀʟᴛɪ ʟɪᴋʜᴀ ʜᴏ, ᴩᴀᴅʜᴀɪ - ʟɪᴋʜᴀɪ ᴛᴏʜ ᴋᴀʀᴛᴀ ɴᴀʜɪ ᴛᴜ !"
         )
         print(str(e))
         return
-    thumbnail = f"https://i.ytimg.com/vi/{data['id']}/hqdefault.jpg"    
+    thumbnail = f"https://i.ytimg.com/vi/{data['id']}/hqdefault.jpg"
     reply_markup = QUALITY_BUTTONS
     message.reply_photo(
         thumbnail,
