@@ -105,7 +105,13 @@ async def callback_query(Client, CallbackQuery):
         )
         download_720 = vid_720.download()
         try:
-            await Client.send_video(chat_id, download_720, caption=youtube_720.title, thumb=thumb, supports_streaming=True)
+            await Client.send_video(
+                chat_id,
+                download_720,
+                caption=youtube_720.title,
+                thumb=thumb,
+                supports_streaming=True,
+            )
         except Exception as error:
             await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
         os.remove(download_720)
@@ -119,7 +125,13 @@ async def callback_query(Client, CallbackQuery):
         )
         download_360 = vid_360.download()
         try:
-            await Client.send_video(chat_id, download_360, caption=youtube_360.title, thumb=thumb, supports_streaming=True)
+            await Client.send_video(
+                chat_id,
+                download_360,
+                caption=youtube_360.title,
+                thumb=thumb,
+                supports_streaming=True,
+            )
         except Exception as error:
             await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
         os.remove(download_360)
