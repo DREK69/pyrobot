@@ -4,7 +4,7 @@ from pyrogram.types import *
 from MerissaRobot import pbot
 
 
-@pbot.on_message(filters.private & filters.reply & filters.command(["post"]), group=1)
+@pbot.on_message(filters.private & filters.reply & filters.command("post"))
 async def post(bot, update):
     if (update.text == "post") or (" " not in update.text):
         return
