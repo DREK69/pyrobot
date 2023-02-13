@@ -1,4 +1,5 @@
 import os
+
 import wget
 import yt_dlp
 from pyrogram import Client, filters
@@ -31,7 +32,7 @@ QUALITY_BUTTONS = InlineKeyboardMarkup(
 def song(client, message):
     global chat_id
     chat_id = message.chat.id
-    global link    
+    global link
     global duration
     global thumb
     user_id = message.from_user.id
