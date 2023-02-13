@@ -2,13 +2,7 @@ import os
 
 import yt_dlp
 from pyrogram import Client, filters
-from pyrogram.types import (
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    InlineQueryResultArticle,
-    InputMediaAudio,
-    InputTextMessageContent,
-)
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaAudio
 from pytube import YouTube
 from youtubesearchpython import VideosSearch
 
@@ -31,6 +25,7 @@ QUALITY_BUTTONS = InlineKeyboardMarkup(
         ],
     ]
 )
+
 
 @Client.on_message(filters.command(["music", "ytdl"]))
 def song(client, message):
@@ -59,7 +54,7 @@ def song(client, message):
         print(str(e))
         return
     thumbnail = f"https://i.ytimg.com/vi/{data['id']}/hqdefault.jpg"
-    link = f"https://youtube.com/{videoid}"    
+    link = f"https://youtube.com/{videoid}"
     reply_markup = QUALITY_BUTTONS
     message.reply_photo(
         thumbnail,
