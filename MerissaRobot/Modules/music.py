@@ -33,7 +33,7 @@ def song(client, message):
     chat_id = message.chat.id
     global link
     global thumbnail
-    global duration 
+    global duration
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
@@ -48,7 +48,7 @@ def song(client, message):
         data = search["result"][0]
         songname = data["title"]
         link = data["link"]
-        duration = data["duration"]               
+        duration = data["duration"]
     except Exception as e:
         message.reply(
             "**😴 sᴏɴɢ ɴᴏᴛ ғᴏᴜɴᴅ ᴏɴ ʏᴏᴜᴛᴜʙᴇ.**\n\n» ᴍᴀʏʙᴇ ᴛᴜɴᴇ ɢᴀʟᴛɪ ʟɪᴋʜᴀ ʜᴏ, ᴩᴀᴅʜᴀɪ - ʟɪᴋʜᴀɪ ᴛᴏʜ ᴋᴀʀᴛᴀ ɴᴀʜɪ ᴛᴜ !"
@@ -81,7 +81,12 @@ async def callback_query(Client, CallbackQuery):
         dur = info_dict["duration"]
         uploader = info_dict["uploader"]
         med = InputMediaAudio(
-            media=audio_file, caption=title, title=title, thumb=thumbnail, duration=dur, performer=uploader
+            media=audio_file,
+            caption=title,
+            title=title,
+            thumb=thumbnail,
+            duration=dur,
+            performer=uploader,
         )
         try:
             await CallbackQuery.edit_message_media(media=med)
