@@ -58,7 +58,7 @@ def song(client, message):
     )
 
 
-@app.on_callback_query(filters.regex(pattern=r"audio"))
+@Client.on_callback_query(filters.regex(pattern=r"audio"))
 async def callback_query(Client, CallbackQuery):
     ## Download audio
     callback = CallbackQuery.data.strip()
@@ -92,7 +92,7 @@ async def callback_query(Client, CallbackQuery):
     ## 720p
 
 
-@app.on_callback_query(filters.regex(pattern=r"720p"))
+@Client.on_callback_query(filters.regex(pattern=r"720p"))
 async def callback_query(Client, CallbackQuery):
     callback = CallbackQuery.data.strip()
     link = callback.split(None, 1)[1]
@@ -116,7 +116,7 @@ async def callback_query(Client, CallbackQuery):
     await m.delete()
 
 
-@app.on_callback_query(filters.regex(pattern=r"360p"))
+@Client.on_callback_query(filters.regex(pattern=r"360p"))
 async def callback_query(Client, CallbackQuery):
     callback = CallbackQuery.data.strip()
     link = callback.split(None, 1)[1]
