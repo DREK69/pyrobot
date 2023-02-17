@@ -61,7 +61,7 @@ def song(client, message):
 @Client.on_callback_query()
 async def callback_query(Client, CallbackQuery):
     ## Download audio
-    if CallbackQuery.data == "audio_{link}":
+    if CallbackQuery.data == r"audio_":
         link = CallbackQuery.data.split("_")[1]
         youtube_audio = YouTube(link)
         ydl_opts = {"format": "bestaudio[ext=m4a]"}
@@ -90,7 +90,7 @@ async def callback_query(Client, CallbackQuery):
         os.remove(audio_file)
         os.remove(thumb)
     ## 720p
-    elif CallbackQuery.data == "720p_{link}":
+    elif CallbackQuery.data == r"720p_":
         link = CallbackQuery.data.split("_")[1]
         youtube_720 = YouTube(link)
         vid_720 = youtube_720.streams.get_by_resolution("720p")
@@ -111,7 +111,7 @@ async def callback_query(Client, CallbackQuery):
         os.remove(thumb)
         await m.delete()
     ## 360p
-    elif CallbackQuery.data == "360p_{link}":
+    elif CallbackQuery.data == r"360p_":
         link = CallbackQuery.data.split("_")[1]
         youtube_360 = YouTube(link)
         vid_360 = youtube_360.streams.get_lowest_resolution()
