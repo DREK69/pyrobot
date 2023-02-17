@@ -1,6 +1,6 @@
 import os
 
-import wget
+import requests 
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaAudio
 from pytube import YouTube
@@ -12,9 +12,7 @@ from MerissaRobot import pbot as Client
 @Client.on_message(filters.command(["music", "ytdl", "song"]))
 def song(client, message):
     global chat_id
-    chat_id = message.chat.id
-    global duration
-    global thumb
+    chat_id = message.chat.id   
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
@@ -36,9 +34,8 @@ def song(client, message):
         )
         print(str(e))
         return
-    thumb = "thumbnail.jpg"
-    thumbnail = f"https://i.ytimg.com/vi/{data['id']}/hqdefault.jpg"
-    wget.download(thumbnail, thumb)
+    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={link}&limit=1").json()["results"][0]
+    thumbnail = yt["thumbnail"][1]["url"]
     message.reply_photo(
         thumbnail,
         caption=f"**Title**: {songname}\n**Duration**: {str(duration)}\n\n**Select Your Preferred Format from Below**:",
@@ -63,16 +60,19 @@ async def callback_query(Client, CallbackQuery):
     callback = CallbackQuery.data.strip()
     link = callback.split(None, 1)[1]
     youtube_audio = YouTube(link)
-    audio = url.streams.filter(
+    audio = youtube_audio.streams.filter(
         mime_type="audio/mp4", abr="48kbps", only_audio=True
     ).first()
     audio_file = audio.download(filename="y.mp3")
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
-    title = youtube_audio.title
-    dur = info_dict["duration"]
-    uploader = info_dict["uploader"]
+    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={link}&limit=1").json()["results"][0]
+    title = yt["title"]
+    dur = yt["duration"]
+    uploader = yt["channel"]["name"]
+    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={link}&limit=1").json()["results"][0]
+    thumb = yt["thumbnail"][1]["url"]
     med = InputMediaAudio(
         media=audio_file,
         caption=title,
@@ -99,6 +99,8 @@ async def callback_query(Client, CallbackQuery):
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
+    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={link}&limit=1").json()["results"][0]
+    thumb = yt["thumbnail"][1]["url"]
     download_720 = vid_720.download()
     try:
         await Client.send_video(
@@ -124,6 +126,8 @@ async def callback_query(Client, CallbackQuery):
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
     download_360 = vid_360.download()
+    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={link}&limit=1").json()["results"][0]
+    thumb = yt["thumbnail"][1]["url"]
     try:
         await Client.send_video(
             chat_id,
