@@ -58,25 +58,24 @@ def song(client, message):
     )
 
 
-@Client.on_callback_query()
+@app.on_callback_query(filters.regex(pattern=r"audio"))
 async def callback_query(Client, CallbackQuery):
-    ## Download audio
-    if CallbackQuery.data == "audio":
-        CallbackQuery.data.strip()
-        link = callback_data.split(None, 1)[1]
-        youtube_audio = YouTube(link)
-        ydl_opts = {"format": "bestaudio[ext=m4a]"}
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info_dict = ydl.extract_info(link, download=False)
-            audio_file = ydl.prepare_filename(info_dict)
-            ydl.process_info(info_dict)
-        m = await CallbackQuery.edit_message_text(
+    ## Download audio    
+    callback = CallbackQuery.data.strip()
+    link = callback.split(None, 1)[1]
+    youtube_audio = YouTube(link)
+    ydl_opts = {"format": "bestaudio[ext=m4a]"}
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info_dict = ydl.extract_info(link, download=False)
+        audio_file = ydl.prepare_filename(info_dict)
+        ydl.process_info(info_dict)
+    m = await CallbackQuery.edit_message_text(
             "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
-        )
-        title = youtube_audio.title
-        dur = info_dict["duration"]
-        uploader = info_dict["uploader"]
-        med = InputMediaAudio(
+    )
+    title = youtube_audio.title
+    dur = info_dict["duration"]
+    uploader = info_dict["uploader"]
+    med = InputMediaAudio(
             media=audio_file,
             caption=title,
             title=title,
@@ -84,51 +83,56 @@ async def callback_query(Client, CallbackQuery):
             duration=dur,
             performer=uploader,
         )
-        try:
-            await CallbackQuery.edit_message_media(media=med)
-        except Exception as error:
-            await Client.send_message(chat_id, f"Something happened!\n<i>{error}</i>")
-        os.remove(audio_file)
-        os.remove(thumb)
+    try:
+        await CallbackQuery.edit_message_media(media=med)
+    except Exception as error:
+        await Client.send_message(chat_id, f"Something happened!\n<i>{error}</i>")
+    os.remove(audio_file)
+    os.remove(thumb)
     ## 720p
-    elif CallbackQuery.data == r"720p_{link}":
-        link = CallbackQuery.data.split("_")[1]
-        youtube_720 = YouTube(link)
-        vid_720 = youtube_720.streams.get_by_resolution("720p")
-        m = await CallbackQuery.edit_message_text(
+    
+@app.on_callback_query(filters.regex(pattern=r"720p"))
+async def callback_query(Client, CallbackQuery):
+    callback = CallbackQuery.data.strip()
+    link = callback.split(None, 1)[1]
+    youtube_720 = YouTube(link)
+    vid_720 = youtube_720.streams.get_by_resolution("720p")
+    m = await CallbackQuery.edit_message_text(
             "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
-        )
-        download_720 = vid_720.download()
-        try:
-            await Client.send_video(
+    )
+    download_720 = vid_720.download()
+    try:
+        await Client.send_video(
                 chat_id,
                 download_720,
                 caption=youtube_720.title,
                 thumb=thumb,
-            )
-        except Exception as error:
-            await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
-        os.remove(download_720)
-        os.remove(thumb)
-        await m.delete()
-    ## 360p
-    elif CallbackQuery.data == r"360p_{link}":
-        link = CallbackQuery.data.split("_")[1]
-        youtube_360 = YouTube(link)
-        vid_360 = youtube_360.streams.get_lowest_resolution()
-        m = await CallbackQuery.edit_message_text(
-            "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
         )
-        download_360 = vid_360.download()
-        try:
-            await Client.send_video(
+    except Exception as error:
+        await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
+    os.remove(download_720)
+    os.remove(thumb)
+    await m.delete()
+
+@app.on_callback_query(filters.regex(pattern=r"360p"))
+async def callback_query(Client, CallbackQuery):    
+    callback = CallbackQuery.data.strip()
+    link = callback.split(None, 1)[1]
+    youtube_360 = YouTube(link)
+    vid_360 = youtube_360.streams.get_lowest_resolution()
+    m = await CallbackQuery.edit_message_text(
+            "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
+    )
+    download_360 = vid_360.download()
+    try:
+        await Client.send_video(
                 chat_id,
                 download_360,
                 caption=youtube_360.title,
                 thumb=thumb,
-            )
-        except Exception as error:
-            await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
-        os.remove(download_360)
-        os.remove(thumb)
-        await m.delete()
+        )
+    except Exception as error:
+        await Client.send_message(chat_id, f"Error occurred!!\n<i>{error}</i>")
+    os.remove(download_360)
+    os.remove(thumb)
+    await m.delete()
