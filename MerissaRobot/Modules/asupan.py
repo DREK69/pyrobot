@@ -1,6 +1,5 @@
 import requests
 from pyrogram import filters
-from pyrogram.types import *
 
 from MerissaRobot import pbot as bot
 
