@@ -62,7 +62,7 @@ def song(client, message):
 async def callback_query(Client, CallbackQuery):
     ## Download audio
     if CallbackQuery.data == "audio":
-        callback = CallbackQuery.data.strip()
+        CallbackQuery.data.strip()
         link = callback_data.split(None, 1)[1]
         youtube_audio = YouTube(link)
         ydl_opts = {"format": "bestaudio[ext=m4a]"}
