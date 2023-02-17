@@ -13,7 +13,7 @@ from MerissaRobot import pbot as Client
 @Client.on_message(filters.command(["music", "ytdl", "song"]))
 def song(client, message):
     global chat_id
-    chat_id = message.chat.id    
+    chat_id = message.chat.id
     global duration
     global thumb
     user_id = message.from_user.id
@@ -44,18 +44,18 @@ def song(client, message):
         thumbnail,
         caption=f"**Title**: {songname}\n**Duration**: {str(duration)}\n\n**Select Your Preferred Format from Below**:",
         reply_markup=InlineKeyboardMarkup(
-      [
-        [
-            InlineKeyboardButton("🔊 Audio", callback_data=f"audio_{link}"),
-            InlineKeyboardButton("🎥 360p", callback_data=f"360p_{link}"),
-        ],
-        [
-            InlineKeyboardButton("🎥 720p", callback_data=f"720p_{link}"),
-            InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
-        ],
-      ]
-   ),
-)
+            [
+                [
+                    InlineKeyboardButton("🔊 Audio", callback_data=f"audio_{link}"),
+                    InlineKeyboardButton("🎥 360p", callback_data=f"360p_{link}"),
+                ],
+                [
+                    InlineKeyboardButton("🎥 720p", callback_data=f"720p_{link}"),
+                    InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                ],
+            ]
+        ),
+    )
 
 
 @Client.on_callback_query()
