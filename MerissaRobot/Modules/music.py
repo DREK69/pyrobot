@@ -35,9 +35,9 @@ def song(client, message):
         print(str(e))
         return
     yt = requests.get(
-        f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
+        f"https://api.princexd.tech/ytsearch?query={query}&limit=1"
     ).json()["results"][0]
-    thumbnail = yt["thumbnail"][1]["url"]
+    thumbnail = yt["thumbnails"][1]["url"]
     message.reply_photo(
         thumbnail,
         caption=f"**Title**: {songname}\n**Duration**: {str(duration)}\n\n**Select Your Preferred Format from Below**:",
@@ -78,7 +78,7 @@ async def callback_query(Client, CallbackQuery):
     yt = requests.get(
         f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
     ).json()["results"][0]
-    thumb = yt["thumbnail"][1]["url"]
+    thumb = yt["thumbnails"][1]["url"]
     med = InputMediaAudio(
         media=audio_file,
         caption=title,
@@ -108,7 +108,7 @@ async def callback_query(Client, CallbackQuery):
     yt = requests.get(
         f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
     ).json()["results"][0]
-    thumb = yt["thumbnail"][1]["url"]
+    thumb = yt["thumbnails"][1]["url"]
     download_720 = vid_720.download()
     try:
         await Client.send_video(
@@ -137,7 +137,7 @@ async def callback_query(Client, CallbackQuery):
     yt = requests.get(
         f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
     ).json()["results"][0]
-    thumb = yt["thumbnail"][1]["url"]
+    thumb = yt["thumbnails"][1]["url"]
     try:
         await Client.send_video(
             chat_id,
