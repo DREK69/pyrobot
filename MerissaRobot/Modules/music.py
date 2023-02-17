@@ -46,11 +46,11 @@ def song(client, message):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("🔊 Audio", callback_data=f"audio_{link}"),
-                    InlineKeyboardButton("🎥 360p", callback_data=f"360p_{link}"),
+                    InlineKeyboardButton("🔊 Audio", callback_data=f"audio {link}"),
+                    InlineKeyboardButton("🎥 360p", callback_data=f"360p {link}"),
                 ],
                 [
-                    InlineKeyboardButton("🎥 720p", callback_data=f"720p_{link}"),
+                    InlineKeyboardButton("🎥 720p", callback_data=f"720p {link}"),
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
@@ -61,8 +61,9 @@ def song(client, message):
 @Client.on_callback_query()
 async def callback_query(Client, CallbackQuery):
     ## Download audio
-    if CallbackQuery.data == r"audio_{link}":
-        link = CallbackQuery.data.split("_")[1]
+    if CallbackQuery.data == "audio":
+        callback = CallbackQuery.data.strip()
+        link = callback_data.split(None, 1)[1]
         youtube_audio = YouTube(link)
         ydl_opts = {"format": "bestaudio[ext=m4a]"}
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
