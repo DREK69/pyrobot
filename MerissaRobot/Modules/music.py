@@ -1,6 +1,7 @@
 import os
-import wget
+
 import requests
+import wget
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaAudio
 from pytube import YouTube
@@ -79,7 +80,7 @@ async def callback_query(Client, CallbackQuery):
         f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
     ).json()["results"][0]
     thumbnail = yt["thumbnails"][1]["url"]
-    thumb = "thumbnail.jpg"    
+    thumb = "thumbnail.jpg"
     wget.download(thumbnail, thumb)
     med = InputMediaAudio(
         media=audio_file,
@@ -111,7 +112,7 @@ async def callback_query(Client, CallbackQuery):
         f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
     ).json()["results"][0]
     thumbnail = yt["thumbnails"][1]["url"]
-    thumb = "thumbnail.jpg"    
+    thumb = "thumbnail.jpg"
     wget.download(thumbnail, thumb)
     download_720 = vid_720.download()
     try:
@@ -142,7 +143,7 @@ async def callback_query(Client, CallbackQuery):
         f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
     ).json()["results"][0]
     thumbnail = yt["thumbnails"][1]["url"]
-    thumb = "thumbnail.jpg"    
+    thumb = "thumbnail.jpg"
     wget.download(thumbnail, thumb)
     try:
         await Client.send_video(
