@@ -1,6 +1,6 @@
 import os
 
-import requests 
+import requests
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaAudio
 from pytube import YouTube
@@ -12,7 +12,7 @@ from MerissaRobot import pbot as Client
 @Client.on_message(filters.command(["music", "ytdl", "song"]))
 def song(client, message):
     global chat_id
-    chat_id = message.chat.id   
+    chat_id = message.chat.id
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
@@ -34,7 +34,9 @@ def song(client, message):
         )
         print(str(e))
         return
-    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={link}&limit=1").json()["results"][0]
+    yt = requests.get(
+        f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
+    ).json()["results"][0]
     thumbnail = yt["thumbnail"][1]["url"]
     message.reply_photo(
         thumbnail,
@@ -67,11 +69,15 @@ async def callback_query(Client, CallbackQuery):
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
-    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={link}&limit=1").json()["results"][0]
+    yt = requests.get(
+        f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
+    ).json()["results"][0]
     title = yt["title"]
     dur = yt["duration"]
     uploader = yt["channel"]["name"]
-    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={link}&limit=1").json()["results"][0]
+    yt = requests.get(
+        f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
+    ).json()["results"][0]
     thumb = yt["thumbnail"][1]["url"]
     med = InputMediaAudio(
         media=audio_file,
@@ -99,7 +105,9 @@ async def callback_query(Client, CallbackQuery):
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
-    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={link}&limit=1").json()["results"][0]
+    yt = requests.get(
+        f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
+    ).json()["results"][0]
     thumb = yt["thumbnail"][1]["url"]
     download_720 = vid_720.download()
     try:
@@ -126,7 +134,9 @@ async def callback_query(Client, CallbackQuery):
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
     download_360 = vid_360.download()
-    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={link}&limit=1").json()["results"][0]
+    yt = requests.get(
+        f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
+    ).json()["results"][0]
     thumb = yt["thumbnail"][1]["url"]
     try:
         await Client.send_video(
