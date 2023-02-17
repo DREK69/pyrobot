@@ -9,30 +9,11 @@ from youtubesearchpython import VideosSearch
 
 from MerissaRobot import pbot as Client
 
-START_BUTTONS = InlineKeyboardMarkup(
-    [[InlineKeyboardButton("🔍Search YouTube", switch_inline_query_current_chat="")]]
-)
-
-
-QUALITY_BUTTONS = InlineKeyboardMarkup(
-    [
-        [
-            InlineKeyboardButton("🔊 Audio", callback_data="audio"),
-            InlineKeyboardButton("🎥 360p", callback_data="360p"),
-        ],
-        [
-            InlineKeyboardButton("🎥 720p", callback_data="720p"),
-            InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
-        ],
-    ]
-)
-
 
 @Client.on_message(filters.command(["music", "ytdl", "song"]))
 def song(client, message):
     global chat_id
-    chat_id = message.chat.id
-    global link
+    chat_id = message.chat.id    
     global duration
     global thumb
     user_id = message.from_user.id
@@ -59,18 +40,29 @@ def song(client, message):
     thumb = "thumbnail.jpg"
     thumbnail = f"https://i.ytimg.com/vi/{data['id']}/hqdefault.jpg"
     wget.download(thumbnail, thumb)
-    reply_markup = QUALITY_BUTTONS
     message.reply_photo(
         thumbnail,
         caption=f"**Title**: {songname}\n**Duration**: {str(duration)}\n\n**Select Your Preferred Format from Below**:",
-        reply_markup=reply_markup,
-    )
+        reply_markup=InlineKeyboardMarkup(
+      [
+        [
+            InlineKeyboardButton("🔊 Audio", callback_data=f"audio_{link}"),
+            InlineKeyboardButton("🎥 360p", callback_data=f"360p_{link}"),
+        ],
+        [
+            InlineKeyboardButton("🎥 720p", callback_data=f"720p_{link}"),
+            InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+        ],
+      ]
+   ),
+)
 
 
 @Client.on_callback_query()
 async def callback_query(Client, CallbackQuery):
     ## Download audio
-    if CallbackQuery.data == "audio":
+    if CallbackQuery.data == "audio_{link}":
+        link = CallbackQuery.data.split("_")[1]
         youtube_audio = YouTube(link)
         ydl_opts = {"format": "bestaudio[ext=m4a]"}
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -98,7 +90,8 @@ async def callback_query(Client, CallbackQuery):
         os.remove(audio_file)
         os.remove(thumb)
     ## 720p
-    elif CallbackQuery.data == "720p":
+    elif CallbackQuery.data == "720p_{link}":
+        link = CallbackQuery.data.split("_")[1]
         youtube_720 = YouTube(link)
         vid_720 = youtube_720.streams.get_by_resolution("720p")
         m = await CallbackQuery.edit_message_text(
@@ -118,7 +111,8 @@ async def callback_query(Client, CallbackQuery):
         os.remove(thumb)
         await m.delete()
     ## 360p
-    elif CallbackQuery.data == "360p":
+    elif CallbackQuery.data == "360p_{link}":
+        link = CallbackQuery.data.split("_")[1]
         youtube_360 = YouTube(link)
         vid_360 = youtube_360.streams.get_lowest_resolution()
         m = await CallbackQuery.edit_message_text(
