@@ -1,7 +1,6 @@
 import os
 
 import wget
-import yt_dlp
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaAudio
 from pytube import YouTube
@@ -65,8 +64,8 @@ async def callback_query(Client, CallbackQuery):
     link = callback.split(None, 1)[1]
     youtube_audio = YouTube(link)
     audio = url.streams.filter(
-                    mime_type="audio/mp4", abr="48kbps", only_audio=True
-                ).first()
+        mime_type="audio/mp4", abr="48kbps", only_audio=True
+    ).first()
     audio_file = audio.download(filename="y.mp3")
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
