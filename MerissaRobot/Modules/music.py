@@ -78,12 +78,7 @@ async def callback_query(Client, CallbackQuery):
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
     title = youtube_audio.title
-    med = InputMediaAudio(
-        media=audio_file,
-        caption=title,
-        title=title,
-        thumb=thumb
-    )
+    med = InputMediaAudio(media=audio_file, caption=title, title=title, thumb=thumb)
     try:
         await CallbackQuery.edit_message_media(media=med)
     except Exception as error:
