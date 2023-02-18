@@ -28,7 +28,7 @@ def song(client, message):
         data = search["result"][0]
         songname = data["title"]
         link = data["link"]
-        duration = data["duration"]
+        dur = data["duration"]
     except Exception as e:
         message.reply(
             "**😴 sᴏɴɢ ɴᴏᴛ ғᴏᴜɴᴅ ᴏɴ ʏᴏᴜᴛᴜʙᴇ.**\n\n» ᴍᴀʏʙᴇ ᴛᴜɴᴇ ɢᴀʟᴛɪ ʟɪᴋʜᴀ ʜᴏ, ᴩᴀᴅʜᴀɪ - ʟɪᴋʜᴀɪ ᴛᴏʜ ᴋᴀʀᴛᴀ ɴᴀʜɪ ᴛᴜ !"
@@ -38,18 +38,21 @@ def song(client, message):
     yt = requests.get(
         f"https://api.princexd.tech/ytsearch?query={query}&limit=1"
     ).json()["results"][0]
+    uploader = yt["channel"]["name"]
     thumbnail = yt["thumbnails"][1]["url"]
+    thumb = "thumbnail.jpg"
+    wget.download(thumbnail, thumb)
     message.reply_photo(
         thumbnail,
-        caption=f"**Title**: {songname}\n**Duration**: {str(duration)}\n\n**Select Your Preferred Format from Below**:",
+        caption=f"**Title**: {songname}\n**Duration**: {str(dur)}\n\n**Select Your Preferred Format from Below**:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("🔊 Audio", callback_data=f"audio {link}"),
-                    InlineKeyboardButton("🎥 360p", callback_data=f"360p {link}"),
+                    InlineKeyboardButton("🔊 Audio", callback_data=f"audio {link}|{dur}|{thumb}|{uploader}"),
+                    InlineKeyboardButton("🎥 360p", callback_data=f"360p {link}|{thumb}"),
                 ],
                 [
-                    InlineKeyboardButton("🎥 720p", callback_data=f"720p {link}"),
+                    InlineKeyboardButton("🎥 720p", callback_data=f"720p {link}|{thumb}"),
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
@@ -61,7 +64,7 @@ def song(client, message):
 async def callback_query(Client, CallbackQuery):
     ## Download audio
     callback = CallbackQuery.data.strip()
-    link = callback.split(None, 1)[1]
+    link, title, dur, thumb = callback.split("|")
     youtube_audio = YouTube(link)
     audio = youtube_audio.streams.filter(
         mime_type="audio/mp4", abr="48kbps", only_audio=True
@@ -70,24 +73,12 @@ async def callback_query(Client, CallbackQuery):
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
-    yt = requests.get(
-        f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
-    ).json()["results"][0]
-    title = yt["title"]
-    dur = yt["duration"]
-    uploader = yt["channel"]["name"]
-    yt = requests.get(
-        f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
-    ).json()["results"][0]
-    thumbnail = yt["thumbnails"][1]["url"]
-    thumb = "thumbnail.jpg"
-    wget.download(thumbnail, thumb)
     med = InputMediaAudio(
         media=audio_file,
         caption=title,
         title=title,
         thumb=thumb,
-        duration=dur,
+        duration=str(dur),
         performer=uploader,
     )
     try:
@@ -102,18 +93,12 @@ async def callback_query(Client, CallbackQuery):
 @Client.on_callback_query(filters.regex(pattern=r"720p"))
 async def callback_query(Client, CallbackQuery):
     callback = CallbackQuery.data.strip()
-    link = callback.split(None, 1)[1]
+    link, thumb = callback.split("|")
     youtube_720 = YouTube(link)
     vid_720 = youtube_720.streams.get_by_resolution("720p")
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
-    yt = requests.get(
-        f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
-    ).json()["results"][0]
-    thumbnail = yt["thumbnails"][1]["url"]
-    thumb = "thumbnail.jpg"
-    wget.download(thumbnail, thumb)
     download_720 = vid_720.download()
     try:
         await Client.send_video(
@@ -132,19 +117,13 @@ async def callback_query(Client, CallbackQuery):
 @Client.on_callback_query(filters.regex(pattern=r"360p"))
 async def callback_query(Client, CallbackQuery):
     callback = CallbackQuery.data.strip()
-    link = callback.split(None, 1)[1]
+    link, thumb = callback.split("|")
     youtube_360 = YouTube(link)
     vid_360 = youtube_360.streams.get_lowest_resolution()
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
     download_360 = vid_360.download()
-    yt = requests.get(
-        f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
-    ).json()["results"][0]
-    thumbnail = yt["thumbnails"][1]["url"]
-    thumb = "thumbnail.jpg"
-    wget.download(thumbnail, thumb)
     try:
         await Client.send_video(
             chat_id,
