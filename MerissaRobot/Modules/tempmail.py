@@ -10,9 +10,11 @@ from MerissaRobot import pbot as app
 buttons = InlineKeyboardMarkup(
     [
         [
-            InlineKeyboardButton("Generate", callback_data="generate"),
-            InlineKeyboardButton("Refresh", callback_data="refresh"),
-            InlineKeyboardButton("Close", callback_data="close"),
+            InlineKeyboardButton("📧 Generate Email", callback_data="generate")
+        ],
+        [     
+            InlineKeyboardButton("🔁 Refresh", callback_data="refresh"),          
+            InlineKeyboardButton("🗑️ Close", callback_data="cb_close")
         ]
     ]
 )
@@ -20,8 +22,10 @@ buttons = InlineKeyboardMarkup(
 msg_buttons = InlineKeyboardMarkup(
     [
         [
-            InlineKeyboardButton("View message", callback_data="view_msg"),
-            InlineKeyboardButton("Close", callback_data="close"),
+            InlineKeyboardButton("📫 View message", callback_data="view_msg")
+        ],
+        [
+            InlineKeyboardButton("🗑️ Close", callback_data="cb_close")
         ]
     ]
 )
