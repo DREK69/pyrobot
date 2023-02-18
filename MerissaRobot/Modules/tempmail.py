@@ -157,7 +157,7 @@ async def mail_box(_, query: CallbackQuery):
 {text}
 """,
             reply_markup=mbutton,
-            disable_web_page_preview=True
+            disable_web_page_preview=True,
         )
     else:
         body = mail["textBody"]
@@ -172,7 +172,7 @@ async def mail_box(_, query: CallbackQuery):
 {body}
 """,
             reply_markup=mbutton,
-            disable_web_page_preview=True
+            disable_web_page_preview=True,
         )
 
 
