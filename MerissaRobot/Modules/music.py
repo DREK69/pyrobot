@@ -13,7 +13,6 @@ from MerissaRobot import pbot as Client
 @Client.on_message(filters.command(["music", "ytdl", "song"]))
 def song(client, message):
     global chat_id
-    global thumb
     chat_id = message.chat.id
     user_id = message.from_user.id
     user_name = message.from_user.first_name
@@ -29,6 +28,7 @@ def song(client, message):
         data = search["result"][0]
         songname = data["title"]
         link = data["link"]
+        videoid = data["id"]
         dur = data["duration"]
     except Exception as e:
         message.reply(
@@ -41,7 +41,7 @@ def song(client, message):
     ).json()["results"][0]
     yt["channel"]["name"]
     thumbnail = yt["thumbnails"][1]["url"]
-    thumb = f"{songname}.jpg"
+    thumb = "t.jpg"
     wget.download(thumbnail, thumb)
     message.reply_photo(
         thumbnail,
@@ -51,12 +51,12 @@ def song(client, message):
                 [
                     InlineKeyboardButton(
                         "🔊 Audio",
-                        callback_data=f"audio {link}",
+                        callback_data=f"audio {videoid}|{thumb}",
                     ),
-                    InlineKeyboardButton("🎥 360p", callback_data=f"360p {link}"),
+                    InlineKeyboardButton("🎥 360p", callback_data=f"360p {videoid}|{thumb}"),
                 ],
                 [
-                    InlineKeyboardButton("🎥 720p", callback_data=f"720p {link}"),
+                    InlineKeyboardButton("🎥 720p", callback_data=f"720p {videoid}|{thumb}"),
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
@@ -68,7 +68,8 @@ def song(client, message):
 async def callback_query(Client, CallbackQuery):
     ## Download audio
     callback = CallbackQuery.data.strip()
-    link = callback.split(None, 1)[1]
+    videoid, thumb = callback.split("|")
+    link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_audio = YouTube(link)
     audio = youtube_audio.streams.filter(
         mime_type="audio/mp4", abr="48kbps", only_audio=True
@@ -90,7 +91,8 @@ async def callback_query(Client, CallbackQuery):
 @Client.on_callback_query(filters.regex(pattern=r"360p"))
 async def callback_query(Client, CallbackQuery):
     callback = CallbackQuery.data.strip()
-    link = callback.split(None, 1)[1]
+    videoid, thumb = callback.split("|")
+    link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_360 = YouTube(link)
     vid_360 = youtube_360.streams.get_lowest_resolution()
     m = await CallbackQuery.edit_message_text(
@@ -114,7 +116,8 @@ async def callback_query(Client, CallbackQuery):
 @Client.on_callback_query(filters.regex(pattern=r"720p"))
 async def callback_query(Client, CallbackQuery):
     callback = CallbackQuery.data.strip()
-    link = callback.split(None, 1)[1]
+    videoid, thumb = callback.split("|")
+    link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_720 = YouTube(link)
     vid_720 = youtube_720.streams.get_by_resolution("720p")
     m = await CallbackQuery.edit_message_text(
