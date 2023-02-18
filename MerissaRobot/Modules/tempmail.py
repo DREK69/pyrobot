@@ -4,8 +4,8 @@ import bs4
 import requests
 from pykeyboard import InlineKeyboard
 from pyrogram import *
-from pyrogram.errors import bad_request_400
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.errors import *
+from pyrogram.types import *
 from RandomWordGenerator import RandomWord
 
 from MerissaRobot import pbot as app
