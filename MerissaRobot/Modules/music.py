@@ -71,7 +71,8 @@ def song(client, message):
 @Client.on_callback_query(filters.regex(pattern=r"audio"))
 async def callback_query(Client, CallbackQuery):
     ## Download audio
-    callback = CallbackQuery.data.strip()
+    callback_data = CallbackQuery.data.strip()
+    callback = callback_data.split(None, 1)[1]
     videoid, thumb = callback.split("|")
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_audio = YouTube(link)
@@ -94,7 +95,8 @@ async def callback_query(Client, CallbackQuery):
 
 @Client.on_callback_query(filters.regex(pattern=r"360p"))
 async def callback_query(Client, CallbackQuery):
-    callback = CallbackQuery.data.strip()
+    callback_data = CallbackQuery.data.strip()
+    callback = callback_data.split(None, 1)[1]
     videoid, thumb = callback.split("|")
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_360 = YouTube(link)
@@ -119,7 +121,8 @@ async def callback_query(Client, CallbackQuery):
 
 @Client.on_callback_query(filters.regex(pattern=r"720p"))
 async def callback_query(Client, CallbackQuery):
-    callback = CallbackQuery.data.strip()
+    callback_data = CallbackQuery.data.strip()
+    callback = callback_data.split(None, 1)[1]
     videoid, thumb = callback.split("|")
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_720 = YouTube(link)
