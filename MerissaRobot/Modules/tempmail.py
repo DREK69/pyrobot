@@ -1,34 +1,84 @@
-from pyrogram import filters
-from requests import get
+from pyrogram import *
+import requests as re
 
-from MerissaRobot import pbot
+from pyrogram.types import InlineKeyboardButton,InlineKeyboardMarkup
+import wget
+import os 
+
+from MerissaRobot import pbot as app
+
+buttons=InlineKeyboardMarkup(
+                             [
+                             [
+            InlineKeyboardButton('Generate', callback_data='generate'),
+            InlineKeyboardButton('Refresh', callback_data='refresh'),
+            InlineKeyboardButton('Close', callback_data='close')
+                   ] 
+                             ])
+
+msg_buttons=InlineKeyboardMarkup(
+                             [
+                             [
+            InlineKeyboardButton('View message', callback_data='view_msg'),
+            InlineKeyboardButton('Close', callback_data='close')
+                   ] 
+                             ])
+
+email=''
+
+@app.on_message(filters.command('genmail'))
+async def start_msg(client,message):
+    await message.reply('Hello Welcome to Merissa Temp Mail Generator',
+                        reply_markup=buttons)
 
 
-@pbot.on_message(filters.command("genmail"))
-async def gen_mail(_, message):
-    x = get(f"https://api.princexd.tech/emailgen").json()["email"]
-    await message.reply_text(
-        f"Email - {x}\n\nPowered by @MerissaRobot",
-    )
-
-
-@pbot.on_message(filters.command("mails"))
-async def movie(_, message):
-    if len(message.command) < 2:
-        return await message.reply_text(
-            "First of all Genrate Email /genmail and Give me some emails to get mails\n\nEx. /mails abcdef@coooooool.com"
-        )
-    email = (
-        message.text.split(None, 1)[1]
-        if len(message.command) < 3
-        else message.text.split(None, 1)[1].replace(" ", "%20")
-    )
-    x = get(f"https://api.princexd.tech/receivedmails?email={email}").json()[0]
-    cu = x["from"]
-    fr = cu.replace("<", "").replace(">", "")
-    to = x["to"]
-    subject = x["subject"]
-    text = x["body_text"]
-    await message.reply_text(
-        text=f"From = {fr}\nTo = {to}\n\nSubject = {subject}\nBody = {text}\n\nPowered By @MerissaRobot",
-    )
+@app.on_callback_query()
+async def mailbox(client,message):
+    response=message.data
+    if response=='generate':
+       global email
+       email = re.get("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1").json()[0]
+       await message.edit_message_text('__**Your Temporary E-mail: **__`'+str(email)+'`',
+                                       reply_markup=buttons)
+       print(email)
+    elif response=='refresh':
+        print(email)
+        try:
+            if email=='':
+                await message.edit_message_text('Genaerate a email',reply_markup=buttons)
+            else: 
+                getmsg_endp =  "https://www.1secmail.com/api/v1/?action=getMessages&login=" + email[:email.find("@")] + "&domain=" + email[email.find("@") + 1:]
+                print(getmsg_endp)
+                ref_response = re.get(getmsg_endp).json()
+                global idnum
+                idnum=str(ref_response[0]['id'])
+                from_msg=ref_response[0]['from']
+                subject=ref_response[0]['subject']
+                refreshrply='You a message from '+from_msg+'\n\nSubject : '+subject
+                await message.edit_message_text(refreshrply,
+                                                reply_markup=msg_buttons)
+        except:
+            await message.answer('No messages were received..\nin your Mailbox '+email)
+    elif response=='view_msg':
+        msg =re.get("https://www.1secmail.com/api/v1/?action=readMessage&login=" + email[:email.find("@")] + "&domain=" + email[email.find("@") + 1:] + "&id=" + idnum).json()
+        print(msg)
+        from_mail=msg['from']
+        date=msg['date']
+        subjectt=msg['subject']
+        attachments=msg['attachments'][0]
+        body=msg['body']
+        mailbox_view='ID No : '+idnum+'\nFrom : '+from_mail+'\nDate : '+date+'\nSubject : '+subjectt+'\n\n'+body
+        await message.edit_message_text(mailbox_view,reply_markup=buttons)
+        print(attachments)
+        mailbox_view='ID No : '+idnum+'\nFrom : '+from_mail+'\nDate : '+date+'\nSubject : '+subjectt+'\n\n'+body
+        if attachments == "[]":
+            await message.edit_message_text(mailbox_view,reply_markup=buttons)
+            await message.answer("No Messages Were Recieved..", show_alert=True)
+        else:
+            dlattach=attachments['filename']
+            attc="https://www.1secmail.com/api/v1/?action=download&login=" + email[:email.find("@")] + "&domain=" + email[email.find("@") + 1:] + "&id=" + idnum+"&file="+dlattach
+            print(attc)
+            mailbox_vieww='ID No : '+idnum+'\nFrom : '+from_mail+'\nDate : '+date+'\nSubject : '+subjectt+'\n\n'+body+'\n\n'+'[Download]('+attc+') Attachments'
+            filedl=wget.download(attc)
+            await message.edit_message_text(mailbox_vieww,reply_markup=buttons)
+            os.remove(dlattach)
