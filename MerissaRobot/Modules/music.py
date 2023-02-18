@@ -27,7 +27,7 @@ def song(client, message):
         search = VideosSearch(query, limit=1).result()
         data = search["result"][0]
         songname = data["title"]
-        link = data["link"]
+        data["link"]
         videoid = data["id"]
         dur = data["duration"]
     except Exception as e:
@@ -53,10 +53,14 @@ def song(client, message):
                         "🔊 Audio",
                         callback_data=f"audio {videoid}|{thumb}",
                     ),
-                    InlineKeyboardButton("🎥 360p", callback_data=f"360p {videoid}|{thumb}"),
+                    InlineKeyboardButton(
+                        "🎥 360p", callback_data=f"360p {videoid}|{thumb}"
+                    ),
                 ],
                 [
-                    InlineKeyboardButton("🎥 720p", callback_data=f"720p {videoid}|{thumb}"),
+                    InlineKeyboardButton(
+                        "🎥 720p", callback_data=f"720p {videoid}|{thumb}"
+                    ),
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
