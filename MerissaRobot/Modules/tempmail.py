@@ -48,13 +48,14 @@ async def fakemailgen(_, message: Message):
     pi = await mes.pin(disable_notification=True, both_sides=True)
     await pi.delete()
 
+
 @app.on_message(filters.command("set"))
 async def setmailgen(_, message: Message):
-    name = message.from_user.id    
+    name = message.from_user.id
     if len(message.command) < 2:
         return await message.reply_text(
             "Give me some text to make Tempmail\n\nEx. /set Merissarobot"
-        )     
+        )
     email = message.text.split(None, 1)[1]
     xx = requests.get(API1).json()
     domain = random.choice(xx)
@@ -91,9 +92,7 @@ async def gen_keyboard(mails, email, domain):
             InlineKeyboardButton(f"{mail['subject']}", f"mail |{email}|{domain}|{id}")
         )
         num += 1
-    data.append(
-        InlineKeyboardButton("🔁 Update Mailbox", f"mailbox |{email}|{domain}")
-    )
+    data.append(InlineKeyboardButton("🔁 Update Mailbox", f"mailbox |{email}|{domain}"))
     i_kbd.add(*data)
     return i_kbd
 
