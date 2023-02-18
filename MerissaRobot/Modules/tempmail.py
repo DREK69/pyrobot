@@ -18,19 +18,12 @@ API3 = "https://www.1secmail.com/api/v1/?action=readMessage&login="
 
 # ********************************************************************************
 
-create = InlineKeyboardMarkup(
-    [[InlineKeyboardButton("Groupdcbots ⚡", url="https://t.me/NotReallyPrince")]]
-)
-
 # *******************************************************************************
 
 
 @app.on_message(filters.command("genmail"))
 async def fakemailgen(_, message: Message):
     name = message.from_user.id
-    m = await app.send_message(
-        name, text=f"📧 Creating  temp email....", reply_markup=create
-    )
     rp = RandomWord(max_word_size=8, include_digits=True)
     email = rp.generate()
     xx = requests.get(API1).json()
@@ -42,7 +35,7 @@ async def fakemailgen(_, message: Message):
 **📬 Done,Your Email Address Created!**
 📧 **Email** : `{email}@{domain}`
 📨 **Mail BOX** : `empty`
-♨️ **Powered by** : @groupdcbots """,
+♨️ **Powered by** : @MerissaRobot """,
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -96,7 +89,7 @@ async def mail_box(_, query: CallbackQuery):
 **📬 Done,Your Email Address Created!**
 📧 **Email** : `{smail}`
 📨 **Mail BOX** : ✅
-**♨️ Powered by** : @Groupdcbots""",
+**♨️ Powered by** : @MerissaRobot""",
                 reply_markup=mbutton,
             )
         except bad_request_400.MessageNotModified as e:
