@@ -41,7 +41,7 @@ def song(client, message):
     ).json()["results"][0]
     yt["channel"]["name"]
     thumbnail = yt["thumbnails"][1]["url"]
-    thumb = f"{title}.jpg"
+    thumb = f"{songname}.jpg"
     wget.download(thumbnail, thumb)
     message.reply_photo(
         thumbnail,
@@ -77,13 +77,12 @@ async def callback_query(Client, CallbackQuery):
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
+    title = youtube_audio.title
     med = InputMediaAudio(
         media=audio_file,
         caption=title,
         title=title,
-        thumb=thumb,
-        duration=str(dur),
-        performer=uploader,
+        thumb=thumb
     )
     try:
         await CallbackQuery.edit_message_media(media=med)
