@@ -39,7 +39,7 @@ def song(client, message):
     yt = requests.get(
         f"https://api.princexd.tech/ytsearch?query={query}&limit=1"
     ).json()["results"][0]
-    uploader = yt["channel"]["name"]
+    yt["channel"]["name"]
     thumbnail = yt["thumbnails"][1]["url"]
     thumb = f"{title}.jpg"
     wget.download(thumbnail, thumb)
@@ -53,14 +53,10 @@ def song(client, message):
                         "🔊 Audio",
                         callback_data=f"audio {link}",
                     ),
-                    InlineKeyboardButton(
-                        "🎥 360p", callback_data=f"360p {link}"
-                    ),
+                    InlineKeyboardButton("🎥 360p", callback_data=f"360p {link}"),
                 ],
                 [
-                    InlineKeyboardButton(
-                        "🎥 720p", callback_data=f"720p {link}"
-                    ),
+                    InlineKeyboardButton("🎥 720p", callback_data=f"720p {link}"),
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
@@ -96,6 +92,7 @@ async def callback_query(Client, CallbackQuery):
     os.remove(audio_file)
     os.remove(thumb)
 
+
 @Client.on_callback_query(filters.regex(pattern=r"360p"))
 async def callback_query(Client, CallbackQuery):
     callback = CallbackQuery.data.strip()
@@ -118,6 +115,7 @@ async def callback_query(Client, CallbackQuery):
     os.remove(download_360)
     os.remove(thumb)
     await m.delete()
+
 
 @Client.on_callback_query(filters.regex(pattern=r"720p"))
 async def callback_query(Client, CallbackQuery):
