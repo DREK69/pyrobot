@@ -47,8 +47,7 @@ async def fakemailgen(_, message: Message):
             ]
         ),
     )
-    pi = await mes.pin(disable_notification=True, both_sides=True)
-    await m.delete()
+    pi = await mes.pin(disable_notification=True, both_sides=True)   
     await pi.delete()
 
 
