@@ -48,11 +48,18 @@ def song(client, message):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("🔊 Audio", callback_data=f"audio {link}|{dur}|{thumb}|{uploader}"),
-                    InlineKeyboardButton("🎥 360p", callback_data=f"360p {link}|{thumb}"),
+                    InlineKeyboardButton(
+                        "🔊 Audio",
+                        callback_data=f"audio {link}|{dur}|{thumb}|{uploader}",
+                    ),
+                    InlineKeyboardButton(
+                        "🎥 360p", callback_data=f"360p {link}|{thumb}"
+                    ),
                 ],
                 [
-                    InlineKeyboardButton("🎥 720p", callback_data=f"720p {link}|{thumb}"),
+                    InlineKeyboardButton(
+                        "🎥 720p", callback_data=f"720p {link}|{thumb}"
+                    ),
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
