@@ -18,8 +18,6 @@ API3 = "https://www.1secmail.com/api/v1/?action=readMessage&login="
 
 # ********************************************************************************
 
-# *******************************************************************************
-
 
 @app.on_message(filters.command("genmail"))
 async def fakemailgen(_, message: Message):
@@ -40,7 +38,39 @@ async def fakemailgen(_, message: Message):
             [
                 [
                     InlineKeyboardButton(
-                        "♻️ Update Mail BOX ♻️",
+                        "🔁 Update Mailbox",
+                        callback_data=f"mailbox |{email}|{domain}",
+                    )
+                ]
+            ]
+        ),
+    )
+    pi = await mes.pin(disable_notification=True, both_sides=True)
+    await pi.delete()
+
+@app.on_message(filters.command("set"))
+async def setmailgen(_, message: Message):
+    name = message.from_user.id    
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "Give me some text to make Tempmail\n\nEx. /set Merissarobot"
+        )     
+    email = message.text.split(None, 1)[1]
+    xx = requests.get(API1).json()
+    domain = random.choice(xx)
+    # print(email)
+    mes = await app.send_message(
+        name,
+        text=f"""
+**📬 Done,Your Email Address Created!**
+📧 **Email** : `{email}@{domain}`
+📨 **Mail BOX** : `empty`
+♨️ **Powered by** : @MerissaRobot """,
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "🔁 Update Mailbox",
                         callback_data=f"mailbox |{email}|{domain}",
                     )
                 ]
@@ -62,7 +92,7 @@ async def gen_keyboard(mails, email, domain):
         )
         num += 1
     data.append(
-        InlineKeyboardButton(f"Update Mail BOX ♻️", f"mailbox |{email}|{domain}")
+        InlineKeyboardButton("🔁 Update Mailbox", f"mailbox |{email}|{domain}")
     )
     i_kbd.add(*data)
     return i_kbd
@@ -78,7 +108,7 @@ async def mail_box(_, query: CallbackQuery):
     m, email, domain = callback_request.split("|")
     mails = requests.get(f"{API2}{email}&domain={domain}").json()
     if mails == []:
-        await query.answer("🤷‍♂️ No Mails found! 🤷‍♂️")
+        await query.answer("🤷‍♂️ No Mails found!")
     else:
         try:
             smail = f"{email}@{domain}"
@@ -92,7 +122,7 @@ async def mail_box(_, query: CallbackQuery):
                 reply_markup=mbutton,
             )
         except bad_request_400.MessageNotModified as e:
-            await query.answer("🤷‍♂️ No New Mails found! 🤷‍♂️")
+            await query.answer("🤷‍♂️ No New Mails found!")
 
 
 # ********************************************************************************
