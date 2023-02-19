@@ -12,7 +12,7 @@ async def instadown(_, message):
     msg = await message.reply_text("Please Wait Video Uploading...")
     url = get(f"https://api.princexd.tech/igdown?link={name}").json()["media"]
     i = []
-    if i in url:
+    if '[' in url:
         for i in url:
             media = i
         video = media
