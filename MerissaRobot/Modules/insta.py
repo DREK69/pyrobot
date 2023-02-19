@@ -13,7 +13,7 @@ async def instadown(_, message):
     if url == []:
         for i in url:
             i["medias"] = medias
-        video = medias      
+        video = medias
     else:
         video = url["medias"]
     await message.reply_video(
