@@ -53,14 +53,10 @@ def song(client, message):
                         "🔊 Audio",
                         callback_data=f"audio {videoid}|{thumb}",
                     ),
-                    InlineKeyboardButton(
-                        "🎥 360p", callback_data=f"360p {videoid}"
-                    ),
+                    InlineKeyboardButton("🎥 360p", callback_data=f"360p {videoid}"),
                 ],
                 [
-                    InlineKeyboardButton(
-                        "🎥 720p", callback_data=f"720p {videoid}"
-                    ),
+                    InlineKeyboardButton("🎥 720p", callback_data=f"720p {videoid}"),
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
@@ -104,8 +100,8 @@ async def callback_query(Client, CallbackQuery):
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
     thumb = await CallbackQuery.message.download()
-    width = CallbackQuery.message.photo.width
-    height = CallbackQuery.message.photo.height
+    CallbackQuery.message.photo.width
+    CallbackQuery.message.photo.height
     download_360 = vid_360.download()
     try:
         await Client.send_video(
@@ -129,11 +125,11 @@ async def callback_query(Client, CallbackQuery):
     youtube_720 = YouTube(link)
     vid_720 = youtube_720.streams.get_by_resolution("720p")
     m = await CallbackQuery.edit_message_text(
-       "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
+        "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
     thumb = await CallbackQuery.message.download()
-    width = CallbackQuery.message.photo.width
-    height = CallbackQuery.message.photo.height
+    CallbackQuery.message.photo.width
+    CallbackQuery.message.photo.height
     download_720 = vid_720.download()
     try:
         await Client.send_video(
