@@ -14,8 +14,10 @@ from youtubesearchpython import VideosSearch
 
 from MerissaRobot import pbot as Client
 
+ytregex = r"^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
 @Client.on_message(filters.command(["music", "ytdl", "song"]))
+@Client.on_message(filters.regex(ytregex))
 def song(client, message):
     message.chat.id
     user_id = message.from_user.id
