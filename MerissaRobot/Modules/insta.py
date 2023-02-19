@@ -10,12 +10,12 @@ instaregex = r"^https:\/\/www\.instagram\.com\/(p|tv|reel|stories)\/([A-Za-z0-9\
 async def instadown(_, message):
     name = message.text
     url = get(f"https://api.princexd.tech/igdown?link={name}").json()
-    if url == []:
+    if url.startswith([):
         for i in url:
-            i["medias"] = medias
+            i["media"] = medias
         video = medias
     else:
-        video = url["medias"]
+        video = url["media"]
     await message.reply_video(
         video,
         caption="Powered by @MerissaRobot",
