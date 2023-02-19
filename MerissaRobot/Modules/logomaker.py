@@ -5,8 +5,7 @@ from io import BytesIO
 import requests
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-from MerissaRobot import telethn as bot
-from MerissaRobot.events import register
+from MerissaRobot import pbot
 
 
 def mediainfo(media):
@@ -44,9 +43,9 @@ def mediainfo(media):
     return m
 
 
-@register(pattern="^/logo ?(.*)")
-async def makelogo(event):
-    quew = event.pattern_match.group(1).strip()
+@pbot.on_message(filters.command("logo"))
+async def logomaker(_, message):
+    quew = message.text.split(None, 1)
     if not quew:
         await event.reply("Provide Some Text To Draw! Example: /logo <your name>")
         return
@@ -63,7 +62,7 @@ async def makelogo(event):
                 randBg = await temp.download_media()
     else:
         pass
-    msg = await event.reply("Creating your logo...wait!")
+    msg = await message.reply_text("Creating your logo...wait!")
     try:
         text = quew
         if ";" in text:
@@ -265,12 +264,12 @@ async def makelogo(event):
         fname2 = "logo.png"
         blueimg.save(fname2, "png")
         await msg.delete()
-        await bot.send_file(event.chat_id, fname2, caption="Made By @MerissaRobot")
+        await message.reply_photo(fname2, caption="Made By @MerissaRobot")
         if os.path.exists(fname2):
             os.remove(fname2)
 
     except Exception:
-        await msg.edit(
+        await msg.edit_text(
             f"Please Try Again! \nif you're getting Error again and again then Report @MerissaxSupport"
         )
 
