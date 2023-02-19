@@ -78,7 +78,7 @@ async def callback_query(Client, CallbackQuery):
     youtube_audio = YouTube(link)
     title = youtube_audio.title
     thumb = await CallbackQuery.message.download()
-    audio = url.streams.filter(only_audio=True).first()
+    audio = youtube_audio.streams.filter(only_audio=True).first()
     down = audio.download()
     first, last = os.path.splitext(down)
     song = first + ".mp3"
