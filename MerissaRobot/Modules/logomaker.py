@@ -4,7 +4,7 @@ from io import BytesIO
 
 import requests
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
-
+from pyrogram import *
 from MerissaRobot import pbot
 
 
