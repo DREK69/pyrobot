@@ -81,10 +81,10 @@ async def callback_query(Client, CallbackQuery):
     audio = url.streams.filter(only_audio=True).first()
     down = audio.download()
     first, last = os.path.splitext(down)
-    song = first + '.mp3'
+    song = first + ".mp3"
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
-    )    
+    )
     med = InputMediaAudio(media=song, caption=title, title=title, thumb=thumb)
     try:
         await CallbackQuery.edit_message_media(media=med)
