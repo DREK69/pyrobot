@@ -79,7 +79,8 @@ async def callback_query(Client, CallbackQuery):
     title = youtube_audio.title
     thumb = await CallbackQuery.message.download()
     audio = youtube_audio.streams.filter(only_audio=True).first()
-    song = audio.download()
+    name = f"{youtube_audio.title}.mp3"
+    song = audio.download(filename=name)
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
