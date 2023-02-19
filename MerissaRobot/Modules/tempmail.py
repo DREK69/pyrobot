@@ -38,12 +38,9 @@ async def fakemailgen(_, message: Message):
             [
                 [
                     InlineKeyboardButton(
-                        "🔁 Refresh",
-                        callback_data=f"mailbox |{email}|{domain}"),
-                    InlineKeyboardButton(
-                        "🗑️ Delete",
-                        callback_data="cb_close"
-                    )
+                        "🔁 Refresh", callback_data=f"mailbox |{email}|{domain}"
+                    ),
+                    InlineKeyboardButton("🗑️ Delete", callback_data="cb_close"),
                 ]
             ]
         ),
@@ -74,11 +71,9 @@ async def setmailgen(_, message: Message):
             [
                 [
                     InlineKeyboardButton(
-                        "🔁 Refresh",
-                        callback_data=f"mailbox |{email}|{domain}"),
-                    InlineKeyboardButton(
-                        "🗑️ Delete",
-                        callback_data="cb_close"),
+                        "🔁 Refresh", callback_data=f"mailbox |{email}|{domain}"
+                    ),
+                    InlineKeyboardButton("🗑️ Delete", callback_data="cb_close"),
                 ]
             ]
         ),
