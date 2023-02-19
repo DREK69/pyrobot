@@ -45,7 +45,7 @@ def song(client, message):
     ).json()["results"][0]
     yt["channel"]["name"]
     thumbnail = yt["thumbnails"][1]["url"]
-    thumb = "t.jpg"
+    thumb = f"{songname}.jpg"
     wget.download(thumbnail, thumb)
     message.reply_photo(
         thumbnail,
@@ -76,21 +76,21 @@ async def callback_query(Client, CallbackQuery):
     videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_audio = YouTube(link)
+    title = youtube_audio.title
     thumb = await CallbackQuery.message.download()
-    audio = youtube_audio.streams.filter(
-        mime_type="audio/mp4", abr="48kbps", only_audio=True
-    ).first()
-    audio_file = audio.download(filename="y.mp3")
+    audio = url.streams.filter(only_audio=True).first()
+    down = audio.download()
+    first, last = os.path.splitext(down)
+    song = first + '.mp3'
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
-    )
-    title = youtube_audio.title
-    med = InputMediaAudio(media=audio_file, caption=title, title=title, thumb=thumb)
+    )    
+    med = InputMediaAudio(media=song, caption=title, title=title, thumb=thumb)
     try:
         await CallbackQuery.edit_message_media(media=med)
     except Exception as error:
         await CallbackQuery.edit_message_text(f"Something happened!\n<i>{error}</i>")
-    os.remove(audio_file)
+    os.remove(song)
     os.remove(thumb)
 
 
