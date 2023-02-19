@@ -92,8 +92,8 @@ async def gen_keyboard(mails, email, domain):
             InlineKeyboardButton(f"{mail['subject']}", f"mail |{email}|{domain}|{id}")
         )
         num += 1
-    data.append(InlineKeyboardButton("🔁 Refresh", f"mailbox |{email}|{domain}"))
-    data.append(InlineKeyboardButton("🗑️ Delete", "cb_close"))
+    data.append(InlineKeyboardButton("🔁 Refresh", f"mailbox |{email}|{domain}"),
+    InlineKeyboardButton("🗑️ Delete", "cb_close"))
     i_kbd.add(*data)
     return i_kbd
 
