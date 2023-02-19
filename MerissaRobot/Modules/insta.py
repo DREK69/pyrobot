@@ -16,10 +16,6 @@ async def instadown(_, message):
         for i in url:
             media = i
         video = media
-    await message.reply_video(
-        video,
-        caption="Powered by @MerissaRobot",
-    )
     else:
         video = url
     await message.reply_video(
