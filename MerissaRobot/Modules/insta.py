@@ -9,8 +9,14 @@ instaregex = r"^https:\/\/www\.instagram\.com\/(p|tv|reel|stories)\/([A-Za-z0-9\
 @pbot.on_message(filters.regex(instaregex))
 async def instadown(_, message):
     name = message.text
-    x = get(f"https://api.princexd.tech/igdown?link={name}").json()["media"]
+    url = get(f"https://api.princexd.tech/igdown?link={name}").json()
+    if url == []:
+        for i in url:
+            i["medias"] = medias
+        video = medias      
+    else:
+        video = url["medias"]
     await message.reply_video(
-        x,
+        video,
         caption="Powered by @MerissaRobot",
     )
