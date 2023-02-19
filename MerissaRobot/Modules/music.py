@@ -3,7 +3,7 @@ import os
 import requests
 import wget
 from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaAudio
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaAudio, InputMediaVideo
 from pytube import YouTube
 from youtubesearchpython import VideosSearch
 
@@ -61,6 +61,7 @@ def song(client, message):
             ]
         ),
     )
+    os.remove(thumb)
 
 
 @Client.on_callback_query(filters.regex(pattern=r"audio"))
@@ -70,6 +71,7 @@ async def callback_query(Client, CallbackQuery):
     videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_audio = YouTube(link)
+    thumb = await CallbackQuery.message.download()
     audio = youtube_audio.streams.filter(
         mime_type="audio/mp4", abr="48kbps", only_audio=True
     ).first()
