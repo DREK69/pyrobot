@@ -3,16 +3,11 @@ from requests import get
 
 from MerissaRobot import pbot
 
+instaregex = r'^https:\/\/www\.instagram\.com\/(p|tv|reel|stories)\/([A-Za-z0-9\-_]*)'
 
-@pbot.on_message(filters.command("insta"))
+@pbot.on_message(filters.regex(instaregex))
 async def instadown(_, message):
-    if len(message.command) < 2:
-        return await message.reply_text("Give me some link\n\nEx. /insta link")
-    name = (
-        message.text.split(None, 1)[1]
-        if len(message.command) < 3
-        else message.text.split(None, 1)[1].replace(" ", "%20")
-    )
+    name = message.text
     x = get(f"https://api.princexd.tech/igdown?link={name}").json()["media"]
     await message.reply_video(
         x,
