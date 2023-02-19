@@ -527,6 +527,7 @@ def merissa_about_callback(update, context):
         query.message.reply_sticker(
             "CAACAgUAAxkBAAJRAWLx-zmJ62FNVR9gnl4w22X5qRlqAAKyBAADwEBWQxLxqPtRziMpBA"
         )
+        query.message.delete()
 
     elif query.data == "merissa_soon":
         query.answer(
