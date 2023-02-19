@@ -105,8 +105,8 @@ async def callback_query(Client, CallbackQuery):
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
     thumb = await CallbackQuery.message.download()
-    CallbackQuery.message.photo.width
-    CallbackQuery.message.photo.height
+    width = CallbackQuery.message.photo.width
+    height = CallbackQuery.message.photo.height
     download_360 = vid_360.download()
     med = InputMediaVideo(
         download_360,
