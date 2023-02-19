@@ -67,8 +67,7 @@ def song(client, message):
 async def callback_query(Client, CallbackQuery):
     ## Download audio
     callback_data = CallbackQuery.data.strip()
-    callback = callback_data.split(None, 1)[1]
-    chat_id, videoid = callback.split("|")
+    videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_audio = YouTube(link)
     audio = youtube_audio.streams.filter(
@@ -91,8 +90,7 @@ async def callback_query(Client, CallbackQuery):
 @Client.on_callback_query(filters.regex(pattern=r"360p"))
 async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
-    callback = callback_data.split(None, 1)[1]
-    chat_id, videoid = callback.split("|")
+    videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_360 = YouTube(link)
     vid_360 = youtube_360.streams.get_lowest_resolution()
@@ -122,8 +120,7 @@ async def callback_query(Client, CallbackQuery):
 @Client.on_callback_query(filters.regex(pattern=r"720p"))
 async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
-    callback = callback_data.split(None, 1)[1]
-    chat_id, videoid = callback.split("|")
+    videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_720 = YouTube(link)
     vid_720 = youtube_720.streams.get_by_resolution("720p")
