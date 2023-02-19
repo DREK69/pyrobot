@@ -16,11 +16,56 @@ from MerissaRobot import pbot as Client
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
-
-@Client.on_message(filters.command(["music", "ytdl", "song"]))
 @Client.on_message(filters.regex(ytregex))
 def song(client, message):
-    message.chat.id
+    user_id = message.from_user.id
+    user_name = message.from_user.first_name
+    user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
+    query = message.text
+    try:
+        search = VideosSearch(query, limit=1).result()
+        data = search["result"][0]
+        songname = data["title"]
+        data["link"]
+        videoid = data["id"]
+        dur = data["duration"]
+    except Exception as e:
+        message.reply(
+            "**😴 sᴏɴɢ ɴᴏᴛ ғᴏᴜɴᴅ ᴏɴ ʏᴏᴜᴛᴜʙᴇ.**\n\n» ᴍᴀʏʙᴇ ᴛᴜɴᴇ ɢᴀʟᴛɪ ʟɪᴋʜᴀ ʜᴏ, ᴩᴀᴅʜᴀɪ - ʟɪᴋʜᴀɪ ᴛᴏʜ ᴋᴀʀᴛᴀ ɴᴀʜɪ ᴛᴜ !"
+        )
+        print(str(e))
+        return
+    yt = requests.get(
+        f"https://api.princexd.tech/ytsearch?query={query}&limit=1"
+    ).json()["results"][0]
+    yt["channel"]["name"]
+    thumbnail = yt["thumbnails"][1]["url"]
+    thumb = f"{songname}.jpg"
+    wget.download(thumbnail, thumb)
+    message.reply_photo(
+        thumbnail,
+        caption=f"**Title**: {songname}\n**Duration**: {str(dur)}\n\n**Select Your Preferred Format from Below**:",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "🔊 Audio",
+                        callback_data=f"audio {videoid}",
+                    ),
+                    InlineKeyboardButton("🎥 360p", callback_data=f"360p {videoid}"),
+                ],
+                [
+                    InlineKeyboardButton("🎥 720p", callback_data=f"720p {videoid}"),
+                    InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                ],
+            ]
+        ),
+    )
+    os.remove(thumb)
+
+
+@Client.on_message(filters.command(["music", "ytdl", "song"]))
+def song(client, message):
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
