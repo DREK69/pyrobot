@@ -54,12 +54,12 @@ def song(client, message):
                         callback_data=f"audio {videoid}|{thumb}",
                     ),
                     InlineKeyboardButton(
-                        "🎥 360p", callback_data=f"360p {videoid}|{thumb}"
+                        "🎥 360p", callback_data=f"360p {videoid}"
                     ),
                 ],
                 [
                     InlineKeyboardButton(
-                        "🎥 720p", callback_data=f"720p {videoid}|{thumb}"
+                        "🎥 720p", callback_data=f"720p {videoid}"
                     ),
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
@@ -96,14 +96,16 @@ async def callback_query(Client, CallbackQuery):
 @Client.on_callback_query(filters.regex(pattern=r"360p"))
 async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
-    callback = callback_data.split(None, 1)[1]
-    videoid, thumb = callback.split("|")
+    videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_360 = YouTube(link)
     vid_360 = youtube_360.streams.get_lowest_resolution()
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
+    thumb = await CallbackQuery.message.download()
+    width = CallbackQuery.message.photo.width
+    height = CallbackQuery.message.photo.height
     download_360 = vid_360.download()
     try:
         await Client.send_video(
@@ -122,14 +124,16 @@ async def callback_query(Client, CallbackQuery):
 @Client.on_callback_query(filters.regex(pattern=r"720p"))
 async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
-    callback = callback_data.split(None, 1)[1]
-    videoid, thumb = callback.split("|")
+    videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_720 = YouTube(link)
     vid_720 = youtube_720.streams.get_by_resolution("720p")
     m = await CallbackQuery.edit_message_text(
-        "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
+       "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
+    thumb = await CallbackQuery.message.download()
+    width = CallbackQuery.message.photo.width
+    height = CallbackQuery.message.photo.height
     download_720 = vid_720.download()
     try:
         await Client.send_video(
