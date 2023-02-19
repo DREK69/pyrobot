@@ -38,8 +38,11 @@ async def fakemailgen(_, message: Message):
             [
                 [
                     InlineKeyboardButton(
-                        "🔁 Update Mailbox",
-                        callback_data=f"mailbox |{email}|{domain}",
+                        "🔁 Refresh",
+                        callback_data=f"mailbox |{email}|{domain}"),
+                    InlineKeyboardButton(
+                        "🗑️ Delete",
+                        callback_data="cb_close"
                     )
                 ]
             ]
@@ -71,9 +74,11 @@ async def setmailgen(_, message: Message):
             [
                 [
                     InlineKeyboardButton(
-                        "🔁 Update Mailbox",
-                        callback_data=f"mailbox |{email}|{domain}",
-                    )
+                        "🔁 Refresh",
+                        callback_data=f"mailbox |{email}|{domain}"),
+                    InlineKeyboardButton(
+                        "🗑️ Delete",
+                        callback_data="cb_close"),
                 ]
             ]
         ),
@@ -92,7 +97,8 @@ async def gen_keyboard(mails, email, domain):
             InlineKeyboardButton(f"{mail['subject']}", f"mail |{email}|{domain}|{id}")
         )
         num += 1
-    data.append(InlineKeyboardButton("🔁 Update Mailbox", f"mailbox |{email}|{domain}"))
+    data.append(InlineKeyboardButton("🔁 Refresh", f"mailbox |{email}|{domain}"))
+    data.append(InlineKeyboardButton("🗑️ Delete", "cb_close"))
     i_kbd.add(*data)
     return i_kbd
 
@@ -146,7 +152,7 @@ async def mail_box(_, query: CallbackQuery):
         mbutton = InlineKeyboardMarkup(
             [
                 [InlineKeyboardButton("🔗 Open Link", url=link)],
-                [InlineKeyboardButton("Back", f"mailbox |{email}|{domain}")],
+                [InlineKeyboardButton("🔙 Back", f"mailbox |{email}|{domain}")],
             ]
         )
         await query.message.edit(
@@ -162,7 +168,7 @@ async def mail_box(_, query: CallbackQuery):
     else:
         body = mail["textBody"]
         mbutton = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("Back", f"mailbox |{email}|{domain}")]]
+            [[InlineKeyboardButton("🔙 Back", f"mailbox |{email}|{domain}")]]
         )
         await query.message.edit(
             f""" 
@@ -190,5 +196,4 @@ async def fakemailgen(_, message: Message):
         text=f"""
 **{email}**
 """,
-        reply_markup=create,
     )
