@@ -12,7 +12,7 @@ from MerissaRobot import pbot as Client
 
 @Client.on_message(filters.command(["music", "ytdl", "song"]))
 def song(client, message):
-    chat_id = message.chat.id
+    message.chat.id
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
@@ -103,13 +103,13 @@ async def callback_query(Client, CallbackQuery):
     CallbackQuery.message.photo.width
     CallbackQuery.message.photo.height
     download_360 = vid_360.download()
-    med = InputMediaVideo(        
+    med = InputMediaVideo(
         download_360,
         width=width,
         height=height,
         caption=youtube_360.title,
         thumb=thumb,
-        supports_streaming=True
+        supports_streaming=True,
     )
     try:
         await CallbackQuery.edit_message_media(media=med)
@@ -134,13 +134,13 @@ async def callback_query(Client, CallbackQuery):
     width = CallbackQuery.message.photo.width
     height = CallbackQuery.message.photo.height
     download_720 = vid_720.download()
-    med = InputMediaVideo(        
+    med = InputMediaVideo(
         download_720,
         width=width,
         height=height,
         caption=youtube_720.title,
         thumb=thumb,
-        supports_streaming=True
+        supports_streaming=True,
     )
     try:
         await CallbackQuery.edit_message_media(media=med)
@@ -148,4 +148,3 @@ async def callback_query(Client, CallbackQuery):
         await CallbackQuery.edit_message_text(f"Error occurred!!\n<i>{error}</i>")
     os.remove(download_720)
     os.remove(thumb)
-
