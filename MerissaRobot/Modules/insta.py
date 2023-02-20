@@ -12,7 +12,7 @@ async def instadown(_, message):
     msg = await message.reply_text("Processing...")
     posts = get(f"https://api.princexd.tech/igdown?link={link}").json()["media"]
     if isinstance(posts, str):
-        await message.reply_document(posts, caption='Powered By @MerissaRobot')
+        await message.reply_document(posts, caption="Powered By @MerissaRobot")
     else:
         for post in posts:
             await message.reply_document(post)
