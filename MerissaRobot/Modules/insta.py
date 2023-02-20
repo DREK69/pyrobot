@@ -2,6 +2,7 @@ from pyrogram import filters
 from requests import get
 
 from MerissaRobot import pbot
+from pyrogram.types import InputMediaVideo, InputMediaPhoto
 
 instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stories)\/([A-Za-z0-9\-_]*)"
 
@@ -12,8 +13,16 @@ async def instadown(_, message):
     msg = await message.reply_text("Processing...")
     posts = get(f"https://api.princexd.tech/igdown?link={link}").json()["media"]
     if isinstance(posts, str):
-        await message.reply_document(posts, caption="Powered By @MerissaRobot")
+        if str(posts.split('https://')[1]).startswith('video'):
+            await message.reply_video(posts, caption=f'Powered By @MerissaRobot')
+        else:
+            await message.reply_photo(posts, caption=f'Powered By @MerissaRobot')
     else:
+        mg = []
         for post in posts:
-            await message.reply_document(post)
+            if str(post.split('https://')[1]).startswith('video'):
+                mg.append(InputMediaVideo(post, caption=f'Powered By @MerissaRobot'))
+            else:
+                mg.append(InputMediaPhoto(post, caption=f'Powered By @MerissaRobot'))
+        await message.reply_media_group(mg)
     await msg.delete()
