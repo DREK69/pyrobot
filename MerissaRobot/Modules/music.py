@@ -203,7 +203,7 @@ async def callback_query(Client, CallbackQuery):
 
 
 @Client.on_message(filters.command("lyrics"))
-def lyrics(client, message):
+async def lyrics(client, message):
     if len(message.command) < 2:
         return await message.reply_text(
             "Give me some text to find lyrics\n\nEx. /lyrics songname"
