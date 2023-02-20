@@ -201,6 +201,7 @@ async def callback_query(Client, CallbackQuery):
     os.remove(download_720)
     os.remove(thumb)
 
+
 @Client.on_message(filters.command("lyrics"))
 def lyrics(client, message):
     if len(message.command) < 2:
@@ -212,7 +213,5 @@ def lyrics(client, message):
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    url = get(
-        f"https://api.princexd.tech/lyrics?query={songname}"
-    ).json()["lyrics"]
+    url = get(f"https://api.princexd.tech/lyrics?query={songname}").json()["lyrics"]
     await message.reply_text(url)
