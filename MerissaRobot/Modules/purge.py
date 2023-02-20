@@ -5,11 +5,11 @@ from pyrogram.enums import ChatType
 from pyrogram.errors import MessageDeleteForbidden, RPCError
 from pyrogram.types import Message
 
-from MerissaRobot import SUPPORT_CHAT, Abishnoi
+from MerissaRobot import SUPPORT_CHAT, pbot
 
 
-@Abishnoi.on_message(filters.command("purge"))
-async def purge(c: Abishnoi, m: Message):
+@pbot.on_message(filters.command("purge"))
+async def purge(c: pbot, m: Message):
     if m.chat.type != ChatType.SUPERGROUP:
         await m.reply_text(text="ᴄᴀɴɴᴏᴛ ᴘᴜʀɢᴇ ᴍᴇssᴀɢᴇs ɪɴ ᴀ ʙᴀsɪᴄ ɢʀᴏᴜᴘ")
         return
@@ -54,9 +54,9 @@ async def purge(c: Abishnoi, m: Message):
     return
 
 
-@Abishnoi.on_message(filters.command("spurge"))
+@pbot.on_message(filters.command("spurge"))
 @adminsOnly("can_delete_messages")
-async def spurge(c: Abishnoi, m: Message):
+async def spurge(c: pbot, m: Message):
     if m.chat.type != ChatType.SUPERGROUP:
         await m.reply_text(text="ᴄᴀɴɴᴏᴛ ᴘᴜʀɢᴇ ᴍᴇssᴀɢᴇs ɪɴ ᴀ ʙᴀsɪᴄ ɢʀᴏᴜᴘ")
         return
@@ -95,8 +95,8 @@ async def spurge(c: Abishnoi, m: Message):
     return
 
 
-@Abishnoi.on_message(filters.command("del") & ~filters.private)
-async def del_msg(c: Abishnoi, m: Message):
+@pbot.on_message(filters.command("del") & ~filters.private)
+async def del_msg(c: pbot, m: Message):
     if m.chat.type != ChatType.SUPERGROUP:
         return
 
