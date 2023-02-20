@@ -17,5 +17,5 @@ async def instadown(_, message):
     else:
         for post in dllink:
             mg.append(post)
-    await message.reply_media_group(mg, caption="Powered by @MerissaRobot")
+    await message.reply_media_group(mg)
     await msg.delete()
