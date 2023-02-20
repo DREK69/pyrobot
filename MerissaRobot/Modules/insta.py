@@ -15,5 +15,5 @@ async def instadown(_, message):
         await message.reply_document(posts)
     else:
         for post in posts:
-            await message.reply_document(post, caption='Powered By @MerissaRobot')    
+            await message.reply_document(post, caption="Powered By @MerissaRobot")
     await msg.delete()
