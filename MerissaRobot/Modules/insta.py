@@ -13,5 +13,5 @@ async def instadown(_, message):
     url = get(f"https://api.princexd.tech/igdown?link={name}").json()
     vid = url["media"]
     for video in vid:
-        await message.reply_document(file=video, caption="Powered by @MerissaRobot")
+        await message.reply_document(document=video, caption="Powered by @MerissaRobot")
     await msg.delete()
