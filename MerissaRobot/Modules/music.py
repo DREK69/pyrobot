@@ -200,3 +200,19 @@ async def callback_query(Client, CallbackQuery):
         await CallbackQuery.edit_message_text(f"Error occurred!!\n<i>{error}</i>")
     os.remove(download_720)
     os.remove(thumb)
+
+@Client.on_message(filters.command("lyrics"))
+def lyrics(client, message):
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "Give me some text to find lyrics\n\nEx. /lyrics songname"
+        )
+    songname = (
+        message.text.split(None, 1)[1]
+        if len(message.command) < 3
+        else message.text.split(None, 1)[1].replace(" ", "%20")
+    )
+    url = get(
+        f"https://api.princexd.tech/lyrics?query={songname}"
+    ).json()["lyrics"]
+    await message.reply_text(url)
