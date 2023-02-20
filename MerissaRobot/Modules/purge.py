@@ -6,7 +6,7 @@ from pyrogram.errors import MessageDeleteForbidden, RPCError
 from pyrogram.types import Message
 
 from MerissaRobot import SUPPORT_CHAT, pbot
-
+from MerissaRobot.Utils.permissions import adminsOnly
 
 @pbot.on_message(filters.command("purge"))
 async def purge(c: pbot, m: Message):
