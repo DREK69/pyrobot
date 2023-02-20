@@ -13,9 +13,9 @@ async def instadown(_, message):
     posts = get(f"https://api.princexd.tech/igdown?link={name}").json()["media"]
     mg = []
     if isinstance(posts, str):
-        mg.append(dllink)
+        mg.append(posts)
     else:
-        for post in dllink:
+        for post in posts:
             mg.append(post)
     await message.reply_media_group(mg, caption="Powered by @MerissaRobot")
     await msg.delete()
