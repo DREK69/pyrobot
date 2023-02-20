@@ -213,5 +213,5 @@ async def lyrics(client, message):
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    url = get(f"https://api.princexd.tech/lyrics?query={songname}").json()["lyrics"]
+    url = requests.get(f"https://api.princexd.tech/lyrics?query={songname}").json()["lyrics"]
     await message.reply_text(url)
