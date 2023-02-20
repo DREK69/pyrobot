@@ -120,7 +120,9 @@ def song(client, message):
 
 @Client.on_callback_query(filters.regex(pattern=r"audio"))
 async def callback_query(Client, CallbackQuery):
-    ## Download audio
+    m = await CallbackQuery.edit_message_text(
+        "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
+    )
     callback_data = CallbackQuery.data.strip()
     videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
@@ -130,9 +132,6 @@ async def callback_query(Client, CallbackQuery):
     audio = youtube_audio.streams.filter(only_audio=True).first()
     name = f"{youtube_audio.title}.mp3"
     song = audio.download(filename=name)
-    m = await CallbackQuery.edit_message_text(
-        "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
-    )
     med = InputMediaAudio(media=song, caption=title, title=title, thumb=thumb)
     try:
         await CallbackQuery.edit_message_media(media=med)
@@ -144,14 +143,14 @@ async def callback_query(Client, CallbackQuery):
 
 @Client.on_callback_query(filters.regex(pattern=r"360p"))
 async def callback_query(Client, CallbackQuery):
+    m = await CallbackQuery.edit_message_text(
+        "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
+    )
     callback_data = CallbackQuery.data.strip()
     videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_360 = YouTube(link)
     vid_360 = youtube_360.streams.get_lowest_resolution()
-    m = await CallbackQuery.edit_message_text(
-        "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
-    )
     thumb = await CallbackQuery.message.download()
     width = CallbackQuery.message.photo.width
     height = CallbackQuery.message.photo.height
@@ -174,6 +173,9 @@ async def callback_query(Client, CallbackQuery):
 
 @Client.on_callback_query(filters.regex(pattern=r"720p"))
 async def callback_query(Client, CallbackQuery):
+    m = await CallbackQuery.edit_message_text(
+        "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
+    )
     callback_data = CallbackQuery.data.strip()
     videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
