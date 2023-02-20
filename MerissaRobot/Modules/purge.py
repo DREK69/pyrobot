@@ -1,7 +1,9 @@
 import asyncio
 import time
-from pyrogram.types import ChatPermissions, Message
+
 from pyrogram import filters
+from pyrogram.types import Message
+
 from MerissaRobot import pbot as Client
 
 
@@ -11,7 +13,7 @@ async def purge(client: Client, message: Message):
     message_ids = []
     purge_len = 0
     event = await message.edit_text("`Starting To Purge Messages!`")
-    me_m =await client.get_me()
+    me_m = await client.get_me()
     if message.chat.type in ["supergroup", "channel"]:
         me_ = await message.chat.get_member(int(me_m.id))
         if not me_.can_delete_messages:
