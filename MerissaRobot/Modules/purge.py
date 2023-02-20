@@ -1,48 +1,111 @@
-import asyncio
-import time
+from asyncio import sleep
 
 from pyrogram import filters
+from pyrogram.enums import ChatType
+from pyrogram.errors import MessageDeleteForbidden, RPCError
 from pyrogram.types import Message
 
-from MerissaRobot import pbot as Client
+from MerissaRobot import SUPPORT_CHAT, Abishnoi
 
 
-@Client.on_message(filters.command("purge"))
-async def purge(client: Client, message: Message):
-    start_time = time.time()
-    message_ids = []
-    purge_len = 0
-    event = await message.edit_text("`Starting To Purge Messages!`")
-    me_m = await client.get_me()
-    if message.chat.type in ["supergroup", "channel"]:
-        me_ = await message.chat.get_member(int(me_m.id))
-        if not me_.can_delete_messages:
-            await event.edit("`I Need Delete Permission To Do This!`")
-            return
-    if not message.reply_to_message:
-        await event.edit("`Reply To Message To Purge!`")
+@Abishnoi.on_message(filters.command("purge"))
+async def purge(c: Abishnoi, m: Message):
+    if m.chat.type != ChatType.SUPERGROUP:
+        await m.reply_text(text="ᴄᴀɴɴᴏᴛ ᴘᴜʀɢᴇ ᴍᴇssᴀɢᴇs ɪɴ ᴀ ʙᴀsɪᴄ ɢʀᴏᴜᴘ")
         return
-    async for msg in client.iter_history(
-        chat_id=message.chat.id,
-        offset_id=message.reply_to_message.message_id,
-        reverse=True,
-    ):
-        if msg.message_id != message.message_id:
-            purge_len += 1
-            message_ids.append(msg.message_id)
-            if len(message_ids) >= 100:
-                await client.delete_messages(
-                    chat_id=message.chat.id, message_ids=message_ids, revoke=True
+
+    if m.reply_to_message:
+        message_ids = list(range(m.reply_to_message.id, m.id))
+
+        def divide_chunks(l: list, n: int = 100):
+            for i in range(0, len(l), n):
+                yield l[i : i + n]
+
+        # Dielete messages in chunks of 100 messages
+        m_list = list(divide_chunks(message_ids))
+
+        try:
+            for plist in m_list:
+                await c.delete_messages(
+                    chat_id=m.chat.id,
+                    message_ids=plist,
+                    revoke=True,
                 )
-                message_ids.clear()
-    if message_ids:
-        await client.delete_messages(
-            chat_id=message.chat.id, message_ids=message_ids, revoke=True
+            await m.delete()
+        except MessageDeleteForbidden:
+            await m.reply_text(
+                text="ᴄᴀɴɴᴏᴛ ᴅᴇʟᴇᴛᴇ ᴀʟʟ ᴍᴇssᴀɢᴇs. ᴛʜᴇ ᴍᴇssᴀɢᴇs ᴍᴀʏ ʙᴇ ᴛᴏᴏ ᴏʟᴅ, I ᴍɪɢʜᴛ ɴᴏᴛ ʜᴀᴠᴇ ᴅᴇʟᴇᴛᴇ ʀɪɢʜᴛs, ᴏʀ ᴛʜɪs ᴍɪɢʜᴛ ɴᴏᴛ ʙᴇ ᴀ sᴜᴘᴇʀɢʀᴏᴜᴘ."
+            )
+            return
+        except RPCError as ef:
+            await m.reply_text(
+                text=f"""sᴏᴍᴇ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀᴇᴅ, ʀᴇᴘᴏʀᴛ ᴛᴏ @{SUPPORT_CHAT}
+
+      <b>ᴇʀʀᴏʀ:</b> <code>{ef}</code>"""
+            )
+
+        count_del_msg = len(message_ids)
+
+        z = await m.reply_text(text=f"ᴅᴇʟᴇᴛᴇᴅ <i>{count_del_msg}</i> messages")
+        await sleep(3)
+        await z.delete()
+        return
+    await m.reply_text("ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ sᴛᴀʀᴛ ᴘᴜʀɢᴇ !")
+    return
+
+
+@Abishnoi.on_message(filters.command("spurge"))
+@adminsOnly("can_delete_messages")
+async def spurge(c: Abishnoi, m: Message):
+    if m.chat.type != ChatType.SUPERGROUP:
+        await m.reply_text(text="ᴄᴀɴɴᴏᴛ ᴘᴜʀɢᴇ ᴍᴇssᴀɢᴇs ɪɴ ᴀ ʙᴀsɪᴄ ɢʀᴏᴜᴘ")
+        return
+
+    if m.reply_to_message:
+        message_ids = list(range(m.reply_to_message.id, m.id))
+
+        def divide_chunks(l: list, n: int = 100):
+            for i in range(0, len(l), n):
+                yield l[i : i + n]
+
+        # Dielete messages in chunks of 100 messages
+        m_list = list(divide_chunks(message_ids))
+
+        try:
+            for plist in m_list:
+                await c.delete_messages(
+                    chat_id=m.chat.id,
+                    message_ids=plist,
+                    revoke=True,
+                )
+            await m.delete()
+        except MessageDeleteForbidden:
+            await m.reply_text(
+                text="ᴄᴀɴɴᴏᴛ ᴅᴇʟᴇᴛᴇ ᴀʟʟ ᴍᴇssᴀɢᴇs. ᴛʜᴇ ᴍᴇssᴀɢᴇs ᴍᴀʏ ʙᴇ ᴛᴏᴏ ᴏʟᴅ, I ᴍɪɢʜᴛ ɴᴏᴛ ʜᴀᴠᴇ ᴅᴇʟᴇᴛᴇ ʀɪɢʜᴛs, ᴏʀ ᴛʜɪs ᴍɪɢʜᴛ ɴᴏᴛ ʙᴇ ᴀ sᴜᴘᴇʀɢʀᴏᴜᴘ."
+            )
+            return
+        except RPCError as ef:
+            await m.reply_text(
+                text=f"""sᴏᴍᴇ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀᴇᴅ, ʀᴇᴘᴏʀᴛ ᴛᴏ @{SUPPORT_CHAT}
+
+      <b>ᴇʀʀᴏʀ:</b> <code>{ef}</code>"""
+            )
+        return
+    await m.reply_text("ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ sᴛᴀʀᴛ sᴘᴜʀɢᴇ !")
+    return
+
+
+@Abishnoi.on_message(filters.command("del") & ~filters.private)
+async def del_msg(c: Abishnoi, m: Message):
+    if m.chat.type != ChatType.SUPERGROUP:
+        return
+
+    if m.reply_to_message:
+        await m.delete()
+        await c.delete_messages(
+            chat_id=m.chat.id,
+            message_ids=m.reply_to_message.id,
         )
-    end_time = time.time()
-    u_time = round(end_time - start_time)
-    await event.edit(
-        f"**>> Fast Purge Done!** \n**>> Total Message Purged :** `{purge_len}` \n**>> Time Taken :** `{u_time}`",
-    )
-    await asyncio.sleep(3)
-    await event.delete()
+    else:
+        await m.reply_text(text="ᴡʜᴀᴛ ᴅᴏ ʏᴏᴜ ᴡᴀɴɴᴀ ᴅᴇʟᴇᴛᴇ?")
+    return
