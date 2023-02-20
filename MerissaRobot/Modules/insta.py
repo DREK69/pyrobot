@@ -10,12 +10,10 @@ instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stori
 async def instadown(_, message):
     link = message.text
     msg = await message.reply_text("Processing...")
-    dllink = get(f"https://api.princexd.tech/igdown?link={link}").json()["media"]
-    mg = []
-    if isinstance(dllink, str):
-        mg.append(dllink)
+    posts = get(f"https://api.princexd.tech/igdown?link={link}").json()["media"]
+    if isinstance(posts, str):
+        await message.reply_document(posts)
     else:
-        for post in dllink:
-            mg.append(post)
-    await message.reply_media_group(mg)
+        for post in posts:
+            await message.reply_document(post, caption='Powered By @MerissaRobot')
     await msg.delete()
