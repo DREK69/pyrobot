@@ -1,79 +1,46 @@
+import asyncio
 import time
-
-from telethon import events
-
-from MerissaRobot import telethn
-from MerissaRobot.Handler.chat_status import can_delete_messages, user_is_admin
+from pyrogram.types import ChatPermissions, Message
+from pyrogram import filters
+from MerissaRobot import pbot as Client
 
 
-async def purge_messages(event):
-    start = time.perf_counter()
-    if event.from_id is None:
+@Client.on_message(filters.command("purge"))
+async def purge(client: Client, message: Message):
+    start_time = time.time()
+    message_ids = []
+    purge_len = 0
+    event = await message.edit_text("`Starting To Purge Messages!`")
+    me_m =await client.get_me()
+    if message.chat.type in ["supergroup", "channel"]:
+        me_ = await message.chat.get_member(int(me_m.id))
+        if not me_.can_delete_messages:
+            await event.edit("`I Need Delete Permission To Do This!`")
+            return
+    if not message.reply_to_message:
+        await event.edit("`Reply To Message To Purge!`")
         return
-
-    if not await user_is_admin(
-        user_id=event.sender_id, message=event
-    ) and event.from_id not in [1087968824]:
-        await event.reply("Only Admins are allowed to use this command")
-        return
-
-    if not await can_delete_messages(message=event):
-        await event.reply("Can't seem to purge the message")
-        return
-
-    reply_msg = await event.get_reply_message()
-    if not reply_msg:
-        await event.reply("Reply to a message to select where to start purging from.")
-        return
-    messages = []
-    message_id = reply_msg.id
-    delete_to = event.message.id
-
-    messages.append(event.reply_to_msg_id)
-    for msg_id in range(message_id, delete_to + 1):
-        messages.append(msg_id)
-        if len(messages) == 100:
-            await event.client.delete_messages(event.chat_id, messages)
-            messages = []
-
-    try:
-        await event.client.delete_messages(event.chat_id, messages)
-    except:
-        pass
-    time_ = time.perf_counter() - start
-    text = f"Purged Successfully in {time_:0.2f} Second(s)\nFast AF 😎"
-    await event.respond(text, parse_mode="markdown")
-
-
-async def delete_messages(event):
-    if event.from_id is None:
-        return
-
-    if not await user_is_admin(
-        user_id=event.sender_id, message=event
-    ) and event.from_id not in [1087968824]:
-        await event.reply("Only Admins are allowed to use this command")
-        return
-
-    if not await can_delete_messages(message=event):
-        await event.reply("Can't seem to delete this?")
-        return
-
-    message = await event.get_reply_message()
-    if not message:
-        await event.reply("Whadya want to delete?")
-        return
-    chat = await event.get_input_chat()
-    del_message = [message, event.message]
-    await event.client.delete_messages(chat, del_message)
-
-
-PURGE_HANDLER = purge_messages, events.NewMessage(pattern="^[!/]purge$")
-DEL_HANDLER = delete_messages, events.NewMessage(pattern="^[!/]del$")
-
-telethn.add_event_handler(*PURGE_HANDLER)
-telethn.add_event_handler(*DEL_HANDLER)
-
-__mod_name__ = "Purge"
-__command_list__ = ["del", "purge"]
-__handlers__ = [PURGE_HANDLER, DEL_HANDLER]
+    async for msg in client.iter_history(
+        chat_id=message.chat.id,
+        offset_id=message.reply_to_message.message_id,
+        reverse=True,
+    ):
+        if msg.message_id != message.message_id:
+            purge_len += 1
+            message_ids.append(msg.message_id)
+            if len(message_ids) >= 100:
+                await client.delete_messages(
+                    chat_id=message.chat.id, message_ids=message_ids, revoke=True
+                )
+                message_ids.clear()
+    if message_ids:
+        await client.delete_messages(
+            chat_id=message.chat.id, message_ids=message_ids, revoke=True
+        )
+    end_time = time.time()
+    u_time = round(end_time - start_time)
+    await event.edit(
+        f"**>> Fast Purge Done!** \n**>> Total Message Purged :** `{purge_len}` \n**>> Time Taken :** `{u_time}`",
+    )
+    await asyncio.sleep(3)
+    await event.delete()
