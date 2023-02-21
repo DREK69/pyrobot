@@ -1,23 +1,22 @@
-import os
 import asyncio
-import youtube_dl
-import threading 
+import os
+import threading
 
+import youtube_dl
 from pornhub_api import PornhubApi
 from pornhub_api.backends.aiohttp import AioHttpBackend
-from youtube_dl.utils import DownloadError
-
 from pyrogram import Client, filters
+from pyrogram.errors import ChatAdminRequired, ChatWriteForbidden, UserNotParticipant
 from pyrogram.types import (
-    Message, InlineQuery,
+    CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    CallbackQuery,
+    InlineQuery,
     InlineQueryResultArticle,
     InputTextMessageContent,
+    Message,
 )
-from pyrogram.errors import ChatAdminRequired, UserNotParticipant, ChatWriteForbidden
-
+from youtube_dl.utils import DownloadError
 
 if os.path.exists("downloads"):
     print("✅ File is exist")
@@ -28,16 +27,20 @@ else:
 active = []
 queues = []
 
+
 def download_progress_hook(d, message, client):
-    if d['status'] == 'downloading':
-        current = d.get("_downloaded_bytes_str") or humanbytes(int(d.get("downloaded_bytes", 1)))
+    if d["status"] == "downloading":
+        current = d.get("_downloaded_bytes_str") or humanbytes(
+            int(d.get("downloaded_bytes", 1))
+        )
         total = d.get("_total_bytes_str") or d.get("_total_bytes_estimate_str")
         file_name = d.get("filename")
-        eta = d.get('_eta_str', "N/A")
+        eta = d.get("_eta_str", "N/A")
         percent = d.get("_percent_str", "N/A")
         speed = d.get("_speed_str", "N/A")
         to_edit = f"📥 <b>Downloading!</b>\n\n<b>Name :</b> <code>{file_name}</code>\n<b>Size :</b> <code>{total}</code>\n<b>Speed :</b> <code>{speed}</code>\n<b>ETA :</b> <code>{eta}</code>\n\n<b>Percentage: </b> <code>{current}</code> from <code>{total} (__{percent}__)</code>"
         threading.Thread(target=edit_msg, args=(client, message, to_edit)).start()
+
 
 async def run_async(func, *args, **kwargs):
     loop = asyncio.get_running_loop()
@@ -49,6 +52,7 @@ def url(filter, client, update):
         return True
     else:
         return False
+
 
 url_filter = filters.create(url, name="url_filter")
 
@@ -82,7 +86,10 @@ async def subscribe_channel(c: Client, u: Message):
             except ChatWriteForbidden:
                 pass
     except ChatAdminRequired:
-        c.send_message(log_chat, "Can't manage the provided channel, make sure I'm the admin on the channel!")
+        c.send_message(
+            log_chat,
+            "Can't manage the provided channel, make sure I'm the admin on the channel!",
+        )
 
 
 @Client.on_inline_query()
@@ -93,7 +100,7 @@ async def inline_search(c: Client, q: InlineQuery):
     results = []
     try:
         src = await api.search.search(query)
-    except ValueError as e:
+    except ValueError:
         results.append(
             InlineQueryResultArticle(
                 title="I can't found it!",
@@ -111,13 +118,10 @@ async def inline_search(c: Client, q: InlineQuery):
 
         return
 
-
     videos = src.videos
     await backend.close()
-    
 
     for vid in videos:
-
         try:
             pornstars = ", ".join(v for v in vid.pornstars)
             categories = ", ".join(v for v in vid.categories)
@@ -126,13 +130,15 @@ async def inline_search(c: Client, q: InlineQuery):
             pornstars = "N/A"
             categories = "N/A"
             tags = "N/A"
-        capt = (f"Title: `{vid.title}`\n"
-                f"Duration: `{vid.duration}`\n"
-                f"Views: `{vid.views}`\n\n"
-                f"**{pornstars}**\n"
-                f"Category: {categories}\n\n"
-                f"{tags}"
-                f"Link: {vid.url}")
+        capt = (
+            f"Title: `{vid.title}`\n"
+            f"Duration: `{vid.duration}`\n"
+            f"Views: `{vid.views}`\n\n"
+            f"**{pornstars}**\n"
+            f"Category: {categories}\n\n"
+            f"{tags}"
+            f"Link: {vid.url}"
+        )
 
         text = f"{vid.url}"
 
@@ -140,7 +146,8 @@ async def inline_search(c: Client, q: InlineQuery):
             InlineQueryResultArticle(
                 title=vid.title,
                 input_message_content=InputTextMessageContent(
-                    message_text=text, disable_web_page_preview=True,
+                    message_text=text,
+                    disable_web_page_preview=True,
                 ),
                 description=f"Duration: {vid.duration}\nViews: {vid.views}\nRating: {vid.rating}",
                 thumb_url=vid.thumb,
@@ -164,16 +171,19 @@ async def inline_search(c: Client, q: InlineQuery):
 @Client.on_message(url_filter)
 async def options(c: Client, m: Message):
     await m.reply_text(
-        "Tap the button to continue action!", 
+        "Tap the button to continue action!",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
-                        "Download", callback_data=f"d_{m.text}",
+                        "Download",
+                        callback_data=f"d_{m.text}",
                     ),
-                ],[
+                ],
+                [
                     InlineKeyboardButton(
-                        "Watch in web", url=m.text,
+                        "Watch in web",
+                        url=m.text,
                     ),
                 ],
             ],
@@ -183,7 +193,7 @@ async def options(c: Client, m: Message):
 
 @Client.on_callback_query(filters.regex("^d"))
 async def get_video(c: Client, q: CallbackQuery):
-    url = q.data.split("_",1)[1]
+    url = q.data.split("_", 1)[1]
     msg = await q.message.edit("Downloading...")
     user_id = q.message.from_user.id
 
@@ -193,9 +203,7 @@ async def get_video(c: Client, q: CallbackQuery):
     else:
         active.append(user_id)
 
-    ydl_opts = {
-            "progress_hooks": [lambda d: download_progress_hook(d, q.message, c)]
-        }
+    ydl_opts = {"progress_hooks": [lambda d: download_progress_hook(d, q.message, c)]}
 
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         try:
@@ -204,8 +212,7 @@ async def get_video(c: Client, q: CallbackQuery):
             await q.message.edit("Sorry, an error occurred")
             return
 
-
-    for file in os.listdir('.'):
+    for file in os.listdir("."):
         if file.endswith(".mp4"):
             await q.message.reply_video(
                 f"{file}",
@@ -216,7 +223,9 @@ async def get_video(c: Client, q: CallbackQuery):
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
-                            InlineKeyboardButton("• Donate •", url="https://t.me/IamOkayy"),
+                            InlineKeyboardButton(
+                                "• Donate •", url="https://t.me/IamOkayy"
+                            ),
                         ],
                     ],
                 ),
@@ -225,7 +234,6 @@ async def get_video(c: Client, q: CallbackQuery):
             break
         else:
             continue
-
 
     await msg.delete()
     active.remove(user_id)
