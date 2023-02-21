@@ -3,7 +3,8 @@ import socket
 from html import escape
 from re import sub as re_sub
 from time import ctime, time
-
+from pornhub_api import PornhubApi
+from pornhub_api.backends.aiohttp import AioHttpBackend
 from fuzzysearch import find_near_matches
 from pykeyboard import InlineKeyboard
 from pyrogram import filters
