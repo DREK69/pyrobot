@@ -21,18 +21,10 @@ async def run_async(func, *args, **kwargs):
     loop = asyncio.get_running_loop()
     return await loop.run_in_executor(None, func, *args, **kwargs)
 
-
-def url(filter, client, update):
-    if "www.pornhub" in update.message.text:
-        return True
-    else:
-        return False
+ph = r"^https:\/\/(pornhub\.com|www\.pornhub\.com)"
 
 
-url_filter = filters.create(url, name="url_filter")
-
-
-@Client.on_message(url_filter)
+@Client.on_message(filters.regex(ph_regex))
 async def options(c: Client, m: Message):
     await m.reply_text(
         "Tap the button to continue action!",
