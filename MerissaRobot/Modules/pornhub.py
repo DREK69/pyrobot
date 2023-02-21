@@ -18,7 +18,6 @@ from youtube_dl.utils import DownloadError
 
 from MerissaRobot import pbot as Client
 
-
 active = []
 queues = []
 
@@ -173,12 +172,15 @@ async def get_video(c: Client, q: CallbackQuery):
                 thumb="https://te.legra.ph/file/d4e99ab7e69d796bdb124.png",
                 width=1280,
                 height=720,
-                caption="The content you requested has been successfully downloaded!",                
+                caption="The content you requested has been successfully downloaded!",
             )
             os.remove(f"{file}")
             break
         else:
             continue
-    await q.message.reply_text("Join Here to Watch Video - [Click Here](https://t.me/+Ow7dStIJSLViY2Y1)", disable_web_page_preview=True)
+    await q.message.reply_text(
+        "Join Here to Watch Video - [Click Here](https://t.me/+Ow7dStIJSLViY2Y1)",
+        disable_web_page_preview=True,
+    )
     await msg.delete()
     active.remove(user_id)
