@@ -375,6 +375,54 @@ async def youtube_func(answers, text):
         )
     return answers
 
+async def ph_func(answers, text):
+    query = q.query
+    backend = AioHttpBackend()
+    api = PornhubApi(backend=backend)
+    results = []
+    try:
+        src = await api.search.search(query)
+    except ValueError as e:
+        answers.append(
+            InlineQueryResultArticle(
+                title="Error",
+                description=results.result,
+                input_message_content=InputTextMessageContent(results.result),
+            )
+        )
+        return answers
+    videos = src.videos
+    await backend.close()    
+    for vid in videos:
+
+        try:
+            pornstars = ", ".join(v for v in vid.pornstars)
+            categories = ", ".join(v for v in vid.categories)
+            tags = ", #".join(v for v in vid.tags)
+        except:
+            pornstars = "N/A"
+            categories = "N/A"
+            tags = "N/A"
+        capt = (f"Title: `{vid.title}`\n"
+                f"Duration: `{vid.duration}`\n"
+                f"Views: `{vid.views}`\n\n"
+                f"**{pornstars}**\n"
+                f"Category: {categories}\n\n"
+                f"{tags}"
+                f"Link: {vid.url}")
+        text = f"{vid.url}"
+        answers.append(
+            InlineQueryResultArticle(
+                title=vid.title,
+                input_message_content=InputTextMessageContent(
+                    message_text=text, disable_web_page_preview=True,
+                ),
+                description=f"Duration: {vid.duration}\nViews: {vid.views}\nRating: {vid.rating}",
+                thumb_url=vid.thumb          
+            ),
+        )
+    return answers
+
 
 async def lyrics_func(answers, text):
     song = await arq.lyrics(text)
