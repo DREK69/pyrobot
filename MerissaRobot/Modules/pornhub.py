@@ -53,7 +53,7 @@ async def get_video(c: Client, q: CallbackQuery):
     message = await q.message.edit(
         "Downloading Started\n\nDownloading Speed could be Slow Plase wait..."
     )
-    name = q.message.from_user.firstname
+    name = q.message.from_user.first_name
     user_id = q.message.from_user.id
     if "some" in active:
         await q.message.edit("Sorry, you can only download videos at a time!")
