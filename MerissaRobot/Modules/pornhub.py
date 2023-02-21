@@ -2,16 +2,11 @@ import asyncio
 import os
 
 import youtube_dl
-from pornhub_api import PornhubApi
-from pornhub_api.backends.aiohttp import AioHttpBackend
 from pyrogram import filters
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    InlineQuery,
-    InlineQueryResultArticle,
-    InputTextMessageContent,
     Message,
 )
 from youtube_dl.utils import DownloadError
