@@ -375,6 +375,7 @@ async def youtube_func(answers, text):
         )
     return answers
 
+
 async def ph_func(answers, text):
     query = q.query
     backend = AioHttpBackend()
@@ -382,7 +383,7 @@ async def ph_func(answers, text):
     results = []
     try:
         src = await api.search.search(query)
-    except ValueError as e:
+    except ValueError:
         answers.append(
             InlineQueryResultArticle(
                 title="Error",
@@ -392,9 +393,8 @@ async def ph_func(answers, text):
         )
         return answers
     videos = src.videos
-    await backend.close()    
+    await backend.close()
     for vid in videos:
-
         try:
             pornstars = ", ".join(v for v in vid.pornstars)
             categories = ", ".join(v for v in vid.categories)
@@ -403,22 +403,25 @@ async def ph_func(answers, text):
             pornstars = "N/A"
             categories = "N/A"
             tags = "N/A"
-        capt = (f"Title: `{vid.title}`\n"
-                f"Duration: `{vid.duration}`\n"
-                f"Views: `{vid.views}`\n\n"
-                f"**{pornstars}**\n"
-                f"Category: {categories}\n\n"
-                f"{tags}"
-                f"Link: {vid.url}")
+        capt = (
+            f"Title: `{vid.title}`\n"
+            f"Duration: `{vid.duration}`\n"
+            f"Views: `{vid.views}`\n\n"
+            f"**{pornstars}**\n"
+            f"Category: {categories}\n\n"
+            f"{tags}"
+            f"Link: {vid.url}"
+        )
         text = f"{vid.url}"
         answers.append(
             InlineQueryResultArticle(
                 title=vid.title,
                 input_message_content=InputTextMessageContent(
-                    message_text=text, disable_web_page_preview=True,
+                    message_text=text,
+                    disable_web_page_preview=True,
                 ),
                 description=f"Duration: {vid.duration}\nViews: {vid.views}\nRating: {vid.rating}",
-                thumb_url=vid.thumb          
+                thumb_url=vid.thumb,
             ),
         )
     return answers
