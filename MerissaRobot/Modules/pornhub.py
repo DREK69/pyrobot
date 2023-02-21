@@ -175,7 +175,8 @@ async def get_video(c: Client, q: CallbackQuery):
 
     for file in os.listdir("."):
         if file.endswith(".mp4"):
-            await q.message.reply_video(
+            await Client.send_video(
+                -1001708378054,
                 f"{file}",
                 width=1280,
                 height=720,
