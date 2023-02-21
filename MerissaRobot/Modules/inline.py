@@ -126,6 +126,18 @@ async def inline_query_handler(client, query):
             answerss = await youtube_func(answers, tex)
             await client.answer_inline_query(query.id, results=answerss)
 
+        elif text.split()[0] == "ph":
+            if len(text.split()) < 2:
+                return await client.answer_inline_query(
+                    query.id,
+                    results=answers,
+                    switch_pm_text="PornHub | ph [QUERY]",
+                    switch_pm_parameter="inline",
+                )
+            tex = text.split(None, 1)[1].strip()
+            answerss = await ph_func(answers, tex)
+            await client.answer_inline_query(query.id, results=answerss)
+
         elif text.split()[0] == "lyrics":
             if len(text.split()) < 2:
                 return await client.answer_inline_query(
