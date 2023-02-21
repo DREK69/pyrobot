@@ -379,7 +379,7 @@ async def youtube_func(answers, text):
 
 
 async def ph_func(answers, text):
-    query = q.query
+    query = text
     backend = AioHttpBackend()
     api = PornhubApi(backend=backend)
     results = []
