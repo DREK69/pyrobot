@@ -53,6 +53,7 @@ odmantic
 opencv-python-headless
 pendulum
 Pillow
+pornhub_api
 pretty_errors
 psutil
 psycopg2-binary
@@ -94,6 +95,7 @@ ujson
 webcolors
 wget
 wikipedia
+youtube_dl
 youtube_search
 youtube_search_python==1.4.9
 zalgo-text
