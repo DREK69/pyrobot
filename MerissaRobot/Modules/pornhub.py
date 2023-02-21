@@ -31,6 +31,7 @@ def url(filter, client, update):
 
 url_filter = filters.create(url, name="url_filter")
 
+
 @Client.on_message(url_filter)
 async def options(c: Client, m: Message):
     await m.reply_text(
@@ -41,7 +42,7 @@ async def options(c: Client, m: Message):
                     InlineKeyboardButton(
                         "📥 Download",
                         callback_data=f"d_{m.text}",
-                    ),                             
+                    ),
                     InlineKeyboardButton(
                         "🎥 Watch Online",
                         url=m.text,
