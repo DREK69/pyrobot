@@ -1,12 +1,10 @@
 import asyncio
 import os
-import threading
 
 import youtube_dl
 from pornhub_api import PornhubApi
 from pornhub_api.backends.aiohttp import AioHttpBackend
 from pyrogram import filters
-from pyrogram.errors import FloodWait, MessageNotModified
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
