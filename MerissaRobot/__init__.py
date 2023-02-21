@@ -161,7 +161,7 @@ pbot = Client(
 # ARQ Client
 LOGGER.info("[ARQ CLIENT] Checking Arq Connections...")
 
-arq = ARQ("https://arq.hamker.in", "IXJDNK-GURMUL-HPGZYX-TPJKKT-ARQ", aiohttpsession)
+arq = ARQ("https://arq.hamker.dev", "IXJDNK-GURMUL-HPGZYX-TPJKKT-ARQ", aiohttpsession)
 
 
 class InterceptHandler(logging.Handler):
