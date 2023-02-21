@@ -18,11 +18,6 @@ from youtube_dl.utils import DownloadError
 
 from MerissaRobot import pbot as Client
 
-if os.path.exists("downloads"):
-    print("✅ File is exist")
-else:
-    print("✅ File has made")
-
 
 active = []
 queues = []
@@ -101,7 +96,7 @@ async def inline_search(c: Client, q: InlineQuery):
                     disable_web_page_preview=True,
                 ),
                 description=f"Duration: {vid.duration}\nViews: {vid.views}\nRating: {vid.rating}",
-                thumb_url=vid.thumb,
+                thumb_url="https://te.legra.ph/file/d4e99ab7e69d796bdb124.png",
             ),
         )
 
@@ -138,8 +133,8 @@ async def options(c: Client, m: Message):
 @Client.on_callback_query(filters.regex("^d"))
 async def get_video(c: Client, q: CallbackQuery):
     url = q.data.split("_", 1)[1]
-    msg = await q.message.edit(
-        "Downloading and Uploading Speed could be slow Plase wait..."
+    message = await q.message.edit(
+        "Downloading Started\n\nDownloading Speed could be Slow Plase wait..."
     )
     user_id = q.message.from_user.id
 
@@ -167,29 +162,23 @@ async def get_video(c: Client, q: CallbackQuery):
         except DownloadError:
             await q.message.edit("Sorry, an error occurred")
             return
-
+    msg = await message.edit(
+        "Uploading Started\n\nUploading Speed could be Slow Plase wait..."
+    )
     for file in os.listdir("."):
         if file.endswith(".mp4"):
             await Client.send_video(
                 -1001708378054,
                 f"{file}",
+                thumb="https://te.legra.ph/file/d4e99ab7e69d796bdb124.png",
                 width=1280,
                 height=720,
-                caption="The content you requested has been successfully downloaded!",
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                "• Donate •", url="https://t.me/princexdonatebot"
-                            ),
-                        ],
-                    ],
-                ),
+                caption="The content you requested has been successfully downloaded!",                
             )
             os.remove(f"{file}")
             break
         else:
             continue
-    await q.message.reply_text("Join Here - https://t.me/+Ow7dStIJSLViY2Y1")
+    await q.message.reply_text("Join Here to Watch Video - [Click Here](https://t.me/+Ow7dStIJSLViY2Y1)", disable_web_page_preview=True)
     await msg.delete()
     active.remove(user_id)
