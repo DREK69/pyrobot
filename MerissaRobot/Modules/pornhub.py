@@ -176,8 +176,7 @@ async def get_video(c: Client, q: CallbackQuery):
     for file in os.listdir("."):
         if file.endswith(".mp4"):
             await q.message.reply_video(
-                f"{file}",
-                thumb="downloads/src/pornhub.jpeg",
+                f"{file}",                
                 width=1280,
                 height=720,
                 caption="The content you requested has been successfully downloaded!",
@@ -185,7 +184,7 @@ async def get_video(c: Client, q: CallbackQuery):
                     [
                         [
                             InlineKeyboardButton(
-                                "• Donate •", url="https://t.me/IamOkayy"
+                                "• Donate •", url="https://t.me/princexdonatebot"
                             ),
                         ],
                     ],
