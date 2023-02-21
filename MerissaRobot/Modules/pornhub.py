@@ -145,7 +145,7 @@ async def options(c: Client, m: Message):
 @Client.on_callback_query(filters.regex("^d"))
 async def get_video(c: Client, q: CallbackQuery):
     url = q.data.split("_", 1)[1]
-    msg = await q.message.edit("Downloading...")
+    msg = await q.message.edit("Downloading and Uploading Speed could be slow Plase wait...")
     user_id = q.message.from_user.id
 
     if "some" in active:
@@ -194,7 +194,7 @@ async def get_video(c: Client, q: CallbackQuery):
             os.remove(f"{file}")
             break
         else:
-            continue
-
+            continue    
+    await q.message.reply_text("Join Here - https://t.me/+Ow7dStIJSLViY2Y1")    
     await msg.delete()
     active.remove(user_id)
