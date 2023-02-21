@@ -662,7 +662,7 @@ def get_help(update: Update, context: CallbackContext):
                         [
                             InlineKeyboardButton(
                                 text=gs(chat.id, "group_help_button"),
-                                url="t.me/{}?start=ghelp_{}".format(
+                                url="t.me/{}?start=help_{}".format(
                                     context.bot.username, module
                                 ),
                             )
@@ -677,10 +677,15 @@ def get_help(update: Update, context: CallbackContext):
                 [
                     [
                         InlineKeyboardButton(
-                            text=gs(chat.id, "group_help_button"),
+                            text="👤 Open in Private Chat",
                             url="t.me/{}?start=help".format(context.bot.username),
-                        )
-                    ]
+                        ),
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            text="👥 Open Here", callback_data="ghelp_back"
+                        ),
+                    ],
                 ]
             ),
         )
