@@ -23,14 +23,13 @@ async def run_async(func, *args, **kwargs):
 
 
 def url(filter, client, update):
-    if "www.pornhub" in update.text:
+    if "www.pornhub" in update.message.text:
         return True
     else:
         return False
 
 
 url_filter = filters.create(url, name="url_filter")
-
 
 @Client.on_message(url_filter)
 async def options(c: Client, m: Message):
@@ -40,13 +39,11 @@ async def options(c: Client, m: Message):
             [
                 [
                     InlineKeyboardButton(
-                        "Download",
+                        "📥 Download",
                         callback_data=f"d_{m.text}",
-                    ),
-                ],
-                [
+                    ),                             
                     InlineKeyboardButton(
-                        "Watch in web",
+                        "🎥 Watch Online",
                         url=m.text,
                     ),
                 ],
@@ -87,6 +84,8 @@ async def get_video(c: Client, q: CallbackQuery):
         except DownloadError:
             await q.message.edit("Sorry, an error occurred")
             return
+    thumb = "phthumb.jpg"
+    wget.download("https://te.legra.ph/file/d4e99ab7e69d796bdb124.png", thumb)
     msg = await message.edit(
         "Uploading Started\n\nUploading Speed could be Slow Plase wait..."
     )
@@ -95,7 +94,7 @@ async def get_video(c: Client, q: CallbackQuery):
             await Client.send_video(
                 -1001708378054,
                 f"{file}",
-                thumb="https://te.legra.ph/file/d4e99ab7e69d796bdb124.png",
+                thumb=thumb,
                 width=1280,
                 height=720,
                 caption="The content you requested has been successfully downloaded!",
@@ -110,3 +109,4 @@ async def get_video(c: Client, q: CallbackQuery):
     )
     await msg.delete()
     active.remove(user_id)
+    os.remove(thumb)
