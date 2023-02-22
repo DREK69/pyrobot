@@ -126,13 +126,14 @@ async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
+    performer = requests.get(f"https://api.princexd.tech/ytsearch?query={link}&limit=1").json()["results"][0]["channel"]["name"]
     youtube_audio = YouTube(link)
     title = youtube_audio.title
     thumb = await CallbackQuery.message.download()
     audio = youtube_audio.streams.filter(only_audio=True).first()
     name = f"{youtube_audio.title}.mp3"
     song = audio.download(filename=name)
-    med = InputMediaAudio(media=song, caption=title, title=title, thumb=thumb)
+    med = InputMediaAudio(media=song, caption=title, title=title, performer=performer, thumb=thumb)
     try:
         await CallbackQuery.edit_message_media(media=med)
     except Exception as error:
