@@ -284,3 +284,18 @@ async def throw_dice(client, message: Message):
 @app.on_message(filters.command("slot"))
 async def throw_dice(client, message: Message):
     await client.send_dice(message.chat.id, "🎰")
+
+__mod_name__ = "Games 🎮"
+
+__help__ = """
+*Play Games Online*:
+- /games : To get all Games
+
+*Play Game With Emojis:*
+/dice - Dice 🎲
+/dart - Dart 🎯
+/basket - Basket Ball 🏀
+/bowling - Bowling Ball 🎳
+/football - Football ⚽
+/slot - Spin slot machine 🎰"""
+
