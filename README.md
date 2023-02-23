@@ -7,14 +7,14 @@
 </h4>
 <p align="center">
     <a href="https://t.me/MerissaRobot"> Ready-To-Use Bot </a> •
-    <a href="http://MerissaRobot.github.io"> Documentation </a> •
+    <a href="http://merissarobot.tk"> Documentation </a> •
     <a href="https://t.me/MerissaxUpdates"> Update Channel </a> •
     <a href="https://t.me/MerissaxSupport"> Support Chat </a> 
 </p>
     
 # Merissa Robot
 • Merissa is a Telegram group managment bot made using Telethon and Pyrogram which makes it modern and faster than most of the exisitng Telegram Chat Managers.
-<p align="center"><img src="https://telegra.ph/file/ea56ebea604b4e054213c.jpg"></p>
+<p align="center"><img src="https://te.legra.ph/file/2b1d53cba73ae4b855837.jpg"></p>
 
 #### Merissa's features over other bots:
 - Modern
