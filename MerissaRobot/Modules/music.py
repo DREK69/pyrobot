@@ -97,7 +97,7 @@ def song(client, message):
     for i in message.command[1:]:
         link += " " + str(i)
     print(link)
-    YouTube(link)
+    url = YouTube(link)
     video = url.streams.get_by_resolution("720p")
     ytshorts = video.download()
     message.reply_video(ytshorts, caption="Powered By @MerissaRobot")
