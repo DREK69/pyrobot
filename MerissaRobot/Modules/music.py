@@ -62,13 +62,13 @@ def song(client, message):
     yt = requests.get(
         f"https://api.princexd.tech/ytsearch?query={query}&limit=1"
     ).json()["result"][0]
-    yt["title"]
+    title = yt["title"]
     dur = yt["duration"]
     videoid = yt["id"]
     thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"
     message.reply_photo(
         thumbnail,
-        caption=f"**Title**: {songname}\n**Duration**: {str(dur)}\n\n**Select Your Preferred Format from Below**:",
+        caption=f"**Title**: {title}\n**Duration**: {str(dur)}\n\n**Select Your Preferred Format from Below**:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
