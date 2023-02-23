@@ -86,6 +86,20 @@ def song(client, message):
         ),
     )
 
+@Client.on_message(filters.command(["ytshorts"]))
+def song(client, message):
+    user_id = message.from_user.id
+    user_name = message.from_user.first_name
+    user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
+    link = ""
+    for i in message.command[1:]:
+        link += " " + str(i)
+    print(link)
+    shorts = YouTube(link)             
+    video= url.streams.get_by_resolution("720p")
+    ytshorts = video.download()
+    await message.reply_video(ytshorts, caption="Powered By @MerissaRobot")
+    os.remove(ytshorts)    
 
 @Client.on_callback_query(filters.regex(pattern=r"audio"))
 async def callback_query(Client, CallbackQuery):
