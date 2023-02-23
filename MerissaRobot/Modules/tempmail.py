@@ -192,6 +192,7 @@ async def fakemailgen(_, message: Message):
 """,
     )
 
+
 __help__ = """
 You can generate Temp-Mail from MerissaRobot 
  ❍ /genmail : To get Random Temp-Mail.
