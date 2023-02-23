@@ -10,7 +10,6 @@ from pyrogram.types import (
     InputMediaVideo,
 )
 from pytube import YouTube
-from youtubesearchpython import VideosSearch
 
 from MerissaRobot import pbot as Client
 
@@ -23,24 +22,11 @@ def song(client, message):
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
     query = message.text
-    try:
-        search = VideosSearch(query, limit=1).result()
-        data = search["result"][0]
-        songname = data["title"]
-        data["link"]
-        videoid = data["id"]
-        dur = data["duration"]
-    except Exception as e:
-        message.reply(
-            "**😴 sᴏɴɢ ɴᴏᴛ ғᴏᴜɴᴅ ᴏɴ ʏᴏᴜᴛᴜʙᴇ.**\n\n» ᴍᴀʏʙᴇ ᴛᴜɴᴇ ɢᴀʟᴛɪ ʟɪᴋʜᴀ ʜᴏ, ᴩᴀᴅʜᴀɪ - ʟɪᴋʜᴀɪ ᴛᴏʜ ᴋᴀʀᴛᴀ ɴᴀʜɪ ᴛᴜ !"
-        )
-        print(str(e))
-        return
-    yt = requests.get(
-        f"https://api.princexd.tech/ytsearch?query={query}&limit=1"
-    ).json()["results"][0]
-    yt["channel"]["name"]
-    thumbnail = yt["thumbnails"][1]["url"]
+    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={query}").json()["results"]
+    duration= yt["duration"]
+    performer= yt["author"]["name"]
+    videoid = yt["id"]
+    thumbnail = yt["thumbnail"]
     thumb = f"{songname}.jpg"
     wget.download(thumbnail, thumb)
     message.reply_photo(
@@ -76,24 +62,11 @@ def song(client, message):
         query += " " + str(i)
     print(query)
     ydl_opts = {"format": "bestaudio[ext=m4a]"}
-    try:
-        search = VideosSearch(query, limit=1).result()
-        data = search["result"][0]
-        songname = data["title"]
-        data["link"]
-        videoid = data["id"]
-        dur = data["duration"]
-    except Exception as e:
-        message.reply(
-            "**😴 sᴏɴɢ ɴᴏᴛ ғᴏᴜɴᴅ ᴏɴ ʏᴏᴜᴛᴜʙᴇ.**\n\n» ᴍᴀʏʙᴇ ᴛᴜɴᴇ ɢᴀʟᴛɪ ʟɪᴋʜᴀ ʜᴏ, ᴩᴀᴅʜᴀɪ - ʟɪᴋʜᴀɪ ᴛᴏʜ ᴋᴀʀᴛᴀ ɴᴀʜɪ ᴛᴜ !"
-        )
-        print(str(e))
-        return
-    yt = requests.get(
-        f"https://api.princexd.tech/ytsearch?query={query}&limit=1"
-    ).json()["results"][0]
-    yt["channel"]["name"]
-    thumbnail = yt["thumbnails"][1]["url"]
+    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={query}").json()["results"]
+    duration= yt["duration"]
+    performer= yt["author"]["name"]
+    videoid = yt["id"]
+    thumbnail = yt["thumbnail"]
     thumb = f"{songname}.jpg"
     wget.download(thumbnail, thumb)
     message.reply_photo(
@@ -126,9 +99,6 @@ async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    performer = requests.get(
-        f"https://api.princexd.tech/ytsearch?query={link}&limit=1"
-    ).json()["results"][0]["channel"]["name"]
     youtube_audio = YouTube(link)
     title = youtube_audio.title
     thumb = await CallbackQuery.message.download()
@@ -136,7 +106,7 @@ async def callback_query(Client, CallbackQuery):
     name = f"{youtube_audio.title}.mp3"
     song = audio.download(filename=name)
     med = InputMediaAudio(
-        media=song, caption=title, title=title, performer=performer, thumb=thumb
+        media=song, caption=title, title=title, performer=str(youtube_audio.author), duration=int(youtube_audio.length), thumb=thumb
     )
     try:
         await CallbackQuery.edit_message_media(media=med)
