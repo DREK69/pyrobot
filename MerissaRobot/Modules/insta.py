@@ -25,3 +25,20 @@ async def instadown(_, message):
                 mg.append(InputMediaPhoto(post, caption="Powered By @MerissaRobot"))
         await message.reply_media_group(mg)
     await msg.delete()
+
+__help__ = """
+@MerissaRobot Share Anything Download Anything
+
+For YouTube:
+ ❍ [/ytdl,/song,/music] <query> : To download song and video From Youtube
+ ❍ Otherwise Send direct link from YouTube To download Song or Video
+
+For Instagram:
+ ❍ Send direct link of Story, Reels, Post, IGTV Videos from Instagram to Download Video.
+
+For Merissa-Hub(PHub):
+ ❍ Send direct link of Phub Video from Phub website to Download Video.
+ ❍ @MerissaRobot ph <query> : For search link of PHub Videos in MerissaRobot.
+"""
+
+__mod_name__ = "Downloaders 📥"
