@@ -208,7 +208,6 @@ async def makelogo(event):
         imgSize = blueimg.size
 
         if upper_text:
-
             fontSize = int(imgSize[1] / 5)
             image_widthz, image_heightz = img.size
             font = ImageFont.truetype(
@@ -236,7 +235,6 @@ async def makelogo(event):
             )
 
         if lower_text:
-
             fontSize = int(imgSize[1] / 14)
             image_widthz, image_heightz = img.size
             font = ImageFont.truetype(
