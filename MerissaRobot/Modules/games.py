@@ -285,6 +285,7 @@ async def throw_dice(client, message: Message):
 async def throw_dice(client, message: Message):
     await client.send_dice(message.chat.id, "🎰")
 
+
 __mod_name__ = "Games 🎮"
 
 __help__ = """
@@ -298,4 +299,3 @@ __help__ = """
 /bowling - Bowling Ball 🎳
 /football - Football ⚽
 /slot - Spin slot machine 🎰"""
-
