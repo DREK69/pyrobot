@@ -23,7 +23,7 @@ def song(client, message):
     query = message.text
     yt = requests.get(
         f"https://api.princexd.tech/ytsearch?query={query}&limit=1"
-    ).json()["results"][0]
+    ).json()["result"][0]
     title = yt["title"]
     dur = yt["duration"]
     videoid = yt["id"]
@@ -61,7 +61,7 @@ def song(client, message):
     print(query)
     yt = requests.get(
         f"https://api.princexd.tech/ytsearch?query={query}&limit=1"
-    ).json()["results"][0]
+    ).json()["result"][0]
     yt["title"]
     dur = yt["duration"]
     videoid = yt["id"]
