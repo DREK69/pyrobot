@@ -22,9 +22,11 @@ def song(client, message):
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
     query = message.text
-    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={query}").json()["results"]
-    duration= yt["duration"]
-    performer= yt["author"]["name"]
+    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={query}").json()[
+        "results"
+    ]
+    yt["duration"]
+    yt["author"]["name"]
     videoid = yt["id"]
     thumbnail = yt["thumbnail"]
     thumb = f"{songname}.jpg"
@@ -62,9 +64,11 @@ def song(client, message):
         query += " " + str(i)
     print(query)
     ydl_opts = {"format": "bestaudio[ext=m4a]"}
-    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={query}").json()["results"]
-    duration= yt["duration"]
-    performer= yt["author"]["name"]
+    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={query}").json()[
+        "results"
+    ]
+    yt["duration"]
+    yt["author"]["name"]
     videoid = yt["id"]
     thumbnail = yt["thumbnail"]
     thumb = f"{songname}.jpg"
@@ -106,7 +110,12 @@ async def callback_query(Client, CallbackQuery):
     name = f"{youtube_audio.title}.mp3"
     song = audio.download(filename=name)
     med = InputMediaAudio(
-        media=song, caption=title, title=title, performer=str(youtube_audio.author), duration=int(youtube_audio.length), thumb=thumb
+        media=song,
+        caption=title,
+        title=title,
+        performer=str(youtube_audio.author),
+        duration=int(youtube_audio.length),
+        thumb=thumb,
     )
     try:
         await CallbackQuery.edit_message_media(media=med)
