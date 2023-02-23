@@ -89,6 +89,7 @@ def song(client, message):
 
 @Client.on_message(filters.command(["ytshorts"]))
 def song(client, message):
+    m = message.reply_text("Processing....")
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
@@ -99,8 +100,9 @@ def song(client, message):
     YouTube(link)
     video = url.streams.get_by_resolution("720p")
     ytshorts = video.download()
-    await message.reply_video(ytshorts, caption="Powered By @MerissaRobot")
-    os.remove(ytshorts)
+    message.reply_video(ytshorts, caption="Powered By @MerissaRobot")
+    m.delete()
+    os.remove(ytshorts)   
 
 
 @Client.on_callback_query(filters.regex(pattern=r"audio"))
