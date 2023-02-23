@@ -22,18 +22,14 @@ def song(client, message):
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
     query = message.text
-    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={query}").json()[
-        "results"
-    ]
-    yt["duration"]
-    yt["author"]["name"]
+    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={query}&limit=1").json()["results"][0]
+    title = yt["title"]
+    dur = yt["duration"]
     videoid = yt["id"]
-    thumbnail = yt["thumbnail"]
-    thumb = f"{songname}.jpg"
-    wget.download(thumbnail, thumb)
+    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"    
     message.reply_photo(
         thumbnail,
-        caption=f"**Title**: {songname}\n**Duration**: {str(dur)}\n\n**Select Your Preferred Format from Below**:",
+        caption=f"**Title**: {title}\n**Duration**: {str(dur)}\n\n**Select Your Preferred Format from Below**:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -49,9 +45,7 @@ def song(client, message):
                 ],
             ]
         ),
-    )
-    os.remove(thumb)
-
+    )    
 
 @Client.on_message(filters.command(["music", "ytdl", "song"]))
 def song(client, message):
@@ -62,17 +56,12 @@ def song(client, message):
     query = ""
     for i in message.command[1:]:
         query += " " + str(i)
-    print(query)
-    ydl_opts = {"format": "bestaudio[ext=m4a]"}
-    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={query}").json()[
-        "results"
-    ]
-    yt["duration"]
-    yt["author"]["name"]
+    print(query)    
+    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={query}&limit=1").json()["results"][0]
+    title = yt["title"]
+    dur = yt["duration"]
     videoid = yt["id"]
-    thumbnail = yt["thumbnail"]
-    thumb = f"{songname}.jpg"
-    wget.download(thumbnail, thumb)
+    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"    
     message.reply_photo(
         thumbnail,
         caption=f"**Title**: {songname}\n**Duration**: {str(dur)}\n\n**Select Your Preferred Format from Below**:",
@@ -92,7 +81,6 @@ def song(client, message):
             ]
         ),
     )
-    os.remove(thumb)
 
 
 @Client.on_callback_query(filters.regex(pattern=r"audio"))
