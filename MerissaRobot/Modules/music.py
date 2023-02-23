@@ -102,7 +102,7 @@ def song(client, message):
     ytshorts = video.download()
     message.reply_video(ytshorts, caption="Powered By @MerissaRobot")
     m.delete()
-    os.remove(ytshorts)   
+    os.remove(ytshorts)
 
 
 @Client.on_callback_query(filters.regex(pattern=r"audio"))
