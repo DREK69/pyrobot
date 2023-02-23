@@ -26,12 +26,12 @@ async def instadown(_, message):
         await message.reply_media_group(mg)
     await msg.delete()
 
-
 __help__ = """
 @MerissaRobot Share Anything Download Anything
 
 For YouTube:
  ❍ [/ytdl,/song,/music] <query> : To download song and video From Youtube
+ ❍ `@MerissaRobot yt query` : For search link of Youtube Videos in MerissaRobot.
  ❍ Otherwise Send direct link from YouTube To download Song or Video
 
 For Instagram:
@@ -39,7 +39,7 @@ For Instagram:
 
 For Merissa-Hub(PHub):
  ❍ Send direct link of Phub Video from Phub website to Download Video.
- ❍ @MerissaRobot ph <query> : For search link of PHub Videos in MerissaRobot.
+ ❍ `@MerissaRobot ph query` : For search link of PHub Videos in MerissaRobot.
 """
 
 __mod_name__ = "Downloaders 📥"
