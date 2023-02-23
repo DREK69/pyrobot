@@ -1,7 +1,6 @@
 import os
 
 import requests
-import wget
 from pyrogram import Client, filters
 from pyrogram.types import (
     InlineKeyboardButton,
@@ -22,11 +21,13 @@ def song(client, message):
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
     query = message.text
-    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={query}&limit=1").json()["results"][0]
+    yt = requests.get(
+        f"https://api.princexd.tech/ytsearch?query={query}&limit=1"
+    ).json()["results"][0]
     title = yt["title"]
     dur = yt["duration"]
     videoid = yt["id"]
-    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"    
+    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"
     message.reply_photo(
         thumbnail,
         caption=f"**Title**: {title}\n**Duration**: {str(dur)}\n\n**Select Your Preferred Format from Below**:",
@@ -45,7 +46,8 @@ def song(client, message):
                 ],
             ]
         ),
-    )    
+    )
+
 
 @Client.on_message(filters.command(["music", "ytdl", "song"]))
 def song(client, message):
@@ -56,12 +58,14 @@ def song(client, message):
     query = ""
     for i in message.command[1:]:
         query += " " + str(i)
-    print(query)    
-    yt = requests.get(f"https://api.princexd.tech/ytsearch?query={query}&limit=1").json()["results"][0]
-    title = yt["title"]
+    print(query)
+    yt = requests.get(
+        f"https://api.princexd.tech/ytsearch?query={query}&limit=1"
+    ).json()["results"][0]
+    yt["title"]
     dur = yt["duration"]
     videoid = yt["id"]
-    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"    
+    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"
     message.reply_photo(
         thumbnail,
         caption=f"**Title**: {songname}\n**Duration**: {str(dur)}\n\n**Select Your Preferred Format from Below**:",
