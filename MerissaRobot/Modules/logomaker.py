@@ -4,9 +4,9 @@ from io import BytesIO
 
 import requests
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
-from pyrogram import *
 
-from MerissaRobot import pbot
+from MerissaRobot import telethn as bot
+from MerissaRobot.events import register
 
 
 def mediainfo(media):
@@ -44,9 +44,9 @@ def mediainfo(media):
     return m
 
 
-@pbot.on_message(filters.command("logo"))
-async def logomaker(_, message):
-    quew = message.text.split(None, 1)
+@register(pattern="^/logo ?(.*)")
+async def makelogo(event):
+    quew = event.pattern_match.group(1).strip()
     if not quew:
         await event.reply("Provide Some Text To Draw! Example: /logo <your name>")
         return
@@ -63,7 +63,7 @@ async def logomaker(_, message):
                 randBg = await temp.download_media()
     else:
         pass
-    msg = await message.reply_text("Creating your logo...wait!")
+    msg = await event.reply("Creating your logo...wait!")
     try:
         text = quew
         if ";" in text:
@@ -208,6 +208,7 @@ async def logomaker(_, message):
         imgSize = blueimg.size
 
         if upper_text:
+
             fontSize = int(imgSize[1] / 5)
             image_widthz, image_heightz = img.size
             font = ImageFont.truetype(
@@ -235,6 +236,7 @@ async def logomaker(_, message):
             )
 
         if lower_text:
+
             fontSize = int(imgSize[1] / 14)
             image_widthz, image_heightz = img.size
             font = ImageFont.truetype(
@@ -265,12 +267,12 @@ async def logomaker(_, message):
         fname2 = "logo.png"
         blueimg.save(fname2, "png")
         await msg.delete()
-        await message.reply_photo(fname2, caption="Made By @MerissaRobot")
+        await bot.send_file(event.chat_id, fname2, caption="Made By @MerissaRobot")
         if os.path.exists(fname2):
             os.remove(fname2)
 
     except Exception:
-        await msg.edit_text(
+        await msg.edit(
             f"Please Try Again! \nif you're getting Error again and again then Report @MerissaxSupport"
         )
 
