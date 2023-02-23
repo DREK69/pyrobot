@@ -87,7 +87,7 @@ def song(client, message):
     )
 
 
-@Client.on_message(filters.command(["ytshorts"]))
+@Client.on_message(filters.command(["ytshorts", "shorts", "ytshort"]))
 def song(client, message):
     m = message.reply_text("Processing....")
     user_id = message.from_user.id
