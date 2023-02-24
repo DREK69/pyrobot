@@ -175,9 +175,6 @@ async def callback_query(Client, CallbackQuery):
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_720 = YouTube(link)
     vid_720 = youtube_720.streams.get_by_resolution("720p")
-    m = await CallbackQuery.edit_message_text(
-        "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
-    )
     thumb = await CallbackQuery.message.download()
     width = CallbackQuery.message.photo.width
     height = CallbackQuery.message.photo.height
