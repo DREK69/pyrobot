@@ -144,7 +144,7 @@ async def callback_query(Client, CallbackQuery):
     videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_360 = YouTube(link)
-    vid_360 = youtube_360.streams.get_lowest_resolution()
+    vid_360 = youtube_360.streams.get_by_resolution("360p")
     thumb = await CallbackQuery.message.download()
     width = CallbackQuery.message.photo.width
     height = CallbackQuery.message.photo.height
