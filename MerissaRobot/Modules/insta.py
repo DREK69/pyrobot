@@ -9,7 +9,7 @@ instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stori
 @pbot.on_message(filters.regex(instaregex))
 async def instadown(_, message):
     link = message.text
-    await message.reply_text("Processing...")
+    m = await message.reply_text("Processing...")
     url = f"https://igdl.in/apis.php?url={link}"
     data = get(url).json()
     type = data["graphql"]["shortcode_media"]["__typename"]
@@ -30,10 +30,10 @@ async def instadown(_, message):
             else:
                 photo = node["display_resources"][0]["src"]
                 await message.reply_photo(photo)
-
     else:
         x = data["graphql"]["shortcode_media"]["video_url"]
         await message.reply_video(x)
+    await m.delete()
 
 
 __help__ = """
