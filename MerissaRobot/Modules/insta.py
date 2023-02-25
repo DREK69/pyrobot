@@ -28,7 +28,7 @@ async def instadown(_, message):
                 video = node["video_url"]
                 await message.reply_video(video)
             else:
-                photo = node["display_resources"]["src"]
+                photo = node["display_resources"][0]["src"]
                 await message.reply_photo(photo)
 
     else:
