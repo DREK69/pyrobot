@@ -1,5 +1,4 @@
 from pyrogram import filters
-from pyrogram.types import InputMediaPhoto, InputMediaVideo
 from requests import get
 
 from MerissaRobot import pbot
@@ -10,25 +9,29 @@ instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stori
 @pbot.on_message(filters.regex(instaregex))
 async def instadown(_, message):
     link = message.text
-    msg = await message.reply_text("Processing...")
+    await message.reply_text("Processing...")
     url = f"https://igdl.in/apis.php?url={link}"
-    data = get(url).json()     
-    type = data["graphql"]["shortcode_media"]["__typename"]    
+    data = get(url).json()
+    type = data["graphql"]["shortcode_media"]["__typename"]
     if type == "GraphImage":
         h = data["graphql"]["shortcode_media"]["display_resources"][0]["src"]
         await message.reply_photo(h)
-    elif type == "GraphSidecar":    
-        cnt = len(data["graphql"]["shortcode_media"]["edge_sidecar_to_children"]["edges"])
-        for i in range(0,cnt):
-            node = data["graphql"]["shortcode_media"]["edge_sidecar_to_children"]["edges"][i]["node"]   
+    elif type == "GraphSidecar":
+        cnt = len(
+            data["graphql"]["shortcode_media"]["edge_sidecar_to_children"]["edges"]
+        )
+        for i in range(0, cnt):
+            node = data["graphql"]["shortcode_media"]["edge_sidecar_to_children"][
+                "edges"
+            ][i]["node"]
             if "video_url" in node:
                 video = node["video_url"]
                 await message.reply_video(video)
             else:
-                photo = node["display_resources"]["src"]            
+                photo = node["display_resources"]["src"]
                 await message.reply_photo(photo)
 
-    else:     
+    else:
         x = data["graphql"]["shortcode_media"]["video_url"]
         await message.reply_video(x)
 
