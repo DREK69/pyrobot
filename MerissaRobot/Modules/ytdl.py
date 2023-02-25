@@ -2,7 +2,6 @@ import os
 
 import requests
 from pyrogram import Client, filters
-from pyrogram.errors.exceptions import MessageIdInvalid
 from pyrogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
