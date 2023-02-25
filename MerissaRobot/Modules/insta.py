@@ -3,8 +3,8 @@ from requests import get
 
 from MerissaRobot import pbot
 
-instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stories)\/([A-Za-z0-9\-_]*)"
-
+instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel)\/([A-Za-z0-9\-_]*)"
+storyregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(stories)\/([A-Za-z0-9\-_]*)
 
 @pbot.on_message(filters.regex(instaregex))
 async def instadown(_, message):
@@ -35,6 +35,11 @@ async def instadown(_, message):
         await message.reply_video(x)
     await m.delete()
 
+@pbot.on_message(filters.regex(storyregex))
+async def instadown(_, message):
+    link = message.text
+    story = requests.get(f"https://api.princexd.tech/igdown?link={link}").json()["media"]
+    await message.reply_document(story, caption="Powered By @MerissaRobot")
 
 __help__ = """
 @MerissaRobot Share Anything Download Anything
