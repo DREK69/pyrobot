@@ -4,7 +4,7 @@ from requests import get
 from MerissaRobot import pbot
 
 instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel)\/([A-Za-z0-9\-_]*)"
-storyregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(stories)\/([A-Za-z0-9\-_]*)
+storyregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(stories)\/([A-Za-z0-9\-_]*)"
 
 @pbot.on_message(filters.regex(instaregex))
 async def instadown(_, message):
