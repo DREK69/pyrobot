@@ -20,13 +20,11 @@ def song(client, message):
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
-    query = message.text
-    yt = requests.get(
-        f"https://api.princexd.tech/ytsearch?query={query}&limit=1"
-    ).json()["result"][0]
-    title = yt["title"]
-    dur = yt["duration"]
-    videoid = yt["id"]
+    link = message.text
+    yt = YouTube(link)
+    videoid = yt.video_id
+    title = yt.title
+    duration= yt.length
     thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"
     message.reply_photo(
         thumbnail,
@@ -85,24 +83,6 @@ def song(client, message):
             ]
         ),
     )
-
-
-@Client.on_message(filters.command(["ytshorts", "shorts", "ytshort"]))
-def song(client, message):
-    m = message.reply_text("Processing....")
-    user_id = message.from_user.id
-    user_name = message.from_user.first_name
-    user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
-    link = ""
-    for i in message.command[1:]:
-        link += " " + str(i)
-    print(link)
-    url = YouTube(link)
-    video = url.streams.get_by_resolution("720p")
-    ytshorts = video.download()
-    message.reply_video(ytshorts, caption="Powered By @MerissaRobot")
-    m.delete()
-    os.remove(ytshorts)
 
 
 @Client.on_callback_query(filters.regex(pattern=r"audio"))
