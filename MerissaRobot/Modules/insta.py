@@ -45,9 +45,7 @@ async def instadown(_, message):
 async def instadown(_, message):
     m = await message.reply_text("Processing...")
     link = message.text
-    story = get(f"https://api.princexd.tech/igdown?link={link}").json()[
-        "media"
-    ]
+    story = get(f"https://api.princexd.tech/igdown?link={link}").json()["media"]
     await message.reply_document(story, caption="Powered By @MerissaRobot")
     await m.delete()
 
