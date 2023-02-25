@@ -11,20 +11,26 @@ instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stori
 async def instadown(_, message):
     link = message.text
     msg = await message.reply_text("Processing...")
-    posts = get(
-        f"https://api.princexd.tech/igdown?apikey=22a34ac86fmsh648c15a7abb6555p1cb539jsn4b193ae50c9f&link={link}"
-    ).json()["media"]
-    if isinstance(posts, str):
-        await message.reply_document(posts, caption="Powered By @MerissaRobot")
-    else:
-        mg = []
-        for post in posts:
-            if str(post.split("https://")[1]).startswith("video"):
-                mg.append(InputMediaVideo(post, caption="Powered By @MerissaRobot"))
+    url = f"https://igdl.in/apis.php?url={link}"
+    data = get(url).json()     
+    type = data["graphql"]["shortcode_media"]["__typename"]    
+    if type == "GraphImage":
+        h = data["graphql"]["shortcode_media"]["display_resources"][0]["src"]
+        await message.reply_photo(h)
+    elif type == "GraphSidecar":    
+        cnt = len(data["graphql"]["shortcode_media"]["edge_sidecar_to_children"]["edges"])
+        for i in range(0,cnt):
+            node = data["graphql"]["shortcode_media"]["edge_sidecar_to_children"]["edges"][i]["node"]   
+            if "video_url" in node:
+                video = node["video_url"]
+                await message.reply_video(video)
             else:
-                mg.append(InputMediaPhoto(post, caption="Powered By @MerissaRobot"))
-        await message.reply_media_group(mg)
-    await msg.delete()
+                photo = node["display_resources"]["src"]            
+                await message.reply_photo(photo)
+
+    else:     
+        x = data["graphql"]["shortcode_media"]["video_url"]
+        await message.reply_video(x)
 
 
 __help__ = """
