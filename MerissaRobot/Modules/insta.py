@@ -43,12 +43,13 @@ async def instadown(_, message):
 
 @pbot.on_message(filters.regex(storyregex))
 async def instadown(_, message):
+    m = await message.reply_text("Processing...")
     link = message.text
     story = requests.get(f"https://api.princexd.tech/igdown?link={link}").json()[
         "media"
     ]
     await message.reply_document(story, caption="Powered By @MerissaRobot")
-
+    await m.delete()
 
 __help__ = """
 @MerissaRobot Share Anything Download Anything
