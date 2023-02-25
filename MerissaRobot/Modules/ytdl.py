@@ -24,7 +24,7 @@ def song(client, message):
     yt = YouTube(link)
     videoid = yt.video_id
     title = yt.title
-    yt.length
+    dur = yt.length
     thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"
     message.reply_photo(
         thumbnail,
