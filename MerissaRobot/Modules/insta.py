@@ -58,7 +58,7 @@ __help__ = """
 For YouTube:
  ❍ [/ytdl,/song,/music] <query> : To download song and video From Youtube
  ❍ `@MerissaRobot yt query` : For search link of Youtube Videos in MerissaRobot.
- ❍ Otherwise Send direct link from YouTube To download Song or Video
+ ❍ Otherwise Send direct link of YouTube Video or Shorts For download Song or Video
 
 For Instagram:
  ❍ Send direct link of Story, Reels, Post, IGTV Videos from Instagram to Download Video.
