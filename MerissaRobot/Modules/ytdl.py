@@ -12,7 +12,7 @@ from pytube import YouTube
 
 from MerissaRobot import pbot as Client
 
-ytregex = r"^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
+ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
 
 @Client.on_message(filters.regex(ytregex) & filters.private)
@@ -25,7 +25,9 @@ def song(client, message):
     videoid = yt.video_id
     title = yt.title
     dur = yt.length
-    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"
+    thumbnail = yt.thumbnail_url
+    thumb = f"{title}.png"
+    wget.download(thumbnail, thumb)
     message.reply_photo(
         thumbnail,
         caption=f"**Title**: {title}\n**Duration**: {str(dur)}\n\n**Select Your Preferred Format from Below**:",
@@ -45,6 +47,7 @@ def song(client, message):
             ]
         ),
     )
+    os.remove(thumb)
 
 
 @Client.on_message(filters.command(["music", "ytdl", "song"]))
@@ -63,7 +66,9 @@ def song(client, message):
     title = yt["title"]
     dur = yt["duration"]
     videoid = yt["id"]
-    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"
+    thumbnail = yt["thumbnails"][0]["url"]
+    thumb = f"{title}.png"
+    wget.download(thumbnail, thumb)
     message.reply_photo(
         thumbnail,
         caption=f"**Title**: {title}\n**Duration**: {str(dur)}\n\n**Select Your Preferred Format from Below**:",
@@ -83,6 +88,7 @@ def song(client, message):
             ]
         ),
     )
+    os.remove(thumb)
 
 
 @Client.on_callback_query(filters.regex(pattern=r"audio"))
