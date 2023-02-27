@@ -67,7 +67,9 @@ def song(client, message):
     title = yt["title"]
     dur = yt["duration"]
     videoid = yt["id"]
-    thumbnail = yt["thumbnails"][1]["url"]
+    link = f"https://m.youtube.com/watch?v={videoid}"
+    yt = YouTube(link)
+    thumbnail = yt.thumbnail_url
     thumb = f"{title}.png"
     wget.download(thumbnail, thumb)
     message.reply_photo(
