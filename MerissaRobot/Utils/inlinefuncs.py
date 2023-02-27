@@ -355,14 +355,9 @@ async def youtube_func(answers, text):
     for i in results:
         buttons = InlineKeyboard(row_width=1)
         video_url = f"https://youtube.com{i.url_suffix}"
-        buttons.add(InlineKeyboardButton("Watch", url=video_url))
-        caption = f"""
-**Title:** {i.title}
-**Views:** {i.views}
-**Channel:** {i.channel}
-**Duration:** {i.duration}
-**Uploaded:** {i.publish_time}
-**Description:** {i.long_desc}"""
+
+        caption = f"""{video_url}"""
+
         description = f"{i.views} | {i.channel} | {i.duration} | {i.publish_time}"
         answers.append(
             InlineQueryResultArticle(
@@ -372,7 +367,7 @@ async def youtube_func(answers, text):
                 input_message_content=InputTextMessageContent(
                     caption, disable_web_page_preview=True
                 ),
-                reply_markup=buttons,
+                
             )
         )
     return answers
