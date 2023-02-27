@@ -367,7 +367,6 @@ async def youtube_func(answers, text):
                 input_message_content=InputTextMessageContent(
                     caption, disable_web_page_preview=True
                 ),
-                
             )
         )
     return answers
