@@ -106,7 +106,7 @@ async def callback_query(Client, CallbackQuery):
     yt = requests.get(
         f"https://api.princexd.tech/ytdown/v2?link={link}&quality=720"
     ).json()
-    song = yt["mp3"]["audio"]                   
+    song = yt["mp3"]["audio"]
     thumb = await CallbackQuery.message.download()
     med = InputMediaAudio(
         media=song,
