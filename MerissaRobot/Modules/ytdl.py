@@ -104,7 +104,7 @@ async def callback_query(Client, CallbackQuery):
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_audio = YouTube(link)
     yt = requests.get(
-        "https://api.princexd.tech/ytdown/v2?link={link}&quality=720"
+        f"https://api.princexd.tech/ytdown/v2?link={link}&quality=720"
     ).json()
     song = yt["mp3"]["audio"]
     title = yt["title"]
@@ -121,7 +121,6 @@ async def callback_query(Client, CallbackQuery):
         await CallbackQuery.edit_message_media(media=med)
     except Exception as error:
         await CallbackQuery.edit_message_text(f"Something happened!\n<i>{error}</i>")
-
     os.remove(thumb)
 
 
@@ -135,7 +134,7 @@ async def callback_query(Client, CallbackQuery):
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_360 = YouTube(link)
     x = requests.get(
-        "https://api.princexd.tech/ytdown/v2?link={link}&quality=360"
+        f"https://api.princexd.tech/ytdown/v2?link={link}&quality=360"
     ).json()
     download_360 = x["mp4"]["download"]
     thumb = await CallbackQuery.message.download()
@@ -166,7 +165,7 @@ async def callback_query(Client, CallbackQuery):
     link = f"https://m.youtube.com/watch?v={videoid}"
     youtube_720 = YouTube(link)
     x = requests.get(
-        "https://api.princexd.tech/ytdown/v2?link={link}&quality=720"
+        f"https://api.princexd.tech/ytdown/v2?link={link}&quality=720"
     ).json()
     download_720 = x["mp4"]["download"]
     thumb = await CallbackQuery.message.download()
