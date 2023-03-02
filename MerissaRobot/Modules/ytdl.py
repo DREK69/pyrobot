@@ -159,7 +159,7 @@ async def callback_query(Client, CallbackQuery):
     width = CallbackQuery.message.photo.width
     height = CallbackQuery.message.photo.height
     med = InputMediaVideo(
-        media=open(download_720, "rb"),
+        media=download_720,
         width=width,
         height=height,
         caption=str(info_dict["title"]),
