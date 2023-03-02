@@ -116,7 +116,7 @@ async def callback_query(Client, CallbackQuery):
         thumb=thumb,
         title=str(info_dict["title"]),
         performer="{info_dict['channel']}",
-        duration=int(info_dict["duration"])
+        duration=int(info_dict["duration"]),
     )
     try:
         await CallbackQuery.edit_message_media(media=med)
