@@ -41,10 +41,9 @@ def song(client, message):
                         "🔊 Audio",
                         callback_data=f"audio {videoid}",
                     ),
-                    InlineKeyboardButton("🎥 360p", callback_data=f"360p {videoid}"),
+                    InlineKeyboardButton("🎥 Video", callback_data=f"720p {videoid}"),
                 ],
                 [
-                    InlineKeyboardButton("🎥 720p", callback_data=f"720p {videoid}"),
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
@@ -84,10 +83,9 @@ def song(client, message):
                         "🔊 Audio",
                         callback_data=f"audio {videoid}",
                     ),
-                    InlineKeyboardButton("🎥 360p", callback_data=f"360p {videoid}"),
+                    InlineKeyboardButton("🎥 Video", callback_data=f"720p {videoid}"),
                 ],
-                [
-                    InlineKeyboardButton("🎥 720p", callback_data=f"720p {videoid}"),
+                [                    
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
@@ -124,38 +122,6 @@ async def callback_query(Client, CallbackQuery):
         await CallbackQuery.edit_message_text(f"Something happened!\n<i>{error}</i>")
     os.remove(thumb)
     os.remove(audio_file)
-
-
-@Client.on_callback_query(filters.regex(pattern=r"360p"))
-async def callback_query(Client, CallbackQuery):
-    m = await CallbackQuery.edit_message_text(
-        "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
-    )
-    callback_data = CallbackQuery.data.strip()
-    videoid = callback_data.split(None, 1)[1]
-    link = f"https://m.youtube.com/watch?v={videoid}"
-    youtube_360 = YouTube(link)
-    x = requests.get(
-        f"https://api.princexd.tech/ytdown/v2?link={link}&quality=360"
-    ).json()
-    download_360 = x["mp4"]["download"]
-    thumb = await CallbackQuery.message.download()
-    width = CallbackQuery.message.photo.width
-    height = CallbackQuery.message.photo.height
-    med = InputMediaVideo(
-        download_360,
-        width=width,
-        height=height,
-        caption=youtube_360.title,
-        thumb=thumb,
-        supports_streaming=True,
-    )
-    try:
-        await CallbackQuery.edit_message_media(media=med)
-    except Exception as error:
-        await CallbackQuery.edit_message_text(f"Error occurred!!\n<i>{error}</i>")
-    os.remove(thumb)
-
 
 @Client.on_callback_query(filters.regex(pattern=r"720p"))
 async def callback_query(Client, CallbackQuery):
