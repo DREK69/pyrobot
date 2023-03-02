@@ -10,11 +10,11 @@ from pyrogram.types import (
     InputMediaVideo,
 )
 from pytube import YouTube
+import lyricsgenius as lg
 
 from MerissaRobot import pbot as Client
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
-
 
 @Client.on_message(filters.regex(ytregex) & filters.private)
 def song(client, message):
@@ -191,12 +191,13 @@ async def lyrics(client, message):
         return await message.reply_text(
             "Give me some text to find lyrics\n\nEx. /lyrics songname"
         )
-    songname = (
-        message.text.split(None, 1)[1]
-        if len(message.command) < 3
-        else message.text.split(None, 1)[1].replace(" ", "%20")
-    )
-    url = requests.get(f"https://api.princexd.tech/lyrics?query={songname}").json()[
-        "lyrics"
-    ]
-    await message.reply_text(url)
+    query = message.text.split(None, 1)    
+    api_key = "3w1IXc4ipZ2D7Ef3g2dogPVXnr2VBeUhBqzn5Vr6D_wQVzFFsHRDo_ycV7f8hYwT"
+    y = lg.Genius(
+    api_key,
+    skip_non_songs=True,
+    excluded_terms=["(Remix)", "(Live)"], 
+    remove_section_headers=True)
+    y.verbose = False
+    lyrics = y.search_song(query, get_full_info=False).lyrics
+    await message.reply_text(lyrics)
