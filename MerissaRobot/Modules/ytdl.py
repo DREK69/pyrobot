@@ -34,7 +34,7 @@ def song(client, message):
     wget.download(thumbnail, thumb)
     message.reply_photo(
         thumbnail,
-        caption=f"**Title**: {title}\n**Duration**: {int(dur)}\n\n**Select Your Preferred Format from Below**:",
+        caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -76,7 +76,7 @@ def song(client, message):
     wget.download(thumbnail, thumb)
     message.reply_photo(
         thumbnail,
-        caption=f"**Title**: {title}\n**Duration**: {int(dur)}\n\n**Select Your Preferred Format from Below**:",
+        caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
