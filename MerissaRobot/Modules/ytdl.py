@@ -3,6 +3,7 @@ import os
 import lyricsgenius as lg
 import requests
 import wget
+import yt_dlp
 from pyrogram import Client, filters
 from pyrogram.types import (
     InlineKeyboardButton,
@@ -11,7 +12,7 @@ from pyrogram.types import (
     InputMediaVideo,
 )
 from pytube import YouTube
-import yt_dlp
+
 from MerissaRobot import pbot as Client
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
@@ -102,24 +103,24 @@ async def callback_query(Client, CallbackQuery):
     )
     callback_data = CallbackQuery.data.strip()
     videoid = callback_data.split(None, 1)[1]
-    link = f"https://m.youtube.com/watch?v={videoid}" 
+    link = f"https://m.youtube.com/watch?v={videoid}"
     ydl_opts = {"format": "bestaudio[ext=m4a]"}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info_dict = ydl.extract_info(link, download=False)
         audio_file = ydl.prepare_filename(info_dict)
-        ydl.process_info(info_dict)        
+        ydl.process_info(info_dict)
     secmul, dur, dur_arr = 1, 0, duration.split(":")
     for i in range(len(dur_arr) - 1, -1, -1):
         dur += int(dur_arr[i]) * secmul
         secmul *= 60
     thumb = await CallbackQuery.message.download()
     med = InputMediaAudio(
-            audio_file,
-            caption=str(info_dict["title"]),
-            thumb=thumb,
-            title=str(info_dict["title"]),
-            duration=dur,
-         )
+        audio_file,
+        caption=str(info_dict["title"]),
+        thumb=thumb,
+        title=str(info_dict["title"]),
+        duration=dur,
+    )
     try:
         await CallbackQuery.edit_message_media(media=med)
     except Exception as error:
