@@ -11,7 +11,7 @@ from pyrogram.types import (
     InputMediaVideo,
 )
 from pytube import YouTube
-
+import yt_dlp
 from MerissaRobot import pbot as Client
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
@@ -114,7 +114,7 @@ async def callback_query(Client, CallbackQuery):
     thumb = await CallbackQuery.message.download()
     med = InputMediaAudio(
         audio_file,
-        caption=str(info_dict["title"])",
+        caption=str(info_dict["title"]),
         thumb=thumb,
         title=str(info_dict["title"]),
         duration=dur,
