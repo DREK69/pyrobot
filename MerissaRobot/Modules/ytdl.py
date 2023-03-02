@@ -34,7 +34,7 @@ def song(client, message):
     wget.download(thumbnail, thumb)
     message.reply_photo(
         thumbnail,
-        caption=f"**Title**: {title}\n**Duration**: {str(dur)}\n\n**Select Your Preferred Format from Below**:",
+        caption=f"**Title**: {title}\n**Duration**: {int(dur)}\n\n**Select Your Preferred Format from Below**:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -53,7 +53,7 @@ def song(client, message):
     os.remove(thumb)
 
 
-@Client.on_message(filters.command(["music", "ytdl", "song"]))
+@Client.on_message(filters.command(["music", "ytdl", "song", "video"]))
 def song(client, message):
     user_id = message.from_user.id
     user_name = message.from_user.first_name
@@ -76,7 +76,7 @@ def song(client, message):
     wget.download(thumbnail, thumb)
     message.reply_photo(
         thumbnail,
-        caption=f"**Title**: {title}\n**Duration**: {str(dur)}\n\n**Select Your Preferred Format from Below**:",
+        caption=f"**Title**: {title}\n**Duration**: {int(dur)}\n\n**Select Your Preferred Format from Below**:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
