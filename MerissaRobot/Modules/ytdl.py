@@ -114,13 +114,12 @@ async def callback_query(Client, CallbackQuery):
         secmul *= 60
     thumb = await CallbackQuery.message.download()
     med = InputMediaAudio(
-        audio_file,
-        caption=str(info_dict["title"]),
-        thumb=thumb,
-        title=str(info_dict["title"]),
-        duration=dur,
-        )
-    )
+            audio_file,
+            caption=str(info_dict["title"]),
+            thumb=thumb,
+            title=str(info_dict["title"]),
+            duration=dur,
+         )
     try:
         await CallbackQuery.edit_message_media(media=med)
     except Exception as error:
