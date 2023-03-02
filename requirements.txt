@@ -28,7 +28,7 @@ future
 fuzzysearch
 geopy
 git+https://github.com/python-telegram-bot/ptbcontrib.git
-git+https://github.com/Sorrybabe/downloader
+git+https://github.com/yt-dlp/yt-dlp
 googletrans==4.0.0rc1
 google-trans-new
 gpytranslate
