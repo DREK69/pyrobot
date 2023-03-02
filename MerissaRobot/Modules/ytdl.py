@@ -115,7 +115,7 @@ async def callback_query(Client, CallbackQuery):
         caption=str(info_dict["title"]),
         thumb=thumb,
         title=str(info_dict["title"]),
-        performer="{info_dict['channel']}",
+        performer=f"{info_dict['channel']}",
         duration=int(info_dict["duration"]),
     )
     try:
@@ -123,6 +123,7 @@ async def callback_query(Client, CallbackQuery):
     except Exception as error:
         await CallbackQuery.edit_message_text(f"Something happened!\n<i>{error}</i>")
     os.remove(thumb)
+    os.remove(audio_file)
 
 
 @Client.on_callback_query(filters.regex(pattern=r"360p"))
