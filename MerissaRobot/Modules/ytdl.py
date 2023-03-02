@@ -108,18 +108,13 @@ async def callback_query(Client, CallbackQuery):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info_dict = ydl.extract_info(link, download=False)
         audio_file = ydl.prepare_filename(info_dict)
-        ydl.process_info(info_dict)
-    secmul, dur, dur_arr = 1, 0, duration.split(":")
-    for i in range(len(dur_arr) - 1, -1, -1):
-        dur += int(dur_arr[i]) * secmul
-        secmul *= 60
+        ydl.process_info(info_dict)    
     thumb = await CallbackQuery.message.download()
     med = InputMediaAudio(
         audio_file,
         caption=str(info_dict["title"]),
         thumb=thumb,
-        title=str(info_dict["title"]),
-        duration=dur,
+        title=str(info_dict["title"])        
     )
     try:
         await CallbackQuery.edit_message_media(media=med)
