@@ -150,7 +150,7 @@ async def callback_query(Client, CallbackQuery):
     }
     try:
         with yt_dlp.YoutubeDL(opts) as ytdl:
-            info_dict = ytdl.extract_info(link, download=True)            
+            info_dict = ytdl.extract_info(link, download=True)
     except Exception as e:
         await m.edit(f"**ғᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ.** \n**ᴇʀʀᴏʀ :** `{str(e)}`")
         return
