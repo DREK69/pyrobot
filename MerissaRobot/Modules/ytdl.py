@@ -11,6 +11,8 @@ from pyrogram.types import (
     InputMediaAudio,
     InputMediaVideo,
 )
+from pyrogram.enums import ChatAction
+
 from pytube import YouTube
 
 from MerissaRobot import pbot as Client
@@ -96,6 +98,7 @@ def song(client, message):
 
 @Client.on_callback_query(filters.regex(pattern=r"audio"))
 async def callback_query(Client, CallbackQuery):
+    chatid = CallbackQuery.message.chat.id
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
@@ -117,6 +120,7 @@ async def callback_query(Client, CallbackQuery):
         duration=int(info_dict["duration"]),
     )
     try:
+        await Client.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
         await CallbackQuery.edit_message_media(media=med)
     except Exception as error:
         await CallbackQuery.edit_message_text(f"Something happened!\n<i>{error}</i>")
@@ -126,6 +130,7 @@ async def callback_query(Client, CallbackQuery):
 
 @Client.on_callback_query(filters.regex(pattern=r"720p"))
 async def callback_query(Client, CallbackQuery):
+    chatid = CallbackQuery.message.chat.id
     m = await CallbackQuery.edit_message_text(
         "Downloading And Uploading Started\n\nDownload And Upload Speed could be slow. Please hold on.."
     )
@@ -149,6 +154,7 @@ async def callback_query(Client, CallbackQuery):
         supports_streaming=True,
     )
     try:
+        await Client.send_chat_action(chatid, ChatAction.UPLOAD_VIDEO)
         await CallbackQuery.edit_message_media(media=med)
     except Exception as error:
         await CallbackQuery.edit_message_text(f"Error occurred!!\n<i>{error}</i>")
