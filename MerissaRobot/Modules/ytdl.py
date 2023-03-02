@@ -85,7 +85,7 @@ def song(client, message):
                     ),
                     InlineKeyboardButton("🎥 Video", callback_data=f"720p {videoid}"),
                 ],
-                [                    
+                [
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
@@ -122,6 +122,7 @@ async def callback_query(Client, CallbackQuery):
         await CallbackQuery.edit_message_text(f"Something happened!\n<i>{error}</i>")
     os.remove(thumb)
     os.remove(audio_file)
+
 
 @Client.on_callback_query(filters.regex(pattern=r"720p"))
 async def callback_query(Client, CallbackQuery):
