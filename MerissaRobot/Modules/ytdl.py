@@ -155,7 +155,7 @@ async def callback_query(Client, CallbackQuery):
     except Exception as e:
         await m.edit(f"**ғᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ.** \n**ᴇʀʀᴏʀ :** `{str(e)}`")
         return
-    download_720  = f"{ytdl_data['id']}.mp4
+    download_720  = f"{ytdl_data['id']}.mp4"
     thumb = await CallbackQuery.message.download()
     width = CallbackQuery.message.photo.width
     height = CallbackQuery.message.photo.height
