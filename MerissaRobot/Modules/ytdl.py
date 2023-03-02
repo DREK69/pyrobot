@@ -149,7 +149,7 @@ async def callback_query(Client, CallbackQuery):
         "quiet": True,
     }
     try:
-        with YoutubeDL(opts) as ytdl:
+        with yt_dlp.YoutubeDL(opts) as ytdl:
             info_dict = ytdl.extract_info(url, False)
             ytdl_data = ytdl.extract_info(url, download=True)
     except Exception as e:
