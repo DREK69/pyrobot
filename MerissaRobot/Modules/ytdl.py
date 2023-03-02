@@ -172,6 +172,7 @@ async def callback_query(Client, CallbackQuery):
     except Exception as error:
         await CallbackQuery.edit_message_text(f"Error occurred!!\n<i>{error}</i>")
     os.remove(thumb)
+    os.remove(download_720)
 
 
 @Client.on_message(filters.command("lyrics"))
