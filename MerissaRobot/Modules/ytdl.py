@@ -136,19 +136,34 @@ async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    youtube_720 = YouTube(link)
-    x = requests.get(
-        f"https://api.princexd.tech/ytdown/v2?link={link}&quality=720"
-    ).json()
-    download_720 = x["mp4"]["download"]
+    opts = {
+        "format": "best",
+        "addmetadata": True,
+        "key": "FFmpegMetadata",
+        "prefer_ffmpeg": True,
+        "geo_bypass": True,
+        "nocheckcertificate": True,
+        "postprocessors": [{"key": "FFmpegVideoConvertor", "preferedformat": "mp4"}],
+        "outtmpl": "%(id)s.mp4",
+        "logtostderr": False,
+        "quiet": True,
+    }
+    try:
+        with YoutubeDL(opts) as ytdl:
+            info_dict = ytdl.extract_info(url, False)     
+            ytdl_data = ytdl.extract_info(url, download=True)
+    except Exception as e:
+        await m.edit(f"**ғᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ.** \n**ᴇʀʀᴏʀ :** `{str(e)}`")
+        return
+    download_720  = f"{ytdl_data['id']}.mp4
     thumb = await CallbackQuery.message.download()
     width = CallbackQuery.message.photo.width
     height = CallbackQuery.message.photo.height
     med = InputMediaVideo(
-        download_720,
+        media=open(download_720, "rb"),
         width=width,
         height=height,
-        caption=youtube_720.title,
+        caption=str(info_dict["title"]),
         thumb=thumb,
         supports_streaming=True,
     )
@@ -158,6 +173,7 @@ async def callback_query(Client, CallbackQuery):
     except Exception as error:
         await CallbackQuery.edit_message_text(f"Error occurred!!\n<i>{error}</i>")
     os.remove(thumb)
+    
 
 
 @Client.on_message(filters.command("lyrics"))
