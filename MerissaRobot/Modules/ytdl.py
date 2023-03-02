@@ -150,12 +150,12 @@ async def callback_query(Client, CallbackQuery):
     }
     try:
         with YoutubeDL(opts) as ytdl:
-            info_dict = ytdl.extract_info(url, False)     
+            info_dict = ytdl.extract_info(url, False)
             ytdl_data = ytdl.extract_info(url, download=True)
     except Exception as e:
         await m.edit(f"**ғᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ.** \n**ᴇʀʀᴏʀ :** `{str(e)}`")
         return
-    download_720  = f"{ytdl_data['id']}.mp4"
+    download_720 = f"{ytdl_data['id']}.mp4"
     thumb = await CallbackQuery.message.download()
     width = CallbackQuery.message.photo.width
     height = CallbackQuery.message.photo.height
@@ -173,7 +173,6 @@ async def callback_query(Client, CallbackQuery):
     except Exception as error:
         await CallbackQuery.edit_message_text(f"Error occurred!!\n<i>{error}</i>")
     os.remove(thumb)
-    
 
 
 @Client.on_message(filters.command("lyrics"))
