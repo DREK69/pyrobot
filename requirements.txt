@@ -98,4 +98,4 @@ youtube_dl
 youtube_search
 youtube_search_python==1.4.9
 zalgo-text
-lyricsgenius
+lyricsgenius-3.0.1
