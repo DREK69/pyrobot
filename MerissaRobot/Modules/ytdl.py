@@ -34,7 +34,7 @@ def song(client, message):
     wget.download(thumbnail, thumb)
     message.reply_photo(
         thumbnail,
-        caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
+        caption=f"**Title**: {title}\n**Duration**: {dur} seconds\n\n**Select Your Preferred Format from Below**:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -42,7 +42,7 @@ def song(client, message):
                         "🔊 Audio",
                         callback_data=f"audio {videoid}",
                     ),
-                    InlineKeyboardButton("🎥 Video", callback_data=f"720p {videoid}"),
+                    InlineKeyboardButton("🎥 Video", callback_data=f"video {videoid}"),
                 ],
                 [
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
@@ -84,7 +84,7 @@ def song(client, message):
                         "🔊 Audio",
                         callback_data=f"audio {videoid}",
                     ),
-                    InlineKeyboardButton("🎥 Video", callback_data=f"720p {videoid}"),
+                    InlineKeyboardButton("🎥 Video", callback_data=f"video {videoid}"),
                 ],
                 [
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
@@ -127,7 +127,7 @@ async def callback_query(Client, CallbackQuery):
     os.remove(audio_file)
 
 
-@Client.on_callback_query(filters.regex(pattern=r"720p"))
+@Client.on_callback_query(filters.regex(pattern=r"video"))
 async def callback_query(Client, CallbackQuery):
     chatid = CallbackQuery.message.chat.id
     m = await CallbackQuery.edit_message_text(
