@@ -119,7 +119,9 @@ async def callback_query(Client, CallbackQuery):
         duration=int(info_dict["duration"]),
     )
     try:
-        await m.edit("Uploading Started\n\nUpload Speed could be slow. Please hold on..")
+        await m.edit(
+            "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
+        )
         await Client.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
         await CallbackQuery.edit_message_media(media=med)
     except Exception as error:
@@ -168,7 +170,9 @@ async def callback_query(Client, CallbackQuery):
         supports_streaming=True,
     )
     try:
-        await m.edit("Uploading Started\n\nUpload Speed could be slow. Please hold on..")
+        await m.edit(
+            "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
+        )
         await Client.send_chat_action(chatid, ChatAction.UPLOAD_VIDEO)
         await CallbackQuery.edit_message_media(media=med)
     except Exception as error:
