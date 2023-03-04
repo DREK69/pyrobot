@@ -46,9 +46,10 @@ delete = ReplyKeyboardRemove()
 @app.on_message(filters.command("games") & filters.private)
 async def gamescmd(_, message: Message):
     chat = message.from_user.id
-    await app.send_message(
+    await app.send_photo(
         chat_id=chat,
-        text="Hello, we have attched some games for you, press the button and play games.",
+        photo="https://te.legra.ph/file/98a2330097ec25a078b95.jpg",
+        text="Hello Dear, Welcome to Merissa Gamezone. We have attched some games for you, Press the button and Play Games.",
         reply_markup=game,
     )
 
