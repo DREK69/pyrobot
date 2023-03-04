@@ -49,7 +49,7 @@ async def gamescmd(_, message: Message):
     await app.send_photo(
         chat_id=chat,
         photo="https://te.legra.ph/file/98a2330097ec25a078b95.jpg",
-        text="Hello Dear, Welcome to Merissa Gamezone. We have attched some games for you, Press the button and Play Games.",
+        caption="Hello Dear, Welcome to Merissa Gamezone. We have attched some games for you, Press the button and Play Games.",
         reply_markup=game,
     )
 
