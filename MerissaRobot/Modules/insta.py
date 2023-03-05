@@ -1,6 +1,7 @@
 from pyrogram import filters
 from requests import get
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton
+
 from MerissaRobot import pbot
 
 instaregex = (
