@@ -107,8 +107,9 @@ async def callback_query(Client, CallbackQuery):
     yt = YouTube(link)
     thumbnail = yt.thumbnail_url
     await CallbackQuery.edit_message_media(
+        InputMediaPhoto(
         thumbnail,
-        caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
+        caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:"),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -140,7 +141,7 @@ async def callback_query(Client, CallbackQuery):
                         "🔊 Audio",
                         callback_data=f"audio {videoid}",
                     ),
-                    InlineKeyboardButton("🎥 Video", callback_data=f"video {query}"),
+                    InlineKeyboardButton("🎥 Video", callback_data=f"video {videoid}"),
                 ],
                 [
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
