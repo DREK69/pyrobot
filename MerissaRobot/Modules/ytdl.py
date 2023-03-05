@@ -10,8 +10,8 @@ from pyrogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     InputMediaAudio,
-    InputMediaVideo,
     InputMediaPhoto,
+    InputMediaVideo,
 )
 from pytube import YouTube
 
@@ -92,8 +92,9 @@ def song(client, message):
         ),
     )
 
+
 @Client.on_callback_query(filters.regex(pattern=r"next"))
-async def callback_query(Client, CallbackQuery):  
+async def callback_query(Client, CallbackQuery):
     callback = cq.data.split("|")
     query = callback[1]
     page = int(callback[2])
@@ -106,30 +107,36 @@ async def callback_query(Client, CallbackQuery):
     link = f"https://m.youtube.com/watch?v={videoid}"
     yt = YouTube(link)
     thumbnail = yt.thumbnail_url
-    await CallbackWuery.edit_message_media(InputMediaPhoto(thumbnail,
-        caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
-        reply_markup=InlineKeyboardMarkup(
-            [
+    await CallbackWuery.edit_message_media(
+        InputMediaPhoto(
+            thumbnail,
+            caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
+            reply_markup=InlineKeyboardMarkup(
                 [
-                    InlineKeyboardButton(
-                        "📥 Download",
-                        callback_data=f"down {videoid}",
-                    ),
-                    InlineKeyboardButton("Next ➡", callback_data=f"next|{query}|{page+1}"),
-                ],
-                [
-                    InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
-                ],
-            ]
-         ),
-      )
-   )
+                    [
+                        InlineKeyboardButton(
+                            "📥 Download",
+                            callback_data=f"down {videoid}",
+                        ),
+                        InlineKeyboardButton(
+                            "Next ➡", callback_data=f"next|{query}|{page+1}"
+                        ),
+                    ],
+                    [
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                    ],
+                ]
+            ),
+        )
+    )
+
 
 @Client.on_callback_query(filters.regex(pattern=r"down"))
-async def callback_query(Client, CallbackQuery):  
+async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     videoid = callback_data.split(None, 1)[1]
-    await CallbackQuery.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(
+    await CallbackQuery.edit_message_reply_markup(
+        reply_markup=InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
