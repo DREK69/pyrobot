@@ -11,6 +11,7 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     InputMediaAudio,
     InputMediaVideo,
+    InputMediaPhoto,
 )
 from pytube import YouTube
 
