@@ -10,7 +10,6 @@ from pyrogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     InputMediaAudio,
-    InputMediaPhoto,
     InputMediaVideo,
 )
 from pytube import YouTube
@@ -108,25 +107,25 @@ async def callback_query(Client, CallbackQuery):
     yt = YouTube(link)
     thumbnail = yt.thumbnail_url
     await CallbackQuery.edit_message_media(
-            thumbnail,
-            caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
-            reply_markup=InlineKeyboardMarkup(
+        thumbnail,
+        caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
+        reply_markup=InlineKeyboardMarkup(
+            [
                 [
-                    [
-                        InlineKeyboardButton(
-                            "📥 Download",
-                            callback_data=f"extract {videoid}",
-                        ),
-                        InlineKeyboardButton(
-                            "Next ➡", callback_data=f"next|{query}|{page+1}"
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
-                    ],
-                ]
-            ),
-        )
+                    InlineKeyboardButton(
+                        "📥 Download",
+                        callback_data=f"extract {videoid}",
+                    ),
+                    InlineKeyboardButton(
+                        "Next ➡", callback_data=f"next|{query}|{page+1}"
+                    ),
+                ],
+                [
+                    InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                ],
+            ]
+        ),
+    )
 
 
 @Client.on_callback_query(filters.regex(pattern=r"extract"))
