@@ -81,7 +81,7 @@ def song(client, message):
                 [
                     InlineKeyboardButton(
                         "📥 Download",
-                        callback_data=f"dl {videoid}",
+                        callback_data=f"extract {videoid}",
                     ),
                     InlineKeyboardButton("Next ➡", callback_data=f"next|{query}|1"),
                 ],
@@ -108,7 +108,6 @@ async def callback_query(Client, CallbackQuery):
     yt = YouTube(link)
     thumbnail = yt.thumbnail_url
     await CallbackQuery.edit_message_media(
-        InputMediaPhoto(
             thumbnail,
             caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
             reply_markup=InlineKeyboardMarkup(
@@ -116,7 +115,7 @@ async def callback_query(Client, CallbackQuery):
                     [
                         InlineKeyboardButton(
                             "📥 Download",
-                            callback_data=f"down {videoid}",
+                            callback_data=f"extract {videoid}",
                         ),
                         InlineKeyboardButton(
                             "Next ➡", callback_data=f"next|{query}|{page+1}"
@@ -128,10 +127,9 @@ async def callback_query(Client, CallbackQuery):
                 ]
             ),
         )
-    )
 
 
-@Client.on_callback_query(filters.regex(pattern=r"dl"))
+@Client.on_callback_query(filters.regex(pattern=r"extract"))
 async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     videoid = callback_data.split(None, 1)[1]
