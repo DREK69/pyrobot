@@ -95,7 +95,7 @@ def song(client, message):
 
 @Client.on_callback_query(filters.regex(pattern=r"next"))
 async def callback_query(Client, CallbackQuery):
-    callback = cq.data.split("|")
+    callback = CallbackQuery.data.split("|")
     query = callback[1]
     page = int(callback[2])
     yt = requests.get(
@@ -107,7 +107,7 @@ async def callback_query(Client, CallbackQuery):
     link = f"https://m.youtube.com/watch?v={videoid}"
     yt = YouTube(link)
     thumbnail = yt.thumbnail_url
-    await CallbackWuery.edit_message_media(
+    await CallbackQuery.edit_message_media(
         InputMediaPhoto(
             thumbnail,
             caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
