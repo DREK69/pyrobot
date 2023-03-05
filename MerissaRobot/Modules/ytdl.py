@@ -121,8 +121,9 @@ async def callback_query(Client, CallbackQuery):
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
-        ),
-    )
+         ),
+      )
+   )
 
 @Client.on_callback_query(filters.regex(pattern=r"down"))
 async def callback_query(Client, CallbackQuery):  
