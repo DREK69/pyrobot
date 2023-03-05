@@ -67,3 +67,13 @@ For Merissa-Hub(PHub):
 """
 
 __mod_name__ = "Downloaders 📥"
+
+__helpbtns__ = [
+    [       
+        InlineKeyboardButton("Youtube", switch_inline_query_current_chat="yt"),
+        InlineKeyboardButton("P-Hub", switch_inline_query_current_chat="ph"),
+    ],
+    [
+        InlineKeyboardButton("🔙 Back", callback_data="help_back")        
+    ],
+]
