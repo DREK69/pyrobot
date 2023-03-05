@@ -84,6 +84,7 @@ async def games(_, message: Message):
         reply_markup=sologame,
     )
 
+
 @app.on_message(filters.private & filters.regex(pattern="🎮 Categories"))
 async def games(_, message: Message):
     chat = message.from_user.id
@@ -93,6 +94,7 @@ async def games(_, message: Message):
         reply_markup=categories,
     )
 
+
 @app.on_message(filters.private & filters.regex(pattern="Next ➡️"))
 async def games(_, message: Message):
     chat = message.from_user.id
@@ -101,6 +103,7 @@ async def games(_, message: Message):
         text="Hello Dear, You can play Games here no Need to download anything, press the button below and play games.",
         reply_markup=gamea,
     )
+
 
 @app.on_message(filters.private & filters.regex(pattern="▶️ Play - Subway Surf"))
 async def games(_, message: Message):
@@ -118,6 +121,7 @@ async def games(_, message: Message):
     )
     await app.send_photo(chat_id=chat, photo=img, caption=text, reply_markup=button)
 
+
 @app.on_message(filters.private & filters.regex(pattern="▶️ Play - Swingo"))
 async def games(_, message: Message):
     chat = message.from_user.id
@@ -126,13 +130,12 @@ async def games(_, message: Message):
     button = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton(
-                    "Play Game 🎮", url="https://poki.com/en/g/swingo"
-                ),
+                InlineKeyboardButton("Play Game 🎮", url="https://poki.com/en/g/swingo"),
             ],
         ]
     )
     await app.send_photo(chat_id=chat, photo=img, caption=text, reply_markup=button)
+
 
 @app.on_message(filters.private & filters.regex(pattern="▶️ Play - Blumgi Ball"))
 async def games(_, message: Message):
@@ -150,6 +153,7 @@ async def games(_, message: Message):
     )
     await app.send_photo(chat_id=chat, photo=img, caption=text, reply_markup=button)
 
+
 @app.on_message(filters.private & filters.regex(pattern="▶️ Play - Blumgi Rocket"))
 async def games(_, message: Message):
     chat = message.from_user.id
@@ -166,6 +170,7 @@ async def games(_, message: Message):
     )
     await app.send_photo(chat_id=chat, photo=img, caption=text, reply_markup=button)
 
+
 @app.on_message(filters.private & filters.regex(pattern="▶️ Play - BoxRob"))
 async def games(_, message: Message):
     chat = message.from_user.id
@@ -174,13 +179,12 @@ async def games(_, message: Message):
     button = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton(
-                    "Play Game 🎮", url="https://poki.com/en/g/boxrob"
-                ),
+                InlineKeyboardButton("Play Game 🎮", url="https://poki.com/en/g/boxrob"),
             ],
         ]
     )
     await app.send_photo(chat_id=chat, photo=img, caption=text, reply_markup=button)
+
 
 @app.on_message(filters.private & filters.regex(pattern="▶️ Play - Lines to Fill"))
 async def games(_, message: Message):
@@ -198,6 +202,7 @@ async def games(_, message: Message):
     )
     await app.send_photo(chat_id=chat, photo=img, caption=text, reply_markup=button)
 
+
 @app.on_message(filters.private & filters.regex(pattern="▶️ Play - Maze"))
 async def games(_, message: Message):
     chat = message.from_user.id
@@ -214,6 +219,7 @@ async def games(_, message: Message):
     )
     await app.send_photo(chat_id=chat, photo=img, caption=text, reply_markup=button)
 
+
 @app.on_message(filters.private & filters.regex(pattern="▶️ Play - Energy"))
 async def games(_, message: Message):
     chat = message.from_user.id
@@ -222,13 +228,12 @@ async def games(_, message: Message):
     button = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton(
-                    "Play Game 🎮", url="https://poki.com/en/g/energy"
-                ),
+                InlineKeyboardButton("Play Game 🎮", url="https://poki.com/en/g/energy"),
             ],
         ]
     )
     await app.send_photo(chat_id=chat, photo=img, caption=text, reply_markup=button)
+
 
 @app.on_message(filters.private & filters.regex(pattern="▶️ Play - Infinity Loop"))
 async def games(_, message: Message):
