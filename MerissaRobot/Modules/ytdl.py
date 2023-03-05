@@ -108,8 +108,9 @@ async def callback_query(Client, CallbackQuery):
     thumbnail = yt.thumbnail_url
     await CallbackQuery.edit_message_media(
         InputMediaPhoto(
-        thumbnail,
-        caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:"),
+            thumbnail,
+            caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
+        ),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
