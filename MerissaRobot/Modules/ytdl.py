@@ -115,16 +115,12 @@ async def callback_query(Client, CallbackQuery):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton(
-                        "⬅️", callback_data=f"next|{query}|{page-1}"
-                    ),
+                    InlineKeyboardButton("⬅️", callback_data=f"next|{query}|{page-1}"),
                     InlineKeyboardButton(
                         "📥 Download",
                         callback_data=f"extract {videoid}",
                     ),
-                    InlineKeyboardButton(
-                        "➡", callback_data=f"next|{query}|{page+1}"
-                    ),
+                    InlineKeyboardButton("➡", callback_data=f"next|{query}|{page+1}"),
                 ],
                 [
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
