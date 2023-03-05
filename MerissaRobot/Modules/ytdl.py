@@ -116,11 +116,14 @@ async def callback_query(Client, CallbackQuery):
             [
                 [
                     InlineKeyboardButton(
+                        "⬅️", callback_data=f"next|{query}|{page-1}"
+                    ),
+                    InlineKeyboardButton(
                         "📥 Download",
                         callback_data=f"extract {videoid}",
                     ),
                     InlineKeyboardButton(
-                        "Next ➡", callback_data=f"next|{query}|{page+1}"
+                        "➡", callback_data=f"next|{query}|{page+1}"
                     ),
                 ],
                 [
