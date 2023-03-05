@@ -172,12 +172,12 @@ For Asking Questions to ChatGPT:
 *Powered by* @MerissaRobot"""
 
 __helpbtns__ = [
-    [               
-        InlineKeyboardButton("For Devlopers Merissa ChatApi", url="https://t.me/Merissachatbotapi"),
-    ],
     [
-        InlineKeyboardButton("🔙 Back", callback_data="help_back")        
+        InlineKeyboardButton(
+            "For Devlopers Merissa ChatApi", url="https://t.me/Merissachatbotapi"
+        ),
     ],
+    [InlineKeyboardButton("🔙 Back", callback_data="help_back")],
 ]
 
 CHATBOTK_HANDLER = CommandHandler("chatbot", merissa)
