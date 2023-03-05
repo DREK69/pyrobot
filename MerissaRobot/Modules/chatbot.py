@@ -158,13 +158,27 @@ __mod_name__ = "Chatbot 🤖"
 __help__ = """
 Merissa AI ChatBot is the only ai system which can detect & reply upto 200 language's
 
+For Chatbot turn on/off:
 ❂ `/chatbot`: To On Or Off ChatBot In Your Chat.
 
+For Merissa Chatbot Api:
 ❂ `/token` : To get your Merissa Chatbot Token.
-❂ `/revoke` : To revoke/delete Merissa Chatbot Token
+❂ `/revoke` : To revoke/delete Merissa Chatbot Token.
+
+For Asking Questions to ChatGPT:
+❂ `/ask question` : To get answer from Chatgpt By OpenAI.
 
 *Reports bugs at*: @MerissaxSupport
 *Powered by* @MerissaRobot"""
+
+__helpbtns__ = [
+    [               
+        InlineKeyboardButton("For Devlopers Merissa ChatApi", url="https://t.me/Merissachatbotapi"),
+    ],
+    [
+        InlineKeyboardButton("🔙 Back", callback_data="help_back")        
+    ],
+]
 
 CHATBOTK_HANDLER = CommandHandler("chatbot", merissa)
 ADD_CHAT_HANDLER = CallbackQueryHandler(merissaadd, pattern=r"add_chat")
