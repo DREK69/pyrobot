@@ -13,12 +13,12 @@ from pyrogram.types import (
     InputMediaPhoto,
     InputMediaVideo,
 )
+from Merissarobot.Utils import http
 from pytube import YouTube
 
 from MerissaRobot import pbot as Client
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
-
 
 @Client.on_message(filters.regex(ytregex) & filters.private)
 def song(client, message):
@@ -71,8 +71,7 @@ def song(client, message):
     dur = yt["duration"]
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    yt = YouTube(link)
-    thumbnail = yt.thumbnail_url
+    thumbnail = get_ytthumb(videoid)
     message.reply_photo(
         thumbnail,
         caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
@@ -105,8 +104,7 @@ async def callback_query(Client, CallbackQuery):
     dur = yt["duration"]
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    yt = YouTube(link)
-    thumbnail = yt.thumbnail_url
+    thumbnail = get_ytthumb(videoid)
     await CallbackQuery.edit_message_media(
         InputMediaPhoto(
             thumbnail,
@@ -255,3 +253,19 @@ async def lyrics(client, message):
     y.verbose = False
     lyrics = y.search_song(query, get_full_info=False).lyrics
     await message.reply_text(lyrics)
+
+async def get_ytthumb(videoid: str):
+    thumb_quality = [
+        "maxresdefault.jpg",  # Best quality
+        "hqdefault.jpg",
+        "sddefault.jpg",
+        "mqdefault.jpg",
+        "default.jpg",  # Worst quality
+    ]
+    thumb_link = "https://i.imgur.com/4LwPLai.png"
+    for qualiy in thumb_quality:
+        link = f"https://i.ytimg.com/vi/{videoid}/{qualiy}"
+        if (await http.get(link)).status_code == 200:
+            thumb_link = link
+            break
+    return thumb_link
