@@ -1,3 +1,4 @@
+
 import os
 
 import lyricsgenius as lg
@@ -71,7 +72,7 @@ async def song(client, message):
     dur = yt["duration"]
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    thumbnail = get_ytthumb(videoid)
+    thumbnail = await get_ytthumb(videoid)
     await message.reply_photo(
         thumbnail,
         caption=f"**Title**: {title}\n**Duration**: {dur}\nLimit = 1/{len(search['result'])}\n\n**Select Your Track from Below and Download It**:",
