@@ -16,7 +16,7 @@ from pyrogram.types import (
 from pytube import YouTube
 
 from MerissaRobot import pbot as Client
-from MerissaRobot.Utils import http
+from MerissaRobot.Utils.http import http
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
