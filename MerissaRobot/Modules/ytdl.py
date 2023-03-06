@@ -19,6 +19,7 @@ from MerissaRobot.Utils.http import http
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
+
 def convert_bytes(size: float) -> str:
     """humanize size"""
     if not size:
@@ -30,6 +31,7 @@ def convert_bytes(size: float) -> str:
         size /= power
         t_n += 1
     return "{:.2f} {}B".format(size, power_dict[t_n])
+
 
 @Client.on_message(filters.regex(ytregex) & filters.private)
 async def song(client, message):
@@ -170,6 +172,7 @@ async def callback_query(Client, CallbackQuery):
         ),
     )
 
+
 @Client.on_callback_query(filters.regex(pattern=r"formats"))
 async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
@@ -202,7 +205,7 @@ async def callback_query(Client, CallbackQuery):
                         "ext": format["ext"],
                         "format_note": format["format_note"],
                         "yturl": link,
-                        }
+                    }
                 )
     keyboard = InlineKeyboard()
     done = [160, 133, 134, 135, 136, 137, 298, 299, 264, 304, 266]
@@ -217,22 +220,18 @@ async def callback_query(Client, CallbackQuery):
         to = f"{ap} = {sz}"
         keyboard.row(
             InlineKeyboardButton(
-                    text=to,
-                    callback_data=f"video {x['format_id']}|{videoid}",
-                )
+                text=to,
+                callback_data=f"video {x['format_id']}|{videoid}",
+            )
         )
     keyboard.row(
-            InlineKeyboardButton(
-                text="🔙 Back",
-                callback_data=f"ytdown {videoid}",
-            ),
-            InlineKeyboardButton(
-                text="🗑️ Close", callback_data=f"cb_close"
-            ),
-        )
-    await CallbackQuery.edit_message_reply_markup(
-            reply_markup=keyboard
-        )
+        InlineKeyboardButton(
+            text="🔙 Back",
+            callback_data=f"ytdown {videoid}",
+        ),
+        InlineKeyboardButton(text="🗑️ Close", callback_data=f"cb_close"),
+    )
+    await CallbackQuery.edit_message_reply_markup(reply_markup=keyboard)
 
 
 @Client.on_callback_query(filters.regex(pattern=r"audio"))
@@ -278,7 +277,7 @@ async def callback_query(Client, CallbackQuery):
     )
     callback_data = CallbackQuery.data.strip()
     callback_request = callback_data.split(None, 1)[1]
-    format_id, vidid = callback_request.split("|")   
+    format_id, vidid = callback_request.split("|")
     link = f"https://m.youtube.com/watch?v={videoid}"
     formats = f"{format_id}+140"
     opts = {
