@@ -8,7 +8,9 @@ from MerissaRobot import pbot
 async def ask(_, message):
     m = await message.reply_text("Wait a moment looking for your answer..")
     if len(message.command) < 2:
-        return await message.reply_text("Give me some questions to ask ChatGPT. Example- /ask question")
+        return await message.reply_text(
+            "Give me some questions to ask ChatGPT. Example- /ask question"
+        )
     query = (
         message.text.split(None, 1)[1]
         if len(message.command) < 3
