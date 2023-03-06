@@ -56,7 +56,7 @@ def song(client, message):
 
 
 @Client.on_message(filters.command(["music", "ytdl", "song", "video"]))
-def song(client, message):
+async def song(client, message):
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
@@ -73,7 +73,7 @@ def song(client, message):
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
     thumbnail = await get_ytthumb(videoid)
-    message.reply_photo(
+    await message.reply_photo(
         thumbnail,
         caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
         reply_markup=InlineKeyboardMarkup(
