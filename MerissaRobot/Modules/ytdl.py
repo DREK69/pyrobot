@@ -4,7 +4,7 @@ import lyricsgenius as lg
 import requests
 import wget
 import yt_dlp
-from Merissarobot.Utils import http
+from MerissaRobot.Utils import http
 from pyrogram import Client, filters
 from pyrogram.enums import ChatAction
 from pyrogram.types import (
