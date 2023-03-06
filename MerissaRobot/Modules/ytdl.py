@@ -4,7 +4,6 @@ import lyricsgenius as lg
 import requests
 import wget
 import yt_dlp
-from MerissaRobot.Utils import http
 from pyrogram import Client, filters
 from pyrogram.enums import ChatAction
 from pyrogram.types import (
@@ -17,6 +16,7 @@ from pyrogram.types import (
 from pytube import YouTube
 
 from MerissaRobot import pbot as Client
+from MerissaRobot.Utils import http
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
