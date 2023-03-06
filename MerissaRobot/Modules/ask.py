@@ -5,7 +5,8 @@ from MerissaRobot import pbot
 
 
 @pbot.on_message(filters.command("ask"))
-async def instadown(_, message):
+async def ask(_, message):
+    m = await message.reply_text("Wait a moment looking for your answer..")
     if len(message.command) < 2:
         return await message.reply_text("Give me some link\n\nEx. /ask question")
     query = (
@@ -14,6 +15,6 @@ async def instadown(_, message):
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
     x = get(f"https://api.princexd.tech/ask?text={query}").json()["answer"]
-    await message.reply_text(
-        f"{x}\nPowered by @MerissaRobot", disable_web_page_preview=True
+    await m.edit(
+        f"{x}\n\nPowered by @MerissaRobot", disable_web_page_preview=True
     )
