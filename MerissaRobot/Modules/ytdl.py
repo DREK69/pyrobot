@@ -57,7 +57,7 @@ async def song(client, message):
                         "🔊 Audio",
                         callback_data=f"audio {videoid}",
                     ),
-                    InlineKeyboardButton("🎥 Video", callback_data=f"video {videoid}"),
+                    InlineKeyboardButton("🎥 Video", callback_data=f"formats {videoid}"),
                 ],
                 [
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
@@ -278,7 +278,7 @@ async def callback_query(Client, CallbackQuery):
     )
     callback_data = CallbackQuery.data.strip()
     callback_request = callback_data.split(None, 1)[1]
-    format_id, vidid = callback_request.split("|")
+    format_id, videoid = callback_request.split("|")
     link = f"https://m.youtube.com/watch?v={videoid}"
     formats = f"{format_id}+140"
     opts = {
