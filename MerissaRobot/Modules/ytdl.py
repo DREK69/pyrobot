@@ -22,6 +22,7 @@ ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(
 
 @Client.on_message(filters.regex(ytregex) & filters.private)
 async def song(client, message):
+    m = await message.reply_text("🔄 Processing Query... Please Wait!")
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
@@ -31,6 +32,7 @@ async def song(client, message):
     title = yt.title
     dur = yt.length
     thumbnail = f"https://i.ytimg.com/vi/{videoid}/hqdefault.jpg"
+    await m.delete()
     await message.reply_photo(
         thumbnail,
         caption=f"**Title**: {title}\n**Duration**: {dur} seconds\n\n**Select Your Preferred Format from Below**:",
@@ -54,6 +56,7 @@ async def song(client, message):
 
 @Client.on_message(filters.command(["music", "ytdl", "song", "video"]))
 async def song(client, message):
+    m = await message.reply_text("🔄 Processing Query... Please Wait!")
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
@@ -72,6 +75,7 @@ async def song(client, message):
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
     thumbnail = await get_ytthumb(videoid)
+    await m.delete()
     await message.reply_photo(
         thumbnail,
         caption=f"**Title**: {title}\n**Duration**: {dur}\nLimit = 1/{len(search['result'])}\n\n**Select Your Track from Below and Download It**:",
