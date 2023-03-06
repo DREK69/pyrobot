@@ -15,6 +15,4 @@ async def ask(_, message):
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
     x = get(f"https://api.princexd.tech/ask?text={query}").json()["answer"]
-    await m.edit(
-        f"{x}\n\nPowered by @MerissaRobot", disable_web_page_preview=True
-    )
+    await m.edit(f"{x}\n\nPowered by @MerissaRobot", disable_web_page_preview=True)
