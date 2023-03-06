@@ -101,9 +101,11 @@ async def callback_query(Client, CallbackQuery):
     callback = CallbackQuery.data.split("|")
     query = callback[1]
     page = int(callback[2])
-    yt = requests.get(
+    search = requests.get(
         f"https://api.princexd.tech/ytsearch?query={query}&limit=50"
-    ).json()["result"][page]
+    ).json()
+    results = f"{len(search['result'])}"
+    yt = search["result"][page]
     title = yt["title"]
     dur = yt["duration"]
     videoid = yt["id"]
@@ -112,7 +114,7 @@ async def callback_query(Client, CallbackQuery):
     await CallbackQuery.edit_message_media(
         InputMediaPhoto(
             thumbnail,
-            caption=f"**Title**: {title}\n**Duration**: {dur}\nLimit = {page}/{len(search['result'])}\n\n**Select your track from Below and Download It**:",
+            caption=f"**Title**: {title}\n**Duration**: {dur}\nLimit = {page+1}/{len(search['result'])}\n\n**Select your track from Below and Download It**:",
         ),
         reply_markup=InlineKeyboardMarkup(
             [
