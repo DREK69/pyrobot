@@ -65,7 +65,7 @@ async def song(client, message):
     search = requests.get(
         f"https://api.princexd.tech/ytsearch?query={query}&limit=50"
     ).json()
-    results = f"{len(search["result"])}"
+    results = f"{len(search['result'])}"
     yt = search["result"][0]
     title = yt["title"]
     dur = yt["duration"]
