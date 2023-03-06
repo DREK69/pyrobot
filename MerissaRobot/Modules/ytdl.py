@@ -22,7 +22,7 @@ ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(
 
 
 @Client.on_message(filters.regex(ytregex) & filters.private)
-await def song(client, message):
+async def song(client, message):
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
