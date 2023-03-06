@@ -104,7 +104,7 @@ async def callback_query(Client, CallbackQuery):
     search = requests.get(
         f"https://api.princexd.tech/ytsearch?query={query}&limit=50"
     ).json()
-    results = f"{len(search['result'])}"
+    f"{len(search['result'])}"
     yt = search["result"][page]
     title = yt["title"]
     dur = yt["duration"]
