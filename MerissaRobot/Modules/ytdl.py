@@ -65,7 +65,7 @@ async def song(client, message):
     search = requests.get(
         f"https://api.princexd.tech/ytsearch?query={query}&limit=50"
     ).json()
-    results = f"{len(search['result'])}"
+    f"{len(search['result'])}"
     yt = search["result"][0]
     title = yt["title"]
     dur = yt["duration"]
@@ -77,8 +77,10 @@ async def song(client, message):
         caption=f"**Title**: {title}\n**Duration**: {dur}\nLimit = 1/{len(search['result'])}\n\n**Select Your Track from Below and Download It**:",
         reply_markup=InlineKeyboardMarkup(
             [
-                [                    
-                    InlineKeyboardButton("Next Track ➡", callback_data=f"next|{query}|1"),
+                [
+                    InlineKeyboardButton(
+                        "Next Track ➡", callback_data=f"next|{query}|1"
+                    ),
                 ],
                 [
                     InlineKeyboardButton(
