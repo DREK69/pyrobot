@@ -22,7 +22,7 @@ ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(
 
 
 @Client.on_message(filters.regex(ytregex) & filters.private)
-def song(client, message):
+await def song(client, message):
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
@@ -30,11 +30,9 @@ def song(client, message):
     yt = YouTube(link)
     videoid = yt.video_id
     title = yt.title
-    dur = yt.length
-    thumbnail = yt.thumbnail_url
-    thumb = "thumb.png"
-    wget.download(thumbnail, thumb)
-    message.reply_photo(
+    dur = yt.length   
+    thumbnail = await get_ytthumb(videoid)
+    await message.reply_photo(
         thumbnail,
         caption=f"**Title**: {title}\n**Duration**: {dur} seconds\n\n**Select Your Preferred Format from Below**:",
         reply_markup=InlineKeyboardMarkup(
