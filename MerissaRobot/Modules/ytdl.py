@@ -30,7 +30,7 @@ async def song(client, message):
     videoid = yt.video_id
     title = yt.title
     dur = yt.length
-    thumbnail = await get_ytthumb(videoid)
+    thumbnail = yt.thumbnail_url
     await message.reply_photo(
         thumbnail,
         caption=f"**Title**: {title}\n**Duration**: {dur} seconds\n\n**Select Your Preferred Format from Below**:",
@@ -71,7 +71,7 @@ async def song(client, message):
     dur = yt["duration"]
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    thumbnail = await get_ytthumb(videoid)
+    thumbnail = "https://i.ytimg.com/vi/{videoid}/hqdefault.jpg"
     await message.reply_photo(
         thumbnail,
         caption=f"**Title**: {title}\n**Duration**: {dur}\nLimit = 1/{len(search['result'])}\n\n**Select Your Track from Below and Download It**:",
