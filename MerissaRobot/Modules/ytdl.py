@@ -19,6 +19,17 @@ from MerissaRobot.Utils.http import http
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
+def convert_bytes(size: float) -> str:
+    """humanize size"""
+    if not size:
+        return ""
+    power = 1024
+    t_n = 0
+    power_dict = {0: " ", 1: "Ki", 2: "Mi", 3: "Gi", 4: "Ti"}
+    while size > power:
+        size /= power
+        t_n += 1
+    return "{:.2f} {}B".format(size, power_dict[t_n])
 
 @Client.on_message(filters.regex(ytregex) & filters.private)
 async def song(client, message):
@@ -150,7 +161,7 @@ async def callback_query(Client, CallbackQuery):
                         "🔊 Audio",
                         callback_data=f"audio {videoid}",
                     ),
-                    InlineKeyboardButton("🎥 Video", callback_data=f"video {videoid}"),
+                    InlineKeyboardButton("🎥 Video", callback_data=f"formats {videoid}"),
                 ],
                 [
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
@@ -158,6 +169,70 @@ async def callback_query(Client, CallbackQuery):
             ]
         ),
     )
+
+@Client.on_callback_query(filters.regex(pattern=r"formats"))
+async def callback_query(Client, CallbackQuery):
+    callback_data = CallbackQuery.data.strip()
+    videoid = callback_data.split(None, 1)[1]
+    link = f"https://m.youtube.com/watch?v={videoid}"
+    ytdl_opts = {"quiet": True}
+    ydl = yt_dlp.YoutubeDL(ytdl_opts)
+    with ydl:
+        formats_available = []
+        r = ydl.extract_info(link, download=False)
+        for format in r["formats"]:
+            try:
+                str(format["format"])
+            except:
+                continue
+            if not "dash" in str(format["format"]).lower():
+                try:
+                    format["format"]
+                    format["filesize"]
+                    format["format_id"]
+                    format["ext"]
+                    format["format_note"]
+                except:
+                    continue
+                formats_available.append(
+                    {
+                        "format": format["format"],
+                        "filesize": format["filesize"],
+                        "format_id": format["format_id"],
+                        "ext": format["ext"],
+                        "format_note": format["format_note"],
+                        "yturl": link,
+                        }
+                )
+    keyboard = InlineKeyboard()
+    done = [160, 133, 134, 135, 136, 137, 298, 299, 264, 304, 266]
+    for x in formats_available:
+        check = x["format"]
+        if x["filesize"] is None:
+            continue
+        if int(x["format_id"]) not in done:
+            continue
+        sz = convert_bytes(x["filesize"])
+        ap = check.split("-")[1]
+        to = f"{ap} = {sz}"
+        keyboard.row(
+            InlineKeyboardButton(
+                    text=to,
+                    callback_data=f"video {x['format_id']}|{videoid}",
+                )
+        )
+    keyboard.row(
+            InlineKeyboardButton(
+                text="🔙 Back",
+                callback_data=f"ytdown {videoid}",
+            ),
+            InlineKeyboardButton(
+                text="🗑️ Close", callback_data=f"cb_close"
+            ),
+        )
+    await CallbackQuery.edit_message_reply_markup(
+            reply_markup=keyboard
+        )
 
 
 @Client.on_callback_query(filters.regex(pattern=r"audio"))
@@ -202,10 +277,12 @@ async def callback_query(Client, CallbackQuery):
         "Downloading Started\n\nDownload Speed could be slow. Please hold on.."
     )
     callback_data = CallbackQuery.data.strip()
-    videoid = callback_data.split(None, 1)[1]
+    callback_request = callback_data.split(None, 1)[1]
+    format_id, vidid = callback_request.split("|")   
     link = f"https://m.youtube.com/watch?v={videoid}"
+    formats = f"{format_id}+140"
     opts = {
-        "format": "best",
+        "format": formats,
         "addmetadata": True,
         "key": "FFmpegMetadata",
         "prefer_ffmpeg": True,
