@@ -2,7 +2,6 @@ import os
 
 import lyricsgenius as lg
 import requests
-import wget
 import yt_dlp
 from pyrogram import Client, filters
 from pyrogram.enums import ChatAction
@@ -30,7 +29,7 @@ async def song(client, message):
     yt = YouTube(link)
     videoid = yt.video_id
     title = yt.title
-    dur = yt.length   
+    dur = yt.length
     thumbnail = await get_ytthumb(videoid)
     await message.reply_photo(
         thumbnail,
@@ -77,11 +76,13 @@ async def song(client, message):
         caption=f"**Title**: {title}\n**Duration**: {dur}\nLimit = 1/{len(search['result'])}\n\n**Select Your Track from Below and Download It**:",
         reply_markup=InlineKeyboardMarkup(
             [
-                [   
-                    InlineKeyboardButton("⬅️ Previous", callback_data=f"next|{query}|{page-1}"),                 
+                [
+                    InlineKeyboardButton(
+                        "⬅️ Previous", callback_data=f"next|{query}|{page-1}"
+                    ),
                     InlineKeyboardButton("Next➡", callback_data=f"next|{query}|1"),
                 ],
-                [ 
+                [
                     InlineKeyboardButton(
                         "📥 Download",
                         callback_data=f"ytdown {videoid}",
@@ -114,7 +115,7 @@ async def callback_query(Client, CallbackQuery):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("⬅️", callback_data=f"next|{query}|{page-1}"),                   
+                    InlineKeyboardButton("⬅️", callback_data=f"next|{query}|{page-1}"),
                     InlineKeyboardButton("➡", callback_data=f"next|{query}|{page+1}"),
                 ],
                 [
