@@ -112,7 +112,7 @@ async def callback_query(Client, CallbackQuery):
     await CallbackQuery.edit_message_media(
         InputMediaPhoto(
             thumbnail,
-            caption=f"**Title**: {title}\n**Duration**: {dur}\nLimit = 1/{len(search['result'])}\n\n**Select your track from Below and Download It**:",
+            caption=f"**Title**: {title}\n**Duration**: {dur}\nLimit = {page}/{len(search['result'])}\n\n**Select your track from Below and Download It**:",
         ),
         reply_markup=InlineKeyboardMarkup(
             [
