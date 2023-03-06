@@ -78,7 +78,7 @@ async def song(client, message):
     await m.delete()
     await message.reply_photo(
         thumbnail,
-        caption=f"**Title**: {title}\n**Duration**: {dur}\nLimit = 1/{len(search['result'])}\n\n**Select Your Track from Below and Download It**:",
+        caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = 1 out of {len(search['result'])}\n\n**Select Your Track from Below and Download It**:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -116,7 +116,7 @@ async def callback_query(Client, CallbackQuery):
     await CallbackQuery.edit_message_media(
         InputMediaPhoto(
             thumbnail,
-            caption=f"**Title**: {title}\n**Duration**: {dur}\nLimit = {page+1}/{len(search['result'])}\n\n**Select your track from Below and Download It**:",
+            caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['result'])}\n\n**Select your track from Below and Download It**:",
         ),
         reply_markup=InlineKeyboardMarkup(
             [
