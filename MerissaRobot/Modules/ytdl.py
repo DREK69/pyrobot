@@ -78,7 +78,7 @@ async def song(client, message):
             [
                 [
                     InlineKeyboardButton(
-                        "⬅️ Previous", callback_data=f"next|{query}|{page-1}"
+                        "⬅️ Previous", callback_data=f"next|{query}|{len(search['result'])-1}"
                     ),
                     InlineKeyboardButton("Next➡", callback_data=f"next|{query}|1"),
                 ],
