@@ -56,6 +56,8 @@ async def song(client, message):
 
 @Client.on_message(filters.command(["music", "ytdl", "song", "video"]))
 async def song(client, message):
+    if len(message.command) < 2:
+        return await message.reply_text("Give me some text to search on Youtube")
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     user_id = message.from_user.id
     user_name = message.from_user.first_name
