@@ -63,9 +63,10 @@ async def song(client, message):
     for i in message.command[1:]:
         query += " " + str(i)
     print(query)
-    yt = requests.get(
-        f"https://api.princexd.tech/ytsearch?query={query}&limit=5"
-    ).json()["result"][0]
+    search = requests.get(
+        f"https://api.princexd.tech/ytsearch?query={query}&limit=50"
+    ).json()
+    yt = search["result"][0]
     title = yt["title"]
     dur = yt["duration"]
     videoid = yt["id"]
@@ -73,17 +74,18 @@ async def song(client, message):
     thumbnail = await get_ytthumb(videoid)
     await message.reply_photo(
         thumbnail,
-        caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
+        caption=f"**Title**: {title}\n**Duration**: {dur}\nLimit = 1/{len(search['result'])}\n\n**Select Your Track from Below and Download It**:",
         reply_markup=InlineKeyboardMarkup(
             [
-                [
+                [   
+                    InlineKeyboardButton("⬅️ Previous", callback_data=f"next|{query}|{page-1}"),                 
+                    InlineKeyboardButton("Next➡", callback_data=f"next|{query}|1"),
+                ],
+                [ 
                     InlineKeyboardButton(
                         "📥 Download",
-                        callback_data=f"extract {videoid}",
+                        callback_data=f"ytdown {videoid}",
                     ),
-                    InlineKeyboardButton("Next ➡", callback_data=f"next|{query}|1"),
-                ],
-                [
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
@@ -97,7 +99,7 @@ async def callback_query(Client, CallbackQuery):
     query = callback[1]
     page = int(callback[2])
     yt = requests.get(
-        f"https://api.princexd.tech/ytsearch?query={query}&limit=5"
+        f"https://api.princexd.tech/ytsearch?query={query}&limit=50"
     ).json()["result"][page]
     title = yt["title"]
     dur = yt["duration"]
@@ -107,19 +109,19 @@ async def callback_query(Client, CallbackQuery):
     await CallbackQuery.edit_message_media(
         InputMediaPhoto(
             thumbnail,
-            caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
+            caption=f"**Title**: {title}\n**Duration**: {dur}\nLimit = 1/{len(search['result'])}\n\n**Select your track from Below and Download It**:",
         ),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("⬅️", callback_data=f"next|{query}|{page-1}"),
-                    InlineKeyboardButton(
-                        "📥 Download",
-                        callback_data=f"extract {videoid}",
-                    ),
+                    InlineKeyboardButton("⬅️", callback_data=f"next|{query}|{page-1}"),                   
                     InlineKeyboardButton("➡", callback_data=f"next|{query}|{page+1}"),
                 ],
                 [
+                    InlineKeyboardButton(
+                        "📥 Download",
+                        callback_data=f"ytdown {videoid}",
+                    ),
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
@@ -127,7 +129,7 @@ async def callback_query(Client, CallbackQuery):
     )
 
 
-@Client.on_callback_query(filters.regex(pattern=r"extract"))
+@Client.on_callback_query(filters.regex(pattern=r"ytdown"))
 async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     videoid = callback_data.split(None, 1)[1]
