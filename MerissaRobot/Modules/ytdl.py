@@ -30,7 +30,7 @@ async def song(client, message):
     videoid = yt.video_id
     title = yt.title
     dur = yt.length
-    thumbnail = yt.thumbnail_url
+    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hqdefault.jpg"
     await message.reply_photo(
         thumbnail,
         caption=f"**Title**: {title}\n**Duration**: {dur} seconds\n\n**Select Your Preferred Format from Below**:",
@@ -71,18 +71,14 @@ async def song(client, message):
     dur = yt["duration"]
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    thumbnail = "https://i.ytimg.com/vi/{videoid}/hqdefault.jpg"
+    thumbnail = get_ytthumb(videoid)
     await message.reply_photo(
         thumbnail,
         caption=f"**Title**: {title}\n**Duration**: {dur}\nLimit = 1/{len(search['result'])}\n\n**Select Your Track from Below and Download It**:",
         reply_markup=InlineKeyboardMarkup(
             [
-                [
-                    InlineKeyboardButton(
-                        "⬅️ Previous",
-                        callback_data=f"next|{query}|{int(results)-1}",
-                    ),
-                    InlineKeyboardButton("Next ➡", callback_data=f"next|{query}|1"),
+                [                    
+                    InlineKeyboardButton("Next Track ➡", callback_data=f"next|{query}|1"),
                 ],
                 [
                     InlineKeyboardButton(
