@@ -3,6 +3,7 @@ import os
 import lyricsgenius as lg
 import requests
 import yt_dlp
+from pykeyboard import InlineKeyboard
 from pyrogram import Client, filters
 from pyrogram.enums import ChatAction
 from pyrogram.types import (
@@ -13,7 +14,7 @@ from pyrogram.types import (
     InputMediaVideo,
 )
 from pytube import YouTube
-from pykeyboard import InlineKeyboard
+
 from MerissaRobot import pbot as Client
 from MerissaRobot.Utils.http import http
 
