@@ -4,6 +4,7 @@ import lyricsgenius as lg
 import requests
 import wget
 import yt_dlp
+from Merissarobot.Utils import http
 from pyrogram import Client, filters
 from pyrogram.enums import ChatAction
 from pyrogram.types import (
@@ -13,12 +14,12 @@ from pyrogram.types import (
     InputMediaPhoto,
     InputMediaVideo,
 )
-from Merissarobot.Utils import http
 from pytube import YouTube
 
 from MerissaRobot import pbot as Client
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
+
 
 @Client.on_message(filters.regex(ytregex) & filters.private)
 def song(client, message):
@@ -253,6 +254,7 @@ async def lyrics(client, message):
     y.verbose = False
     lyrics = y.search_song(query, get_full_info=False).lyrics
     await message.reply_text(lyrics)
+
 
 async def get_ytthumb(videoid: str):
     thumb_quality = [
