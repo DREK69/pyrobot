@@ -45,7 +45,7 @@ async def song(client, message):
     videoid = yt.video_id
     title = yt.title
     dur = yt.length
-    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hqdefault.jpg"
+    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"
     await m.delete()
     await message.reply_photo(
         thumbnail,
@@ -89,7 +89,7 @@ async def song(client, message):
     dur = yt["duration"]
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hqdefault.jpg"
+    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"
     await m.delete()
     await message.reply_photo(
         thumbnail,
