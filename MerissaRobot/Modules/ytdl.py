@@ -84,13 +84,12 @@ async def song(client, message):
     search = requests.get(
         f"https://api.princexd.tech/ytsearch?query={query}&limit=50"
     ).json()
-    f"{len(search['result'])}"
     yt = search["result"][0]
     title = yt["title"]
     dur = yt["duration"]
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    thumbnail = await get_ytthumb(videoid)
+    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hqdefault.jpg"
     await m.delete()
     await message.reply_photo(
         thumbnail,
@@ -122,13 +121,12 @@ async def callback_query(Client, CallbackQuery):
     search = requests.get(
         f"https://api.princexd.tech/ytsearch?query={query}&limit=50"
     ).json()
-    f"{len(search['result'])}"
     yt = search["result"][page]
     title = yt["title"]
     dur = yt["duration"]
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    thumbnail = await get_ytthumb(videoid)
+    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hqdefault.jpg"
     await CallbackQuery.edit_message_media(
         InputMediaPhoto(
             thumbnail,
