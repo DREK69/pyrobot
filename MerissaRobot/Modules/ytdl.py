@@ -45,7 +45,7 @@ async def song(client, message):
     videoid = yt.video_id
     title = yt.title
     dur = yt.length
-    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"
+    thumbnail = get_ytthumb(videoid)
     await m.delete()
     await message.reply_photo(
         thumbnail,
@@ -65,7 +65,6 @@ async def song(client, message):
             ]
         ),
     )
-    os.remove(thumb)
 
 
 @Client.on_message(filters.command(["music", "ytdl", "song", "video"]))
@@ -89,7 +88,7 @@ async def song(client, message):
     dur = yt["duration"]
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hq720.jpg"
+    thumbnail = get_ytthumb(videoid)
     await m.delete()
     await message.reply_photo(
         thumbnail,
@@ -126,7 +125,7 @@ async def callback_query(Client, CallbackQuery):
     dur = yt["duration"]
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    thumbnail = f"https://i.ytimg.com/vi/{videoid}/hqdefault.jpg"
+    thumbnail = get_ytthumb(videoid)
     await CallbackQuery.edit_message_media(
         InputMediaPhoto(
             thumbnail,
@@ -343,7 +342,7 @@ async def lyrics(client, message):
 
 async def get_ytthumb(videoid: str):
     thumb_quality = [
-        "maxresdefault.jpg",  # Best quality
+        "hq720.jpg",  # Best quality
         "hqdefault.jpg",
         "sddefault.jpg",
         "mqdefault.jpg",
