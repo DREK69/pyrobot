@@ -45,7 +45,7 @@ async def song(client, message):
     videoid = yt.video_id
     title = yt.title
     dur = yt.length
-    thumbnail = get_ytthumb(videoid)
+    thumbnail = await get_ytthumb(videoid)
     await m.delete()
     await message.reply_photo(
         thumbnail,
@@ -88,7 +88,7 @@ async def song(client, message):
     dur = yt["duration"]
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    thumbnail = get_ytthumb(videoid)
+    thumbnail = await get_ytthumb(videoid)
     await m.delete()
     await message.reply_photo(
         thumbnail,
@@ -125,7 +125,7 @@ async def callback_query(Client, CallbackQuery):
     dur = yt["duration"]
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    thumbnail = get_ytthumb(videoid)
+    thumbnail = await get_ytthumb(videoid)
     await CallbackQuery.edit_message_media(
         InputMediaPhoto(
             thumbnail,
