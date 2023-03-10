@@ -12,7 +12,9 @@ instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stori
 async def instadown(_, message):
     link = message.text
     msg = await message.reply_text("Processing...")
-    posts = get(f"https://api.princexd.tech/igdown?apikey=22a34ac86fmsh648c15a7abb6555p1cb539jsn4b193ae50c9f&link={link}").json()["media"]
+    posts = get(
+        f"https://api.princexd.tech/igdown?apikey=22a34ac86fmsh648c15a7abb6555p1cb539jsn4b193ae50c9f&link={link}"
+    ).json()["media"]
     if isinstance(posts, str):
         if ".mp4" in posts:
             await message.reply_video(posts, caption=f"Powered By @MerissaRobot")
