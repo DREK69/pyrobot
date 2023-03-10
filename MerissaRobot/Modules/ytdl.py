@@ -200,7 +200,7 @@ async def callback_query(Client, CallbackQuery):
         if x["filesize"] is None:
             continue
         if int(x["format_id"]) not in done:
-            continue       
+            continue
         to = check.split("-")[1]
         keyboard.row(
             InlineKeyboardButton(
@@ -210,7 +210,7 @@ async def callback_query(Client, CallbackQuery):
             InlineKeyboardButton(
                 text=to,
                 callback_data=f"video {x['format_id']}|{videoid}",
-            )
+            ),
         )
     keyboard.row(
         InlineKeyboardButton(
