@@ -19,6 +19,7 @@ from pyrogram.types import (
     InputTextMessageContent,
 )
 from search_engine_parser import GoogleSearch
+from youtubesearchpython import VideosSearch
 
 from MerissaRobot import DEV_USERS, EVENT_LOGS, arq
 from MerissaRobot import pbot as app
@@ -28,8 +29,6 @@ from MerissaRobot.Utils.pluginhelper import convert_seconds_to_minutes as time_c
 from MerissaRobot.Utils.pluginhelper import fetch
 from MerissaRobot.Utils.Services.tasks import _get_tasks_text, all_tasks, rm_task
 from MerissaRobot.Utils.Services.types import InlineQueryResultCachedDocument
-from youtubesearchpython import VideosSearch
-
 
 MESSAGE_DUMP_CHAT = EVENT_LOGS
 
@@ -352,11 +351,12 @@ async def youtube_func(answers, text):
                     result["duration"], result["viewCount"]["short"]
                 ),
                 input_message_content=InputTextMessageContent(
-                    "https://www.youtube.com/watch?v={}".format(result["id"]), disable_web_page_preview=True
-                    ),
+                    "https://www.youtube.com/watch?v={}".format(result["id"]),
+                    disable_web_page_preview=True,
+                ),
                 thumb_url=result["thumbnails"][0]["url"],
-                )
-            ) 
+            )
+        )
     return answers
 
 
