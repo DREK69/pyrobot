@@ -4,51 +4,27 @@ from telegram import InlineKeyboardButton
 
 from MerissaRobot import pbot
 
-instaregex = (
-    r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel)\/([A-Za-z0-9\-_]*)"
-)
-storyregex = (
-    r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(stories)\/([A-Za-z0-9\-_]*)"
-)
+instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stories)\/([A-Za-z0-9\-_]*)"
 
-
-@pbot.on_message(filters.regex(instaregex))
+@pbot.on_message(filters.regex(instaregex) & filters.private)
 async def instadown(_, message):
-    link = message.text
-    m = await message.reply_text("Processing...")
-    url = f"https://igdl.in/apis.php?url={link}"
-    data = get(url).json()
-    type = data["graphql"]["shortcode_media"]["__typename"]
-    if type == "GraphImage":
-        h = data["graphql"]["shortcode_media"]["display_resources"][0]["src"]
-        await message.reply_photo(h)
-    elif type == "GraphSidecar":
-        cnt = len(
-            data["graphql"]["shortcode_media"]["edge_sidecar_to_children"]["edges"]
-        )
-        for i in range(0, cnt):
-            node = data["graphql"]["shortcode_media"]["edge_sidecar_to_children"][
-                "edges"
-            ][i]["node"]
-            if "video_url" in node:
-                video = node["video_url"]
-                await message.reply_video(video)
-            else:
-                photo = node["display_resources"][0]["src"]
-                await message.reply_photo(photo)
+    name = message.text
+    msg = await message.reply_text("Processing...")
+    posts = get(f"https://api.princexd.tech/igdown?link={name}").json()["media"]
+    if isinstance(posts, str):
+        if '.mp4' in posts:
+            await message.reply_video(posts, caption=f'Powered By @MerissaRobot')
+        else:
+            await message.reply_photo(posts, caption=f'Powered By @MerissaRobot')
     else:
-        x = data["graphql"]["shortcode_media"]["video_url"]
-        await message.reply_video(x)
-    await m.delete()
-
-
-@pbot.on_message(filters.regex(storyregex))
-async def instadown(_, message):
-    m = await message.reply_text("Processing...")
-    link = message.text
-    story = get(f"https://api.princexd.tech/igdown?link={link}").json()["media"]
-    await message.reply_document(story, caption="Powered By @MerissaRobot")
-    await m.delete()
+        mg = []
+        for post in posts:
+            if str(post.split('https://')[1]).startswith('video'):
+                mg.append(InputMediaVideo(post, caption=f'Powered By @MerissaRobot'))
+            else:
+                mg.append(InputMediaPhoto(post, caption=f'Powered By @MerissaRobot'))
+        await message.reply_media_group(mg)
+    await msg.delete()
 
 
 __help__ = """
