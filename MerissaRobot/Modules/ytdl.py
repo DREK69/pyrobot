@@ -206,7 +206,7 @@ async def callback_query(Client, CallbackQuery):
             InlineKeyboardButton(
                 text=to,
                 callback_data=f"video {x['format_id']}|{videoid}",
-            )           
+            )
         )
     keyboard.row(
         InlineKeyboardButton(
