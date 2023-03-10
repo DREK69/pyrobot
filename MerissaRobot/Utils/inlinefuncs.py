@@ -28,6 +28,8 @@ from MerissaRobot.Utils.pluginhelper import convert_seconds_to_minutes as time_c
 from MerissaRobot.Utils.pluginhelper import fetch
 from MerissaRobot.Utils.Services.tasks import _get_tasks_text, all_tasks, rm_task
 from MerissaRobot.Utils.Services.types import InlineQueryResultCachedDocument
+from youtubesearchpython import VideosSearch
+
 
 MESSAGE_DUMP_CHAT = EVENT_LOGS
 
@@ -341,34 +343,20 @@ async def torrent_func(answers, text):
 
 
 async def youtube_func(answers, text):
-    results = await arq.youtube(text)
-    if not results.ok:
+    search = VideosSearch(text, limit=50)
+    for result in search.result()["result"]:
         answers.append(
             InlineQueryResultArticle(
-                title="Error",
-                description=results.result,
-                input_message_content=InputTextMessageContent(results.result),
-            )
-        )
-        return answers
-    results = results.result[0:48]
-    for i in results:
-        buttons = InlineKeyboard(row_width=1)
-        video_url = f"https://youtube.com{i.url_suffix}"
-
-        caption = f"""{video_url}"""
-
-        description = f"{i.views} | {i.channel} | {i.duration} | {i.publish_time}"
-        answers.append(
-            InlineQueryResultArticle(
-                title=i.title,
-                thumb_url=i.thumbnails[0],
-                description=description,
-                input_message_content=InputTextMessageContent(
-                    caption, disable_web_page_preview=True
+                title=result["title"],
+                description="{}, {} views.".format(
+                    result["duration"], result["viewCount"]["short"]
                 ),
-            )
-        )
+                input_message_content=InputTextMessageContent(
+                    "https://www.youtube.com/watch?v={}".format(result["id"]), disable_web_page_preview=True
+                    ),
+                thumb_url=result["thumbnails"][0]["url"],
+                )
+            ) 
     return answers
 
 
