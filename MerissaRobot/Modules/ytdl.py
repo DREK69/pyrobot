@@ -21,19 +21,6 @@ from MerissaRobot.Utils.http import http
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
 
-def convert_bytes(size: float) -> str:
-    """humanize size"""
-    if not size:
-        return ""
-    power = 1024
-    t_n = 0
-    power_dict = {0: " ", 1: "Ki", 2: "Mi", 3: "Gi", 4: "Ti"}
-    while size > power:
-        size /= power
-        t_n += 1
-    return "{:.2f} {}B".format(size, power_dict[t_n])
-
-
 @Client.on_message(filters.regex(ytregex) & filters.private)
 async def song(client, message):
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
@@ -213,11 +200,13 @@ async def callback_query(Client, CallbackQuery):
         if x["filesize"] is None:
             continue
         if int(x["format_id"]) not in done:
-            continue
-        sz = convert_bytes(x["filesize"])
-        ap = check.split("-")[1]
-        to = f"{ap} = {sz}"
+            continue       
+        to = check.split("-")[1]
         keyboard.row(
+            InlineKeyboardButton(
+                text=to,
+                callback_data=f"video {x['format_id']}|{videoid}",
+            ),
             InlineKeyboardButton(
                 text=to,
                 callback_data=f"video {x['format_id']}|{videoid}",
