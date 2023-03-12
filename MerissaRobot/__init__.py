@@ -26,9 +26,10 @@ StartTime = time.time()
 # logging enable
 # enable logging
 logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[logging.FileHandler("log.txt"), logging.StreamHandler()],
     level=logging.INFO,
+    format="[MerissaRobot] %(message)s",
+    datefmt="[%X]",
 )
 
 logging.getLogger("apscheduler").setLevel(logging.ERROR)
@@ -181,17 +182,6 @@ class InterceptHandler(logging.Handler):
         )
         logger_opt.log(self._get_level(record), record.getMessage())
 
-
-log = logging.getLogger(__name__)
-logger.add(
-    "logs/merissa.log",
-    rotation="1 d",
-    compression="tar.xz",
-    backtrace=True,
-    diagnose=True,
-    level="INFO",
-)
-log.info("Enabled logging intro Merissa.log file.")
 
 REDIS = StrictRedis.from_url(REDIS_URL, decode_responses=True)
 try:
