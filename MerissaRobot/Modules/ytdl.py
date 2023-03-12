@@ -20,6 +20,18 @@ from MerissaRobot.Utils.http import http
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
+def convert_bytes(size: float) -> str:
+    """humanize size"""
+    if not size:
+        return ""
+    power = 1024
+    t_n = 0
+    power_dict = {0: " ", 1: "K", 2: "M", 3: "G", 4: "T"}
+    while size > power:
+        size /= power
+        t_n += 1
+    return "{:.2f} {}B".format(size, power_dict[t_n])
+
 
 @Client.on_message(filters.regex(ytregex) & filters.private)
 async def song(client, message):
@@ -201,7 +213,9 @@ async def callback_query(Client, CallbackQuery):
             continue
         if int(x["format_id"]) not in done:
             continue
-        to = check.split("-")[1]
+        sz = convert_bytes(x["filesize"])
+        ap = check.split("-")[1]
+        to = f"{ap} = {sz}"
         keyboard.row(
             InlineKeyboardButton(
                 text=to,
@@ -262,24 +276,25 @@ async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     callback_request = callback_data.split(None, 1)[1]
     format_id, videoid = callback_request.split("|")
-    link = f"https://m.youtube.com/watch?v={videoid}"
+    link = f"https://m.youtube.com/watch?v={videoid}"   
     formats = f"{format_id}+140"
-    fpath = f"downloads/{videoid}"
     opts = {
         "format": formats,
-        "outtmpl": fpath,
+        "addmetadata": True,
+        "key": "FFmpegMetadata",
+        "prefer_ffmpeg": True,
         "geo_bypass": True,
         "nocheckcertificate": True,
+        "postprocessors": [{"key": "FFmpegVideoConvertor", "preferedformat": "mp4"}],
+        "outtmpl": "%(id)s.mp4",
+        "logtostderr": False,
         "quiet": True,
-        "no_warnings": True,
-        "prefer_ffmpeg": True,
-        "merge_output_format": "mp4",
     }
     try:
         with yt_dlp.YoutubeDL(opts) as ytdl:
             info_dict = ytdl.extract_info(link, download=True)
     except Exception as e:
-        await m.edit(f"**ғᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ.** \n**ᴇʀʀᴏʀ :** `{str(e)}`")
+        await m.edit(f"**Failed to Download.** \n**Error :** `{str(e)}`")
         return
     download_720 = f"{info_dict['id']}.mp4"
     thumb = await CallbackQuery.message.download()
