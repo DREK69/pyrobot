@@ -264,18 +264,16 @@ async def callback_query(Client, CallbackQuery):
     format_id, videoid = callback_request.split("|")
     link = f"https://m.youtube.com/watch?v={videoid}"
     formats = f"{format_id}+140"
-    opts = {
+    fpath = f"downloads/{videoid}"
+    ydl_optssx = {
         "format": formats,
-        "addmetadata": True,
-        "key": "FFmpegMetadata",
-        "prefer_ffmpeg": True,
+        "outtmpl": fpath,
         "geo_bypass": True,
         "nocheckcertificate": True,
-        "postprocessors": [{"key": "FFmpegVideoConvertor", "preferedformat": "mp4"}],
-        "outtmpl": "%(id)s.mp4",
-        "logtostderr": False,
         "quiet": True,
-    }
+        "no_warnings": True,
+        "prefer_ffmpeg": True,
+        "merge_output_format": "mp4",
     try:
         with yt_dlp.YoutubeDL(opts) as ytdl:
             info_dict = ytdl.extract_info(link, download=True)
