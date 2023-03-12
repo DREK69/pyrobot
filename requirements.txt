@@ -38,7 +38,6 @@ heroku3
 html2text
 img2pdf
 jikanpy
-jikanpy
 loguru
 lxml
 lyrics_extractor
