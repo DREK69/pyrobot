@@ -58,9 +58,7 @@ async def tiktokdown(_, message):
     response = requests.request("GET", url, headers=headers, params=querystring).json()
     video = f"{response['video'][0]}"
     music = f"{response ['music'][0]}"
-    buttons = InlineKeyboardMarkup(
-        [[InlineKeyboardButton(text="🎧 Audio", url=music)]]
-    )
+    buttons = InlineKeyboardMarkup([[InlineKeyboardButton(text="🎧 Audio", url=music)]])
     wget.download(video, "tiktok.mp4")
     cover = f"{response['cover'][0]}"
     wget.download(cover, "cover.jpg")
