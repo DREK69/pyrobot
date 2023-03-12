@@ -274,6 +274,7 @@ async def callback_query(Client, CallbackQuery):
         "no_warnings": True,
         "prefer_ffmpeg": True,
         "merge_output_format": "mp4",
+    }
     try:
         with yt_dlp.YoutubeDL(opts) as ytdl:
             info_dict = ytdl.extract_info(link, download=True)
