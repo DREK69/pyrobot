@@ -1,13 +1,17 @@
 import random
-
+import wget
+import requests
 from pyrogram import filters
 from pyrogram.types import *
-from requests import get
+from requests
 from telegram import InlineKeyboardButton
 
 from MerissaRobot import pbot
 
 instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stories)\/([A-Za-z0-9\-_]*)"
+
+tiktokregex = r"^https:\/\/(tiktok\.com|www\.tiktok\.com))"
+
 
 apikey = [
     "22a34ac86fmsh648c15a7abb6555p1cb539jsn4b193ae50c9f",
@@ -22,7 +26,7 @@ async def instadown(_, message):
     link = message.text
     msg = await message.reply_text("Processing...")
     key = random.choice(apikey)
-    posts = get(f"https://api.princexd.tech/igdown?apikey={key}&link={link}").json()[
+    posts = requests.get(f"https://api.princexd.tech/igdown?apikey={key}&link={link}").json()[
         "media"
     ]
     if isinstance(posts, str):
@@ -39,6 +43,27 @@ async def instadown(_, message):
                 mg.append(InputMediaPhoto(post, caption=f"Powered By @MerissaRobot"))
         await message.reply_media_group(mg)
     await msg.delete()
+ 
+
+@pbot.on_message(filters.regex(tiktokregex) & filters.private)
+async def tiktokdown(_, message):   
+    link = message.text
+    url = "https://tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com/index"
+    querystring = {"url": link}
+    headers = {
+     "X-RapidAPI-Key": "22a34ac86fmsh648c15a7abb6555p1cb539jsn4b193ae50c9f",
+     "X-RapidAPI-Host": "tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com"
+    }
+
+    response = requests.request("GET", url, headers=headers, params=querystring).json()
+    video = f"{response['video'][0]}"
+    buttons = InlineKeyboardMarkup([[InlineKeyboardButton(text="🎧 Audio", url=f"{response ['music'][0]}")]])
+    wget.download(video, "tiktok.mp4") 
+    cover = f"{response['cover'][0]}"
+    wget.download(cover, "cover.jpg")
+    await message.reply_video(video="tiktok.mp4", caption = "For Music Click Below Button", reply_markup=buttons, thumb="cover.jpg")
+    os.remove("tiktok.mp4")
+    os.remove("cover.jpg")
 
 
 __help__ = """
@@ -51,6 +76,12 @@ For YouTube:
 
 For Instagram:
  ❍ Send direct link of Story, Reels, Post, IGTV Videos from Instagram to Download Video.
+
+For Tiktok:
+ ❍ Send direct link of any Tiktok Video from Tiktok to Download Video.
+
+For Pinterest:
+ ❍ Send direct link of Pinterest Video. Photo link will be Not Supported.
 
 For Merissa-Hub(PHub):
  ❍ Send direct link of Phub Video from Phub website to Download Video.
