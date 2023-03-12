@@ -265,7 +265,7 @@ async def callback_query(Client, CallbackQuery):
     link = f"https://m.youtube.com/watch?v={videoid}"
     formats = f"{format_id}+140"
     fpath = f"downloads/{videoid}"
-    ydl_optssx = {
+    opts = {
         "format": formats,
         "outtmpl": fpath,
         "geo_bypass": True,
