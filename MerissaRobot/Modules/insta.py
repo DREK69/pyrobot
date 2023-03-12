@@ -3,7 +3,7 @@ import wget
 import requests
 from pyrogram import filters
 from pyrogram.types import *
-from requests
+import requests
 from telegram import InlineKeyboardButton
 
 from MerissaRobot import pbot
