@@ -10,7 +10,7 @@ from MerissaRobot import pbot
 
 instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stories)\/([A-Za-z0-9\-_]*)"
 
-tiktokregex = r"^https:\/\/(tiktok\.com|www\.tiktok\.com))"
+tiktokregex = r"^https:\/\/(tiktok\.com|www\.tiktok\.com)"
 
 
 apikey = [
