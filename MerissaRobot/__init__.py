@@ -25,6 +25,10 @@ StartTime = time.time()
 
 # logging enable
 # enable logging
+
+LOGGER = logging.getLogger("[MerissaRobot]")
+LOGGER.info("MerissaRobot is Started.")
+
 logging.basicConfig(
     handlers=[logging.FileHandler("log.txt"), logging.StreamHandler()],
     level=logging.INFO,
