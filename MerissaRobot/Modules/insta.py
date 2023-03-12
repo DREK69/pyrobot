@@ -1,9 +1,9 @@
 import random
-import wget
+
 import requests
+import wget
 from pyrogram import filters
 from pyrogram.types import *
-import requests
 from telegram import InlineKeyboardButton
 
 from MerissaRobot import pbot
@@ -26,9 +26,9 @@ async def instadown(_, message):
     link = message.text
     msg = await message.reply_text("Processing...")
     key = random.choice(apikey)
-    posts = requests.get(f"https://api.princexd.tech/igdown?apikey={key}&link={link}").json()[
-        "media"
-    ]
+    posts = requests.get(
+        f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
+    ).json()["media"]
     if isinstance(posts, str):
         if ".mp4" in posts:
             await message.reply_video(posts, caption=f"Powered By @MerissaRobot")
@@ -43,25 +43,32 @@ async def instadown(_, message):
                 mg.append(InputMediaPhoto(post, caption=f"Powered By @MerissaRobot"))
         await message.reply_media_group(mg)
     await msg.delete()
- 
+
 
 @pbot.on_message(filters.regex(tiktokregex) & filters.private)
-async def tiktokdown(_, message):   
+async def tiktokdown(_, message):
     link = message.text
     url = "https://tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com/index"
     querystring = {"url": link}
     headers = {
-     "X-RapidAPI-Key": "22a34ac86fmsh648c15a7abb6555p1cb539jsn4b193ae50c9f",
-     "X-RapidAPI-Host": "tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com"
+        "X-RapidAPI-Key": "22a34ac86fmsh648c15a7abb6555p1cb539jsn4b193ae50c9f",
+        "X-RapidAPI-Host": "tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com",
     }
 
     response = requests.request("GET", url, headers=headers, params=querystring).json()
     video = f"{response['video'][0]}"
-    buttons = InlineKeyboardMarkup([[InlineKeyboardButton(text="🎧 Audio", url=f"{response ['music'][0]}")]])
-    wget.download(video, "tiktok.mp4") 
+    buttons = InlineKeyboardMarkup(
+        [[InlineKeyboardButton(text="🎧 Audio", url=f"{response ['music'][0]}")]]
+    )
+    wget.download(video, "tiktok.mp4")
     cover = f"{response['cover'][0]}"
     wget.download(cover, "cover.jpg")
-    await message.reply_video(video="tiktok.mp4", caption = "For Music Click Below Button", reply_markup=buttons, thumb="cover.jpg")
+    await message.reply_video(
+        video="tiktok.mp4",
+        caption="For Music Click Below Button",
+        reply_markup=buttons,
+        thumb="cover.jpg",
+    )
     os.remove("tiktok.mp4")
     os.remove("cover.jpg")
 
