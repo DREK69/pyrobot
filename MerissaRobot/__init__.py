@@ -144,12 +144,6 @@ updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
 telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
 dispatcher = updater.dispatcher
 aiohttpsession = ClientSession()
-ubot = TelegramClient(StringSession(STRING_SESSION), API_ID, API_HASH)
-try:
-    ubot.start()
-except BaseException:
-    print("Userbot Error ! Have you added a STRING_SESSION in deploying??")
-    sys.exit(1)
 pbot = Client(
     ":memory:",
     api_id=API_ID,
