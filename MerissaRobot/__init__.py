@@ -39,9 +39,6 @@ logging.basicConfig(
 logging.getLogger("apscheduler").setLevel(logging.ERROR)
 logging.getLogger("telethon").setLevel(logging.ERROR)
 logging.getLogger("pyrogram").setLevel(logging.ERROR)
-logging.getLogger("ptbcontrib.postgres_persistence.postgrespersistence").setLevel(
-    logging.ERROR
-)
 
 # if version < 3.6, stop bot.
 if sys.version_info[0] < 3 or sys.version_info[1] < 6:
