@@ -45,7 +45,7 @@ async def instadown(_, message):
     await msg.delete()
 
 
-@pbot.on_message(filters.regex(tiktokregex) & filters.private)
+@pbot.on_message(filters.regex("tiktok") & filters.private)
 async def tiktokdown(_, message):
     link = message.text
     url = "https://tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com/index"
