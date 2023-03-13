@@ -320,11 +320,13 @@ async def callback_query(Client, CallbackQuery):
     os.remove(thumb)
     os.remove(download_720)
 
+
 @Client.on_callback_query(filters.regex(pattern=r"help_private"))
-async def callback_query(Client, CallbackQuery):    
+async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     userid = callback_data.split(None, 1)[1]
     await Client.send_message(userid, "hi how can I help you?")
+
 
 @Client.on_message(filters.command("lyrics"))
 async def lyrics(client, message):
