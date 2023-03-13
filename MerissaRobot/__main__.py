@@ -372,7 +372,7 @@ def help_button(update, context):
 def ghelp_button(update, context):
     chat = update.effective_chat
     query = update.callback_query
-    userid = update.callback_query.from_user.id
+    update.callback_query.from_user.id
     mod_match = re.match(r"ghelp_module\((.+?)\)", query.data)
     prev_match = re.match(r"ghelp_prev\((.+?)\)", query.data)
     next_match = re.match(r"ghelp_next\((.+?)\)", query.data)
