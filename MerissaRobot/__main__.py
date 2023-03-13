@@ -372,6 +372,7 @@ def help_button(update, context):
 def ghelp_button(update, context):
     chat = update.effective_chat
     query = update.callback_query
+    userid = update.callback_query.from_user.id
     mod_match = re.match(r"ghelp_module\((.+?)\)", query.data)
     prev_match = re.match(r"ghelp_prev\((.+?)\)", query.data)
     next_match = re.match(r"ghelp_next\((.+?)\)", query.data)
@@ -435,6 +436,7 @@ def ghelp_button(update, context):
 def merissa_about_callback(update, context):
     chat = update.effective_chat
     query = update.callback_query
+    userid = update.callback_query.from_user.id
     if query.data == "merissa_":
         query.message.edit_text(
             text=gs(chat.id, "pm_help_text"),
@@ -582,7 +584,7 @@ def merissa_about_callback(update, context):
                     [
                         InlineKeyboardButton(
                             text="👤 Open in Private Chat",
-                            url="t.me/{}?start=help".format(context.bot.username),
+                            callback_data=f"help_private {userid}",
                         ),
                     ],
                     [
@@ -678,7 +680,7 @@ def get_help(update: Update, context: CallbackContext):
                     [
                         InlineKeyboardButton(
                             text="👤 Open in Private Chat",
-                            url="t.me/{}?start=help".format(context.bot.username),
+                            callback_data=f"help_private {userid}",
                         ),
                     ],
                     [
