@@ -332,8 +332,7 @@ async def callback_query(Client, CallbackQuery):
         reply_markup=InlineKeyboardMarkup(
             [[InlineKeyboardButton("Go to the Chat", url="https://t.me/MerissaRobot")]]
         ),
-    )
-    InlineKeyboardMarkup(paginate_modules(0, HELPABLE, "help"))
+    )    
     await send_help(userid)
 
 
