@@ -15,7 +15,8 @@ from pyrogram.types import (
 )
 from pytube import YouTube
 
-from MerissaRobot import pbot as Client, send_help
+from MerissaRobot import pbot as Client
+from MerissaRobot import send_help
 from MerissaRobot.__main__ import HELPABLE
 from MerissaRobot.Handler.misc import paginate_modules
 from MerissaRobot.Utils.http import http
@@ -333,7 +334,7 @@ async def callback_query(Client, CallbackQuery):
             [[InlineKeyboardButton("Go to the Chat", url="https://t.me/MerissaRobot")]]
         ),
     )
-    keyboard = InlineKeyboardMarkup(paginate_modules(0, HELPABLE, "help"))
+    InlineKeyboardMarkup(paginate_modules(0, HELPABLE, "help"))
     await send_help(userid)
 
 
