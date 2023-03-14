@@ -16,9 +16,9 @@ from pyrogram.types import (
 from pytube import YouTube
 
 from MerissaRobot import pbot as Client
-from MerissaRobot.Utils.http import http
-from MerissaRobot.Handler.misc import paginate_modules
 from MerissaRobot.__main__ import HELPABLE
+from MerissaRobot.Handler.misc import paginate_modules
+from MerissaRobot.Utils.http import http
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
@@ -327,10 +327,20 @@ async def callback_query(Client, CallbackQuery):
 async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     userid = callback_data.split(None, 1)[1]
-    grouphelp=InlineKeyboardMarkup([[InlineKeyboardButton("Go to the Chat", url="https://t.me/MerissaRobot")]]),
-    await Callbackquery.edit_message_text("Help menu sent in private chat", reply_markup=grouphelp)
+    grouphelp = (
+        InlineKeyboardMarkup(
+            [[InlineKeyboardButton("Go to the Chat", url="https://t.me/MerissaRobot")]]
+        ),
+    )
+    await Callbackquery.edit_message_text(
+        "Help menu sent in private chat", reply_markup=grouphelp
+    )
     keyboard = InlineKeyboardMarkup(paginate_modules(0, HELPABLE, "help"))
-    await Client.send_message(userid, "Click on the button bellow to get description about specifics command.", reply_markup=keyboard)
+    await Client.send_message(
+        userid,
+        "Click on the button bellow to get description about specifics command.",
+        reply_markup=keyboard,
+    )
 
 
 @Client.on_message(filters.command("lyrics"))
