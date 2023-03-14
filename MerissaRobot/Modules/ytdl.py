@@ -332,7 +332,7 @@ async def callback_query(Client, CallbackQuery):
             [[InlineKeyboardButton("Go to the Chat", url="https://t.me/MerissaRobot")]]
         ),
     )
-    await Callbackquery.edit_message_text(
+    await CallbackQuery.edit_message_text(
         "Help menu sent in private chat", reply_markup=grouphelp
     )
     keyboard = InlineKeyboardMarkup(paginate_modules(0, HELPABLE, "help"))
