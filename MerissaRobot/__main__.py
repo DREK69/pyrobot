@@ -1019,6 +1019,11 @@ def main():
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    telethn.start(bot_token=TOKEN)
+    try:
+        telethn.start(bot_token=TOKEN)
+    except FloodWaitError as e:
+        LOGGER.info(f"[FloodWaitError] Have to wait {e.seconds} seconds due to FloodWait.")
+        time.sleep(e.seconds)
+        telethn.start(bot_token=TOKEN)
     pbot.start()
     main()
