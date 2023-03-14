@@ -326,14 +326,9 @@ async def callback_query(Client, CallbackQuery):
 @Client.on_callback_query(filters.regex(pattern=r"help_private"))
 async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
-    userid = callback_data.split(None, 1)[1]
-    grouphelp = (
-        InlineKeyboardMarkup(
-            [[InlineKeyboardButton("Go to the Chat", url="https://t.me/MerissaRobot")]]
-        ),
-    )
+    userid = callback_data.split(None, 1)[1]    
     await CallbackQuery.edit_message_text(
-        "Help menu sent in private chat", reply_markup=grouphelp
+        "Help menu sent in private chat", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Go to the Chat", url="https://t.me/MerissaRobot")]])
     )
     keyboard = InlineKeyboardMarkup(paginate_modules(0, HELPABLE, "help"))
     await Client.send_message(
