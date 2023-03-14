@@ -372,7 +372,6 @@ def help_button(update, context):
 def ghelp_button(update, context):
     chat = update.effective_chat
     query = update.callback_query
-    update.callback_query.from_user.id
     mod_match = re.match(r"ghelp_module\((.+?)\)", query.data)
     prev_match = re.match(r"ghelp_prev\((.+?)\)", query.data)
     next_match = re.match(r"ghelp_next\((.+?)\)", query.data)
@@ -652,8 +651,8 @@ def Source_about_callback(update, context):
 def get_help(update: Update, context: CallbackContext):
     chat = update.effective_chat  # type: Optional[Chat]
     args = update.effective_message.text.split(None, 1)
-    query = update.callback_query
-    userid = query.from_user.id
+    userid = update.effective_message.from_user.id
+
     # ONLY send help in PM
     if chat.type != chat.PRIVATE:
         if len(args) >= 2 and any(args[1].lower() == x for x in HELPABLE):
