@@ -436,7 +436,7 @@ def ghelp_button(update, context):
 def merissa_about_callback(update, context):
     chat = update.effective_chat
     query = update.callback_query
-    userid = update.callback_query.from_user.id
+    userid = query.from_user.id
     if query.data == "merissa_":
         query.message.edit_text(
             text=gs(chat.id, "pm_help_text"),
@@ -652,7 +652,8 @@ def Source_about_callback(update, context):
 def get_help(update: Update, context: CallbackContext):
     chat = update.effective_chat  # type: Optional[Chat]
     args = update.effective_message.text.split(None, 1)
-
+    query = update.callback_query
+    userid = query.from_user.id
     # ONLY send help in PM
     if chat.type != chat.PRIVATE:
         if len(args) >= 2 and any(args[1].lower() == x for x in HELPABLE):
