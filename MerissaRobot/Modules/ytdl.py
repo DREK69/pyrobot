@@ -17,7 +17,6 @@ from pytube import YouTube
 
 from MerissaRobot import pbot as Client
 from MerissaRobot.__main__ import send_help
-from MerissaRobot.Handler.misc import paginate_modules
 from MerissaRobot.Utils.http import http
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
@@ -332,7 +331,7 @@ async def callback_query(Client, CallbackQuery):
         reply_markup=InlineKeyboardMarkup(
             [[InlineKeyboardButton("Go to the Chat", url="https://t.me/MerissaRobot")]]
         ),
-    )    
+    )
     await send_help(userid)
 
 
