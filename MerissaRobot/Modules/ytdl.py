@@ -16,8 +16,7 @@ from pyrogram.types import (
 from pytube import YouTube
 
 from MerissaRobot import pbot as Client
-from MerissaRobot import send_help
-from MerissaRobot.__main__ import HELPABLE
+from MerissaRobot.__main__ import send_help
 from MerissaRobot.Handler.misc import paginate_modules
 from MerissaRobot.Utils.http import http
 
