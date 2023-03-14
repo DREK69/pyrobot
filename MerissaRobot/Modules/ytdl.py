@@ -19,6 +19,11 @@ from MerissaRobot import pbot as Client
 from MerissaRobot.__main__ import send_help
 from MerissaRobot.Utils.http import http
 
+try:
+    from MerissaRobot.__main__ import send_help
+except ImportError as e:
+    print(e)
+
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
 
