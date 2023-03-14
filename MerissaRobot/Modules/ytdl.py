@@ -332,7 +332,7 @@ async def callback_query(Client, CallbackQuery):
             [[InlineKeyboardButton("Go to the Chat", url="https://t.me/MerissaRobot")]]
         ),
     )
-    await send_help(userid)
+    await send_help(userid, text="Click on the button bellow to get description about specifics command.")
 
 
 @Client.on_message(filters.command("lyrics"))
