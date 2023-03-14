@@ -14,9 +14,8 @@ from pyrogram.types import (
     InputMediaVideo,
 )
 from pytube import YouTube
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-from MerissaRobot import pbot as Client
+from MerissaRobot import pbot as Client, send_help
 from MerissaRobot.__main__ import HELPABLE
 from MerissaRobot.Handler.misc import paginate_modules
 from MerissaRobot.Utils.http import http
@@ -329,17 +328,13 @@ async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     userid = callback_data.split(None, 1)[1]
     await CallbackQuery.edit_message_text(
-        "Help menu sent in private chat",
+        text="Help menu sent in private chat",
         reply_markup=InlineKeyboardMarkup(
             [[InlineKeyboardButton("Go to the Chat", url="https://t.me/MerissaRobot")]]
         ),
     )
     keyboard = InlineKeyboardMarkup(paginate_modules(0, HELPABLE, "help"))
-    await Client.send_message(
-        userid,
-        "Click on the button bellow to get description about specifics command.",
-        reply_markup=keyboard,
-    )
+    await send_help(userid)
 
 
 @Client.on_message(filters.command("lyrics"))
