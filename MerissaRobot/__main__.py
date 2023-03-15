@@ -596,7 +596,7 @@ def merissa_about_callback(update, context):
         )
     elif query.data == "merissa_private":
         userid = query.from_user.id
-        query.answer("Help Menu Sent in Private Chat")
+        query.answer("Help Menu Sent in Private Chat", show_alert=True)
         send_help(
             userid,
             text="Click on the button bellow to get description about specifics command.",
