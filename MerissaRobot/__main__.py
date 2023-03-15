@@ -435,7 +435,7 @@ def ghelp_button(update, context):
 
 def merissa_about_callback(update, context):
     chat = update.effective_chat
-    query = update.callback_query   
+    query = update.callback_query
     if query.data == "merissa_":
         query.message.edit_text(
             text=gs(chat.id, "pm_help_text"),
@@ -595,11 +595,24 @@ def merissa_about_callback(update, context):
             ),
         )
     elif query.data == "merissa_private":
-        userid = query.from_user.id 
-        query.message.edit_text(text="Help menu sent in private chat",
-        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Go to the Chat", url="https://t.me/MerissaRobot")]]))          
-        await send_help(userid, text="Click on the button bellow to get description about specifics command.")
-      
+        userid = query.from_user.id
+        query.message.edit_text(
+            text="Help menu sent in private chat",
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            "Go to the Chat", url="https://t.me/MerissaRobot"
+                        )
+                    ]
+                ]
+            ),
+        )
+        await send_help(
+            userid,
+            text="Click on the button bellow to get description about specifics command.",
+        )
+
     elif query.data == "merissa_donate":
         query.message.edit_text(
             text=gs(chat.id, "pm_donate_text"),
@@ -656,7 +669,7 @@ def Source_about_callback(update, context):
 
 def get_help(update: Update, context: CallbackContext):
     chat = update.effective_chat  # type: Optional[Chat]
-    args = update.effective_message.text.split(None, 1)    
+    args = update.effective_message.text.split(None, 1)
 
     # ONLY send help in PM
     if chat.type != chat.PRIVATE:
