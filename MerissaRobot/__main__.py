@@ -594,7 +594,7 @@ def merissa_about_callback(update, context):
                 ]
             ),
         )
-    elif query.data == "merissa_setting":
+    elif query.data == "merissa_private":
         userid = query.from_user.id 
         query.message.edit_text(text="Help menu sent in private chat",
         reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Go to the Chat", url="https://t.me/MerissaRobot")]]))          
