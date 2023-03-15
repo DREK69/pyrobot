@@ -608,7 +608,7 @@ def merissa_about_callback(update, context):
                 ]
             ),
         )
-        await send_help(
+        send_help(
             userid,
             text="Click on the button bellow to get description about specifics command.",
         )
