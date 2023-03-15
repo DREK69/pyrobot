@@ -19,11 +19,6 @@ from MerissaRobot import pbot as Client
 from MerissaRobot.__main__ import send_help
 from MerissaRobot.Utils.http import http
 
-try:
-    from MerissaRobot.__main__ import send_help
-except ImportError as e:
-    print(e)
-
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
 
@@ -325,22 +320,7 @@ async def callback_query(Client, CallbackQuery):
         await CallbackQuery.edit_message_text(f"Error occurred!!\n<i>{error}</i>")
     os.remove(thumb)
     os.remove(download_720)
-
-
-@Client.on_callback_query(filters.regex(pattern=r"help_private"))
-async def callback_query(Client, CallbackQuery):
-    callback_data = CallbackQuery.data.strip()
-    userid = callback_data.split(None, 1)[1]
-    await CallbackQuery.edit_message_text(
-        text="Help menu sent in private chat",
-        reply_markup=InlineKeyboardMarkup(
-            [[InlineKeyboardButton("Go to the Chat", url="https://t.me/MerissaRobot")]]
-        ),
-    )
-    await send_help(
-        userid,
-        text="Click on the button bellow to get description about specifics command.",
-    )
+    
 
 
 @Client.on_message(filters.command("lyrics"))
