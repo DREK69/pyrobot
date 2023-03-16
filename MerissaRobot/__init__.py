@@ -160,14 +160,6 @@ pbot = Client(
     plugins=dict(root="MerissaRobot.Modules"),
 )
 
-user = Client(
-    "MerissaMusic",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    session_string=str(STRING_SESSION),
-)
-pytgcalls = PyTgCalls(user)
-
 # ARQ Client
 LOGGER.info("[ARQ CLIENT] Checking Arq Connections...")
 
