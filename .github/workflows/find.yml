@@ -8,8 +8,8 @@ jobs:
       - name: Find and Replace
         uses: nguyenvanuyn96/str-find-and-replace-action@master
         with:
-          find: "Utils"
-          replace: "Utils.Helpers"
+          find: ""
+          replace: ""
       - name: Pull All Updates
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
