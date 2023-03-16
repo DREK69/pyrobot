@@ -15,7 +15,7 @@ async def _(event):
         return
     kontol = await event.reply("`Processing tiny...`")
     ik = await tbot.download_media(reply)
-    im1 = Image.open("MerissaRobot/Utils.Helpers/Resources/ken.png")
+    im1 = Image.open("MerissaRobot/Utils/Resources/ken.png")
     if ik.endswith(".tgs"):
         await tbot.download_media(reply, "ken.tgs")
         os.system("lottie_convert.py ken.tgs json.json")

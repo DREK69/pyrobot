@@ -24,17 +24,17 @@ from youtubesearchpython import VideosSearch
 from MerissaRobot import DEV_USERS, EVENT_LOGS, arq
 from MerissaRobot import pbot as app
 from MerissaRobot.Modules.info import get_chat_info, get_user_info
-from MerissaRobot.Utils.Helpers.pastebin import paste
-from MerissaRobot.Utils.Helpers.pluginhelper import (
+from MerissaRobot.Utils.pastebin import paste
+from MerissaRobot.Utils.pluginhelper import (
     convert_seconds_to_minutes as time_convert,
 )
-from MerissaRobot.Utils.Helpers.pluginhelper import fetch
-from MerissaRobot.Utils.Helpers.Services.tasks import (
+from MerissaRobot.Utils.pluginhelper import fetch
+from MerissaRobot.Utils.Services.tasks import (
     _get_tasks_text,
     all_tasks,
     rm_task,
 )
-from MerissaRobot.Utils.Helpers.Services.types import InlineQueryResultCachedDocument
+from MerissaRobot.Utils.Services.types import InlineQueryResultCachedDocument
 
 MESSAGE_DUMP_CHAT = EVENT_LOGS
 

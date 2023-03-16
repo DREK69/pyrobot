@@ -5,7 +5,7 @@ from pyrogram.types import Message
 
 from MerissaRobot import DEV_USERS
 from MerissaRobot import pbot as app
-from MerissaRobot.Utils.Helpers.Services.sections import section
+from MerissaRobot.Utils.Services.sections import section
 
 
 async def get_user_info(user, already=False):

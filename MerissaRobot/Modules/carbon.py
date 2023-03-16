@@ -9,7 +9,7 @@ from telethon import __version__ as s
 
 from MerissaRobot import aiohttpsession as aiosession
 from MerissaRobot import pbot
-from MerissaRobot.Utils.Helpers.errors import capture_err
+from MerissaRobot.Utils.errors import capture_err
 
 
 async def make_carbon(code):

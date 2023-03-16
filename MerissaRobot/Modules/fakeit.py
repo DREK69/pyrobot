@@ -6,7 +6,7 @@ from faker.providers import internet
 from telethon import events
 
 from MerissaRobot import telethn
-from MerissaRobot.Utils.Helpers.pluginhelper import is_admin
+from MerissaRobot.Utils.pluginhelper import is_admin
 
 
 @telethn.on(events.NewMessage(pattern="/fakegen$"))
