@@ -72,7 +72,6 @@ pytimeparse
 pytube
 pytz
 pyYAML>=5.1.2
-py-tgcalls==0.9.7
 Random-Word-Generator
 redis
 regex
