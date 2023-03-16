@@ -5,7 +5,7 @@ from pyrogram.types import Message
 
 from MerissaRobot import DEMONS, DEV_USERS, DRAGONS, TIGERS, WOLVES
 from MerissaRobot import pbot as app
-from MerissaRobot.Utils.adminperms import member_permissions
+from MerissaRobot.Utils.Helpers.adminperms import member_permissions
 
 SUDO = DRAGONS, DEV_USERS, WOLVES, DEMONS, TIGERS
 
