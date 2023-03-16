@@ -9,8 +9,8 @@ from pyrogram.types import InlineKeyboardButton
 
 from MerissaRobot import aiohttpsession as session
 from MerissaRobot import pbot as app
-from MerissaRobot.Utils.errors import capture_err
-from MerissaRobot.Utils.pastebin import paste
+from MerissaRobot.Utils.Helpers.errors import capture_err
+from MerissaRobot.Utils.Helpers.pastebin import paste
 
 __mod_name__ = "Paste​"
 
