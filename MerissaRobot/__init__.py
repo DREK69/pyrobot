@@ -11,6 +11,7 @@ from aiohttp import ClientSession
 from loguru import logger
 from pyrogram import Client, errors
 from pyrogram.types import Message
+from pytgcalls import PyTgCalls
 from Python_ARQ import ARQ
 from redis import StrictRedis
 from telethon import TelegramClient
@@ -158,6 +159,14 @@ pbot = Client(
     bot_token=TOKEN,
     plugins=dict(root="MerissaRobot.Modules"),
 )
+
+user = Client(
+    "MerissaMusic",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    session_string=str(STRING_SESSION),
+)
+pytgcalls = PyTgCalls(user)
 
 # ARQ Client
 LOGGER.info("[ARQ CLIENT] Checking Arq Connections...")

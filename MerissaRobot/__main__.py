@@ -42,6 +42,7 @@ from MerissaRobot import (
     pbot,
     telethn,
     updater,
+    user,
 )
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
@@ -1035,4 +1036,6 @@ if __name__ == "__main__":
         time.sleep(e.seconds)
         telethn.start(bot_token=TOKEN)
     pbot.start()
+    user.start()
+    user.send_message("MerissaRobot", "/start")
     main()
