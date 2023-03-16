@@ -13,7 +13,7 @@ from MerissaRobot.Database.mongo.karma_mongo import (
     karma_on,
     update_karma,
 )
-from MerissaRobot.Utils.errors import capture_err
+from MerissaRobot.Utils.Helpers.errors import capture_err
 
 
 async def can_change_info(message):
