@@ -328,7 +328,7 @@ async def lyrics(client, message):
             "Give me some text to find lyrics\n\nEx. /lyrics songname"
         )
     query = message.text.split(None, 1)
-    api_key = "3w1IXc4ipZ2D7Ef3g2dogPVXnr2VBeUhBqzn5Vr6D_wQVzFFsHRDo_ycV7f8hYwT"
+    api_key = "JVv8pud-25QRBYyRwcH34AlAygySsSAU3owRNGBw6hXO96x0JiTMn-3R4PvsjcTf"
     y = lg.Genius(
         api_key,
         skip_non_songs=True,
@@ -336,7 +336,9 @@ async def lyrics(client, message):
         remove_section_headers=True,
     )
     y.verbose = False
-    lyrics = y.search_song(query, get_full_info=False).lyrics
+    S = y.search_song(query, get_full_info=False).lyrics
+    if "Embed" in S:
+        lyrics = re.sub(r"\d*You might also likeEmbed", "", S)
     await message.reply_text(lyrics)
 
 
