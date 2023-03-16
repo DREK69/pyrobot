@@ -11,7 +11,6 @@ from aiohttp import ClientSession
 from loguru import logger
 from pyrogram import Client, errors
 from pyrogram.types import Message
-from pytgcalls import PyTgCalls
 from Python_ARQ import ARQ
 from redis import StrictRedis
 from telethon import TelegramClient
