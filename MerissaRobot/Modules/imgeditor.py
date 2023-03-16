@@ -6,6 +6,7 @@ from pyrogram.types import (
     Message,
 )
 
+from MerissaRobot import pbot
 from MerissaRobot.Utils.ImageEditor.edit_1 import (  # pylint:disable=import-error
     black_white,
     box_blur,
@@ -52,9 +53,10 @@ from MerissaRobot.Utils.ImageEditor.edit_5 import (  # pylint:disable=import-err
     scanlineglitch_4,
     scanlineglitch_5,
 )
-from MerissaRobot import pbot
 
 lel = 00000000
+
+
 # pylint:disable=import-error
 @pbot.on_message(filters.command(["edit", "editor"]))
 async def photo(client: pbot, message: Message):
