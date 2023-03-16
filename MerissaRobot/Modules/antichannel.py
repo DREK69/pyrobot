@@ -5,7 +5,7 @@ from pyrogram.types import Message
 
 from MerissaRobot import eor
 from MerissaRobot import pbot as app
-from MerissaRobot.Utils.errors import capture_err
+from MerissaRobot.Utils.Helpers.errors import capture_err
 
 active_channel = []
 

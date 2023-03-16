@@ -1,7 +1,7 @@
 import traceback
 
 from MerissaRobot import pbot as app
-from MerissaRobot.Utils.inlinefuncs import *
+from MerissaRobot.Utils.Helpers.inlinefuncs import *
 
 __MODULE__ = "Inline"
 __HELP__ = """See inline for help related to inline"""

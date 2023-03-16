@@ -20,7 +20,7 @@ from MerissaRobot.Handler.chat_status import dev_plus, sudo_plus, whitelist_plus
 from MerissaRobot.Handler.extraction import extract_user
 from MerissaRobot.Modules.log_channel import gloggable
 
-ELEVATED_USERS_FILE = os.path.join(os.getcwd(), "MerissaRobot.Utils/users.json")
+ELEVATED_USERS_FILE = os.path.join(os.getcwd(), "MerissaRobot.Utils.Helpers/users.json")
 
 
 def check_user_id(user_id: int, context: CallbackContext) -> Optional[str]:
