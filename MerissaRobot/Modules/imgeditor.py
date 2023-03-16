@@ -7,7 +7,7 @@ from pyrogram.types import (
 )
 
 from MerissaRobot import pbot
-from MerissaRobot.Utils.Helpers.ImageEditor.edit_1 import (  # pylint:disable=import-error
+from MerissaRobot.Utils.ImageEditor.edit_1 import (  # pylint:disable=import-error
     black_white,
     box_blur,
     bright,
@@ -15,7 +15,7 @@ from MerissaRobot.Utils.Helpers.ImageEditor.edit_1 import (  # pylint:disable=im
     mix,
     normal_blur,
 )
-from MerissaRobot.Utils.Helpers.ImageEditor.edit_2 import (  # pylint:disable=import-error
+from MerissaRobot.Utils.ImageEditor.edit_2 import (  # pylint:disable=import-error
     cartoon,
     circle_with_bg,
     circle_without_bg,
@@ -25,13 +25,13 @@ from MerissaRobot.Utils.Helpers.ImageEditor.edit_2 import (  # pylint:disable=im
     sepia_mode,
     sticker,
 )
-from MerissaRobot.Utils.Helpers.ImageEditor.edit_3 import (  # pylint:disable=import-error
+from MerissaRobot.Utils.ImageEditor.edit_3 import (  # pylint:disable=import-error
     black_border,
     blue_border,
     green_border,
     red_border,
 )
-from MerissaRobot.Utils.Helpers.ImageEditor.edit_4 import (  # pylint:disable=import-error
+from MerissaRobot.Utils.ImageEditor.edit_4 import (  # pylint:disable=import-error
     inverted,
     removebg_plain,
     removebg_sticker,
@@ -41,7 +41,7 @@ from MerissaRobot.Utils.Helpers.ImageEditor.edit_4 import (  # pylint:disable=im
     rotate_270,
     round_sticker,
 )
-from MerissaRobot.Utils.Helpers.ImageEditor.edit_5 import (  # pylint:disable=import-error
+from MerissaRobot.Utils.ImageEditor.edit_5 import (  # pylint:disable=import-error
     normalglitch_1,
     normalglitch_2,
     normalglitch_3,
