@@ -38,9 +38,9 @@ async def merissa(_, message):
     m = await message.reply_text("Replying...")
     try:
         L = await fetch(
-            f"https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message={merissa}"
+            f"https://api.princexd.tech/ask?text={merissa}"
         )
-        chatbot = L["reply"]
+        chatbot = L["answer"]
         VoiceAi = f"https://serverless-tts.vercel.app/api/demo?voice=en-US_LisaExpressive&text={chatbot}"
         name = "Merissa"
     except Exception as e:
