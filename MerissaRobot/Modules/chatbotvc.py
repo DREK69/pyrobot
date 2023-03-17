@@ -37,9 +37,7 @@ async def merissa(_, message):
     merissa = text.replace(" ", "%20")
     m = await message.reply_text("Replying...")
     try:
-        L = await fetch(
-            f"https://api.princexd.tech/ask?text={merissa}"
-        )
+        L = await fetch(f"https://api.princexd.tech/ask?text={merissa}")
         chatbot = L["answer"]
         VoiceAi = f"https://serverless-tts.vercel.app/api/demo?voice=en-US_LisaExpressive&text={chatbot}"
         name = "Merissa"
