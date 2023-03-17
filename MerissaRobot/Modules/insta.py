@@ -10,7 +10,7 @@ from MerissaRobot import pbot
 
 instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stories)\/([A-Za-z0-9\-_]*)"
 
-tiktokregex = r"^https:\/\/(tiktok\.com|www\.tiktok\.com|vm\.tiktok\.com)"
+tiktokregex = r"^https?:\/\/(www\.|vm\.)?(tiktok\.com)\/?(.*)$/gm"
 
 
 apikey = [
@@ -45,7 +45,7 @@ async def instadown(_, message):
     await msg.delete()
 
 
-@pbot.on_message(filters.regex("tiktok") & filters.private)
+@pbot.on_message(filters.regex(tiktokregex) & filters.private)
 async def tiktokdown(_, message):
     link = message.text
     url = "https://tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com/index"
