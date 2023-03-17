@@ -3,7 +3,7 @@ import random
 import requests
 import wget
 from pyrogram import filters
-from pyrogram.types import *
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton as Keyboard
 from telegram import InlineKeyboardButton
 
 from MerissaRobot import pbot
@@ -59,7 +59,7 @@ async def tiktokdown(_, message):
     response = requests.request("GET", url, headers=headers, params=querystring).json()
     video = f"{response['video'][0]}"
     music = f"{response ['music'][0]}"
-    buttons = InlineKeyboardMarkup([[InlineKeyboardButton(text="🎧 Audio", url=music)]])
+    buttons = InlineKeyboardMarkup([[Keyboard(text="🎧 Audio", url=music)]])
     wget.download(video, "tiktok.mp4")
     cover = f"{response['cover'][0]}"
     wget.download(cover, "cover.jpg")
