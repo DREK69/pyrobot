@@ -885,44 +885,17 @@ def donate(update: Update, context: CallbackContext):
     bot = context.bot
     if chat.type == "private":
         update.effective_message.reply_text(
-            text="𝙔𝙤𝙪 𝘾𝙖𝙣 𝘿𝙤𝙣𝙖𝙩𝙚 𝙈𝙚 𝙃𝙚𝙧𝙚",
+            text=gs(chat.id, "pm_donate_text"),
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text="Dᴏɴᴀᴛᴇ Mᴇ", url="t.me/PrincexDonateBot"
-                        ),
-                    ]
-                ]
-            ),
         )
-    else:
-        try:
-            bot.send_message(
-                user.id,
-                text="𝙔𝙤𝙪 𝘾𝙖𝙣 𝘿𝙤𝙣𝙖𝙩𝙚 𝙈𝙚 𝙃𝙚𝙧𝙚",
-                parse_mode=ParseMode.MARKDOWN,
-                disable_web_page_preview=True,
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                text="Dᴏɴᴀᴛᴇ Mᴇ", url="t.me/PrincexDonateBot"
-                            ),
-                        ]
-                    ]
-                ),
-            )
-
-            update.effective_message.reply_text(
-                "I've PM'ed you about donating to my creator!"
-            )
-        except Unauthorized:
-            update.effective_message.reply_text(
-                "Contact me in PM first to get donation information."
-            )
+    else:      
+        bot.send_message(
+            user.id,
+            text=gs(chat.id, "pm_donate_text"),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,                
+            )           
 
 
 def migrate_chats(update: Update, context: CallbackContext):
