@@ -889,13 +889,13 @@ def donate(update: Update, context: CallbackContext):
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         )
-    else:      
+    else:
         bot.send_message(
             user.id,
             text=gs(chat.id, "pm_donate_text"),
             parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=True,                
-            )           
+            disable_web_page_preview=True,
+        )
 
 
 def migrate_chats(update: Update, context: CallbackContext):
