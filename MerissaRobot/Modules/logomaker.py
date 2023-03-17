@@ -281,11 +281,8 @@ __help__ = """
 - Logo Maker Command
 ❂ /logo <text/name> - Create a logo with random view.
 ❂ /logo Merissa;Robot -  use ; for write in next line
-❂ /logohq <text> - To create random logo.
+❂ /hqlogo <text> - To create random logo.
 ❂ /alogo <text> - To create anime logo.
 ❂ /write <text/name> - Write Text on Note Book
 ❂ /carbon <reply to text> - Create carbon Logo
-
-- Image Editor 
-❂  /edit <reply photo> - to edit image.
 """
