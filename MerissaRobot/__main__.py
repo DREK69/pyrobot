@@ -880,9 +880,9 @@ def get_settings(update: Update, context: CallbackContext):
 
 
 def donate(update: Update, context: CallbackContext):
-    user = update.effective_message.from_user
+    update.effective_message.from_user
     chat = update.effective_chat  # type: Optional[Chat]
-    bot = context.bot   
+    context.bot
     update.effective_message.reply_text(
         text=gs(chat.id, "pm_donate_text"),
         parse_mode=ParseMode.MARKDOWN,
