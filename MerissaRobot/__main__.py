@@ -882,20 +882,12 @@ def get_settings(update: Update, context: CallbackContext):
 def donate(update: Update, context: CallbackContext):
     user = update.effective_message.from_user
     chat = update.effective_chat  # type: Optional[Chat]
-    bot = context.bot
-    if chat.type == "private":
-        update.effective_message.reply_text(
-            text=gs(chat.id, "pm_donate_text"),
-            parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=True,
-        )
-    else:
-        bot.send_message(
-            user.id,
-            text=gs(chat.id, "pm_donate_text"),
-            parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=True,
-        )
+    bot = context.bot   
+    update.effective_message.reply_text(
+        text=gs(chat.id, "pm_donate_text"),
+        parse_mode=ParseMode.MARKDOWN,
+        disable_web_page_preview=True,
+    )
 
 
 def migrate_chats(update: Update, context: CallbackContext):
