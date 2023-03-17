@@ -1,9 +1,11 @@
-import random
 import os
+import random
+
 import requests
 import wget
 from pyrogram import filters
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton as Keyboard
+from pyrogram.types import InlineKeyboardButton as Keyboard
+from pyrogram.types import InlineKeyboardMarkup
 from telegram import InlineKeyboardButton
 
 from MerissaRobot import pbot
