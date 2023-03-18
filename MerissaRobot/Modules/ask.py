@@ -19,6 +19,7 @@ async def ask(_, message):
     x = get(f"https://api.princexd.tech/ask?text={query}").json()["answer"]
     await m.edit(f"{x}\n\nPowered by @MerissaRobot", disable_web_page_preview=True)
 
+
 @pbot.on_message(filters.command("generate"))
 async def generate(_, message):
     m = await message.reply_text("Wait a moment looking for your answer..")
