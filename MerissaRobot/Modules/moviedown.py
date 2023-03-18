@@ -88,7 +88,7 @@ def movie_result(update, context) -> None:
                 text=caption[x : x + 4095],
                 reply_markup=None,
                 parse_mode=ParseMode.MARKDOWN,
-            )            
+            )
     else:
         query.message.edit_text(
             text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
@@ -174,7 +174,7 @@ def anime_result(update, context) -> None:
                 text=caption[x : x + 4095],
                 reply_markup=None,
                 parse_mode=ParseMode.MARKDOWN,
-            )            
+            )
     else:
         query.message.edit_text(
             text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
