@@ -97,7 +97,7 @@ async def song(client, message):
             [
                 [
                     InlineKeyboardButton(
-                        "Next Track ➡", callback_data=f"next|{query}|1"
+                        "Next Track ➡", callback_data=f"ytnext|{query}|1"
                     ),
                 ],
                 [
@@ -112,7 +112,7 @@ async def song(client, message):
     )
 
 
-@Client.on_callback_query(filters.regex(pattern=r"next"))
+@Client.on_callback_query(filters.regex(pattern=r"ytnext"))
 async def callback_query(Client, CallbackQuery):
     callback = CallbackQuery.data.split("|")
     query = callback[1]
@@ -134,8 +134,8 @@ async def callback_query(Client, CallbackQuery):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("⬅️", callback_data=f"next|{query}|{page-1}"),
-                    InlineKeyboardButton("➡", callback_data=f"next|{query}|{page+1}"),
+                    InlineKeyboardButton("⬅️", callback_data=f"ytnext|{query}|{page-1}"),
+                    InlineKeyboardButton("➡", callback_data=f"ytnext|{query}|{page+1}"),
                 ],
                 [
                     InlineKeyboardButton(
