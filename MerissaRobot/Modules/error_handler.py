@@ -1,4 +1,3 @@
-import html
 import io
 import random
 import sys
@@ -77,8 +76,9 @@ def error_callback(update: Update, context: CallbackContext):
         tb,
     )
     key = requests.post(
-        "https://spaceb.in/api/v1/documents/", data={"content": pretty_message, "extension": "txt"}
-    ).json()['payload']['id']
+        "https://spaceb.in/api/v1/documents/",
+        data={"content": pretty_message, "extension": "txt"},
+    ).json()["payload"]["id"]
     url = f"https://spaceb.in/{key}"
     context.bot.send_message(
         OWNER_ID,
