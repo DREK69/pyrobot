@@ -1,10 +1,17 @@
 import asyncio
-from pyrogram import filters
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
-from MerissaRobot import OWNER_ID, pbot as app
-from MerissaRobot.Database.sql.users_sql import get_all_chats, get_all_users
-from pyrogram.errors import FloodWait
 
+from pyrogram import filters
+from pyrogram.errors import FloodWait
+from pyrogram.types import (
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
+)
+
+from MerissaRobot import OWNER_ID
+from MerissaRobot import pbot as app
+from MerissaRobot.Database.sql.users_sql import get_all_chats, get_all_users
 
 
 @app.on_message(filters.command("promo"))
@@ -25,12 +32,10 @@ async def broadcast(client, message: Message):
             InlineKeyboardButton("Groups", callback_data="promogroups"),
             InlineKeyboardButton("Users", callback_data="promousers"),
         ],
-        [
-            InlineKeyboardButton("Broadcast to All", callback_data="promoall")
-        ]
+        [InlineKeyboardButton("Broadcast to All", callback_data="promoall")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-            
+
     await message.reply_text(
         text=text,
         reply_markup=reply_markup,
@@ -44,10 +49,10 @@ async def process_callback_data(client, callback_query: CallbackQuery):
     message = callback_query.message
 
     await callback_query.answer()
-    
+
     to_group = False
     to_user = False
-    
+
     if action == "promogroups":
         to_group = True
     elif action == "promousers":
@@ -75,11 +80,11 @@ async def process_callback_data(client, callback_query: CallbackQuery):
                 )
                 await asyncio.sleep(0.1)
                 sent += 1
-            except FloodWait as e:
+            except FloodWait:
                 failed += 1
-            except Exception as e:
-                failed +=1
-                
+            except Exception:
+                failed += 1
+
     if to_user:
         for user in users:
             try:
@@ -90,10 +95,10 @@ async def process_callback_data(client, callback_query: CallbackQuery):
                 )
                 await asyncio.sleep(0.1)
                 sent_user += 1
-            except FloodWait as e:
+            except FloodWait:
                 failed_user += 1
-            except Exception as e:
-                failed_user +=1
+            except Exception:
+                failed_user += 1
 
     await callback_query.message.edit_text(
         text=f"Broadcast complete.\nGroups Count: {sent}\n Users Count: {sent_user} \nGroups failed: {failed}.\nUsers failed: {failed_user}.",
