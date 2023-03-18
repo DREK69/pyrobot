@@ -134,7 +134,9 @@ async def callback_query(Client, CallbackQuery):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("⬅️", callback_data=f"ytnext|{query}|{page-1}"),
+                    InlineKeyboardButton(
+                        "⬅️", callback_data=f"ytnext|{query}|{page-1}"
+                    ),
                     InlineKeyboardButton("➡", callback_data=f"ytnext|{query}|{page+1}"),
                 ],
                 [
