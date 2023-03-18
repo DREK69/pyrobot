@@ -26,19 +26,40 @@ StartTime = time.time()
 # logging enable
 # enable logging
 
-LOGGER = logging.getLogger("[MerissaRobot]")
-LOGGER.info("MerissaRobot is Started.")
+class InterceptHandler(logging.Handler):
+    LEVELS_MAP = {
+        logging.CRITICAL: "CRITICAL",
+        logging.ERROR: "ERROR",
+        logging.WARNING: "WARNING",
+        logging.INFO: "INFO",
+        logging.DEBUG: "DEBUG",
+    }
 
-logging.basicConfig(
-    handlers=[logging.FileHandler("log.txt"), logging.StreamHandler()],
-    level=logging.INFO,
-    format="[MerissaRobot] %(message)s",
-    datefmt="[%X]",
+    def _get_level(self, record):
+        return self.LEVELS_MAP.get(record.levelno, record.levelno)
+
+    def emit(self, record):
+        logger_opt = logger.opt(
+            depth=6, exception=record.exc_info, ansi=True, lazy=True
+        )
+        logger_opt.log(self._get_level(record), record.getMessage())
+
+
+LOGGER = logging.getLogger(__name__)
+
+logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
+
+logger.add(
+    "logs/merissa.log",
+    rotation="1 d",
+    compression="tar.xz",
+    backtrace=True,
+    diagnose=True,
+    level="INFO",
 )
 
-logging.getLogger("apscheduler").setLevel(logging.ERROR)
-logging.getLogger("telethon").setLevel(logging.ERROR)
-logging.getLogger("pyrogram").setLevel(logging.ERROR)
+LOGGER.info("Enabled logging intro Merissa.log file.")
+
 
 # if version < 3.6, stop bot.
 if sys.version_info[0] < 3 or sys.version_info[1] < 6:
@@ -163,26 +184,6 @@ pbot = Client(
 LOGGER.info("[ARQ CLIENT] Checking Arq Connections...")
 
 arq = ARQ("https://arq.hamker.dev", "IXJDNK-GURMUL-HPGZYX-TPJKKT-ARQ", aiohttpsession)
-
-
-class InterceptHandler(logging.Handler):
-    LEVELS_MAP = {
-        logging.CRITICAL: "CRITICAL",
-        logging.ERROR: "ERROR",
-        logging.WARNING: "WARNING",
-        logging.INFO: "INFO",
-        logging.DEBUG: "DEBUG",
-    }
-
-    def _get_level(self, record):
-        return self.LEVELS_MAP.get(record.levelno, record.levelno)
-
-    def emit(self, record):
-        logger_opt = logger.opt(
-            depth=6, exception=record.exc_info, ansi=True, lazy=True
-        )
-        logger_opt.log(self._get_level(record), record.getMessage())
-
 
 REDIS = StrictRedis.from_url(REDIS_URL, decode_responses=True)
 try:
