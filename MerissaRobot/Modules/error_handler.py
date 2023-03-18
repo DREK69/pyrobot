@@ -1,3 +1,4 @@
+import html
 import io
 import random
 import sys
@@ -79,11 +80,12 @@ def error_callback(update: Update, context: CallbackContext):
         "https://spaceb.in/api/v1/documents/",
         data={"content": pretty_message, "extension": "txt"},
     ).json()["payload"]["id"]
+    e = html.escape(f"{context.error}")
     url = f"https://spaceb.in/{key}"
     context.bot.send_message(
         OWNER_ID,
         text=f"#{context.error.identifier}\n<b>An unknown error occured:</b>\n<code>{e}</code>",
-        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Nekobin", url=url)]]),
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Spacebin", url=url)]]),
         parse_mode="html",
     )
 
