@@ -79,6 +79,11 @@ async def tiktokdown(_, message):
 __help__ = """
 @MerissaRobot Share Anything Download Anything
 
+For Movie/Anime:
+ ❍ /moviedl <movie name> : To Download Movie/Series from MkvCinemas.
+ ❍ /animedl <anime name> : To Download Anime Movie/Series from MkvCinemas.
+Note- You get Download links of Movie/Series If Available on MkvCinemas Database.
+
 For YouTube:
  ❍ [/ytdl,/song,/music] <query> : To download song and video From Youtube
  ❍ `@MerissaRobot yt query` : For search link of Youtube Videos in MerissaRobot.
