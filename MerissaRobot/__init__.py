@@ -26,6 +26,7 @@ StartTime = time.time()
 # logging enable
 # enable logging
 
+
 class InterceptHandler(logging.Handler):
     LEVELS_MAP = {
         logging.CRITICAL: "CRITICAL",
