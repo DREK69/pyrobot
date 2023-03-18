@@ -32,6 +32,6 @@ async def generate(_, message):
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    x = get(f"https://api.princexd.tech/genimg?query={query}").json()["img_url"]
+    x = get(f"https://api.princexd.tech/genimg?query={query}").json()["imgurl"]
     await message.reply_photo(x, caption="Powered by @MerissaRobot")
     await m.delete()
