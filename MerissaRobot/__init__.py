@@ -51,7 +51,7 @@ LOGGER = logging.getLogger(__name__)
 logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
 
 logger.add(
-    "logs/merissa.log",
+    "log.txt",
     rotation="1 d",
     compression="tar.xz",
     backtrace=True,
