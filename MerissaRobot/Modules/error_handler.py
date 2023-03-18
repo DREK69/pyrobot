@@ -85,7 +85,9 @@ def error_callback(update: Update, context: CallbackContext):
     context.bot.send_message(
         OWNER_ID,
         text=f"#{context.error.identifier}\n<b>An unknown error occured:</b>\n<code>{e}</code>",
-        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Spacebin", url=url)]]),
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton("Spacebin", url=url)]]
+        ),
         parse_mode="html",
     )
 
