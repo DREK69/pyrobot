@@ -5,7 +5,7 @@ import requests
 import wget
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton as Keyboard
-from pyrogram.types import InlineKeyboardMarkup
+from pyrogram.types import InlineKeyboardMarkup, InputMediaVideo, InputMediaPhoto 
 from telegram import InlineKeyboardButton
 
 from MerissaRobot import pbot
