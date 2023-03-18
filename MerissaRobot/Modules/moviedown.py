@@ -73,7 +73,7 @@ def find_movie(update, context):
 def movie_result(update, context) -> None:
     query = update.callback_query
     id = query.data.split("_")[1]
-    m = query.message.edit_text(
+    query.message.edit_text(
         text="Please Wait Movie Details Fetching From MKVCinemas", reply_markup=None
     )
     s = get_movie(id)
@@ -88,8 +88,7 @@ def movie_result(update, context) -> None:
                 text=caption[x : x + 4095],
                 reply_markup=None,
                 parse_mode=ParseMode.MARKDOWN,
-            )
-            m.delete()
+            )            
     else:
         query.message.edit_text(
             text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
@@ -160,7 +159,7 @@ def find_anime(update, context):
 def anime_result(update, context) -> None:
     query = update.callback_query
     id = query.data.split("_")[1]
-    m = query.message.edit_text(
+    query.message.edit_text(
         text="Please Wait Movie Details Fetching From MKVCinemas", reply_markup=None
     )
     s = get_anime(id)
@@ -175,8 +174,7 @@ def anime_result(update, context) -> None:
                 text=caption[x : x + 4095],
                 reply_markup=None,
                 parse_mode=ParseMode.MARKDOWN,
-            )
-            m.delete()
+            )            
     else:
         query.message.edit_text(
             text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
