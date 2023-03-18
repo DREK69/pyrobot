@@ -77,21 +77,9 @@ def error_callback(update: Update, context: CallbackContext):
         tb,
     )
     key = requests.post(
-        "https://nekobin.com/api/documents", json={"content": pretty_message}
-    ).json()
-    e = html.escape(f"{context.error}")
-    if not key.get("result", {}).get("key"):
-        with open("error.txt", "w+") as f:
-            f.write(pretty_message)
-        context.bot.send_document(
-            OWNER_ID,
-            open("error.txt", "rb"),
-            caption=f"#{context.error.identifier}\n<b>An unknown error occured:</b>\n<code>{e}</code>",
-            parse_mode="html",
-        )
-        return
-    key = key.get("result").get("key")
-    url = f"https://nekobin.com/{key}.py"
+        "https://spaceb.in/api/v1/documents/", data={"content": pretty_message, "extension": "txt"}
+    ).json()['payload']['id']
+    url = f"https://spaceb.in/{key}"
     context.bot.send_message(
         OWNER_ID,
         text=f"#{context.error.identifier}\n<b>An unknown error occured:</b>\n<code>{e}</code>",
