@@ -4,7 +4,7 @@ import os
 import sys
 import time
 from inspect import getfullargspec
-
+from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 import spamwatch
 import telegram.ext as tg
 from aiohttp import ClientSession
@@ -60,7 +60,6 @@ logger.add(
 )
 
 LOGGER.info("Enabled logging intro Merissa.log file.")
-
 
 # if version < 3.6, stop bot.
 if sys.version_info[0] < 3 or sys.version_info[1] < 6:
@@ -170,7 +169,7 @@ else:
 
 
 updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
-telethn = TelegramClient("MerissaRobot", API_ID, API_HASH)
+telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
 dispatcher = updater.dispatcher
 aiohttpsession = ClientSession()
 pbot = Client(
@@ -197,6 +196,32 @@ except BaseException:
 finally:
     REDIS.ping()
     LOGGER.info("Connection To The Redis Database Established Successfully!")
+
+async def get_entity(client, entity):
+    entity_client = client
+    if not isinstance(entity, Chat):
+        try:
+            entity = int(entity)
+        except ValueError:
+            pass
+        except TypeError:
+            entity = entity.id
+        try:
+            entity = await client.get_chat(entity)
+        except (PeerIdInvalid, ChannelInvalid):
+            for pgram in apps:
+                if pgram != client:
+                    try:
+                        entity = await pgram.get_chat(entity)
+                    except (PeerIdInvalid, ChannelInvalid):
+                        pass
+                    else:
+                        entity_client = pgram
+                        break
+            else:
+                entity = await pgram.get_chat(entity)
+                entity_client = pgram
+    return entity, entity_client
 
 
 async def eor(msg: Message, **kwargs):
