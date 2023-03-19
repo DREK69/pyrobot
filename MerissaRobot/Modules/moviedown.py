@@ -3,11 +3,10 @@ import requests
 from bs4 import BeautifulSoup
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-
+from telegram import ParseMode
 from MerissaRobot import pbot
 
 url_list = {}
-
 
 def search_movies(query):
     movies_list = []
