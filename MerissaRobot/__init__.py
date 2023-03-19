@@ -29,8 +29,7 @@ StartTime = time.time()
 
 FORMAT = "[MerissaRobot] %(message)s"
 logging.basicConfig(
-    handlers=[logging.FileHandler("log.txt"),
-              logging.StreamHandler()],
+    handlers=[logging.FileHandler("log.txt"), logging.StreamHandler()],
     level=logging.INFO,
     format=FORMAT,
     datefmt="[%X]",
