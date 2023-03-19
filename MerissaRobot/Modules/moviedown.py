@@ -88,7 +88,7 @@ def movie_result(Client, CallbackQuery):
                 reply_markup=None,
                 parse_mode=ParseMode.MARKDOWN,
             )
-    m.delete()
+            m.delete()
     else:
         m.edit_text(
             text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
@@ -159,7 +159,7 @@ def find_anime(_, message):
 def anime_result(Client, CallbackQuery):
     query = update.callback_query
     id = query.data.split("_")[1]
-    CallbackQuery.message.edit(
+    m = CallbackQuery.message.edit(
         text="Please Wait Movie Details Fetching From MKVCinemas", reply_markup=None
     )
     s = get_anime(id)
@@ -175,7 +175,7 @@ def anime_result(Client, CallbackQuery):
                 reply_markup=None,
                 parse_mode=ParseMode.MARKDOWN,
             )
-    CallbackQuery.message.delete()        
+            m.delete()        
     else:
         CallbackQuery.message.edit_text(
             text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
