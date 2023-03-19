@@ -329,7 +329,7 @@ async def lyrics(client, message):
         return await message.reply_text(
             "Give me some text to find lyrics\n\nEx. /lyrics songname"
         )
-    query = message.text.split(None, 1)
+    query = message.text.split(None, 1)[1]
     api_key = "JVv8pud-25QRBYyRwcH34AlAygySsSAU3owRNGBw6hXO96x0JiTMn-3R4PvsjcTf"
     y = lg.Genius(
         api_key,
