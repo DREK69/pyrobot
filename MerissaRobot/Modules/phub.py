@@ -27,7 +27,7 @@ ph_regex = r"^https:\/\/(pornhub\.com|www\.pornhub\.com)"
 
 
 @Client.on_message(filters.regex(ph_regex))
-async def options(c: Client, m: Message):    
+async def options(c: Client, m: Message):
     x = m.text.split("=")[1]
     await m.reply_text(
         "Tap the button to continue action!",
