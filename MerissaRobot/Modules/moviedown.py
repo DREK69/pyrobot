@@ -1,9 +1,10 @@
 import pyshorteners
 import requests
 from bs4 import BeautifulSoup
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton 
 from pyrogram import filters
-from MerissaRobot import pbot as Client 
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+
+from MerissaRobot import pbot as Client
 
 url_list = {}
 
@@ -47,6 +48,7 @@ def get_movie(query):
         movie_details["links"] = final_links
     return movie_details
 
+
 @pbot.on_message(filters.command("moviedl"))
 def find_movie(_, message):
     search_results = message.reply_text("Processing...")
@@ -68,12 +70,14 @@ def find_movie(_, message):
             "Sorry 🙏, No Result Found!\nCheck If You Have Misspelled The Movie Name."
         )
 
+
 @Client.on_callback_query(filters.regex(pattern=r"moviedl"))
 def movie_result(Client, CallbackQuery):
     query = CallbackQuery.data.strip()
     id = query.split("_")[1]
     m = CallbackQuery.message.edit(
-        text="Please Wait Movie/Series Details Fetching From MKVCinemas", reply_markup=None
+        text="Please Wait Movie/Series Details Fetching From MKVCinemas",
+        reply_markup=None,
     )
     s = get_movie(id)
     link = ""
@@ -90,9 +94,7 @@ def movie_result(Client, CallbackQuery):
             )
             m.delete()
     else:
-        m.edit_text(
-            text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
-        )
+        m.edit_text(text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN)
 
 
 def search_anime(query):
@@ -134,6 +136,7 @@ def get_anime(query):
         movie_details["links"] = final_links
     return movie_details
 
+
 @pbot.on_message(filters.command("animedl"))
 def find_anime(_, message):
     search_results = message.reply_text("Processing...")
@@ -155,6 +158,7 @@ def find_anime(_, message):
             "Sorry 🙏, No Result Found!\nCheck If You Have Misspelled The Movie Name."
         )
 
+
 @Client.on_callback_query(filters.regex(pattern=r"animedl"))
 def anime_result(Client, CallbackQuery):
     query = update.callback_query
@@ -175,7 +179,7 @@ def anime_result(Client, CallbackQuery):
                 reply_markup=None,
                 parse_mode=ParseMode.MARKDOWN,
             )
-            m.delete()        
+            m.delete()
     else:
         CallbackQuery.message.edit_text(
             text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
