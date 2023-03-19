@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from MerissaRobot import pbot as Client
+from MerissaRobot import pbot
 
 url_list = {}
 
@@ -71,7 +71,7 @@ def find_movie(_, message):
         )
 
 
-@Client.on_callback_query(filters.regex(pattern=r"moviedl"))
+@pbot.on_callback_query(filters.regex(pattern=r"moviedl"))
 def movie_result(Client, CallbackQuery):
     query = CallbackQuery.data.strip()
     id = query.split("_")[1]
@@ -159,7 +159,7 @@ def find_anime(_, message):
         )
 
 
-@Client.on_callback_query(filters.regex(pattern=r"animedl"))
+@pbot.on_callback_query(filters.regex(pattern=r"animedl"))
 def anime_result(Client, CallbackQuery):
     query = update.callback_query
     id = query.data.split("_")[1]
