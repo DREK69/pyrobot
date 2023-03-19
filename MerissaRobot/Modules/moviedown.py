@@ -3,8 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from telegram import ParseMode
-
+from pyrogram.enums import ParseMode
 from MerissaRobot import pbot
 
 url_list = {}
