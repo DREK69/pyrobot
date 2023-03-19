@@ -27,38 +27,17 @@ StartTime = time.time()
 # logging enable
 # enable logging
 
-
-class InterceptHandler(logging.Handler):
-    LEVELS_MAP = {
-        logging.CRITICAL: "CRITICAL",
-        logging.ERROR: "ERROR",
-        logging.WARNING: "WARNING",
-        logging.INFO: "INFO",
-        logging.DEBUG: "DEBUG",
-    }
-
-    def _get_level(self, record):
-        return self.LEVELS_MAP.get(record.levelno, record.levelno)
-
-    def emit(self, record):
-        logger_opt = logger.opt(
-            depth=6, exception=record.exc_info, ansi=True, lazy=True
-        )
-        logger_opt.log(self._get_level(record), record.getMessage())
-
+FORMAT = "[MerissaRobot] %(message)s"
+logging.basicConfig(
+    handlers=[logging.FileHandler("log.txt"),
+              logging.StreamHandler()],
+    level=logging.INFO,
+    format=FORMAT,
+    datefmt="[%X]",
+)
+logging.getLogger("pyrogram").setLevel(logging.INFO)
 
 LOGGER = logging.getLogger(__name__)
-
-logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
-
-logger.add(
-    "log.txt",
-    rotation="1 d",
-    compression="tar.xz",
-    backtrace=True,
-    diagnose=True,
-    level="INFO",
-)
 
 LOGGER.info("Enabled logging intro Merissa.log file.")
 
