@@ -1,5 +1,4 @@
 import re
-
 from typing import List, Optional
 
 from telegram import Message, MessageEntity
@@ -22,6 +21,7 @@ def id_from_reply(message):
 
 def extract_user(message: Message, args: List[str]) -> Optional[int]:
     return extract_user_and_text(message, args)[0]
+
 
 def extract_user_and_text(message, args):
     prev_message = message.reply_to_message
@@ -52,12 +52,14 @@ def extract_user_and_text(message, args):
             )
             return None, None
 
-    elif len(args) >= 1 and (args[0].isdigit() or re.match(r'https://t\.me/(\w+)', args[0])):
+    elif len(args) >= 1 and (
+        args[0].isdigit() or re.match(r"https://t\.me/(\w+)", args[0])
+    ):
         if args[0].isdigit():
             user_id = int(args[0])
         else:
-            username = re.search(r'https://t\.me/(\w+)', args[0]).group(1)
-            user_id = get_user_id(f'@{username}')
+            username = re.search(r"https://t\.me/(\w+)", args[0]).group(1)
+            user_id = get_user_id(f"@{username}")
 
         if not user_id:
             message.reply_text(
@@ -91,6 +93,7 @@ def extract_user_and_text(message, args):
         return None, None
 
     return user_id, text
+
 
 def extract_text(message) -> str:
     return (
