@@ -28,6 +28,7 @@ ph_regex = r"^https:\/\/(pornhub\.com|www\.pornhub\.com)"
 
 @Client.on_message(filters.regex(ph_regex))
 async def options(c: Client, m: Message):
+    x = m.split("=")[1]
     await m.reply_text(
         "Tap the button to continue action!",
         reply_markup=InlineKeyboardMarkup(
@@ -35,7 +36,7 @@ async def options(c: Client, m: Message):
                 [
                     InlineKeyboardButton(
                         "📥 Download",
-                        callback_data=f"phubdl_{m.text}",
+                        callback_data=f"phubdl_{x}",
                     ),
                     InlineKeyboardButton(
                         "🎥 Watch Online",
@@ -49,7 +50,8 @@ async def options(c: Client, m: Message):
 
 @Client.on_callback_query(filters.regex("^phubdl"))
 async def get_video(c: Client, q: CallbackQuery):
-    url = q.data.split("_", 1)[1]
+    x = q.data.split("_", 1)[1]
+    url = f"https://www.pornhub.com/view_video.php?viewkey={x}"
     message = await q.message.edit(
         "Downloading Started\n\nDownloading Speed could be Slow Plase wait..."
     )
