@@ -14,7 +14,7 @@
     
 # Merissa Robot
 • Merissa is a Telegram group managment bot made using Telethon and Pyrogram which makes it modern and faster than most of the exisitng Telegram Chat Managers.
-<p align="center"><img src="https://te.legra.ph/file/2b1d53cba73ae4b855837.jpg"></p>
+<p align="center"><img src="https://te.legra.ph/file/90b1aa10cf8b77d5b781b.jpg"></p>
 
 #### Merissa's features over other bots:
 - Modern
