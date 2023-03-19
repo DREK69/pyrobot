@@ -56,11 +56,11 @@ Read [Docs](http://MerissaRobot.github.io) for Detailed Description and Setup Gu
 > By setting those two vars you can get logs of your heroku app, set var, edit var, delete vars , check dyno usage and update bot. 
 > Those two vars are not Mandatory! You can leave them blank too. 
     
-<h4>Click the button below to deploy Tiana Group Managment Bot on Heroku!</h4>    
-<p><a href="https://heroku.com/deploy?template=https://github.com/Prince-Botz/TianaBot"><img src="https://img.shields.io/badge/Deploy%20To%20Heroku-blueviolet?style=for-the-badge&logo=heroku" width="200""/></a></p>
+<h4>Click the button below to deploy Merissa Group Managment Bot on Heroku!</h4>    
+<p><a href="https://heroku.com/deploy?template=https://github.com/NotReallyPrince/MerissaRobot"><img src="https://img.shields.io/badge/Deploy%20To%20Heroku-blueviolet?style=for-the-badge&logo=heroku" width="200""/></a></p>
 
-<h4>Click the button below to deploy Vc Bot on Heroku!</h4>    
-<p><a href="https://heroku.com/deploy?template=https://github.com/Prince301102/Tiana-Music"><img src="https://img.shields.io/badge/Deploy%20To%20Heroku-blueviolet?style=for-the-badge&logo=heroku" width="200""/></a></p> 
+<h4>Click the button below to deploy Merissa Group Management + Vc Bot on Heroku!</h4>    
+<p><a href="https://heroku.com/deploy?template=https://github.com/NotReallyPrince/MerissaRobot"><img src="https://img.shields.io/badge/Deploy%20To%20Heroku-blueviolet?style=for-the-badge&logo=heroku" width="200""/></a></p> 
 </details>
 
 <details>
@@ -89,13 +89,13 @@ $ bash start
 
 ## Contact & Support
 
-- [Telegram Channel](https://t.me/TianaxUpdates)
-- [Telegram Support Group](https://t.me/TianaxSupport)
+- [Telegram Channel](https://t.me/MerissaxUpdates)
+- [Telegram Support Group](https://t.me/MerissaxSupport)
 - [Contact Owner](https://t.me/PrincexAssistantBot)
 
 ## License
 
-Distributed under the [GNU General Public License v3.0 License.](https://github.com/Prince-Botz/TianaBot/blob/main/LICENSE) See `LICENSE.md` for more information.
+Distributed under the [GNU General Public License v3.0 License.](https://github.com/NotReallyPrince/MerissaRobot) See `LICENSE.md` for more information.
 
 ## Credits
 ### Bot Creator
