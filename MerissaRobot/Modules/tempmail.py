@@ -100,7 +100,7 @@ async def gen_keyboard(mails, email, domain):
 # ********************************************************************************
 
 
-@app.on_callback_query(filters.regex("mailbox"))
+@app.on_callback_query(filters.regex(pattern=r"mailbox"))
 async def mail_box(_, query: CallbackQuery):
     Data = query.data
     callback_request = Data.split(None, 1)[1]
@@ -127,7 +127,7 @@ async def mail_box(_, query: CallbackQuery):
 # ********************************************************************************
 
 
-@app.on_callback_query(filters.regex("mail"))
+@app.on_callback_query(filters.regex(pattern=r"mail"))
 async def mail_box(_, query: CallbackQuery):
     Data = query.data
     callback_request = Data.split(None, 1)[1]
@@ -197,6 +197,7 @@ __help__ = """
 You can generate Temp-Mail from MerissaRobot 
  ❍ /genmail : To get Random Temp-Mail.
  ❍ /set <email-name> : To get Tempmail of Your Name
+ ❍ /domains : To check Domains List
 """
 
 __mod_name__ = "TempMail 📩"
