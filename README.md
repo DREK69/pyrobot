@@ -75,7 +75,7 @@ Read [Docs](http://MerissaRobot.github.io) for Detailed Description and Setup Gu
 
 
 ```console
-$ git clone https://github.com/Hunter-XD/MerissaRobot
+$ git clone https://github.com/NotReallyPrince/MerissaRobot
 $ cd MerissaRobot
 $ pip3 install -U -r requirements.txt
 $ cp sample.env
