@@ -1,4 +1,5 @@
 import os
+import re
 
 import lyricsgenius as lg
 import requests
@@ -14,7 +15,6 @@ from pyrogram.types import (
     InputMediaVideo,
 )
 from pytube import YouTube
-import re
 
 from MerissaRobot import pbot as Client
 from MerissaRobot.Utils.Helpers.http import http
