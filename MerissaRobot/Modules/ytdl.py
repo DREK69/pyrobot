@@ -14,6 +14,7 @@ from pyrogram.types import (
     InputMediaVideo,
 )
 from pytube import YouTube
+import re
 
 from MerissaRobot import pbot as Client
 from MerissaRobot.Utils.Helpers.http import http
@@ -153,8 +154,7 @@ async def callback_query(Client, CallbackQuery):
 
 @Client.on_callback_query(filters.regex(pattern=r"ytdown"))
 async def callback_query(Client, CallbackQuery):
-    callback_data = CallbackQuery.data.strip()
-    videoid = callback_data.split(None, 1)[1]
+    videoid = CallbackQuery.data.split(None, 1)[1]
     await CallbackQuery.edit_message_reply_markup(
         reply_markup=InlineKeyboardMarkup(
             [
@@ -176,8 +176,7 @@ async def callback_query(Client, CallbackQuery):
 @Client.on_callback_query(filters.regex(pattern=r"formats"))
 async def callback_query(Client, CallbackQuery):
     await CallbackQuery.answer("Getting Formats..\n\nPlease Wait..", show_alert=True)
-    callback_data = CallbackQuery.data.strip()
-    videoid = callback_data.split(None, 1)[1]
+    videoid = CallbackQuery.data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     ytdl_opts = {"quiet": True}
     ydl = yt_dlp.YoutubeDL(ytdl_opts)
@@ -241,8 +240,7 @@ async def callback_query(Client, CallbackQuery):
     m = await CallbackQuery.edit_message_text(
         "Downloading Started\n\nDownload Speed could be slow. Please hold on.."
     )
-    callback_data = CallbackQuery.data.strip()
-    videoid = callback_data.split(None, 1)[1]
+    videoid = CallbackQuery.data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     ydl_opts = {"format": "bestaudio[ext=m4a]"}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -276,8 +274,7 @@ async def callback_query(Client, CallbackQuery):
     m = await CallbackQuery.edit_message_text(
         "Downloading Started\n\nDownload Speed could be slow. Please hold on.."
     )
-    callback_data = CallbackQuery.data.strip()
-    callback_request = callback_data.split(None, 1)[1]
+    callback_request = CallbackQuery.data.split(None, 1)[1]
     format_id, videoid = callback_request.split("|")
     link = f"https://m.youtube.com/watch?v={videoid}"
     formats = f"{format_id}+140"
