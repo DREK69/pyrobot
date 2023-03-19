@@ -27,6 +27,7 @@ StartTime = time.time()
 # logging enable
 # enable logging
 
+
 class InterceptHandler(logging.Handler):
     LEVELS_MAP = {
         logging.CRITICAL: "CRITICAL",
@@ -44,6 +45,7 @@ class InterceptHandler(logging.Handler):
             depth=6, exception=record.exc_info, ansi=True, lazy=True
         )
         logger_opt.log(self._get_level(record), record.getMessage())
+
 
 logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
 
