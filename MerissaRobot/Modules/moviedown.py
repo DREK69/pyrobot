@@ -179,6 +179,6 @@ def anime_result(Client, CallbackQuery):
             )
             m.delete()
     else:
-        m.edi(
+        m.edit(
             text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
         )
