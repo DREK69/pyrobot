@@ -35,7 +35,7 @@ async def options(c: Client, m: Message):
                 [
                     InlineKeyboardButton(
                         "📥 Download",
-                        callback_data=f"d_{m.text}",
+                        callback_data=f"phubdl_{m.text}",
                     ),
                     InlineKeyboardButton(
                         "🎥 Watch Online",
@@ -47,7 +47,7 @@ async def options(c: Client, m: Message):
     )
 
 
-@Client.on_callback_query(filters.regex("^d"))
+@Client.on_callback_query(filters.regex("^phubdl"))
 async def get_video(c: Client, q: CallbackQuery):
     url = q.data.split("_", 1)[1]
     message = await q.message.edit(
