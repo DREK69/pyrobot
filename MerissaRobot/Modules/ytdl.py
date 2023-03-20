@@ -237,7 +237,7 @@ async def callback_query(Client, CallbackQuery):
     await CallbackQuery.edit_message_reply_markup(reply_markup=keyboard)
 
 
-@Client.on_callback_query(filters.regex(pattern=r"audio"))
+@Client.on_callback_query(filters.regex("^audio"))
 async def callback_query(Client, CallbackQuery):
     chatid = CallbackQuery.message.chat.id
     m = await CallbackQuery.edit_message_text(
@@ -272,7 +272,7 @@ async def callback_query(Client, CallbackQuery):
     os.remove(audio_file)
 
 
-@Client.on_callback_query(filters.regex(pattern=r"video"))
+@Client.on_callback_query(filters.regex("^video"))
 async def callback_query(Client, CallbackQuery):
     chatid = CallbackQuery.message.chat.id
     m = await CallbackQuery.edit_message_text(
