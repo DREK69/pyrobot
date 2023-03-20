@@ -115,7 +115,8 @@ async def song(client, message):
 
 @Client.on_callback_query(filters.regex(pattern=r"ytnext"))
 async def callback_query(Client, CallbackQuery):
-    callback = CallbackQuery.data.split("|")
+    callback_data = CallbackQuery.data.strip()
+    callback = callback_data.split("|")
     query = callback[1]
     page = int(callback[2])
     search = requests.get(
@@ -154,7 +155,8 @@ async def callback_query(Client, CallbackQuery):
 
 @Client.on_callback_query(filters.regex(pattern=r"ytdown"))
 async def callback_query(Client, CallbackQuery):
-    videoid = CallbackQuery.data.split(None, 1)[1]
+    callback_data = CallbackQuery.data.strip()
+    videoid = callback_data.split(None, 1)[1]
     await CallbackQuery.edit_message_reply_markup(
         reply_markup=InlineKeyboardMarkup(
             [
@@ -176,7 +178,8 @@ async def callback_query(Client, CallbackQuery):
 @Client.on_callback_query(filters.regex(pattern=r"formats"))
 async def callback_query(Client, CallbackQuery):
     await CallbackQuery.answer("Getting Formats..\n\nPlease Wait..", show_alert=True)
-    videoid = CallbackQuery.data.split(None, 1)[1]
+    callback_data = CallbackQuery.data.strip()
+    videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     ytdl_opts = {"quiet": True}
     ydl = yt_dlp.YoutubeDL(ytdl_opts)
@@ -240,7 +243,8 @@ async def callback_query(Client, CallbackQuery):
     m = await CallbackQuery.edit_message_text(
         "Downloading Started\n\nDownload Speed could be slow. Please hold on.."
     )
-    videoid = CallbackQuery.data.split(None, 1)[1]
+    callback_data = CallbackQuery.data.strip()
+    videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     ydl_opts = {"format": "bestaudio[ext=m4a]"}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -274,7 +278,8 @@ async def callback_query(Client, CallbackQuery):
     m = await CallbackQuery.edit_message_text(
         "Downloading Started\n\nDownload Speed could be slow. Please hold on.."
     )
-    callback_request = CallbackQuery.data.split(None, 1)[1]
+    callback_data = CallbackQuery.data.strip()
+    callback_request = callback_data.split(None, 1)[1]
     format_id, videoid = callback_request.split("|")
     link = f"https://m.youtube.com/watch?v={videoid}"
     formats = f"{format_id}+140"
