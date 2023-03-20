@@ -72,7 +72,7 @@ def find_movie(_, message):
         )
 
 
-@pbot.on_callback_query(filters.regex(pattern=r"moviedl"))
+@pbot.on_callback_query(filters.regex("^moviedl"))
 def movie_result(Client, CallbackQuery):
     id = CallbackQuery.data.split("_")[1]
     m = CallbackQuery.message.edit(
@@ -159,7 +159,7 @@ def find_anime(_, message):
         )
 
 
-@pbot.on_callback_query(filters.regex(pattern=r"animedl"))
+@pbot.on_callback_query(filters.regex("^animedl"))
 def anime_result(Client, CallbackQuery):
     id = CallbackQuery.data.split("_")[1]
     m = CallbackQuery.message.edit(
