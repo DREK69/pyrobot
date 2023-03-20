@@ -67,7 +67,7 @@ pySmartDL
 python-arq
 python-barcode==0.14.0
 python-dotenv==0.*
-python-telegram-bot==13.14
+python-telegram-bot==13.12
 pytimeparse
 pytube
 pytz
