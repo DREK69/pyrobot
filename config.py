@@ -1,5 +1,4 @@
 import os
-
 TOKEN = os.environ.get("TOKEN", "5294959338:AAEL49jv6ALz_5c6zDDGUMq-Al4q2WmsNf8")
 INFOPIC = bool(os.environ.get("INFOPIC", True))
 BOT_USERNAME = os.environ.get("BOT_USERNAME", "MerissaRobot")
