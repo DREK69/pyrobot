@@ -49,7 +49,7 @@ async def options(c: Client, m: Message):
 
 
 @Client.on_callback_query(filters.regex("^phubdl"))
-async def get_video(c: Client, q: CallbackQuery):    
+async def get_video(c: Client, q: CallbackQuery):
     x = q.data.split("_", 1)[1]
     url = f"https://www.pornhub.com/view_video.php?viewkey={x}"
     message = await q.message.edit(
