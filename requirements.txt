@@ -41,6 +41,7 @@ jikanpy
 loguru
 lxml
 lyrics_extractor
+lyricsgenius==3.0.1
 markdown2
 motor
 multicolorcaptcha
@@ -51,7 +52,7 @@ odmantic
 opencv-python-headless
 pendulum
 Pillow
-pornhub_api
+pornhub_api==0.2.0
 pretty_errors
 psutil
 psycopg2-binary
@@ -97,4 +98,3 @@ youtube_dl
 youtube_search
 youtube_search_python==1.4.9
 zalgo-text
-lyricsgenius==3.0.1
