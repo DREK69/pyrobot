@@ -52,7 +52,7 @@ odmantic
 opencv-python-headless
 pendulum
 Pillow
-pornhub_api==0.2.0
+pornhub-api==0.2.0
 pretty_errors
 psutil
 psycopg2-binary
