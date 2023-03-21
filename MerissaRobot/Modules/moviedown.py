@@ -74,7 +74,8 @@ def find_movie(_, message):
 
 @pbot.on_callback_query(filters.regex("^moviedl"))
 def movie_result(Client, CallbackQuery):
-    id = CallbackQuery.data.split("_")[1]
+    callback_data = CallbackQuery.data.strip()
+    id = callback_data.split("_")[1]
     m = CallbackQuery.message.edit(
         text="Please Wait Movie/Series Details Fetching From MKVCinemas",
         reply_markup=None,
@@ -161,7 +162,8 @@ def find_anime(_, message):
 
 @pbot.on_callback_query(filters.regex("^animedl"))
 def anime_result(Client, CallbackQuery):
-    id = CallbackQuery.data.split("_")[1]
+    callback_data = CallbackQuery.data.strip()
+    id = callback_data.split("_")[1]
     m = CallbackQuery.message.edit(
         text="Please Wait Movie Details Fetching From MKVCinemas", reply_markup=None
     )
