@@ -17,9 +17,6 @@ from telethon import TelegramClient
 from telethon.sessions import MemorySession, StringSession
 
 from config import *
-from config import BOT_USERNAME
-from config import EVENT_LOGS as ERROR_LOG
-from config import OWNER_ID
 
 StartTime = time.time()
 
