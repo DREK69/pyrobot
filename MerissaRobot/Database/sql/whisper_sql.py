@@ -2,7 +2,6 @@ from sqlalchemy import Column, String
 
 from MerissaRobot.Database.sql import BASE, SESSION
 
-
 class Whispers(BASE):
     __tablename__ = "whispers"
     __table_args__ = {"extend_existing": True}
@@ -23,5 +22,28 @@ Whispers.__table__.create(checkfirst=True)
 def num_whispers():
     try:
         return SESSION.query(Whispers).count()
+    finally:
+        SESSION.close()
+
+class Users(BASE):
+    __tablename__ = "users"
+    __table_args__ = {'extend_existing': True}
+    user_id = Column(BigInteger, primary_key=True)
+    target_user = Column(JSON)
+
+    def __init__(self, user_id, target_user=None):
+        self.user_id = user_id
+        self.target_user = target_user
+
+    def __repr__(self):
+        return "<User {} ({})>".format(self.target_user, self.user_id)
+
+
+Users.__table__.create(checkfirst=True)
+
+
+def num_users():
+    try:
+        return SESSION.query(Users).count()
     finally:
         SESSION.close()
