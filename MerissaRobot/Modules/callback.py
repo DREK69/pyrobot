@@ -770,5 +770,5 @@ vi,xh,yi,yo,zh,zh_CN,zh_TW,zu`""",
         query.message.delete()
 
 
-CB_HANDLER = CallbackQueryHandler(cb_callback, pattern=r"cb_", run_async=True)
+CB_HANDLER = CallbackQueryHandler(cb_callback, pattern="^cb_", run_async=True)
 dispatcher.add_handler(CB_HANDLER)
