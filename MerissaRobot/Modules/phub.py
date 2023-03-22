@@ -48,7 +48,7 @@ async def options(c: Client, m: Message):
     )
 
 
-@Client.on_callback_query(filters.regex("^phubdl"))
+@Client.on_callback_query(filters.regex(pattern="^phubdl"))
 async def get_video(c: Client, q: CallbackQuery):
     callback_data = q.data.strip()
     x = callback_data.split("_", 1)[1]
