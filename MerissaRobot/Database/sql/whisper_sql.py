@@ -1,6 +1,7 @@
-from sqlalchemy import Column, String
-from sqlalchemy import Column, BigInteger, JSON
+from sqlalchemy import JSON, BigInteger, Column, String
+
 from MerissaRobot.Database.sql import BASE, SESSION
+
 
 class Whispers(BASE):
     __tablename__ = "whispers"
@@ -25,9 +26,10 @@ def num_whispers():
     finally:
         SESSION.close()
 
+
 class Users(BASE):
     __tablename__ = "users"
-    __table_args__ = {'extend_existing': True}
+    __table_args__ = {"extend_existing": True}
     user_id = Column(BigInteger, primary_key=True)
     target_user = Column(JSON)
 
