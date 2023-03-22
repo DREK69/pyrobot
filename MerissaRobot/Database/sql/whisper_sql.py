@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String
-
+from sqlalchemy import Column, BigInteger, JSON
 from MerissaRobot.Database.sql import BASE, SESSION
 
 class Whispers(BASE):
