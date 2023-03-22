@@ -1,10 +1,11 @@
 from sqlalchemy import Column, String
+
 from MerissaRobot.Database.sql import BASE, SESSION
 
 
 class Whispers(BASE):
     __tablename__ = "whispers"
-    __table_args__ = {'extend_existing': True}
+    __table_args__ = {"extend_existing": True}
     specific = Column(String, primary_key=True)  # inline_message_id
     message = Column(String)
 
