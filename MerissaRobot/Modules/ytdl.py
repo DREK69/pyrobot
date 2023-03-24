@@ -113,7 +113,7 @@ async def song(client, message):
     )
 
 
-@Client.on_callback_query(filters.regex("^ytnext"))
+@Client.on_callback_query(filters.regex(pattern="^ytnext"))
 async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     callback = callback_data.split("|")
@@ -153,7 +153,7 @@ async def callback_query(Client, CallbackQuery):
     )
 
 
-@Client.on_callback_query(filters.regex("^ytdown"))
+@Client.on_callback_query(filters.regex(pattern="^ytdown"))
 async def callback_query(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     videoid = callback_data.split(None, 1)[1]
@@ -175,7 +175,7 @@ async def callback_query(Client, CallbackQuery):
     )
 
 
-@Client.on_callback_query(filters.regex("^formats"))
+@Client.on_callback_query(filters.regex(pattern="^formats"))
 async def callback_query(Client, CallbackQuery):
     await CallbackQuery.answer("Getting Formats..\n\nPlease Wait..", show_alert=True)
     callback_data = CallbackQuery.data.strip()
@@ -237,7 +237,7 @@ async def callback_query(Client, CallbackQuery):
     await CallbackQuery.edit_message_reply_markup(reply_markup=keyboard)
 
 
-@Client.on_callback_query(filters.regex("^audio"))
+@Client.on_callback_query(filters.regex(pattern="^audio"))
 async def callback_query(Client, CallbackQuery):
     chatid = CallbackQuery.message.chat.id
     m = await CallbackQuery.edit_message_text(
@@ -272,7 +272,7 @@ async def callback_query(Client, CallbackQuery):
     os.remove(audio_file)
 
 
-@Client.on_callback_query(filters.regex("^video"))
+@Client.on_callback_query(filters.regex(pattern="^video"))
 async def callback_query(Client, CallbackQuery):
     chatid = CallbackQuery.message.chat.id
     m = await CallbackQuery.edit_message_text(
