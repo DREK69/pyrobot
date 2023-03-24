@@ -4,7 +4,7 @@ from pyrogram.types import Message
 import MerissaRobot.Database.sql.chatbot_sql as sql
 from MerissaRobot import BOT_ID, eor
 from MerissaRobot import pbot as app
-from MerissaRobot.Utils.Helpers.chatbot import add_chatbot, check_chatbot, rm_chatbot
+from MerissaRobot.Database.mongo.chatbot_mongo import add_chatbot, check_chatbot, rm_chatbot
 from MerissaRobot.Utils.Helpers.errors import capture_err
 
 chatbot_group = 2
