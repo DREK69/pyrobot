@@ -1,11 +1,11 @@
 from pyrogram import enums, filters
 from pyrogram.types import Message
 
-import MerissaRobot.Database.sql.chatbot_sql as sql
 from MerissaRobot import BOT_ID, eor
 from MerissaRobot import pbot as app
 from MerissaRobot.Utils.Helper.chatbot import add_chatbot, check_chatbot, rm_chatbot
 from MerissaRobot.Utils.Helpers.errors import capture_err
+import MerissaRobot.Database.sql.chatbot_sql as sql
 
 chatbot_group = 2
 
@@ -15,21 +15,21 @@ async def chat_bot_toggle(message: Message, is_userbot: bool):
     chat_id = message.chat.id
     db = await check_chatbot()
     db = db["userbot"] if is_userbot else db["bot"]
-    if status == "enable":
-        if chat_id not in db:
-            await sql.rem_merissa(chat_id)
+    if status == "on":
+        if chat_id not in db:            
+            is_merissa = await sql.rem_merissa(chat_id)
             await add_chatbot(chat_id, is_userbot=is_userbot)
-            text = "Chatbot Enabled!"
+            text = "ChatGPT Enabled!"
             return await eor(message, text=text)
-        await eor(message, text="ChatBot Is Already Enabled.")
-    elif status == "disable":
-        if chat_id in db:
-            await sql.set_merissa(chat_id)
+        await eor(message, text="ChatGPT Is Already Enabled.")
+    elif status == "off":
+        if chat_id in db:        
+            is_merissa = await sql.set_merissa(chat_id)    
             await rm_chatbot(chat_id, is_userbot=is_userbot)
-            return await eor(message, text="Chatbot Disabled!")
-        await eor(message, text="ChatBot Is Already Disabled.")
+            return await eor(message, text="ChatGPT Disabled!")
+        await eor(message, text="ChatGPT Is Already Disabled.")
     else:
-        await eor(message, text="**Usage:**\n/chatbot [ENABLE|DISABLE]")
+        await eor(message, text="**Usage:**\n/chatgpt on/off")
 
 
 # Enabled | Disable Chatbot
@@ -39,7 +39,7 @@ async def chat_bot_toggle(message: Message, is_userbot: bool):
 @capture_err
 async def chatbot_status(_, message: Message):
     if len(message.command) != 2:
-        return await eor(message, text="**Usage:**\n/chatgpt [ENABLE|DISABLE]")
+        return await eor(message, text="**Usage:**\n/chatgpt on/off")
     await chat_bot_toggle(message, is_userbot=False)
 
 
