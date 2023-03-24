@@ -1,33 +1,27 @@
-from MerissaRobot.Database.mongo import client as db_x
+from MerissaRobot.Database.mongo import mongo as db
 
-merissa = db_x["MerissaChatBot"]
+chatbotdb = db.chatbot
 
-
-def add_chat(chat_id):
-    stark = merissa.find_one({"chat_id": chat_id})
-    if stark:
-        return False
-    merissa.insert_one({"chat_id": chat_id})
-    return True
+async def check_chatbot():
+    return await chatbotdb.find_one({"chatbot": "chatbot"}) or {
+        "bot": [],
+        "userbot": [],
+    }
 
 
-def remove_chat(chat_id):
-    stark = merissa.find_one({"chat_id": chat_id})
-    if not stark:
-        return False
-    merissa.delete_one({"chat_id": chat_id})
-    return True
+async def add_chatbot(chat_id: int, is_userbot: bool = False):
+    list_id = await check_chatbot()
+    if is_userbot:
+        list_id["userbot"].append(chat_id)
+    else:
+        list_id["bot"].append(chat_id)
+    await chatbotdb.update_one({"chatbot": "chatbot"}, {"$set": list_id}, upsert=True)
 
 
-def get_all_chats():
-    r = list(merissa.find())
-    if r:
-        return r
-    return False
-
-
-def get_session(chat_id):
-    stark = merissa.find_one({"chat_id": chat_id})
-    if not stark:
-        return False
-    return stark
+async def rm_chatbot(chat_id: int, is_userbot: bool = False):
+    list_id = await check_chatbot()
+    if is_userbot:
+        list_id["userbot"].remove(chat_id)
+    else:
+        list_id["bot"].remove(chat_id)
+    await chatbotdb.update_one({"chatbot": "chatbot"}, {"$set": list_id}, upsert=True)
