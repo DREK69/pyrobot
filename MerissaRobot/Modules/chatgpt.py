@@ -1,14 +1,13 @@
-from asyncio import gather, sleep
-
 from pyrogram import enums, filters
 from pyrogram.types import Message
 
 from MerissaRobot import BOT_ID, eor
 from MerissaRobot import pbot as app
-from MerissaRobot.Utils.Helpers.errors import capture_err
 from MerissaRobot.Utils.Helper.chatbot import add_chatbot, check_chatbot, rm_chatbot
+from MerissaRobot.Utils.Helpers.errors import capture_err
 
 chatbot_group = 2
+
 
 async def chat_bot_toggle(message: Message, is_userbot: bool):
     status = message.text.split(None, 1)[1].lower()
@@ -57,9 +56,11 @@ async def chatbot_talk(_, message: Message):
     if message.reply_to_message.from_user.id != BOT_ID:
         return
     chat_id = message.chat.id
-    user_id = message.from_user.id if message.from_user else 0    
+    message.from_user.id if message.from_user else 0
     text = message.text.replace(" ", "%20") if len(message.text) < 2 else message.text
-    await app.send_chat_action(chat_id, enums.ChatAction.TYPING)    
-    response = requests.get(f"https://api.princexd.tech/ask?text={text}").json()["answer"]  
+    await app.send_chat_action(chat_id, enums.ChatAction.TYPING)
+    response = requests.get(f"https://api.princexd.tech/ask?text={text}").json()[
+        "answer"
+    ]
     await message.reply_text(response)
     await app.send_chat_action(chat_id, enums.ChatAction.CANCEL)
