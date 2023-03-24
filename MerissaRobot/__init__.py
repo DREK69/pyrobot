@@ -105,6 +105,7 @@ if sys.version_info[0] < 3 or sys.version_info[1] < 6:
     ALLOW_CHATS = ALLOW_CHATS
     DRAGONS = {int(x) for x in os.environ.get("DRAGONS", "1218405248").split()}
     EVENT_LOGS = EVENT_LOGS
+    ERROR_LOG = ERROR_LOG
     WEBHOOK = WEBHOOK
     URL = URL
     PORT = PORT
