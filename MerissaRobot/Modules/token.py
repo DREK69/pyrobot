@@ -33,7 +33,7 @@ async def token(client, message):
         await message.reply_text(
             f"Your Merissa Token: `{word}` Do not give this token to anyone else!\n Join @MerissaxSupport"
         )
-        await pbot.send_messagw(
+        await app.send_messagw(
             ERROR_LOG,
             f"#New Merissa Token Generated\n\nUser- [{message.from_user.first_name}](tg://user?id={message.from_user.id})\nToken- `{word}`\n\n©️ MerissaRobot",
         )
