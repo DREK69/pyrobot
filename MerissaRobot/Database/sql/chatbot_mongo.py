@@ -1,6 +1,6 @@
-from MerissaRobot.Database.mongo import mongo as db
+from MerissaRobot.Database.mongo import client as db
 
-chatbotdb = db.chatbot
+chatbotdb = db["MerissaRobot"]
 
 
 async def check_chatbot():
