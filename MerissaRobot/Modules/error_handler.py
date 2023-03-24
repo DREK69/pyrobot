@@ -9,7 +9,7 @@ import requests
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext, CommandHandler
 
-from MerissaRobot import DEV_USERS, OWNER_ID, dispatcher
+from MerissaRobot import DEV_USERS, ERROR_LOG, dispatcher
 
 pretty_errors.mono()
 
@@ -83,7 +83,7 @@ def error_callback(update: Update, context: CallbackContext):
     e = html.escape(f"{context.error}")
     url = f"https://spaceb.in/{key}"
     context.bot.send_message(
-        OWNER_ID,
+        ERROR_LOG,
         text=f"#{context.error.identifier}\n<b>An unknown error occured:</b>\n<code>{e}</code>",
         reply_markup=InlineKeyboardMarkup(
             [[InlineKeyboardButton("Spacebin", url=url)]]
