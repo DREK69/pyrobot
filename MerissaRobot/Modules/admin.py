@@ -1,5 +1,5 @@
-import os
 import html
+import os
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import BadRequest, Unauthorized
