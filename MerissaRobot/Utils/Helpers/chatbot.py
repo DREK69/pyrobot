@@ -2,6 +2,7 @@ from MerissaRobot.Database.mongo import mongo as db
 
 chatbotdb = db.chatbot
 
+
 async def check_chatbot():
     return await chatbotdb.find_one({"chatbot": "chatbot"}) or {
         "bot": [],
