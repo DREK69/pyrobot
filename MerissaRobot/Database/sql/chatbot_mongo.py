@@ -1,7 +1,4 @@
-from MerissaRobot.Database.mongo import client as db
-
-chatbotdb = db["MerissaRobot"]
-
+from MerissaRobot.Database.mongo import db as chatbotdb
 
 async def check_chatbot():
     return await chatbotdb.find_one({"chatbot": "chatbot"}) or {
