@@ -56,7 +56,7 @@ async def revoke(client, message):
         toggle.delete_one({"ID": MerissaAPI, "data": MerissaAPI})
         user.delete_one({"user_id": message.from_user.id, "API": MerissaAPI})
         await message.reply_text(
-            f"Your Merissa Token: `{MerissaAPI}` Your Merissa Api Token Revoked Successfully. You can Generate using /token."
+            f"Your Merissa Token: `{MerissaAPI}` Your Merissa Api Token Revoked Successfully.\n\nYou can Generate again using /token."
         )
     else:
         await message.reply_text("Please First Press /token")
