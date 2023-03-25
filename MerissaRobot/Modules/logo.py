@@ -91,7 +91,7 @@ async def movie(_, message):
     button = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("Change 🔄", callback=f"logo_{name}"),
+                InlineKeyboardButton("Change 🔄", callback_data=f"logo_{name}"),
             ],
         ]
     )
