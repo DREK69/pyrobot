@@ -122,6 +122,7 @@ async def hmeme(_, query: CallbackQuery):
         ),
     )
 
+
 @pbot.on_callback_query(filters.regex(pattern="^anilogo"))
 async def hmeme(_, query: CallbackQuery):
     callback_data = query.data
@@ -140,6 +141,7 @@ async def hmeme(_, query: CallbackQuery):
             ],
         ),
     )
+
 
 @pbot.on_callback_query(filters.regex(pattern="^hqlogo"))
 async def hmeme(_, query: CallbackQuery):
