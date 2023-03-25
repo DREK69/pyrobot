@@ -1,4 +1,3 @@
-import asyncio
 import html
 import importlib
 import json
@@ -987,7 +986,7 @@ def main():
     else:
         telethn.run_until_disconnected()
 
-    updater.idle() 
+    updater.idle()
 
 
 if __name__ == "__main__":
