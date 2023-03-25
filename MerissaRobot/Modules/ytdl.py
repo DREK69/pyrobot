@@ -127,32 +127,31 @@ async def callback_query(Client, CallbackQuery):
     dur = yt["duration"]
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    thumbnail = await get_ytthumb(videoid)               
+    thumbnail = await get_ytthumb(videoid)
     await CallbackQuery.edit_message_media(
-            InputMediaPhoto(
-                thumbnail,
-                caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['result'])}\n\n**Select your track from Below and Download It**:",
-            ),
-            reply_markup=InlineKeyboardMarkup(
+        InputMediaPhoto(
+            thumbnail,
+            caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['result'])}\n\n**Select your track from Below and Download It**:",
+        ),
+        reply_markup=InlineKeyboardMarkup(
+            [
                 [
-                    [
-                        InlineKeyboardButton(
-                            "⬅️", callback_data=f"ytnext|{query}|{page-1}"
-                        ),
-                        InlineKeyboardButton(
-                            "➡", callback_data=f"ytnext|{query}|{page+1}"
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            "📥 Download",
-                            callback_data=f"ytdown {videoid}",
-                        ),
-                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
-                    ],
-                ]
-            ),
-        )
+                    InlineKeyboardButton(
+                        "⬅️", callback_data=f"ytnext|{query}|{page-1}"
+                    ),
+                    InlineKeyboardButton("➡", callback_data=f"ytnext|{query}|{page+1}"),
+                ],
+                [
+                    InlineKeyboardButton(
+                        "📥 Download",
+                        callback_data=f"ytdown {videoid}",
+                    ),
+                    InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                ],
+            ]
+        ),
+    )
+
 
 @Client.on_callback_query(filters.regex(pattern="^ytdown"))
 async def callback_query(Client, CallbackQuery):
