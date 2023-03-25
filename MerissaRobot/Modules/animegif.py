@@ -237,6 +237,7 @@ async def animegif(_, message):
         caption="Powered by @MerissaRobot",
     )
 
+
 @pbot.on_message(filters.command("slap"))
 async def animegif(_, message):
     x = get(f"https://api.princexd.tech/anime/slap").json()["url"]
