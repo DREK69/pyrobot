@@ -1,16 +1,13 @@
-import asyncio
 import csv
 import os
 import traceback
 from asyncio.exceptions import TimeoutError
-from datetime import date, datetime
+from datetime import datetime
 
 from pyrogram import filters
-from pyrogram.errors import FloodWait, UserNotParticipant
-from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
+from pyrogram.errors import FloodWait
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from sql import add_user, query_msg
-from support import users_info
+from sql import add_user
 from telethon import TelegramClient, errors, functions, utils
 from telethon.errors import SessionPasswordNeededError
 from telethon.errors.rpcerrorlist import (
@@ -66,11 +63,13 @@ async def start(lel, message):
             [InlineKeyboardButton("❓ 𝘾𝙤𝙢𝙢𝙖𝙣𝙙 𝙃𝙚𝙡𝙥 ❗️", callback_data="help")],
             [InlineKeyboardButton("𝙏𝙚𝙧𝙢𝙨 𝘼𝙣𝙙 𝘾𝙤𝙣𝙙𝙞𝙩𝙞𝙤𝙣𝙨❗️", callback_data="terms")],
             [
-                InlineKeyboardButton(text="📇 𝙐𝙥𝙙𝙖𝙩𝙚𝙨", url="http://t.me/MerissaxUpdates"),
+                InlineKeyboardButton(
+                    text="📇 𝙐𝙥𝙙𝙖𝙩𝙚𝙨", url="http://t.me/MerissaxUpdates"
+                ),
                 InlineKeyboardButton(
                     text="🫂 𝙎𝙪𝙥𝙥𝙤𝙧𝙩", url="https://t.me/MerissaxSupport"
                 ),
-            ]            
+            ],
         ]
     )
     await message.reply_photo(
@@ -458,6 +457,7 @@ async def start(lel, message):
     except Exception as e:
         await app.send_message(message.chat.id, f"**Error: {e}**")
         return
+
 
 # ------------------------------- Buttons --------------------------------- #
 @app.on_callback_query()
