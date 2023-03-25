@@ -987,14 +987,7 @@ def main():
     else:
         telethn.run_until_disconnected()
 
-    updater.idle()
-
-
-loop = asyncio.get_event_loop()
-
-
-async def initiate_bot():
-    await pbot.start()
+    updater.idle() 
 
 
 if __name__ == "__main__":
@@ -1007,5 +1000,5 @@ if __name__ == "__main__":
         )
         time.sleep(e.seconds)
         telethn.start(bot_token=TOKEN)
-    loop.run_until_complete(initiate_bot())
+    pbot.start()
     main()
