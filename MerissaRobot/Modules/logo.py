@@ -73,3 +73,49 @@ async def movie(_, message):
         reply_markup=button,
     )
     await logo.delete()
+
+@pbot.on_message(filters.command("logo"))
+async def movie(_, message):
+    logo = await message.reply_text("Creating your logo...wait!")
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "Give me some text to make logo\n\nEx. /logo Merissa or Merissa;Robot"
+        )
+    name = (
+        message.text.split(None, 1)[1]
+        if len(message.command) < 3
+        else message.text.split(None, 1)[1].replace(" ", "%20")
+    )
+    url = get(f"https://api.princexd.tech/logo?text={name}").url
+    button = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Change 🔄", callback=f"logo_{name}"),
+            ],
+        ]
+    )
+    await message.reply_photo(
+        photo=url,
+        caption="Powered by @MerissaRobot",
+        reply_markup=button,
+    )
+    await logo.delete()
+
+@pbot.on_callback_query(filters.regex("logo"))
+async def hmeme(_, query: CallbackQuery):
+    callback_data = query.data.strip()
+    name = callback_data.split("_", 1)[1]
+    url = get(f"https://api.princexd.tech/logo?text={name}").url
+    await query.edit_message_media(
+        InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Change 🔂",
+                        callback_data=f"logo_{name}",
+                    ),
+                ],
+            ],
+        ),
+    )
