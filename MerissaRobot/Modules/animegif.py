@@ -237,16 +237,6 @@ async def animegif(_, message):
         caption="Powered by @MerissaRobot",
     )
 
-
-@pbot.on_message(filters.command("kick"))
-async def animegif(_, message):
-    x = get(f"https://api.princexd.tech/anime/kick").json()["url"]
-    await message.reply_video(
-        x,
-        caption="Powered by @MerissaRobot",
-    )
-
-
 @pbot.on_message(filters.command("slap"))
 async def animegif(_, message):
     x = get(f"https://api.princexd.tech/anime/slap").json()["url"]
@@ -259,24 +249,6 @@ async def animegif(_, message):
 @pbot.on_message(filters.command("pat"))
 async def animegif(_, message):
     x = get(f"https://api.princexd.tech/anime/pat").json()["url"]
-    await message.reply_video(
-        x,
-        caption="Powered by @MerissaRobot",
-    )
-
-
-@pbot.on_message(filters.command("boobs"))
-async def animegif(_, message):
-    x = get(f"https://api.princexd.tech/anime/boobs").json()["url"]
-    await message.reply_video(
-        x,
-        caption="Powered by @MerissaRobot",
-    )
-
-
-@pbot.on_message(filters.command("hentai"))
-async def animegif(_, message):
-    x = get(f"https://api.princexd.tech/anime/hentai").json()["url"]
     await message.reply_video(
         x,
         caption="Powered by @MerissaRobot",
