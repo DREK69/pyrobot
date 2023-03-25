@@ -103,9 +103,9 @@ async def movie(_, message):
     await logo.delete()
 
 
-@pbot.on_callback_query(filters.regex("^logo"))
+@pbot.on_callback_query(filters.regex(pattern="^logo"))
 async def hmeme(_, query: CallbackQuery):
-    callback_data = query.data.strip()
+    callback_data = query.data
     name = callback_data.split("_", 1)[1]
     url = get(f"https://api.princexd.tech/logo?text={name}").url
     await query.edit_message_media(
