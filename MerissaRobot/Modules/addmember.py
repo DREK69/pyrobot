@@ -54,8 +54,8 @@ async def start(lel, message):
     if not os.path.exists(f"Users/{message.from_user.id}/phone.csv"):
         os.mkdir(f"./Users/{message.from_user.id}")
         open(f"Users/{message.from_user.id}/phone.csv", "w")
-    id = message.from_user.id
-    user_name = "@" + message.from_user.username if message.from_user.username else None
+    message.from_user.id
+    "@" + message.from_user.username if message.from_user.username else None
     but = InlineKeyboardMarkup(
         [
             [InlineKeyboardButton("❓ 𝘾𝙤𝙢𝙢𝙖𝙣𝙙 𝙃𝙚𝙡𝙥 ❗️", callback_data="help")],
