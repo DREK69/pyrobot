@@ -103,7 +103,7 @@ async def movie(_, message):
     await logo.delete()
 
 
-@pbot.on_callback_query(filters.regex("logo"))
+@pbot.on_callback_query(filters.regex("^logo"))
 async def hmeme(_, query: CallbackQuery):
     callback_data = query.data.strip()
     name = callback_data.split("_", 1)[1]
