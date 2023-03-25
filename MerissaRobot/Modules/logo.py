@@ -35,7 +35,7 @@ async def movie(_, message):
     button = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("Telegraph Link 🔗", url=f"{url}"),
+                InlineKeyboardButton("Change 🔄", callback_data=f"hqlogo_{name}"),
             ],
         ]
     )
@@ -63,7 +63,7 @@ async def movie(_, message):
     button = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("Telegraph Link 🔗", url=f"{url}"),
+                InlineKeyboardButton("Change 🔄", callback_data=f"anilogo_{name}"),
             ],
         ]
     )
@@ -116,6 +116,47 @@ async def hmeme(_, query: CallbackQuery):
                     InlineKeyboardButton(
                         text="Change 🔂",
                         callback_data=f"logo_{name}",
+                    ),
+                ],
+            ],
+        ),
+    )
+
+@pbot.on_callback_query(filters.regex(pattern="^anilogo"))
+async def hmeme(_, query: CallbackQuery):
+    callback_data = query.data
+    name = callback_data.split("_", 1)[1]
+    url = get(f"https://api.princexd.tech/anime-logo?text={name}").json()["url"]
+    await query.edit_message_media(
+        InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Change 🔂",
+                        callback_data=f"anilogo_{name}",
+                    ),
+                ],
+            ],
+        ),
+    )
+
+@pbot.on_callback_query(filters.regex(pattern="^hqlogo"))
+async def hmeme(_, query: CallbackQuery):
+    callback_data = query.data
+    name = callback_data.split("_", 1)[1]
+    ranlink = random.choice(link)
+    url = get(
+        f"https://api.akuari.my.id/ephoto/scraper-1?text={name}&link={ranlink}"
+    ).json()["respon"]
+    await query.edit_message_media(
+        InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Change 🔂",
+                        callback_data=f"hqlogo_{name}",
                     ),
                 ],
             ],
