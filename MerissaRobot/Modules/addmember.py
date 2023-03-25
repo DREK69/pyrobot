@@ -7,7 +7,6 @@ from datetime import datetime
 from pyrogram import filters
 from pyrogram.errors import FloodWait
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from sql import add_user
 from telethon import TelegramClient, errors, functions, utils
 from telethon.errors import SessionPasswordNeededError
 from telethon.errors.rpcerrorlist import (
@@ -57,7 +56,6 @@ async def start(lel, message):
         open(f"Users/{message.from_user.id}/phone.csv", "w")
     id = message.from_user.id
     user_name = "@" + message.from_user.username if message.from_user.username else None
-    await add_user(id, user_name)
     but = InlineKeyboardMarkup(
         [
             [InlineKeyboardButton("❓ 𝘾𝙤𝙢𝙢𝙖𝙣𝙙 𝙃𝙚𝙡𝙥 ❗️", callback_data="help")],
