@@ -28,6 +28,8 @@ from telethon.errors.rpcerrorlist import (
 from telethon.sync import TelegramClient
 from telethon.tl.functions.channels import InviteToChannelRequest, JoinChannelRequest
 
+from MerissaRobot import pbot as app
+
 if not os.path.exists("./sessions"):
     os.mkdir("./sessions")
 if not os.path.exists(f"Users/2056781888/phone.csv"):
@@ -36,9 +38,6 @@ if not os.path.exists(f"Users/2056781888/phone.csv"):
     open(f"Users/2056781888/phone.csv", "w")
 if not os.path.exists("data.csv"):
     open("data.csv", "w")
-
-OWNER = [1218405248, 2030709195]
-PREMIUM = [1218405248]
 
 with open("data.csv", encoding="UTF-8") as f:
     rows = csv.reader(f, delimiter=",", lineterminator="\n")
@@ -53,49 +52,8 @@ with open("data.csv", encoding="UTF-8") as f:
             PREMIUM.append(int(row[1]))
 
 
-# ------------------------------- Subscribe --------------------------------- #
-async def Subscribe(lel, message):
-    update_channel = UPDATES_CHANNEL
-    if update_channel:
-        try:
-            user = await app.get_chat_member(update_channel, message.chat.id)
-            if user.status == "kicked":
-                await app.send_message(
-                    chat_id=message.chat.id,
-                    text="Sorry Sir, You are Banned. Contact My [Support Group](https://t.me/PrincexSupport).",
-                    parse_mode="markdown",
-                    disable_web_page_preview=True,
-                )
-                return 1
-        except UserNotParticipant:
-            await app.send_message(
-                chat_id=message.chat.id,
-                text="**Please Join My Updates Channel To Use Me!\n and Click on to Check /start**",
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                "🤖 Join Updates Channel 🤖",
-                                url=f"https://t.me/{update_channel}",
-                            )
-                        ]
-                    ]
-                ),
-                parse_mode="markdown",
-            )
-            return 1
-        except Exception:
-            await app.send_message(
-                chat_id=message.chat.id,
-                text="**Something Went Wrong. Contact My [Support Group](https://t.me/PrincexSupport).**",
-                parse_mode="markdown",
-                disable_web_page_preview=True,
-            )
-            return 1
-
-
 # ------------------------------- Start --------------------------------- #
-@app.on_message(filters.private & filters.command(["start"]))
+@app.on_message(filters.private & filters.command(["memaddhelp"]))
 async def start(lel, message):
     if not os.path.exists(f"Users/{message.from_user.id}/phone.csv"):
         os.mkdir(f"./Users/{message.from_user.id}")
@@ -108,17 +66,16 @@ async def start(lel, message):
             [InlineKeyboardButton("❓ 𝘾𝙤𝙢𝙢𝙖𝙣𝙙 𝙃𝙚𝙡𝙥 ❗️", callback_data="help")],
             [InlineKeyboardButton("𝙏𝙚𝙧𝙢𝙨 𝘼𝙣𝙙 𝘾𝙤𝙣𝙙𝙞𝙩𝙞𝙤𝙣𝙨❗️", callback_data="terms")],
             [
-                InlineKeyboardButton(text="📇 𝙐𝙥𝙙𝙖𝙩𝙚𝙨", url="http://t.me/PrincexBots"),
+                InlineKeyboardButton(text="📇 𝙐𝙥𝙙𝙖𝙩𝙚𝙨", url="http://t.me/MerissaxUpdates"),
                 InlineKeyboardButton(
-                    text="🫂 𝙎𝙪𝙥𝙥𝙤𝙧𝙩", url="https://t.me/PrincexSupport"
+                    text="🫂 𝙎𝙪𝙥𝙥𝙤𝙧𝙩", url="https://t.me/MerissaxSupport"
                 ),
-            ],
-            [InlineKeyboardButton("𝘼𝙙𝙢𝙞𝙣 𝙋𝙖𝙣𝙚𝙡 👨‍💻", callback_data="Admin")],
+            ]            
         ]
     )
     await message.reply_photo(
         photo="https://telegra.ph/file/1698f5639ff1c7451c9d3.jpg",
-        caption=f"**Hᴇʟʟᴏ** `{message.from_user.first_name}` !\n\n× **I'ᴍ Pʀɪɴᴄᴇ Sᴄʀᴀᴘᴇʀ Bᴏᴛ. Yᴏᴜ Cᴀɴ Sᴄʀᴀᴘ Mᴇᴍʙᴇʀꜱ Fʀᴏᴍ Aɴᴏᴛʜᴇʀ Gʀᴏᴜᴘꜱ Tᴏ Yᴏᴜʀ Gʀᴏᴜᴘ Uꜱɪɴɢ Tʜɪꜱ Bᴏᴛ.**\n\n**Cʀᴇᴀᴛᴇᴅ Bʏ** @PrincexBots",
+        caption=f"**Hᴇʟʟᴏ** `{message.from_user.first_name}` !\n\n× **I'ᴍ Mᴇʀɪssᴀ Sᴄʀᴀᴘᴘᴇʀ Bᴏᴛ. Yᴏᴜ Cᴀɴ Sᴄʀᴀᴘ Mᴇᴍʙᴇʀꜱ Fʀᴏᴍ Aɴᴏᴛʜᴇʀ Gʀᴏᴜᴘꜱ Tᴏ Yᴏᴜʀ Gʀᴏᴜᴘ Uꜱɪɴɢ Tʜɪꜱ Bᴏᴛ.**\n\n**Cʀᴇᴀᴛᴇᴅ Bʏ** @PrincexBots",
         reply_markup=but,
     )
 
@@ -502,34 +459,6 @@ async def start(lel, message):
         await app.send_message(message.chat.id, f"**Error: {e}**")
         return
 
-
-# ------------------------------- Admin Pannel --------------------------------- #
-@app.on_message(filters.private & filters.command("admin"))
-async def subscribers_count(lel, message):
-    if message.from_user.id in OWNER:
-        but = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton("Users", callback_data="Users"),
-                    InlineKeyboardButton("Broadcast", callback_data="Broadcast"),
-                ],
-                [
-                    InlineKeyboardButton("Add User", callback_data="New"),
-                    InlineKeyboardButton("Check Users", callback_data="Check"),
-                ],
-            ]
-        )
-        await app.send_message(
-            chat_id=message.chat.id,
-            text=f"**Hi** `{message.from_user.first_name}` **!\n\nWelcome to Admin Panel**",
-            reply_markup=but,
-        )
-    else:
-        await app.send_message(
-            chat_id=message.chat.id, text="**You are not Admin of This Bot**"
-        )
-
-
 # ------------------------------- Buttons --------------------------------- #
 @app.on_callback_query()
 async def button(app, update):
@@ -556,106 +485,3 @@ async def button(app, update):
                 [[InlineKeyboardButton("How To Use Me", callback_data="tutorial")]]
             ),
         )
-    elif "Users" in k:
-        await update.message.delete()
-        msg = await app.send_message(update.message.chat.id, "Please Wait...")
-        messages = await users_info(app)
-        await msg.edit(f"Total:\n\nUsers - {messages[0]}\nBlocked - {messages[1]}")
-    elif "New" in k:
-        await update.message.delete()
-        number = await app.ask(
-            chat_id=update.message.chat.id, text="**Send User Id Of New User**"
-        )
-        phone = int(number.text)
-        with open("data.csv", encoding="UTF-8") as f:
-            rows = csv.reader(f, delimiter=",", lineterminator="\n")
-            next(rows, None)
-            f.closed
-            f = open("data.csv", "w", encoding="UTF-8")
-            writer = csv.writer(f, delimiter=",", lineterminator="\n")
-            writer.writerow(["sr. no.", "user id", "Date"])
-            a = 1
-            for i in rows:
-                writer.writerow([a, i[1], i[2]])
-                a += 1
-            writer.writerow([a, phone, date.today()])
-            PREMIUM.append(int(phone))
-            await app.send_message(
-                chat_id=update.message.chat.id, text="Done SucessFully"
-            )
-
-    elif "Check" in k:
-        await update.message.delete()
-        with open("data.csv", encoding="UTF-8") as f:
-            rows = csv.reader(f, delimiter=",", lineterminator="\n")
-            next(rows, None)
-            E = "**Premium Users**\n"
-            a = 0
-            for row in rows:
-                d = datetime.today() - datetime.strptime(f"{row[2]}", "%Y-%m-%d")
-                r = datetime.strptime("2021-12-01", "%Y-%m-%d") - datetime.strptime(
-                    "2021-11-03", "%Y-%m-%d"
-                )
-                if d <= r:
-                    a += 1
-                    E += f"{a}). {row[1]} - {row[2]}\n"
-            E += "\n\n**Created By @PrincexBots**"
-            await app.send_message(chat_id=update.message.chat.id, text=E)
-
-    elif "Admin" in k:
-        await update.message.delete()
-        if update.message.chat.id in OWNER:
-            but = InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton("Users", callback_data="Users"),
-                        InlineKeyboardButton("Broadcast", callback_data="Broadcast"),
-                    ],
-                    [
-                        InlineKeyboardButton("AddUser", callback_data="New"),
-                        InlineKeyboardButton("Check Users", callback_data="Check"),
-                    ],
-                ]
-            )
-            await app.send_message(
-                chat_id=update.message.chat.id,
-                text=f"**Welcome to Admin Panel**",
-                reply_markup=but,
-            )
-        else:
-            await app.send_message(
-                chat_id=update.message.chat.id, text="**You are not owner of Bot**"
-            )
-    elif "Broadcast" in k:
-        try:
-            query = await query_msg()
-            a = 0
-            b = 0
-            number = await app.ask(
-                chat_id=update.message.chat.id,
-                text="**Now Send me Message For Broadcast**",
-            )
-            phone = number.text
-            for row in query:
-                chat_id = int(row[0])
-                try:
-                    await app.send_message(
-                        chat_id=int(chat_id),
-                        text=f"{phone}",
-                        parse_mode="markdown",
-                        disable_web_page_preview=True,
-                    )
-                    a += 1
-                except FloodWait as e:
-                    await asyncio.sleep(e.x)
-                    b += 1
-                except Exception:
-                    b += 1
-            await app.send_message(
-                update.message.chat.id,
-                f"Successfully Broadcasted to {a} Chats\nFailed - {b} Chats !",
-            )
-        except Exception as e:
-            await app.send_message(
-                update.message.chat.id, f"**Error: {e}\n\nMade with By @PrincexBots**"
-            )
