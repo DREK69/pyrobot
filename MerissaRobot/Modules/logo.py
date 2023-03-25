@@ -74,6 +74,7 @@ async def movie(_, message):
     )
     await logo.delete()
 
+
 @pbot.on_message(filters.command("logo"))
 async def movie(_, message):
     logo = await message.reply_text("Creating your logo...wait!")
@@ -100,6 +101,7 @@ async def movie(_, message):
         reply_markup=button,
     )
     await logo.delete()
+
 
 @pbot.on_callback_query(filters.regex("logo"))
 async def hmeme(_, query: CallbackQuery):
