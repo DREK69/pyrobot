@@ -81,24 +81,6 @@ async def paste(content):
 
 
 async def inline_help_func(__HELP__):
-    buttons = InlineKeyboard(row_width=4)
-    buttons.add(
-        *[
-            (InlineKeyboardButton(text=i, switch_inline_query_current_chat=i))
-            for i in keywords_list
-        ]
-    )
-    answerss = [
-        InlineQueryResultArticle(
-            title="Inline Commands",
-            description="Help Related To Inline Usage.",
-            input_message_content=InputTextMessageContent(
-                "**__Click A Button To Get Started.__**"
-            ),
-            thumb_url="https://telegra.ph/file/8665fb31265663ba525e3.jpg",
-            reply_markup=buttons,
-        ),
-    ]
     answerss = await about_function(answerss)
     return answerss
 
