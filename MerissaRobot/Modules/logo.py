@@ -106,7 +106,7 @@ async def movie(_, message):
 @pbot.on_callback_query(filters.regex(pattern="^logo"))
 async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
-    callback_data = query.data
+    callback_data = query.data.strip()
     name = callback_data.split("_", 1)[1]
     url = get(f"https://api.princexd.tech/logo?text={name}").url
     await query.edit_message_media(
@@ -127,7 +127,7 @@ async def hmeme(_, query: CallbackQuery):
 @pbot.on_callback_query(filters.regex(pattern="^anilogo"))
 async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
-    callback_data = query.data
+    callback_data = query.data.strip()
     name = callback_data.split("_", 1)[1]
     url = get(f"https://api.princexd.tech/anime-logo?text={name}").json()["url"]
     await query.edit_message_media(
@@ -148,7 +148,7 @@ async def hmeme(_, query: CallbackQuery):
 @pbot.on_callback_query(filters.regex(pattern="^hqlogo"))
 async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
-    callback_data = query.data
+    callback_data = query.data.strip()
     name = callback_data.split("_", 1)[1]
     ranlink = random.choice(link)
     url = get(
