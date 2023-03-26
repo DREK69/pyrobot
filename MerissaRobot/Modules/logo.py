@@ -167,3 +167,15 @@ async def hmeme(_, query: CallbackQuery):
             ],
         ),
     )
+
+__mod_name__ = "Logo 🎇"
+
+__help__ = """ 
+- Logo Maker Command
+❂ /logo <text/name> - Create a logo with random view.
+❂ /logo Merissa;Robot -  use ; for write in next line
+❂ /hqlogo <text> - To create random logo.
+❂ /alogo <text> - To create anime logo.
+❂ /write <text/name> - Write Text on Note Book
+❂ /carbon <reply to text> - Create carbon Logo
+"""
