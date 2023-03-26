@@ -1,7 +1,7 @@
 # Language name in their native
 language: "English 🇬🇧"
 # name of people(s) who worked on this translation
-authors: "NoobxCoder"
+authors: "NotReallyPrince"
 
 # languages
 curr_chat_lang: "Hey. Your current language is {}, select the one you want from the buttons below :)"
@@ -40,7 +40,7 @@ pm_about_support_text: |
 pm_help_text: |
   Click on the button bellow to get description about specifics command.
 
-pm_help_module_text: "──「 Help of {} Module 」── \n"
+pm_help_module_text: "──「 Help of {} 」── \n"
 
 # Group Help Text
 group_start_text: |
