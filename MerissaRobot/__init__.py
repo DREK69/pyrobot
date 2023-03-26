@@ -11,6 +11,7 @@ from aiohttp import ClientSession
 from loguru import logger
 from pyrogram import Client, errors
 from pyrogram.types import Message
+from pyrogram.errors.exceptions.bad_request_400 import PeerIdInvalid, ChannelInvalid
 from Python_ARQ import ARQ
 from redis import StrictRedis
 from telethon import TelegramClient
@@ -177,6 +178,34 @@ pbot = Client(
     bot_token=TOKEN,
     workers=min(32, os.cpu_count() + 4),
 )
+apps = []
+apps.append(pbot)
+
+async def get_entity(client, entity):
+    entity_client = client
+    if not isinstance(entity, Chat):
+        try:
+            entity = int(entity)
+        except ValueError:
+            pass
+        except TypeError:
+            entity = entity.id
+        try:
+            entity = await client.get_chat(entity)
+        except (PeerIdInvalid, ChannelInvalid):
+            for kp in apps:
+                if kp != client:
+                    try:
+                        entity = await kp.get_chat(entity)
+                    except (PeerIdInvalid, ChannelInvalid):
+                        pass
+                    else:
+                        entity_client = kp
+                        break
+            else:
+                entity = await kp.get_chat(entity)
+                entity_client = kp
+    return entity, entity_client
 
 # ARQ Client
 LOGGER.info("[ARQ CLIENT] Checking Arq Connections...")
