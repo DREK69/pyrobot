@@ -1,4 +1,3 @@
-import asyncio
 import html
 import importlib
 import json
@@ -6,12 +5,11 @@ import re
 import time
 import traceback
 from sys import argv
-
+import asyncio
 from pyrogram import Client
 from pyrogram.errors import FloodWait, UserNotParticipant
-from pyrogram.types import InlineKeyboardButton as pbutton
-from pyrogram.types import InlineKeyboardMarkup as pmarkup
-from pyrogram.types import Message
+from pyrogram.types import InlineKeyboardMarkup as pmarkup, InlineKeyboardButton as pbutton, Message
+
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import (
     BadRequest,
@@ -43,6 +41,7 @@ from MerissaRobot import (
     TOKEN,
     URL,
     WEBHOOK,
+    StartTime,
     dispatcher,
     pbot,
     telethn,
@@ -58,39 +57,25 @@ from MerissaRobot.Modules.language import gs
 
 CHANNEL_ID = "-1001450996654"
 
-
-async def ForceSub(bot: Client, event: Message):
+def ForceSub(bot: Client, event: Message):
     try:
-        await bot.get_chat_member(
-            chat_id=(int(CHANNEL_ID) if CHANNEL_ID.startswith("-100") else CHANNEL_ID),
-            user_id=event.from_user.id,
-        )
+        bot.get_chat_member(chat_id=(int(CHANNEL_ID) if CHANNEL_ID.startswith("-100") else CHANNEL_ID), user_id=event.from_user.id)
     except UserNotParticipant:
         try:
-            gh = await bot.send_message(
-                chat_id=event.chat.id,
-                text=f"""
+           gh = bot.send_message(chat_id=event.chat.id,text=f"""
 <b>Hey </b>{event.from_user.mention} !,
 <b>You are Free user so join my creators channel before useing me !Click join now button and join MerissaxSupport.</b>
-<i>Don't forget to give</i><code>/start</code><i>command again.</i>""",
-                reply_markup=pmarkup(
-                    [[pbutton("Join Now ↗️", url="https://t.me/MerissaxSupport")]]
-                ),
-                disable_web_page_preview=True,
-            )
-            await asyncio.sleep(10)
-            await gh.delete()
-            return 400
+<i>Don't forget to give</i><code>/start</code><i>command again.</i>""",reply_markup=pmarkup([[pbutton("Join Now ↗️", url="https://t.me/MerissaxSupport")]]),disable_web_page_preview=True)
+           asyncio.sleep(10)
+           gh.delete()
+           return 400
         except FloodWait as e:
-            await asyncio.sleep(e.x)
-            fix_ = await ForceSub(bot, event)
-            return fix_
+           asyncio.sleep(e.x)
+           fix_ = ForceSub(bot, event)
+           return fix_
     except Exception as err:
-        print(
-            f"Something Went Wrong! Unable to do Force Subscribe.\nError: {err}\n\nContact Support Group: https://t.me/DuskysSupport"
-        )
+        print(f"Something Went Wrong! Unable to do Force Subscribe.\nError: {err}\n\nContact Support Group: https://t.me/DuskysSupport")
         return 200
-
 
 def get_readable_time(seconds: int) -> str:
     count = 0
@@ -192,7 +177,7 @@ def test(update: Update, context: CallbackContext):
 def start(update: Update, context: CallbackContext):
     args = context.args
     chat = update.effective_chat
-    message = update.effective_message
+    message = update.effective_message    
     if update.effective_chat.type == "private":
         if len(args) >= 1:
             if args[0].lower() == "help":
@@ -227,48 +212,45 @@ def start(update: Update, context: CallbackContext):
 
             elif args[0][1:].isdigit() and "rules" in IMPORTED:
                 IMPORTED["rules"].send_rules(update, args[0], from_pm=True)
-        else:
-            FSub = await ForceSub(pbot, message)
+        else:                       
+            FSub = ForceSub(Client, message)
             if FSub == 400:
-                return
-            else:
+                return  
+            else:          
                 update.effective_message.reply_text(
                     text=gs(chat.id, "pm_start_text"),
                     reply_markup=InlineKeyboardMarkup(
+                     [
                         [
-                            [
-                                InlineKeyboardButton(
-                                    text=gs(chat.id, "add_bot_to_group_button"),
-                                    url=f"t.me/{bu}?startgroup=new",
-                                ),
-                            ],
-                            [
-                                InlineKeyboardButton(
-                                    text=gs(chat.id, "help_button"),
-                                    callback_data="help_back",
-                                ),
-                                InlineKeyboardButton(
-                                    text=gs(chat.id, "info_button"),
-                                    callback_data="merissa_",
-                                ),
-                            ],
-                            [
-                                InlineKeyboardButton(
-                                    text=gs(chat.id, "lang_button"),
-                                    callback_data="cblang",
-                                ),
-                                InlineKeyboardButton(
-                                    text=gs(chat.id, "font_button"),
-                                    callback_data="chfont",
-                                ),
-                            ],
-                            [
-                                InlineKeyboardButton(
-                                    text=gs(chat.id, "web_button"),
-                                    url="merissarobot.tk",
-                                ),
-                            ],
-                        ]
+                            InlineKeyboardButton(
+                                text=gs(chat.id, "add_bot_to_group_button"),
+                                url=f"t.me/{bu}?startgroup=new",
+                            ),
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                text=gs(chat.id, "help_button"),
+                                callback_data="help_back",
+                            ),
+                            InlineKeyboardButton(
+                                text=gs(chat.id, "info_button"),
+                                callback_data="merissa_",
+                            ),
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                text=gs(chat.id, "lang_button"), callback_data="cblang"
+                            ),
+                            InlineKeyboardButton(
+                                text=gs(chat.id, "font_button"), callback_data="chfont"
+                            ),
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                text=gs(chat.id, "web_button"), url="merissarobot.tk"
+                            ),
+                        ],
+                      ]
                     ),
                     parse_mode=ParseMode.MARKDOWN,
                     disable_web_page_preview=False,
@@ -1036,6 +1018,7 @@ def main():
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+    pbot.start()
     try:
         telethn.start(bot_token=TOKEN)
     except FloodWaitError as e:
@@ -1044,5 +1027,4 @@ if __name__ == "__main__":
         )
         time.sleep(e.seconds)
         telethn.start(bot_token=TOKEN)
-    pbot.start()
     main()
