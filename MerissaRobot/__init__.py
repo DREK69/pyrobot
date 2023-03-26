@@ -10,8 +10,8 @@ import telegram.ext as tg
 from aiohttp import ClientSession
 from loguru import logger
 from pyrogram import Client, errors
+from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 from pyrogram.types import Message
-from pyrogram.errors.exceptions.bad_request_400 import PeerIdInvalid, ChannelInvalid
 from Python_ARQ import ARQ
 from redis import StrictRedis
 from telethon import TelegramClient
@@ -181,6 +181,7 @@ pbot = Client(
 apps = []
 apps.append(pbot)
 
+
 async def get_entity(client, entity):
     entity_client = client
     if not isinstance(entity, Chat):
@@ -206,6 +207,7 @@ async def get_entity(client, entity):
                 entity = await kp.get_chat(entity)
                 entity_client = kp
     return entity, entity_client
+
 
 # ARQ Client
 LOGGER.info("[ARQ CLIENT] Checking Arq Connections...")
