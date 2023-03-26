@@ -59,7 +59,7 @@ from MerissaRobot.Modules.language import gs
 CHANNEL_ID = "-1001450996654"
 
 
-def ForceSub(bot: Client, event: Message):
+def ForceSub(bot: pbot, event: Message):
     try:
         bot.get_chat_member(
             chat_id=(int(CHANNEL_ID) if CHANNEL_ID.startswith("-100") else CHANNEL_ID),
@@ -87,7 +87,7 @@ def ForceSub(bot: Client, event: Message):
             return fix_
     except Exception as err:
         print(
-            f"Something Went Wrong! Unable to do Force Subscribe.\nError: {err}\n\nContact Support Group: https://t.me/DuskysSupport"
+            f"Something Went Wrong! Unable to do Force Subscribe.\nError: {err}\n\nContact Support Group: https://t.me/MerissaxSupport"
         )
         return 200
 
