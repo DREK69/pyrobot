@@ -5,6 +5,10 @@ import re
 import time
 import traceback
 from sys import argv
+import asyncio
+from pyrogram import Client
+from pyrogram.errors import FloodWait, UserNotParticipant
+from pyrogram.types import InlineKeyboardMarkup as pmarkup, InlineKeyboardButton as pbutton, Message
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import (
@@ -51,6 +55,27 @@ from MerissaRobot.Modules import ALL_MODULES
 # NOTE: Module order is not guaranteed, specify that in the config file!
 from MerissaRobot.Modules.language import gs
 
+CHANNEL_ID = "-1001450996654"
+
+async def ForceSub(bot: Client, event: Message):
+    try:
+        await bot.get_chat_member(chat_id=(int(CHANNEL_ID) if CHANNEL_ID.startswith("-100") else CHANNEL_ID), user_id=event.from_user.id)
+    except UserNotParticipant:
+        try:
+           gh = await bot.send_message(chat_id=event.chat.id,text=f"""
+<b>Hey </b>{event.from_user.mention} !,
+<b>You are Free user so join my creators channel before useing me !Click join now button and join MerissaxSupport.</b>
+<i>Don't forget to give</i><code>/start</code><i>command again.</i>""",reply_markup=pmarkup([[pbutton("Join Now ↗️", url="https://t.me/MerissaxSupport")]]),disable_web_page_preview=True)
+           await asyncio.sleep(10)
+           await gh.delete()
+           return 400
+        except FloodWait as e:
+           await asyncio.sleep(e.x)
+           fix_ = await ForceSub(bot, event)
+           return fix_
+    except Exception as err:
+        print(f"Something Went Wrong! Unable to do Force Subscribe.\nError: {err}\n\nContact Support Group: https://t.me/DuskysSupport")
+        return 200
 
 def get_readable_time(seconds: int) -> str:
     count = 0
@@ -152,7 +177,7 @@ def test(update: Update, context: CallbackContext):
 def start(update: Update, context: CallbackContext):
     args = context.args
     chat = update.effective_chat
-    get_readable_time((time.time() - StartTime))
+    message = update.effective_message    
     if update.effective_chat.type == "private":
         if len(args) >= 1:
             if args[0].lower() == "help":
@@ -187,13 +212,15 @@ def start(update: Update, context: CallbackContext):
 
             elif args[0][1:].isdigit() and "rules" in IMPORTED:
                 IMPORTED["rules"].send_rules(update, args[0], from_pm=True)
-
-        else:
-            update.effective_user.first_name
-            update.effective_message.reply_text(
-                text=gs(chat.id, "pm_start_text"),
-                reply_markup=InlineKeyboardMarkup(
-                    [
+        else:                       
+            FSub = await ForceSub(pbot, message)
+            if FSub == 400:
+                return  
+            else:          
+                update.effective_message.reply_text(
+                    text=gs(chat.id, "pm_start_text"),
+                    reply_markup=InlineKeyboardMarkup(
+                     [
                         [
                             InlineKeyboardButton(
                                 text=gs(chat.id, "add_bot_to_group_button"),
@@ -223,11 +250,11 @@ def start(update: Update, context: CallbackContext):
                                 text=gs(chat.id, "web_button"), url="merissarobot.tk"
                             ),
                         ],
-                    ]
-                ),
-                parse_mode=ParseMode.MARKDOWN,
-                disable_web_page_preview=False,
-            )
+                      ]
+                    ),
+                    parse_mode=ParseMode.MARKDOWN,
+                    disable_web_page_preview=False,
+                )
     else:
         update.effective_message.reply_text(
             text=gs(chat.id, "group_start_text"),
