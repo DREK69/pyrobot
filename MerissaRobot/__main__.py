@@ -56,41 +56,6 @@ from MerissaRobot.Modules import ALL_MODULES
 # NOTE: Module order is not guaranteed, specify that in the config file!
 from MerissaRobot.Modules.language import gs
 
-CHANNEL_ID = "-1001450996654"
-
-
-def ForceSub(bot: pbot, event: Message):
-    try:
-        bot.get_chat_member(
-            chat_id=(int(CHANNEL_ID) if CHANNEL_ID.startswith("-100") else CHANNEL_ID),
-            user_id=event.from_user.id,
-        )
-    except UserNotParticipant:
-        try:
-            gh = bot.send_message(
-                chat_id=event.chat.id,
-                text=f"""
-<b>Hey </b>{event.from_user.mention} !,
-<b>You are Free user so join my creators channel before useing me !Click join now button and join MerissaxSupport.</b>
-<i>Don't forget to give</i><code>/start</code><i>command again.</i>""",
-                reply_markup=pmarkup(
-                    [[pbutton("Join Now ↗️", url="https://t.me/MerissaxSupport")]]
-                ),
-                disable_web_page_preview=True,
-            )
-            asyncio.sleep(10)
-            gh.delete()
-            return 400
-        except FloodWait as e:
-            asyncio.sleep(e.x)
-            fix_ = ForceSub(bot, event)
-            return fix_
-    except Exception as err:
-        print(
-            f"Something Went Wrong! Unable to do Force Subscribe.\nError: {err}\n\nContact Support Group: https://t.me/MerissaxSupport"
-        )
-        return 200
-
 
 def get_readable_time(seconds: int) -> str:
     count = 0
@@ -228,13 +193,9 @@ def start(update: Update, context: CallbackContext):
             elif args[0][1:].isdigit() and "rules" in IMPORTED:
                 IMPORTED["rules"].send_rules(update, args[0], from_pm=True)
         else:
-            FSub = ForceSub(Client, message)
-            if FSub == 400:
-                return
-            else:
-                update.effective_message.reply_text(
-                    text=gs(chat.id, "pm_start_text"),
-                    reply_markup=InlineKeyboardMarkup(
+            update.effective_message.reply_text(
+                text=gs(chat.id, "pm_start_text"),
+                reply_markup=InlineKeyboardMarkup(
                         [
                             [
                                 InlineKeyboardButton(
@@ -270,9 +231,9 @@ def start(update: Update, context: CallbackContext):
                             ],
                         ]
                     ),
-                    parse_mode=ParseMode.MARKDOWN,
-                    disable_web_page_preview=False,
-                )
+                parse_mode=ParseMode.MARKDOWN,
+                disable_web_page_preview=False,
+            )
     else:
         update.effective_message.reply_text(
             text=gs(chat.id, "group_start_text"),
