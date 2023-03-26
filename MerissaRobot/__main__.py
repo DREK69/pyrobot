@@ -1,4 +1,3 @@
-import asyncio
 import html
 import importlib
 import json
@@ -7,11 +6,6 @@ import time
 import traceback
 from sys import argv
 
-from pyrogram import Client
-from pyrogram.errors import FloodWait, UserNotParticipant
-from pyrogram.types import InlineKeyboardButton as pbutton
-from pyrogram.types import InlineKeyboardMarkup as pmarkup
-from pyrogram.types import Message
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import (
     BadRequest,
@@ -157,7 +151,7 @@ def test(update: Update, context: CallbackContext):
 def start(update: Update, context: CallbackContext):
     args = context.args
     chat = update.effective_chat
-    message = update.effective_message
+    update.effective_message
     if update.effective_chat.type == "private":
         if len(args) >= 1:
             if args[0].lower() == "help":
@@ -196,41 +190,41 @@ def start(update: Update, context: CallbackContext):
             update.effective_message.reply_text(
                 text=gs(chat.id, "pm_start_text"),
                 reply_markup=InlineKeyboardMarkup(
+                    [
                         [
-                            [
-                                InlineKeyboardButton(
-                                    text=gs(chat.id, "add_bot_to_group_button"),
-                                    url=f"t.me/{bu}?startgroup=new",
-                                ),
-                            ],
-                            [
-                                InlineKeyboardButton(
-                                    text=gs(chat.id, "help_button"),
-                                    callback_data="help_back",
-                                ),
-                                InlineKeyboardButton(
-                                    text=gs(chat.id, "info_button"),
-                                    callback_data="merissa_",
-                                ),
-                            ],
-                            [
-                                InlineKeyboardButton(
-                                    text=gs(chat.id, "lang_button"),
-                                    callback_data="cblang",
-                                ),
-                                InlineKeyboardButton(
-                                    text=gs(chat.id, "font_button"),
-                                    callback_data="chfont",
-                                ),
-                            ],
-                            [
-                                InlineKeyboardButton(
-                                    text=gs(chat.id, "web_button"),
-                                    url="merissarobot.tk",
-                                ),
-                            ],
-                        ]
-                    ),
+                            InlineKeyboardButton(
+                                text=gs(chat.id, "add_bot_to_group_button"),
+                                url=f"t.me/{bu}?startgroup=new",
+                            ),
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                text=gs(chat.id, "help_button"),
+                                callback_data="help_back",
+                            ),
+                            InlineKeyboardButton(
+                                text=gs(chat.id, "info_button"),
+                                callback_data="merissa_",
+                            ),
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                text=gs(chat.id, "lang_button"),
+                                callback_data="cblang",
+                            ),
+                            InlineKeyboardButton(
+                                text=gs(chat.id, "font_button"),
+                                callback_data="chfont",
+                            ),
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                text=gs(chat.id, "web_button"),
+                                url="merissarobot.tk",
+                            ),
+                        ],
+                    ]
+                ),
                 parse_mode=ParseMode.MARKDOWN,
                 disable_web_page_preview=False,
             )
