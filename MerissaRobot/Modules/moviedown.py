@@ -84,7 +84,7 @@ async def movie_result(Client, CallbackQuery):
         text="Please Wait Movie/Series Details Fetching From MKVCinemas",
         reply_markup=None,
     )
-    s = await get_movie(id)
+    s = get_movie(id)
     link = ""
     links = s["links"]
     for i in links:
@@ -177,7 +177,7 @@ async def anime_result(Client, CallbackQuery):
     m = await CallbackQuery.message.edit(
         text="Please Wait Movie Details Fetching From MKVCinemas", reply_markup=None
     )
-    s = await get_anime(id)
+    s = get_anime(id)
     link = ""
     links = s["links"]
     for i in links:
