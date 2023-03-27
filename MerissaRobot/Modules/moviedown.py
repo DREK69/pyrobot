@@ -183,7 +183,7 @@ def anime_result(update, context) -> None:
         )
 
 
-dispatcher.add_handler(CommandHandler("movie", find_movie))
+dispatcher.add_handler(CommandHandler("moviedl", find_movie))
 dispatcher.add_handler(CallbackQueryHandler(movie_result, pattern="^moviedl_"))
 dispatcher.add_handler(CommandHandler("animedl", find_anime))
 dispatcher.add_handler(CallbackQueryHandler(anime_result, pattern="^animedl_"))
