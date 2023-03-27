@@ -1,11 +1,10 @@
 import pyshorteners
 import requests
 from bs4 import BeautifulSoup
-from pyrogram import filters
-from pyrogram.enums import ParseMode
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
+from telegram.ext import CallbackQueryHandler, CommandHandler
 
-from MerissaRobot import pbot
+from MerissaRobot import dispatcher
 
 url_list = {}
 
@@ -50,20 +49,15 @@ def get_movie(query):
     return movie_details
 
 
-@pbot.on_message(filters.command("moviedl"))
-def find_movie(_, message):
-    if len(message.command) < 2:
-        return message.reply_text(
-            "Give some Movie/Series name to Find it on my Database\n\nEx. /moviedl pathaan"
-        )
-    search_results = message.reply_text("Processing...")
-    query = message.text.split(None, 1)[1]
+def find_movie(update, context):
+    search_results = update.message.reply_text("Processing...")
+    query = update.message.text.split(None, 1)[1]
     movies_list = search_movies(query)
     if movies_list:
         keyboards = []
         for movie in movies_list:
             keyboard = InlineKeyboardButton(
-                movie["title"], callback_data=f"moviedl {movie['id']}"
+                movie["title"], callback_data=f"moviedl_{movie['id']}"
             )
             keyboards.append([keyboard])
         reply_markup = InlineKeyboardMarkup(keyboards)
@@ -76,13 +70,11 @@ def find_movie(_, message):
         )
 
 
-@pbot.on_callback_query(filters.regex(pattern="^moviedl"))
-def movie_result(Client, CallbackQuery):
-    callback_data = CallbackQuery.data.strip()
-    id = callback_data.split(None, 1)[1]
-    m = CallbackQuery.message.edit(
-        text="Please Wait Movie/Series Details Fetching From MKVCinemas",
-        reply_markup=None,
+def movie_result(update, context) -> None:
+    query = update.callback_query
+    id = query.data.split("_")[1]
+    query.message.edit_text(
+        text="Please Wait Movie Details Fetching From MKVCinemas", reply_markup=None
     )
     s = get_movie(id)
     link = ""
@@ -92,14 +84,16 @@ def movie_result(Client, CallbackQuery):
     caption = f"📥 Download Links is Here:-\n\n{link}Credits To MKVCinemas\nPowered By @MerissaRobot"
     if len(caption) > 4095:
         for x in range(0, len(caption), 4095):
-            CallbackQuery.message.reply_text(
+            query.message.reply_text(
                 text=caption[x : x + 4095],
                 reply_markup=None,
                 parse_mode=ParseMode.MARKDOWN,
             )
-            m.delete()
+            query.message.delete()
     else:
-        m.edit_text(text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN)
+        query.message.edit_text(
+            text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
+        )
 
 
 def search_anime(query):
@@ -142,20 +136,15 @@ def get_anime(query):
     return movie_details
 
 
-@pbot.on_message(filters.command("animedl"))
-def find_anime(_, message):
-    if len(message.command) < 2:
-        return message.reply_text(
-            "Give some Movie/Series name to Find it on my Database\n\nEx. /animedl naruto"
-        )
-    search_results = message.reply_text("Processing...")
-    query = message.text.split(None, 1)[1]
+def find_anime(update, context):
+    search_results = update.message.reply_text("Processing...")
+    query = update.message.text.split(None, 1)[1]
     movies_list = search_anime(query)
     if movies_list:
         keyboards = []
         for movie in movies_list:
             keyboard = InlineKeyboardButton(
-                movie["title"], callback_data=f"animedl {movie['id']}"
+                movie["title"], callback_data=f"animedl_{movie['id']}"
             )
             keyboards.append([keyboard])
         reply_markup = InlineKeyboardMarkup(keyboards)
@@ -168,11 +157,10 @@ def find_anime(_, message):
         )
 
 
-@pbot.on_callback_query(filters.regex(pattern="^animedl"))
-def anime_result(Client, CallbackQuery):
-    callback_data = CallbackQuery.data.strip()
-    id = callback_data.split(None, 1)[1]
-    m = CallbackQuery.message.edit(
+def anime_result(update, context) -> None:
+    query = update.callback_query
+    id = query.data.split("_")[1]
+    query.message.edit_text(
         text="Please Wait Movie Details Fetching From MKVCinemas", reply_markup=None
     )
     s = get_anime(id)
@@ -183,11 +171,19 @@ def anime_result(Client, CallbackQuery):
     caption = f"📥 Download Links is Here:-\n\n{link}Credits To MKVCinemas\nPowered By @MerissaRobot"
     if len(caption) > 4095:
         for x in range(0, len(caption), 4095):
-            CallbackQuery.message.reply_text(
+            query.message.reply_text(
                 text=caption[x : x + 4095],
                 reply_markup=None,
                 parse_mode=ParseMode.MARKDOWN,
             )
-            m.delete()
+            query.message.delete()
     else:
-        m.edit(text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN)
+        query.message.edit_text(
+            text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
+        )
+
+
+dispatcher.add_handler(CommandHandler("movie", find_movie))
+dispatcher.add_handler(CallbackQueryHandler(movie_result, pattern="^moviedl_"))
+dispatcher.add_handler(CommandHandler("animedl", find_anime))
+dispatcher.add_handler(CallbackQueryHandler(anime_result, pattern="^animedl_"))
