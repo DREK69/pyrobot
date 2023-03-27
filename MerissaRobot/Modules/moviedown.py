@@ -88,18 +88,13 @@ def movie_result(Client, CallbackQuery):
     link = ""
     links = s["links"]
     for i in links:
-        link += f"🎬{i}\n         └ [Click Here To Download]({links[i]})\n\n"
-    caption = f"📥 Download Links is Here:-\n\n{link}Credits To MKVCinemas\nPowered By @MerissaRobot"
-    if len(caption) > 4095:
-        for x in range(0, len(caption), 4095):
-            CallbackQuery.message.reply_text(
-                text=caption[x : x + 4095],
-                reply_markup=None,
-                parse_mode=ParseMode.MARKDOWN,
+        keyboard = InlineKeyboardButton(
+                i, url=f"{links[i]}"
             )
-            m.delete()
-    else:
-        m.edit_text(text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN)
+        keyboards.append([keyboard])
+        button = InlineKeyboardMarkup(keyboards)       
+    caption = "📥 Download Links is Here:-"
+    m.edit_text(text=caption, reply_markup=button)
 
 
 def search_anime(query):
