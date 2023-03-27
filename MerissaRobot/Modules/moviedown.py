@@ -85,14 +85,11 @@ def movie_result(Client, CallbackQuery):
         reply_markup=None,
     )
     s = get_movie(id)
-    link = ""
     links = s["links"]
     for i in links:
-        keyboard = InlineKeyboardButton(
-                i, url=f"{links[i]}"
-            )
+        keyboard = InlineKeyboardButton(i, url=f"{links[i]}")
         keyboards.append([keyboard])
-        button = InlineKeyboardMarkup(keyboards)       
+        button = InlineKeyboardMarkup(keyboards)
     caption = "📥 Download Links is Here:-"
     m.edit_text(text=caption, reply_markup=button)
 
