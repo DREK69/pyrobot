@@ -76,7 +76,7 @@ def find_movie(_, message):
         )
 
 
-@pbot.on_callback_query(filters.regex(pattern=r"moviedl_(.*)"))
+@pbot.on_callback_query(filters.regex("^moviedl"))
 def movie_result(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     id = callback_data.split("_")[1]
@@ -155,7 +155,7 @@ def find_anime(_, message):
         keyboards = []
         for movie in movies_list:
             keyboard = InlineKeyboardButton(
-                movie["title"], callback_data=f"animedl {movie['id']}"
+                movie["title"], callback_data=f"animedl_{movie['id']}"
             )
             keyboards.append([keyboard])
         reply_markup = InlineKeyboardMarkup(keyboards)
@@ -168,10 +168,10 @@ def find_anime(_, message):
         )
 
 
-@pbot.on_callback_query(filters.regex(pattern=r"animedl(.*)"))
+@pbot.on_callback_query(filters.regex("^animedl"))
 def anime_result(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
-    id = callback_data.split(None, 1)[1]
+    id = callback_data.split("_")[1]
     m = CallbackQuery.message.edit(
         text="Please Wait Movie Details Fetching From MKVCinemas", reply_markup=None
     )
