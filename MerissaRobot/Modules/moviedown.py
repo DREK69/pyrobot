@@ -77,14 +77,14 @@ def find_movie(_, message):
 
 
 @pbot.on_callback_query(filters.regex("^moviedl"))
-def movie_result(Client, CallbackQuery):
+asyncdef movie_result(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     id = callback_data.split("_")[1]
-    m = CallbackQuery.message.edit(
+    m = await CallbackQuery.message.edit(
         text="Please Wait Movie/Series Details Fetching From MKVCinemas",
         reply_markup=None,
     )
-    s = get_movie(id)
+    s = await get_movie(id)
     link = ""
     links = s["links"]
     for i in links:
@@ -92,14 +92,14 @@ def movie_result(Client, CallbackQuery):
     caption = f"📥 Download Links is Here:-\n\n{link}Credits To MKVCinemas\nPowered By @MerissaRobot"
     if len(caption) > 4095:
         for x in range(0, len(caption), 4095):
-            CallbackQuery.message.reply_text(
+            await CallbackQuery.message.reply_text(
                 text=caption[x : x + 4095],
                 reply_markup=None,
                 parse_mode=ParseMode.MARKDOWN,
             )
-            m.delete()
+            await m.delete()
     else:
-        m.edit_text(text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN)
+        await m.edit_text(text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN)
 
 
 def search_anime(query):
@@ -169,13 +169,13 @@ def find_anime(_, message):
 
 
 @pbot.on_callback_query(filters.regex("^animedl"))
-def anime_result(Client, CallbackQuery):
+async def anime_result(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     id = callback_data.split("_")[1]
-    m = CallbackQuery.message.edit(
+    m = await CallbackQuery.message.edit(
         text="Please Wait Movie Details Fetching From MKVCinemas", reply_markup=None
     )
-    s = get_anime(id)
+    s = await get_anime(id)
     link = ""
     links = s["links"]
     for i in links:
@@ -183,11 +183,11 @@ def anime_result(Client, CallbackQuery):
     caption = f"📥 Download Links is Here:-\n\n{link}Credits To MKVCinemas\nPowered By @MerissaRobot"
     if len(caption) > 4095:
         for x in range(0, len(caption), 4095):
-            CallbackQuery.message.reply_text(
+            await CallbackQuery.message.reply_text(
                 text=caption[x : x + 4095],
                 reply_markup=None,
                 parse_mode=ParseMode.MARKDOWN,
             )
-            m.delete()
+            await m.delete()
     else:
-        m.edit(text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN)
+        await m.edit(text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN)
