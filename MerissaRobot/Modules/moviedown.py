@@ -77,7 +77,7 @@ def find_movie(_, message):
 
 
 @pbot.on_callback_query(filters.regex("^moviedl"))
-asyncdef movie_result(Client, CallbackQuery):
+async def movie_result(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     id = callback_data.split("_")[1]
     m = await CallbackQuery.message.edit(
