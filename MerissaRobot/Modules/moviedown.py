@@ -99,7 +99,9 @@ async def movie_result(Client, CallbackQuery):
             )
             await m.delete()
     else:
-        await m.edit_text(text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN)
+        await m.edit_text(
+            text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
+        )
 
 
 def search_anime(query):
