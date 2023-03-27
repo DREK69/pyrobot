@@ -63,7 +63,7 @@ def find_movie(_, message):
         keyboards = []
         for movie in movies_list:
             keyboard = InlineKeyboardButton(
-                movie["title"], callback_data=f"moviedl {movie['id']}"
+                movie["title"], callback_data=f"moviedl_{movie['id']}"
             )
             keyboards.append([keyboard])
         reply_markup = InlineKeyboardMarkup(keyboards)
@@ -76,10 +76,10 @@ def find_movie(_, message):
         )
 
 
-@pbot.on_callback_query(filters.regex(pattern=r"moviedl(.*)"))
+@pbot.on_callback_query(filters.regex(pattern=r"moviedl_(.*)"))
 def movie_result(Client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
-    id = callback_data.split(None, 1)[1]
+    id = callback_data.split("_")[1]
     m = CallbackQuery.message.edit(
         text="Please Wait Movie/Series Details Fetching From MKVCinemas",
         reply_markup=None,
