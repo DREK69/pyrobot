@@ -81,7 +81,7 @@ async def paste(content):
 
 
 async def inline_help_func(__HELP__):
-    answerss = await about_function(answerss)
+    answerss = await about_function(answers)
     return answerss
 
 
