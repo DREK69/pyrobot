@@ -53,7 +53,9 @@ def get_movie(query):
 @pbot.on_message(filters.command("moviedl"))
 def find_movie(_, message):
     if len(message.command) < 2:
-        return await message.reply_text("Give some Movie/Series name to Find it on my Database\n\nEx. /moviedl pathaan")
+        return await message.reply_text(
+            "Give some Movie/Series name to Find it on my Database\n\nEx. /moviedl pathaan"
+        )
     search_results = message.reply_text("Processing...")
     query = message.text.split(None, 1)[1]
     movies_list = search_movies(query)
@@ -143,7 +145,9 @@ def get_anime(query):
 @pbot.on_message(filters.command("animedl"))
 def find_anime(_, message):
     if len(message.command) < 2:
-        return await message.reply_text("Give some Movie/Series name to Find it on my Database\n\nEx. /animedl naruto")
+        return await message.reply_text(
+            "Give some Movie/Series name to Find it on my Database\n\nEx. /animedl naruto"
+        )
     search_results = message.reply_text("Processing...")
     query = message.text.split(None, 1)[1]
     movies_list = search_anime(query)
