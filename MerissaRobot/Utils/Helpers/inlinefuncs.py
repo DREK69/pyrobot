@@ -80,8 +80,8 @@ async def paste(content):
     return link
 
 
-async def inline_help_func(__HELP__):
-    answerss = await about_function()
+async def inline_help_func(answers):
+    answerss = await about_function(answers)
     return answerss
 
 
