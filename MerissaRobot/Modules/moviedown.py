@@ -28,9 +28,9 @@ def search_movies(query):
     return movies_list
 
 
-def get_movie(query):
+async def get_movie(query):
     movie_details = {}
-    movie_page_link = BeautifulSoup(
+    movie_page_link = await BeautifulSoup(
         requests.get(f"{url_list[query]}").text, "html.parser"
     )
     if movie_page_link:
@@ -43,7 +43,7 @@ def get_movie(query):
         )
         final_links = {}
         for i in links:
-            s = pyshorteners.Shortener()
+            s = await pyshorteners.Shortener()
             url = s.tinyurl.short(i["href"])
             final_links[f"{i.text}"] = url
         movie_details["links"] = final_links
@@ -84,7 +84,7 @@ async def movie_result(Client, CallbackQuery):
         text="Please Wait Movie/Series Details Fetching From MKVCinemas",
         reply_markup=None,
     )
-    s = get_movie(id)
+    s = await get_movie(id)
     link = ""
     links = s["links"]
     for i in links:
