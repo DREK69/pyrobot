@@ -25,7 +25,8 @@ from MerissaRobot.Handler.chat_status import (
     is_user_admin,
     user_admin,
     user_admin_no_reply,
-)
+    can_delete,
+)  
 from MerissaRobot.Handler.extraction import extract_user_and_text
 from MerissaRobot.Handler.string_handling import extract_time
 from MerissaRobot.Modules.log_channel import loggable
