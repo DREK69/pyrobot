@@ -13,7 +13,7 @@ async def inline_query_handler(client, query):
         text = query.query.strip().lower()
         answers = []
         if text.strip() == "":
-            answerss = await inline_help_func(__HELP__)
+            answerss = await inline_help_func(answers)
             await client.answer_inline_query(query.id, results=answerss, cache_time=10)
         elif text.split()[0] == "about":
             answerss = await about_function(answers)
