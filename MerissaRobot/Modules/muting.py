@@ -20,13 +20,13 @@ from telegram.utils.helpers import mention_html
 from MerissaRobot import LOGGER, TIGERS, dispatcher
 from MerissaRobot.Handler.chat_status import (
     bot_admin,
+    can_delete,
     can_restrict,
     connection_status,
     is_user_admin,
     user_admin,
     user_admin_no_reply,
-    can_delete,
-)  
+)
 from MerissaRobot.Handler.extraction import extract_user_and_text
 from MerissaRobot.Handler.string_handling import extract_time
 from MerissaRobot.Modules.log_channel import loggable
