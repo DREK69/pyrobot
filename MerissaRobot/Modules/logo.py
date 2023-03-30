@@ -76,7 +76,8 @@ async def movie(_, message):
 
 
 @pbot.on_message(filters.command("logo") & filters.private)
-async def movie(_, message):
+async def movie(_, message):    
+    reply = message.reply_to_message
     logo = await message.reply_text("Creating your logo...wait!")
     if len(message.command) < 2:
         return await message.reply_text(
@@ -87,20 +88,38 @@ async def movie(_, message):
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    url = get(f"https://api.princexd.tech/logo?text={name}").url
-    button = InlineKeyboardMarkup(
-        [
+    if reply:
+        img = reply.download(file_name="merissa.jpg")
+        key = uf("qr.jpeg")[0]
+        response = "https://te.legra.ph" + key
+        url = get(f"https://api.princexd.tech/logo?text={name}").url
+        button = InlineKeyboardMarkup(
+          [
             [
-                InlineKeyboardButton("Change 🔄", callback_data=f"logo_{name}"),
+                InlineKeyboardButton("Change 🔄", callback_data=f"logo|{name}|{key}"),
             ],
-        ]
-    )
-    await message.reply_photo(
+          ]
+        )
+        await message.reply_photo(
         photo=url,
         caption="Powered by @MerissaRobot",
         reply_markup=button,
     )
-    await logo.delete()
+    else:        
+        url = get(f"https://api.princexd.tech/logo?text={name}").url
+        button = InlineKeyboardMarkup(
+          [
+            [
+                InlineKeyboardButton("Change 🔄", callback_data=f"logo_{name}"),
+            ],
+          ]
+         )
+        await message.reply_photo(
+            photo=url,
+            caption="Powered by @MerissaRobot",
+            reply_markup=button,
+        )
+        await logo.delete()
 
 
 @pbot.on_callback_query(filters.regex(pattern="^logo"))
