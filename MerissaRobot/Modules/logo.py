@@ -97,7 +97,9 @@ async def movie(client, message):
         )
         key = uf(download_location)[0]
         imglink = "https://te.legra.ph" + key
-        url = get(f"https://api.princexd.tech/logoimg?imglink={imglink}&text={name}").url
+        url = get(
+            f"https://api.princexd.tech/logoimg?imglink={imglink}&text={name}"
+        ).url
         button = InlineKeyboardMarkup(
             [
                 [
