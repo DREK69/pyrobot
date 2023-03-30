@@ -77,7 +77,7 @@ async def movie(_, message):
 
 
 @pbot.on_message(filters.command("logo") & filters.private)
-async def movie(_, message):    
+async def movie(_, message):
     reply = message.reply_to_message
     logo = await message.reply_text("Creating your logo...wait!")
     if len(message.command) < 2:
@@ -95,26 +95,28 @@ async def movie(_, message):
         imglink = "https://te.legra.ph" + key
         url = get(f"https://api.princexd.tech/logo?imgling={imglink}&text={name}").url
         button = InlineKeyboardMarkup(
-          [
             [
-                InlineKeyboardButton("Change 🔄", callback_data=f"logo|{name}|{key}"),
-            ],
-          ]
+                [
+                    InlineKeyboardButton(
+                        "Change 🔄", callback_data=f"logo|{name}|{key}"
+                    ),
+                ],
+            ]
         )
         await message.reply_photo(
-        photo=url,
-        caption="Powered by @MerissaRobot",
-        reply_markup=button,
-    )
-    else:        
+            photo=url,
+            caption="Powered by @MerissaRobot",
+            reply_markup=button,
+        )
+    else:
         url = get(f"https://api.princexd.tech/logo?text={name}").url
         button = InlineKeyboardMarkup(
-          [
             [
-                InlineKeyboardButton("Change 🔄", callback_data=f"logo_{name}"),
-            ],
-          ]
-         )
+                [
+                    InlineKeyboardButton("Change 🔄", callback_data=f"logo_{name}"),
+                ],
+            ]
+        )
         await message.reply_photo(
             photo=url,
             caption="Powered by @MerissaRobot",
