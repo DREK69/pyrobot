@@ -5,6 +5,7 @@ from pyrogram import filters
 from pyrogram.types import *
 from requests import get
 
+from telegraph import upload_file as uf
 from MerissaRobot import pbot
 
 link = [
