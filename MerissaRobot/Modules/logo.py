@@ -78,7 +78,7 @@ async def movie(_, message):
 
 
 @pbot.on_message(filters.command("logo") & filters.private)
-async def movie(_, message):
+async def movie(client, message):
     reply = message.reply_to_message
     logo = await message.reply_text("Creating your logo...wait!")
     if len(message.command) < 2:
@@ -91,8 +91,11 @@ async def movie(_, message):
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
     if reply:
-        img = reply.download(file_name="merissa.jpg")
-        key = uf("merissa.jpg")[0]
+        download_location = await client.download_media(
+            message=reply,
+            file_name="root/downloads/",
+        )        
+        key = uf(download_location)[0]
         imglink = "https://te.legra.ph" + key
         url = get(f"https://api.princexd.tech/logo?imgling={imglink}&text={name}").url
         button = InlineKeyboardMarkup(
@@ -109,6 +112,7 @@ async def movie(_, message):
             caption="Powered by @MerissaRobot",
             reply_markup=button,
         )
+        os.remove(download_location)
     else:
         url = get(f"https://api.princexd.tech/logo?text={name}").url
         button = InlineKeyboardMarkup(
@@ -123,8 +127,7 @@ async def movie(_, message):
             caption="Powered by @MerissaRobot",
             reply_markup=button,
         )
-        await logo.delete()
-    os.system("merissa.jpg")
+        await logo.delete()   
 
 
 @pbot.on_callback_query(filters.regex(pattern="^logo"))
