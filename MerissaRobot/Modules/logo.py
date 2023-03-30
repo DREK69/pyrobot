@@ -94,7 +94,7 @@ async def movie(client, message):
         download_location = await client.download_media(
             message=reply,
             file_name="root/downloads/",
-        )        
+        )
         key = uf(download_location)[0]
         imglink = "https://te.legra.ph" + key
         url = get(f"https://api.princexd.tech/logo?imgling={imglink}&text={name}").url
@@ -127,7 +127,7 @@ async def movie(client, message):
             caption="Powered by @MerissaRobot",
             reply_markup=button,
         )
-        await logo.delete()   
+        await logo.delete()
 
 
 @pbot.on_callback_query(filters.regex(pattern="^logo"))
