@@ -124,7 +124,7 @@ async def movie(client, message):
 async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
     callback_data = query.data.strip()
-    callback_data.split("_", 1)[1]
+    name = callback_data.split("_")[1]
     url = get(f"https://api.princexd.tech/logo?text={name}").url
     await query.edit_message_media(
         InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
