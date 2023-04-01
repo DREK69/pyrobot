@@ -45,18 +45,10 @@ def merissarm(update: Update, context: CallbackContext) -> str:
         is_chatgpt = sql.rem_chatgpt(chat.id)
         if is_merissa:
             is_merissa = sql.rem_merissa(user_id)
-            return (
-                f"<b>{html.escape(chat.title)}:</b>\n"
-                f"Merissa Chatbot Disable\n"
-                f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
-            )
+            return
         elif is_chatgpt:
             is_chatgpt = sql.rem_chatgpt(user_id)
-            return (
-                f"<b>{html.escape(chat.title)}:</b>\n"
-                f"Merissa Chatbot Disable\n"
-                f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
-            )
+            return
         else:
             update.effective_message.edit_text(
                 "Merissa Chatbot disable by {}.".format(
@@ -73,14 +65,21 @@ def merissarm(update: Update, context: CallbackContext) -> str:
 def merissaadd(update: Update, context: CallbackContext) -> str:
     query: Optional[CallbackQuery] = update.callback_query
     user: Optional[User] = update.effective_user
-    match = re.match(r"add_chat\((.+?)\)", query.data)
+    match = re.match(r"add_gpt\((.+?)\)", query.data)
     if match:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
-        is_merissa = sql.set_merissa(chat.id)
-        sql.rem_chatgpt(chat.id)
+        is_merissa = sql.set_merissa(chat.id)  
+        is_chatgpt = sql.rem_chatgpt(chat.id)        
         if is_merissa:
-            is_merissa = sql.set_merissa(user_id)
+            is_merissa = sql.set_merissa(chat.id)           
+            return (
+                f"<b>{html.escape(chat.title)}:</b>\n"
+                f"Merissa Chatbot Enable\n"
+                f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
+            )
+        elif is_chatgpt:
+            is_chatgpt = sql.rem_chatgpt(chat.id)           
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"Merissa Chatbot Enable\n"
@@ -107,9 +106,16 @@ def chatgptadd(update: Update, context: CallbackContext) -> str:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
         is_chatgpt = sql.set_chatgpt(chat.id)
-        sql.rem_merissa(chat.id)
+        is_merissa = sql.rem_merissa(chat.id)
         if is_chatgpt:
             is_chatgpt = sql.set_chatgpt(user_id)
+            return (
+                f"<b>{html.escape(chat.title)}:</b>\n"
+                f"ChatGPT Enable\n"
+                f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
+            )
+        elif is_merissa:
+            is_merissa = sql.rem_merissa(user_id)
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"ChatGPT Enable\n"
@@ -138,7 +144,7 @@ def merissa(update: Update, context: CallbackContext):
                 InlineKeyboardButton(text="Merissa", callback_data="add_chat({})"),
                 InlineKeyboardButton(text="ChatGPT", callback_data="add_gpt({})"),
             ],
-            [InlineKeyboardButton(text="Off", callback_data="rm_chat({})")],
+            [InlineKeyboardButton(text="Remove Both", callback_data="rm_chat({})")],
         ]
     )
     message.reply_text(
