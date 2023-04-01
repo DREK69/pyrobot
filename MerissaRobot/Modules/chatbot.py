@@ -44,11 +44,19 @@ def merissarm(update: Update, context: CallbackContext) -> str:
         is_merissa = sql.rem_merissa(chat.id)
         is_chatgpt = sql.rem_chatgpt(chat.id)
         if is_merissa:
-            is_merissa = sql.rem_merissa(user_id)
-            return
+            is_merissa = sql.rem_merissa(chat.id)
+            return (
+                f"<b>{html.escape(chat.title)}:</b>\n"
+                f"Merissa Chatbot Enable\n"
+                f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
+            )
         elif is_chatgpt:
-            is_chatgpt = sql.rem_chatgpt(user_id)
-            return
+            is_chatgpt = sql.rem_chatgpt(chat.id)
+            return (
+                f"<b>{html.escape(chat.title)}:</b>\n"
+                f"Merissa Chatbot Enable\n"
+                f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
+            )
         else:
             update.effective_message.edit_text(
                 "Merissa Chatbot disable by {}.".format(
