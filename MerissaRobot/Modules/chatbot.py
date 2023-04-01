@@ -67,7 +67,7 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
     user: Optional[User] = update.effective_user
     match = re.match(r"add_chat\((.+?)\)", query.data)
     if match:
-        user_id = match.group(1)
+        match.group(1)
         chat: Optional[Chat] = update.effective_chat
         is_merissa = sql.set_merissa(chat.id)
         is_chatgpt = sql.rem_chatgpt(chat.id)
@@ -103,7 +103,7 @@ def chatgptadd(update: Update, context: CallbackContext) -> str:
     user: Optional[User] = update.effective_user
     match = re.match(r"add_gpt\((.+?)\)", query.data)
     if match:
-        user_id = match.group(1)
+        match.group(1)
         chat: Optional[Chat] = update.effective_chat
         is_chatgpt = sql.set_chatgpt(chat.id)
         is_merissa = sql.rem_merissa(chat.id)
