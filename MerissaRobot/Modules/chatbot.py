@@ -42,8 +42,16 @@ def merissarm(update: Update, context: CallbackContext) -> str:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
         is_merissa = sql.rem_merissa(chat.id)
+        is_chatgpt = sql.rem_chatgpt(chat.id)
         if is_merissa:
             is_merissa = sql.rem_merissa(user_id)
+            return (
+                f"<b>{html.escape(chat.title)}:</b>\n"
+                f"Merissa Chatbot Disable\n"
+                f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
+            )
+        elif is_chatgpt:
+            is_chatgpt = sql.rem_chatgpt(user_id)
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"Merissa Chatbot Disable\n"
@@ -70,6 +78,7 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
         is_merissa = sql.set_merissa(chat.id)
+        is_chatgpt = sql.rem_chatgpt(chat.id)
         if is_merissa:
             is_merissa = sql.set_merissa(user_id)
             return (
@@ -80,6 +89,34 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
         else:
             update.effective_message.edit_text(
                 "Merissa Chatbot enable by {}.".format(
+                    mention_html(user.id, user.first_name)
+                ),
+                parse_mode=ParseMode.HTML,
+            )
+
+    return ""
+
+@user_admin_no_reply
+@gloggable
+def chatgptadd(update: Update, context: CallbackContext) -> str:
+    query: Optional[CallbackQuery] = update.callback_query
+    user: Optional[User] = update.effective_user
+    match = re.match(r"add_chat\((.+?)\)", query.data)
+    if match:
+        user_id = match.group(1)
+        chat: Optional[Chat] = update.effective_chat
+        is_chatgpt = sql.set_chatgpt(chat.id)
+        is_merissa = sql.rem_merissa(chat.id)
+        if is_chatgpt:
+            is_merissa = sql.set_chatgpt(user_id)
+            return (
+                f"<b>{html.escape(chat.title)}:</b>\n"
+                f"ChatGPT Enable\n"
+                f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
+            )
+        else:
+            update.effective_message.edit_text(
+                "ChatGPT enable by {}.".format(
                     mention_html(user.id, user.first_name)
                 ),
                 parse_mode=ParseMode.HTML,
@@ -99,8 +136,11 @@ def merissa(update: Update, context: CallbackContext):
     keyboard = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton(text="On", callback_data="add_chat({})"),
-                InlineKeyboardButton(text="Off", callback_data="rm_chat({})"),
+                InlineKeyboardButton(text="Merissa", callback_data="add_chat({})"),
+                InlineKeyboardButton(text="ChatGPT", callback_data="add_gpt({})")
+            ],
+            [
+                InlineKeyboardButton(text="Off", callback_data="rm_chat({})")
             ]
         ]
     )
@@ -127,16 +167,20 @@ def chatbot(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     bot = context.bot
     is_merissa = sql.is_merissa(chat_id)
-    if not is_merissa:
-        return
-    if message.text and not message.document:
-        if not merissa_message(context, message):
-            return
+    is_chatgpt = sql.is_chatgpt(chat_id)
+    if is_chatgpt:
         bot.send_chat_action(chat_id, action="typing")
-        url = f"https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message={message.text}"
-        results = requests.get(url).json()
-        sleep(0.5)
-        message.reply_text(results["reply"])
+        url = f"https://api.princexd.tech/chatgpt?ask={message.text}"
+        results = requests.get(url).json()      
+        message.reply_text(results["answer"])
+    elif is_merissa:    
+        if message.text and not message.document:
+            if not merissa_message(context, message):
+                return
+            bot.send_chat_action(chat_id, action="typing")
+            url = f"https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message={message.text}"
+            results = requests.get(url).json()      
+            message.reply_text(results["reply"])
 
 
 def list_all_chats(update: Update, context: CallbackContext):
@@ -182,6 +226,7 @@ __helpbtns__ = [
 
 CHATBOTK_HANDLER = CommandHandler("chatbot", merissa)
 ADD_CHAT_HANDLER = CallbackQueryHandler(merissaadd, pattern=r"add_chat")
+ADD_CHATGPT_HANDLER = CallbackQueryHandler(chatgptadd, pattern=r"add_gpt")
 RM_CHAT_HANDLER = CallbackQueryHandler(merissarm, pattern=r"rm_chat")
 CHATBOT_HANDLER = MessageHandler(
     Filters.text
