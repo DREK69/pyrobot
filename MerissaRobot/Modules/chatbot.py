@@ -134,7 +134,7 @@ def chatbot(update: Update, context: CallbackContext):
             return
         bot.send_chat_action(chat_id, action="typing")
         url = f"https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message={message.text}"
-        results = requests.get(url).json()        
+        results = requests.get(url).json()
         message.reply_text(results["reply"])
 
 
