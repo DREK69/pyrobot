@@ -1,6 +1,5 @@
 import html
 import re
-from time import sleep
 
 import requests
 from googletrans import Translator
@@ -13,7 +12,6 @@ from telegram import (
     Update,
     User,
 )
-from telegram.error import BadRequest, RetryAfter, Unauthorized
 from telegram.ext import (
     CallbackContext,
     CallbackQueryHandler,
@@ -26,7 +24,6 @@ from telegram.utils.helpers import mention_html
 import MerissaRobot.Database.sql.chatbot_sql as sql
 from MerissaRobot import dispatcher
 from MerissaRobot.Handler.chat_status import user_admin, user_admin_no_reply
-from MerissaRobot.Handler.filters import CustomFilters
 from MerissaRobot.Modules.log_channel import gloggable
 
 tr = Translator()
@@ -43,7 +40,7 @@ def chatgptrm(update: Update, context: CallbackContext) -> str:
         chat: Optional[Chat] = update.effective_chat
         is_chatgpt = sql.rem_chatgpt(chat.id)
         if is_chatgpt:
-            is_merissa = sql.rem_chatgpt(user_id)
+            sql.rem_chatgpt(user_id)
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"ChatGPT Disable\n"
@@ -51,9 +48,7 @@ def chatgptrm(update: Update, context: CallbackContext) -> str:
             )
         else:
             update.effective_message.edit_text(
-                "ChatGPT disable by {}.".format(
-                    mention_html(user.id, user.first_name)
-                ),
+                "ChatGPT disable by {}.".format(mention_html(user.id, user.first_name)),
                 parse_mode=ParseMode.HTML,
             )
 
@@ -71,7 +66,7 @@ def chatgptadd(update: Update, context: CallbackContext) -> str:
         chat: Optional[Chat] = update.effective_chat
         is_chatgpt = sql.set_chatgpt(chat.id)
         if is_chatgpt:
-            is_merissa = sql.set_chatgpt(user_id)
+            sql.set_chatgpt(user_id)
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"ChatGPT Enable\n"
@@ -79,9 +74,7 @@ def chatgptadd(update: Update, context: CallbackContext) -> str:
             )
         else:
             update.effective_message.edit_text(
-                "ChatGPT enable by {}.".format(
-                    mention_html(user.id, user.first_name)
-                ),
+                "ChatGPT enable by {}.".format(mention_html(user.id, user.first_name)),
                 parse_mode=ParseMode.HTML,
             )
 
@@ -134,7 +127,7 @@ def gpt(update: Update, context: CallbackContext):
             return
         bot.send_chat_action(chat_id, action="typing")
         url = f"https://api.princexd.tech/chatgpt?ask={message.text}"
-        results = requests.get(url).json()       
+        results = requests.get(url).json()
         message.reply_text(results["answer"])
 
 
