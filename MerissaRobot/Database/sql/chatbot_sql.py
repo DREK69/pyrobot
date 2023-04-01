@@ -33,6 +33,13 @@ def is_merissa(chat_id):
     finally:
         SESSION.close()
 
+def is_chatgpt(chat_id):
+    try:
+        chat = SESSION.query(ChatGPTChats).get(str(chat_id))
+        return bool(chat)
+    finally:
+        SESSION.close()
+
 
 def set_merissa(chat_id):
     with INSERTION_LOCK:
