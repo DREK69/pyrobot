@@ -131,7 +131,7 @@ def gpt(update: Update, context: CallbackContext):
         message.reply_text(results["answer"])
 
 
-CHATGPTK_HANDLER = CommandHandler("chatbot", chatgpt)
+CHATGPTK_HANDLER = CommandHandler("chatgpt", chatgpt)
 ADD_CHATGPT_HANDLER = CallbackQueryHandler(chatgptadd, pattern=r"add_gpt")
 RM_CHATGPT_HANDLER = CallbackQueryHandler(chatgptrm, pattern=r"rm_gpt")
 CHATBOTGPT_HANDLER = MessageHandler(
