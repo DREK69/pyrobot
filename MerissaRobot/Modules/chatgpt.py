@@ -83,7 +83,7 @@ def chatgptadd(update: Update, context: CallbackContext) -> str:
 
 @user_admin
 @gloggable
-def chatgptai(update: Update, context: CallbackContext):    
+def chatgptai(update: Update, context: CallbackContext):
     message = update.effective_message
     msg = """**Welcome To Control Panal Of ChatGPT AI**
 
