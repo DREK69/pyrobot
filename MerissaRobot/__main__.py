@@ -22,6 +22,7 @@ from telegram.ext import (
     Filters,
     MessageHandler,
 )
+from pyrogram.errors.exceptions.flood_420 import FloodWait
 from telegram.ext.dispatcher import DispatcherHandlerStop
 from telegram.utils.helpers import escape_markdown
 from telethon.errors.rpcerrorlist import FloodWaitError
@@ -991,7 +992,14 @@ def main():
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    pbot.start()
+    try:
+        pbot.start()
+    except FloodWait as e:
+        LOGGER.info(
+            f"[FloodWaitError] Have to wait {e.seconds} seconds due to FloodWait."
+        )
+        time.sleep(e.seconds)
+        pbot.start()
     try:
         telethn.start(bot_token=TOKEN)
     except FloodWaitError as e:
