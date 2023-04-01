@@ -40,7 +40,7 @@ def chatgptrm(update: Update, context: CallbackContext) -> str:
         chat: Optional[Chat] = update.effective_chat
         is_chatgpt = sql.rem_chatgpt(chat.id)
         if is_chatgpt:
-            sql.rem_chatgpt(user_id)
+            is_chatgpt = sql.rem_chatgpt(user_id)
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"ChatGPT Disable\n"
@@ -66,7 +66,7 @@ def chatgptadd(update: Update, context: CallbackContext) -> str:
         chat: Optional[Chat] = update.effective_chat
         is_chatgpt = sql.set_chatgpt(chat.id)
         if is_chatgpt:
-            sql.set_chatgpt(user_id)
+            is_chatgpt = sql.set_chatgpt(user_id)
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"ChatGPT Enable\n"
@@ -83,8 +83,7 @@ def chatgptadd(update: Update, context: CallbackContext) -> str:
 
 @user_admin
 @gloggable
-def chatgpt(update: Update, context: CallbackContext):
-    update.effective_user
+def chatgptai(update: Update, context: CallbackContext):    
     message = update.effective_message
     msg = """**Welcome To Control Panal Of ChatGPT AI**
 
@@ -106,7 +105,7 @@ def chatgpt(update: Update, context: CallbackContext):
 
 def merissa_message(context: CallbackContext, message):
     reply_message = message.reply_to_message
-    if message.text.lower() == "merissa":
+    if message.text.lower() == "chatgpt":
         return True
     if reply_message:
         if reply_message.from_user.id == context.bot.get_me().id:
@@ -115,7 +114,7 @@ def merissa_message(context: CallbackContext, message):
         return False
 
 
-def gpt(update: Update, context: CallbackContext):
+def chatgpt(update: Update, context: CallbackContext):
     message = update.effective_message
     chat_id = update.effective_chat.id
     bot = context.bot
@@ -131,23 +130,23 @@ def gpt(update: Update, context: CallbackContext):
         message.reply_text(results["answer"])
 
 
-CHATGPTK_HANDLER = CommandHandler("chatgpt", chatgpt)
+CHATGPT_HANDLER = CommandHandler("chatgpt", chatgptai)
 ADD_CHATGPT_HANDLER = CallbackQueryHandler(chatgptadd, pattern=r"add_gpt")
 RM_CHATGPT_HANDLER = CallbackQueryHandler(chatgptrm, pattern=r"rm_gpt")
 CHATBOTGPT_HANDLER = MessageHandler(
     Filters.text
     & (~Filters.regex(r"^#[^\s]+") & ~Filters.regex(r"^!") & ~Filters.regex(r"^\/")),
-    gpt,
+    chatgpt,
 )
 
 dispatcher.add_handler(ADD_CHATGPT_HANDLER)
-dispatcher.add_handler(CHATBOTGPT_HANDLER)
+dispatcher.add_handler(CHATGPT_HANDLER)
 dispatcher.add_handler(RM_CHATGPT_HANDLER)
 dispatcher.add_handler(CHATBOTGPT_HANDLER)
 
 __handlers__ = [
     ADD_CHATGPT_HANDLER,
-    CHATBOTGPT_HANDLER,
+    CHATGPT_HANDLER,
     RM_CHATGPT_HANDLER,
     CHATBOTGPT_HANDLER,
 ]
