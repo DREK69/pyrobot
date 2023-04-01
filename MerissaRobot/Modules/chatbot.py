@@ -39,7 +39,7 @@ def merissarm(update: Update, context: CallbackContext) -> str:
     user: Optional[User] = update.effective_user
     match = re.match(r"rm_chat\((.+?)\)", query.data)
     if match:
-        user_id = match.group(1)
+        match.group(1)
         chat: Optional[Chat] = update.effective_chat
         is_merissa = sql.rem_merissa(chat.id)
         is_chatgpt = sql.rem_chatgpt(chat.id)
