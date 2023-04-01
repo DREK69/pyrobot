@@ -34,6 +34,7 @@ def set_merissa(chat_id):
         SESSION.add(merissachat)
         SESSION.commit()
 
+
 def set_chatgpt(chat_id):
     with INSERTION_LOCK:
         merissachat = SESSION.query(ChatGPTChats).get(str(chat_id))
@@ -41,6 +42,7 @@ def set_chatgpt(chat_id):
             merissachat = ChatGPTChats(str(chat_id))
         SESSION.add(merissachat)
         SESSION.commit()
+
 
 def rem_chatgpt(chat_id):
     with INSERTION_LOCK:
