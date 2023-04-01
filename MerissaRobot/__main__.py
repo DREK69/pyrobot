@@ -6,6 +6,7 @@ import time
 import traceback
 from sys import argv
 
+from pyrogram.errors.exceptions.flood_420 import FloodWait
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import (
     BadRequest,
@@ -22,7 +23,6 @@ from telegram.ext import (
     Filters,
     MessageHandler,
 )
-from pyrogram.errors.exceptions.flood_420 import FloodWait
 from telegram.ext.dispatcher import DispatcherHandlerStop
 from telegram.utils.helpers import escape_markdown
 from telethon.errors.rpcerrorlist import FloodWaitError
