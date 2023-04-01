@@ -37,7 +37,7 @@ async def movie(_, message):
     button = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("Change 🔄", callback_data=f"hqlogo_{name}"),
+                InlineKeyboardButton("Change 🔂", callback_data=f"hqlogo_{name}"),
             ],
         ]
     )
@@ -65,7 +65,7 @@ async def movie(_, message):
     button = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("Change 🔄", callback_data=f"anilogo_{name}"),
+                InlineKeyboardButton("Change 🔂", callback_data=f"anilogo_{name}"),
             ],
         ]
     )
@@ -100,7 +100,14 @@ async def movie(client, message):
         url = get(
             f"https://api.princexd.tech/logoimg?imglink={imglink}&text={name}"
         ).url
-        await message.reply_photo(photo=url, caption="Powered by @MerissaRobot")
+        button = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton("Change 🔂", callback_data=f"ilogo|{name}|{key}"),
+                ],
+            ]
+        )
+        await message.reply_photo(photo=url, caption="Powered by @MerissaRobot", reply_markup=button)
         await logo.delete()
         os.remove(download_location)
     else:
@@ -108,7 +115,7 @@ async def movie(client, message):
         button = InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("Change 🔄", callback_data=f"logo_{name}"),
+                    InlineKeyboardButton("Change 🔂", callback_data=f"logo_{name}"),
                 ],
             ]
         )
@@ -119,6 +126,32 @@ async def movie(client, message):
         )
         await logo.delete()
 
+@pbot.on_callback_query(filters.regex(pattern="^ilogo"))
+async def hmeme(_, query: CallbackQuery):
+    await query.answer("Generating Your Logo Please Wait....", show_alert=True)
+    callback_data = query.data.strip()
+    data = callback_data.split("|")
+    name = data[1]
+    key = data[2]
+    imglink = "https://te.legra.ph" + key
+    url = get(
+            f"https://api.princexd.tech/logoimg?imglink={imglink}&text={name}"
+    ).url
+    await query.edit_message_media(
+        InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Change 🔂",
+                        callback_data=f"ilogo|{name}|{key}",
+                    ),
+                ],
+            ],
+        ),
+    )
+
+    
 
 @pbot.on_callback_query(filters.regex(pattern="^logo"))
 async def hmeme(_, query: CallbackQuery):
@@ -145,7 +178,7 @@ async def hmeme(_, query: CallbackQuery):
 async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
     callback_data = query.data.strip()
-    name = callback_data.split("_", 1)[1]
+    name = callback_data.split("_")[1]
     url = get(f"https://api.princexd.tech/anime-logo?text={name}").json()["url"]
     await query.edit_message_media(
         InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
@@ -166,7 +199,7 @@ async def hmeme(_, query: CallbackQuery):
 async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
     callback_data = query.data.strip()
-    name = callback_data.split("_", 1)[1]
+    name = callback_data.split("_")[1]
     ranlink = random.choice(link)
     url = get(
         f"https://api.akuari.my.id/ephoto/scraper-1?text={name}&link={ranlink}"
