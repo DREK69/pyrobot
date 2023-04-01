@@ -12,6 +12,7 @@ class MerissaChats(BASE):
     def __init__(self, chat_id):
         self.chat_id = chat_id
 
+
 class ChatGPTChats(BASE):
     __tablename__ = "chatgpt_chats"
     chat_id = Column(String(14), primary_key=True)
