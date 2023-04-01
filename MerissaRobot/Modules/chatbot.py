@@ -107,7 +107,7 @@ def chatgptadd(update: Update, context: CallbackContext) -> str:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
         is_chatgpt = sql.set_chatgpt(chat.id)
-        is_merissa = sql.rem_merissa(chat.id)
+        sql.rem_merissa(chat.id)
         if is_chatgpt:
             is_chatgpt = sql.set_chatgpt(user_id)
             return (
