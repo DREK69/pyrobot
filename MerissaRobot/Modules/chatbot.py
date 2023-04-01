@@ -78,7 +78,7 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
         is_merissa = sql.set_merissa(chat.id)
-        is_chatgpt = sql.rem_chatgpt(chat.id)
+        sql.rem_chatgpt(chat.id)
         if is_merissa:
             is_merissa = sql.set_merissa(user_id)
             return (
@@ -96,6 +96,7 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
 
     return ""
 
+
 @user_admin_no_reply
 @gloggable
 def chatgptadd(update: Update, context: CallbackContext) -> str:
@@ -106,9 +107,9 @@ def chatgptadd(update: Update, context: CallbackContext) -> str:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
         is_chatgpt = sql.set_chatgpt(chat.id)
-        is_merissa = sql.rem_merissa(chat.id)
+        sql.rem_merissa(chat.id)
         if is_chatgpt:
-            is_merissa = sql.set_chatgpt(user_id)
+            sql.set_chatgpt(user_id)
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"ChatGPT Enable\n"
@@ -116,9 +117,7 @@ def chatgptadd(update: Update, context: CallbackContext) -> str:
             )
         else:
             update.effective_message.edit_text(
-                "ChatGPT enable by {}.".format(
-                    mention_html(user.id, user.first_name)
-                ),
+                "ChatGPT enable by {}.".format(mention_html(user.id, user.first_name)),
                 parse_mode=ParseMode.HTML,
             )
 
@@ -137,11 +136,9 @@ def merissa(update: Update, context: CallbackContext):
         [
             [
                 InlineKeyboardButton(text="Merissa", callback_data="add_chat({})"),
-                InlineKeyboardButton(text="ChatGPT", callback_data="add_gpt({})")
+                InlineKeyboardButton(text="ChatGPT", callback_data="add_gpt({})"),
             ],
-            [
-                InlineKeyboardButton(text="Off", callback_data="rm_chat({})")
-            ]
+            [InlineKeyboardButton(text="Off", callback_data="rm_chat({})")],
         ]
     )
     message.reply_text(
@@ -171,15 +168,15 @@ def chatbot(update: Update, context: CallbackContext):
     if is_chatgpt:
         bot.send_chat_action(chat_id, action="typing")
         url = f"https://api.princexd.tech/chatgpt?ask={message.text}"
-        results = requests.get(url).json()      
+        results = requests.get(url).json()
         message.reply_text(results["answer"])
-    elif is_merissa:    
+    elif is_merissa:
         if message.text and not message.document:
             if not merissa_message(context, message):
                 return
             bot.send_chat_action(chat_id, action="typing")
             url = f"https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message={message.text}"
-            results = requests.get(url).json()      
+            results = requests.get(url).json()
             message.reply_text(results["reply"])
 
 
