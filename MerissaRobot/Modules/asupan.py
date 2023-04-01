@@ -23,7 +23,7 @@ async def animememes(_, message):
     os.remove("asupan.mp4")
 
 
-@pbot.on_callback_query(filters.regex("^asupan"))
+@bot.on_callback_query(filters.regex("^asupan"))
 async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your asupan Video\nPlease Wait....", show_alert=True)
     res = wget.download("https://api.princexd.tech/asupan/tiktok", "asupan.mp4")
