@@ -12,6 +12,13 @@ class MerissaChats(BASE):
     def __init__(self, chat_id):
         self.chat_id = chat_id
 
+class ChatGPTChats(BASE):
+    __tablename__ = "chatgpt_chats"
+    chat_id = Column(String(14), primary_key=True)
+
+    def __init__(self, chat_id):
+        self.chat_id = chat_id
+
 
 MerissaChats.__table__.create(checkfirst=True)
 ChatGPTChats.__table__.create(checkfirst=True)
