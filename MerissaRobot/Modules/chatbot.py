@@ -65,7 +65,7 @@ def merissarm(update: Update, context: CallbackContext) -> str:
 def merissaadd(update: Update, context: CallbackContext) -> str:
     query: Optional[CallbackQuery] = update.callback_query
     user: Optional[User] = update.effective_user
-    match = re.match(r"add_gpt\((.+?)\)", query.data)
+    match = re.match(r"add_chat\((.+?)\)", query.data)
     if match:
         match.group(1)
         chat: Optional[Chat] = update.effective_chat
@@ -101,7 +101,7 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
 def chatgptadd(update: Update, context: CallbackContext) -> str:
     query: Optional[CallbackQuery] = update.callback_query
     user: Optional[User] = update.effective_user
-    match = re.match(r"add_chat\((.+?)\)", query.data)
+    match = re.match(r"add_gpt\((.+?)\)", query.data)
     if match:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
