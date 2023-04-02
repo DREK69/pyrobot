@@ -33,7 +33,7 @@ async def chat_bot_toggle(db, message: Message):
 # Enabled | Disable Chatbot
 
 
-@app.on_message(filters.command("chatgpt") & ~filters.edited)
+@app.on_message(filters.command("chatgpt"))
 @capture_err
 async def chatbot_status(_, message: Message):
     if len(message.command) != 2:
