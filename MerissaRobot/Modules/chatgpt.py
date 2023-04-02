@@ -1,15 +1,15 @@
-import requests 
-
 from pyrogram import filters
-from pyrogram.types import Message
 from pyrogram.enums import ChatAction
+from pyrogram.types import Message
 
-from MerissaRobot import pbot as app, BOT_ID
-from MerissaRobot.Utils.Helpers.pluginshelper import edit_or_reply as eor
+from MerissaRobot import BOT_ID
+from MerissaRobot import pbot as app
 from MerissaRobot.Utils.Helpers.errors import capture_err
 from MerissaRobot.Utils.Helpers.filter_groups import chatbot_group
+from MerissaRobot.Utils.Helpers.pluginshelper import edit_or_reply as eor
 
 active_chats_bot = []
+
 
 async def chat_bot_toggle(db, message: Message):
     status = message.text.split(None, 1)[1].lower()
@@ -26,9 +26,7 @@ async def chat_bot_toggle(db, message: Message):
             return await eor(message, text="Chatbot Disabled!")
         await eor(message, text="ChatBot Is Already Disabled.")
     else:
-        await eor(
-            message, text="**Usage:**\n/chatbot [ENABLE|DISABLE]"
-        )
+        await eor(message, text="**Usage:**\n/chatbot [ENABLE|DISABLE]")
 
 
 # Enabled | Disable Chatbot
@@ -38,28 +36,24 @@ async def chat_bot_toggle(db, message: Message):
 @capture_err
 async def chatbot_status(_, message: Message):
     if len(message.command) != 2:
-        return await eor(
-            message, text="**Usage:**\n/chatgpt [ENABLE|DISABLE]"
-        )
+        return await eor(message, text="**Usage:**\n/chatgpt [ENABLE|DISABLE]")
     await chat_bot_toggle(active_chats_bot, message)
 
 
 async def type_and_send(message: Message):
     chat_id = message.chat.id
-    user_id = message.from_user.id if message.from_user else 0
+    message.from_user.id if message.from_user else 0
     query = message.text.strip()
     await message._client.send_chat_action(chat_id, ChatAction.TYPING)
     response = get(f"https://api.princexd.tech/ask?text={query}").json()["answer"]
     await message.reply_text(response)
-    await message._client.send_chat_action(chat_id, )
+    await message._client.send_chat_action(
+        chat_id,
+    )
 
 
 @app.on_message(
-    filters.text
-    & filters.reply
-    & ~filters.bot
-    & ~filters.via_bot
-    & ~filters.forwarded,
+    filters.text & filters.reply & ~filters.bot & ~filters.via_bot & ~filters.forwarded,
     group=chatbot_group,
 )
 @capture_err
