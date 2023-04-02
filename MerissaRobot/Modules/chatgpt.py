@@ -19,12 +19,12 @@ async def chat_bot_toggle(db, message: Message):
             db.append(chat_id)
             text = "Chatbot Enabled!"
             return await eor(message, text=text)
-        await eor(message, text="ChatBot Is Already Enabled.")
+        await eor(message, text="ChatGPT Is Already Enabled.")
     elif status == "off":
         if chat_id in db:
             db.remove(chat_id)
-            return await eor(message, text="Chatbot Disabled!")
-        await eor(message, text="ChatBot Is Already Disabled.")
+            return await eor(message, text="ChatGPT Disabled!")
+        await eor(message, text="ChatGPT Is Already Disabled.")
     else:
         await eor(message, text="**Usage:**\n/chatgpt [on|off]")
 
