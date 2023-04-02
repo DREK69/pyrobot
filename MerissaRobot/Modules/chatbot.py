@@ -27,9 +27,9 @@ from telegram.utils.helpers import mention_html
 
 import MerissaRobot.Database.sql.chatbot_sql as sql
 from MerissaRobot import dispatcher
-from MerissaRobot.Handlers.filters import CustomFilters
-from MerissaRobot.Handlers.validation import user_admin, user_admin_no_reply
-from MerissaRobot.Plugins.Admin.log_channel import gloggable
+from MerissaRobot.Handler.chat_status import user_admin, user_admin_no_reply
+from MerissaRobot.Handler.filters import CustomFilters
+from MerissaRobot.Modules.log_channel import gloggable
 
 
 @user_admin_no_reply
