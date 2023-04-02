@@ -49,6 +49,7 @@ nekos.py
 nltk
 nudepy
 odmantic
+openai
 opencv-python-headless
 pendulum
 Pillow
