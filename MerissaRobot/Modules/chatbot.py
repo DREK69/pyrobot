@@ -26,7 +26,7 @@ import MerissaRobot.Database.sql.chatbot_sql as sql
 from MerissaRobot import BOT_USERNAME, dispatcher
 from MerissaRobot.Handler.chat_status import user_admin, user_admin_no_reply
 from MerissaRobot.Handler.filters import CustomFilters
-from MerissaRobot.Modules.chatgpt import active_chats_bot
+from MerissaRobot.Modules.chatgpt import active_chats_bot as db
 from MerissaRobot.Modules.log_channel import gloggable
 
 
@@ -46,7 +46,7 @@ def merissarm(update: Update, context: CallbackContext) -> str:
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"Merissa Chatbot Disable\n"
                 f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
-            )
+            )            
         else:
             update.effective_message.edit_text(
                 "Merissa Chatbot disable by {}.".format(
@@ -67,15 +67,16 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
     if match:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
-        is_merissa = sql.set_merissa(chat.id)
-        if is_merissa:
-            active_chats_bot.remove(user_id)
+        is_merissa = sql.set_merissa(chat.id)         
+        if is_merissa: 
+            if chat.id in db:
+                return db.remove(chat.id)                          
             is_merissa = sql.set_merissa(user_id)
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"Merissa Chatbot Enable\n"
                 f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
-            )
+            )       
         else:
             update.effective_message.edit_text(
                 "Merissa Chatbot enable by {}.".format(
