@@ -3,7 +3,6 @@ import re
 from time import sleep
 
 import requests
-from googletrans import Translator
 from telegram import (
     CallbackQuery,
     Chat,
@@ -28,8 +27,7 @@ from MerissaRobot import BOT_USERNAME, dispatcher
 from MerissaRobot.Handler.chat_status import user_admin, user_admin_no_reply
 from MerissaRobot.Handler.filters import CustomFilters
 from MerissaRobot.Modules.log_channel import gloggable
-
-tr = Translator()
+from MerissaRobot.Modules.chatgpt import active_chats_bot
 
 
 @user_admin_no_reply
