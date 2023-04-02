@@ -7,6 +7,7 @@ from MerissaRobot import BOT_ID, eor
 from MerissaRobot import pbot as app
 from MerissaRobot.Utils.Helpers.errors import capture_err
 from MerissaRobot.Utils.Helpers.filter_groups import chatbot_group
+from MerissaRobot.Database.sql import chatbot_sql as sql
 
 active_chats_bot = []
 
@@ -17,11 +18,13 @@ async def chat_bot_toggle(db, message: Message):
     if status == "on":
         if chat_id not in db:
             db.append(chat_id)
+            sql.rem_merissa(chat_id)
             text = "Chatbot Enabled!"
             return await eor(message, text=text)
         await eor(message, text="ChatGPT Is Already Enabled.")
     elif status == "off":
         if chat_id in db:
+            sql.set_merissa(chat_id)
             db.remove(chat_id)
             return await eor(message, text="ChatGPT Disabled!")
         await eor(message, text="ChatGPT Is Already Disabled.")
