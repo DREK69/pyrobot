@@ -242,8 +242,7 @@ def chatbot(update: Update, context: CallbackContext):
                 if is_timepass:
                     # Use Kora API to generate response
                     merissaurl = requests.get(
-                        "https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message="
-                        + message_text
+                        "https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message=" + message_text
                     )
                     merissa = json.loads(merissaurl.text)["reply"]
                 else:
@@ -259,16 +258,12 @@ def chatbot(update: Update, context: CallbackContext):
                     else:
                         if len(message_text) <= small_threshold:
                             merissa_url = f"https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message={message_text}"
-                            merissa = json.loads(requests.get(merissa_url).text)[
-                                "reply"
-                            ]
+                            merissa = json.loads(requests.get(merissa_url).text)["reply"]
                         else:
                             # If none of the rules match, randomly choose between Kora and OpenAI API
                             if random.random() < 0.3:
                                 merissa_url = f"https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message={message_text}"
-                                merissa = json.loads(requests.get(merissa_url).text)[
-                                    "reply"
-                                ]
+                                merissa = json.loads(requests.get(merissa_url).text)["reply"]
                             else:
                                 # Use OpenAI API to generate response for unknown intentions
                                 response = openai.Completion.create(
@@ -331,7 +326,6 @@ For Merissa Chatbot Api:
 ❂ `/revoke` : To revoke/delete Merissa Chatbot Token.
 
 For Asking Questions to ChatGPT:
-❂ `/chatgpt` on/off : To on or off chatgpt chat.
 ❂ `/ask question` : To get answer from Chatgpt By OpenAI.
 
 *Reports bugs at*: @MerissaxSupport
