@@ -5,9 +5,9 @@ from pyrogram.types import Message
 
 from MerissaRobot import BOT_ID, eor
 from MerissaRobot import pbot as app
+from MerissaRobot.Database.sql import chatbot_sql as sql
 from MerissaRobot.Utils.Helpers.errors import capture_err
 from MerissaRobot.Utils.Helpers.filter_groups import chatbot_group
-from MerissaRobot.Database.sql import chatbot_sql as sql
 
 active_chats_bot = []
 
