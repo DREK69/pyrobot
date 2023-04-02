@@ -46,7 +46,7 @@ def merissarm(update: Update, context: CallbackContext) -> str:
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"Merissa Chatbot Disable\n"
                 f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
-            )            
+            )
         else:
             update.effective_message.edit_text(
                 "Merissa Chatbot disable by {}.".format(
@@ -67,16 +67,16 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
     if match:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
-        is_merissa = sql.set_merissa(chat.id)         
-        if is_merissa: 
+        is_merissa = sql.set_merissa(chat.id)
+        if is_merissa:
             if chat.id in db:
-                return db.remove(chat.id)                          
+                return db.remove(chat.id)
             is_merissa = sql.set_merissa(user_id)
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"Merissa Chatbot Enable\n"
                 f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
-            )       
+            )
         else:
             update.effective_message.edit_text(
                 "Merissa Chatbot enable by {}.".format(
