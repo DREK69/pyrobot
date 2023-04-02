@@ -67,7 +67,7 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
     if match:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
-        is_merissa = sql.set_merissa(chat.id)        
+        is_merissa = sql.set_merissa(chat.id)
         if is_merissa:
             active_chats_bot.remove(user_id)
             is_merissa = sql.set_merissa(user_id)
