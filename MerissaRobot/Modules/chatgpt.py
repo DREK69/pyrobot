@@ -1,3 +1,5 @@
+import requests 
+
 from pyrogram import filters
 from pyrogram.enums import ChatAction
 from pyrogram.types import Message
@@ -6,7 +8,7 @@ from MerissaRobot import BOT_ID
 from MerissaRobot import pbot as app
 from MerissaRobot.Utils.Helpers.errors import capture_err
 from MerissaRobot.Utils.Helpers.filter_groups import chatbot_group
-from MerissaRobot.Utils.Helpers.pluginshelper import edit_or_reply as eor
+from MerissaRobot.Utils.Helpers.pluginhelper import edit_or_reply as eor
 
 active_chats_bot = []
 
@@ -45,7 +47,7 @@ async def type_and_send(message: Message):
     message.from_user.id if message.from_user else 0
     query = message.text.strip()
     await message._client.send_chat_action(chat_id, ChatAction.TYPING)
-    response = get(f"https://api.princexd.tech/ask?text={query}").json()["answer"]
+    response = requests.get(f"https://api.princexd.tech/ask?text={query}").json()["answer"]
     await message.reply_text(response)
     await message._client.send_chat_action(
         chat_id,
