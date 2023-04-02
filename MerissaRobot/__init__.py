@@ -202,6 +202,9 @@ async def get_entity(client, entity):
                 entity_client = kp
     return entity, entity_client
 
+BOT_ID = dispatcher.bot.id
+BOT_USERNAME = dispatcher.bot.username
+BOT_NAME = dispatcher.bot.first_name
 
 # ARQ Client
 LOGGER.info("[ARQ CLIENT] Checking Arq Connections...")
