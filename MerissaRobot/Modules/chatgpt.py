@@ -3,11 +3,10 @@ from pyrogram import filters
 from pyrogram.enums import ChatAction
 from pyrogram.types import Message
 
-from MerissaRobot import BOT_ID
+from MerissaRobot import BOT_ID, eor
 from MerissaRobot import pbot as app
 from MerissaRobot.Utils.Helpers.errors import capture_err
 from MerissaRobot.Utils.Helpers.filter_groups import chatbot_group
-from MerissaRobot.Utils.Helpers.pluginhelper import edit_or_reply as eor
 
 active_chats_bot = []
 
@@ -37,7 +36,7 @@ async def chat_bot_toggle(db, message: Message):
 @capture_err
 async def chatbot_status(_, message: Message):
     if len(message.command) != 2:
-        return await eor(message, text="**Usage:**\n/chatgpt [ENABLE|DISABLE]")
+        return await message.ra(message, text="**Usage:**\n/chatgpt [ENABLE|DISABLE]")
     await chat_bot_toggle(active_chats_bot, message)
 
 
