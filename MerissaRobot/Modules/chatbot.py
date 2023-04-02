@@ -166,6 +166,7 @@ For Merissa Chatbot Api:
 ❂ `/revoke` : To revoke/delete Merissa Chatbot Token.
 
 For Asking Questions to ChatGPT:
+❂ `/chatgpt` on/off : To on or off chatgpt chat.
 ❂ `/ask question` : To get answer from Chatgpt By OpenAI.
 
 *Reports bugs at*: @MerissaxSupport
