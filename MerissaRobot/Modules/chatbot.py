@@ -24,7 +24,7 @@ from telegram.ext import (
 from telegram.utils.helpers import mention_html
 
 import MerissaRobot.Database.sql.chatbot_sql as sql
-from MerissaRobot import dispatcher
+from MerissaRobot import dispatcher, BOT_USERNAME
 from MerissaRobot.Handler.chat_status import user_admin, user_admin_no_reply
 from MerissaRobot.Handler.filters import CustomFilters
 from MerissaRobot.Modules.log_channel import gloggable
@@ -91,7 +91,6 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
 @user_admin
 @gloggable
 def merissa(update: Update, context: CallbackContext):
-    update.effective_user
     message = update.effective_message
     msg = """**Welcome To Control Panal Of Merissa ChatBot**
 
@@ -114,6 +113,8 @@ def merissa(update: Update, context: CallbackContext):
 def merissa_message(context: CallbackContext, message):
     reply_message = message.reply_to_message
     if message.text.lower() == "merissa":
+        return True
+    elif BOT_USERNAME in message.text.upper():
         return True
     if reply_message:
         if reply_message.from_user.id == context.bot.get_me().id:
