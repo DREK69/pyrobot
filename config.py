@@ -27,7 +27,7 @@ JOIN_LOGGER = os.environ.get("JOIN_LOGGER", "-1001325865052")
 OWNER_USERNAME = os.environ.get("OWNER_USERNAME", "NoobxCoder")
 DB_URL = os.environ.get(
     "DATABASE_URL",
-    "postgres://yone:kushal55@ls-e6c4b74049f7e42d52874d434d6c15f85c25c82a.cmcksriktjsm.ap-south-1.rds.amazonaws.com:5432/merissa",
+    "postgres://merissa:kushal55@ls-e6c4b74049f7e42d52874d434d6c15f85c25c82a.cmcksriktjsm.ap-south-1.rds.amazonaws.com:5432/merissa",
 )
 DB_URI = DB_URL.replace("postgres://", "postgresql://", 1)
 REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", "")

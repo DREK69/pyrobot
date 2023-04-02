@@ -42,13 +42,13 @@ def merissarm(update: Update, context: CallbackContext) -> str:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
         try:
-            is_yone = sql.rem_yone(chat.id)
+            is_merissa = sql.rem_merissa(chat.id)
         except Exception as e:
             update.effective_message.edit_text(f"error occured: {e}")
             return
 
-        if is_yone:
-            is_yone = sql.rem_yone(user_id)
+        if is_merissa:
+            is_merissa = sql.rem_merissa(user_id)
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"AI_DISABLED\n"
@@ -72,10 +72,10 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
     if match:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
-        is_yone = sql.set_yone(chat.id)
-        if is_yone:
+        is_merissa = sql.set_merissa(chat.id)
+        if is_merissa:
             try:
-                is_yone = sql.set_yone(user_id)
+                is_merissa = sql.set_merissa(user_id)
             except Exception as e:
                 update.effective_message.edit_text(f"error occured: {e}")
                 return
@@ -216,14 +216,14 @@ def chatbot(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     bot = context.bot
     # Check if the chat has enabled the chatbot
-    is_yone_enabled = sql.is_yone(chat_id)
-    if not is_yone_enabled:
+    is_merissa_enabled = sql.is_merissa(chat_id)
+    if not is_merissa_enabled:
         return
     # Set up OpenAI API key and models
     openai.api_key = "add_open_api_here"
     if message.text and not message.document:
         try:
-            if not yone_message(context, message):
+            if not merissa_message(context, message):
                 return
             bot.send_chat_action(chat_id, action="typing")
 
@@ -241,29 +241,29 @@ def chatbot(update: Update, context: CallbackContext):
                 is_timepass = any(word in message_text for word in rules["timepass"])
                 if is_timepass:
                     # Use Kora API to generate response
-                    yoneurl = requests.get(
+                    merissaurl = requests.get(
                         "https://kora-api.vercel.app/chatbot/message=" + message_text
                     )
-                    yone = json.loads(yoneurl.text)["reply"]
+                    merissa = json.loads(merissaurl.text)["reply"]
                 else:
                     for rule, words in rules.items():
                         if any(word in message_text for word in words):
                             # Use Kora API to generate response for certain rules
-                            yoneurl = requests.get(
+                            merissaurl = requests.get(
                                 "https://kora-api.vercel.app/chatbot/message="
                                 + message_text
                             )
-                            yone = json.loads(yoneurl.text)["reply"]
+                            merissa = json.loads(merissaurl.text)["reply"]
                             break
                     else:
                         if len(message_text) <= small_threshold:
-                            yone_url = f"https://kora-api.vercel.app/chatbot/message={message_text}"
-                            yone = json.loads(requests.get(yone_url).text)["reply"]
+                            merissa_url = f"https://kora-api.vercel.app/chatbot/message={message_text}"
+                            merissa = json.loads(requests.get(merissa_url).text)["reply"]
                         else:
                             # If none of the rules match, randomly choose between Kora and OpenAI API
                             if random.random() < 0.3:
-                                yone_url = f"https://kora-api.vercel.app/chatbot/message={message_text}"
-                                yone = json.loads(requests.get(yone_url).text)["reply"]
+                                merissa_url = f"https://kora-api.vercel.app/chatbot/message={message_text}"
+                                merissa = json.loads(requests.get(merissa_url).text)["reply"]
                             else:
                                 # Use OpenAI API to generate response for unknown intentions
                                 response = openai.Completion.create(
@@ -275,7 +275,7 @@ def chatbot(update: Update, context: CallbackContext):
                                     frequency_penalty=0,
                                     presence_penalty=0.6,
                                 )
-                                yone = response.choices[0].text
+                                merissa = response.choices[0].text
             else:
                 # Use OpenAI API to generate response for serious questions
                 response = openai.Completion.create(
@@ -287,10 +287,10 @@ def chatbot(update: Update, context: CallbackContext):
                     frequency_penalty=0,
                     presence_penalty=0.6,
                 )
-                yone = response.choices[0].text
+                merissa = response.choices[0].text
 
             # Send the translated response to the user
-            message.reply_text(yone)
+            message.reply_text(merissa)
 
         except Exception as e:
             # Log the error and send a message to the user that there was a problem
@@ -300,7 +300,7 @@ def chatbot(update: Update, context: CallbackContext):
 
 
 def list_all_chats(update: Update, context: CallbackContext):
-    chats = sql.get_all_yone_chats()
+    chats = sql.get_all_merissa_chats()
     text = "<b>YONE-Enabled Chats</b>\n"
     for chat in chats:
         try:
@@ -308,7 +308,7 @@ def list_all_chats(update: Update, context: CallbackContext):
             name = x.title or x.first_name
             text += f"• <code>{name}</code>\n"
         except (BadRequest, Unauthorized):
-            sql.rem_yone(*chat)
+            sql.rem_merissa(*chat)
         except RetryAfter as e:
             sleep(e.retry_after)
     update.effective_message.reply_text(text, parse_mode="HTML")

@@ -31,7 +31,7 @@ async def token(client, message):
         toggle.insert_one({"ID": word, "data": word})
         user.insert_one({"user_id": message.from_user.id, "API": word})
         await message.reply_text(
-            f"Your Merissa Token: `{word}` Do not give this token to anyone else!\nKnow More - @MerissaChatbotApi"
+            f"Your Merissa Token: `{word}` Do not give this token to anmerissa else!\nKnow More - @MerissaChatbotApi"
         )
         await app.send_message(
             ERROR_LOG,
@@ -40,7 +40,7 @@ async def token(client, message):
     else:
         MerissaAPI = is_user["API"]
         await message.reply_text(
-            f"Your Merissa Token: `{MerissaAPI}` Do not give this token to anyone else!\n Join @MerissaxSupport"
+            f"Your Merissa Token: `{MerissaAPI}` Do not give this token to anmerissa else!\n Join @MerissaxSupport"
         )
 
 
