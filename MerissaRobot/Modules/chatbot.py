@@ -27,7 +27,7 @@ from MerissaRobot import BOT_USERNAME, dispatcher
 from MerissaRobot.Handler.chat_status import user_admin, user_admin_no_reply
 from MerissaRobot.Handler.filters import CustomFilters
 from MerissaRobot.Modules.log_channel import gloggable
-
+from MerissaRobot.Modules.chatgpt import active_chats_bot
 
 @user_admin_no_reply
 @gloggable
@@ -67,7 +67,9 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
         is_merissa = sql.set_merissa(chat.id)
+        active_chats_bot.remove(chat.id)
         if is_merissa:
+            active_chats_bot.remove(user_id)
             is_merissa = sql.set_merissa(user_id)
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
