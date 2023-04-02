@@ -1,46 +1,35 @@
-import json
-import re
-import os
 import html
-import requests
-import MerissaRobot.Database.sql.chatbot_sql as sql
-import openai
+import json
 import random
-
-
+import re
 from time import sleep
-from telegram import ParseMode
-from MerissaRobot import dispatcher, updater, SUPPORT_CHAT
-from MerissaRobot.Plugins.Admin.log_channel import gloggable
+
+import openai
+import requests
 from telegram import (
     CallbackQuery,
     Chat,
-    MessageEntity,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    Message,
     ParseMode,
     Update,
-    Bot,
     User,
 )
-
+from telegram.error import BadRequest, RetryAfter, Unauthorized
 from telegram.ext import (
     CallbackContext,
     CallbackQueryHandler,
     CommandHandler,
-    DispatcherHandlerStop,
     Filters,
     MessageHandler,
-    run_async,
 )
+from telegram.utils.helpers import mention_html
 
-from telegram.error import BadRequest, RetryAfter, Unauthorized
-
+import MerissaRobot.Database.sql.chatbot_sql as sql
+from MerissaRobot import dispatcher
 from MerissaRobot.Handlers.filters import CustomFilters
 from MerissaRobot.Handlers.validation import user_admin, user_admin_no_reply
-from MerissaRobot.Handlers.alternate import typing_action
-from telegram.utils.helpers import mention_html, mention_markdown, escape_markdown
+from MerissaRobot.Plugins.Admin.log_channel import gloggable
 
 
 @user_admin_no_reply
@@ -107,7 +96,7 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
 @user_admin
 @gloggable
 def merissa(update: Update, context: CallbackContext):
-    user = update.effective_user
+    update.effective_user
     message = update.effective_message
     msg = """**Welcome To Control Panal Of Merissa ChatBot**
 
@@ -131,9 +120,9 @@ def merissa_message(context: CallbackContext, message):
     reply_message = message.reply_to_message
     if message.text.lower() == "merissa":
         return True
-    if message.chat.type == 'private':
+    if message.chat.type == "private":
         return True
-    
+
     if reply_message:
         if reply_message.from_user.id == context.bot.get_me().id:
             return True
@@ -143,16 +132,83 @@ def merissa_message(context: CallbackContext, message):
 
 # Define the rules for different types of messages
 rules = {
-    'greeting': ['hi', 'hello', 'hey', 'good morning', 'good afternoon', 'good evening', 'howdy'],
-    'compliment': ['beautiful', 'nice', 'lovely', 'stunning', 'gorgeous', 'amazing', 'wonderful'],
-    'flirtation': ['hug', 'kiss', 'date', 'cuddle', 'snuggle', 'miss you', 'you\'re so cute', 'love'],
-    'joke': ['haha', 'lol', 'funny', 'that\'s a good one', 'you crack me up', 'I can\'t stop laughing'],
-    'small talk': ['how are you', 'what\'s up', 'what\'s new', 'how was your day', 'what are you doing', 'nice weather today'],
-    'timepass': ['okay', 'cool', 'nice', 'alright', 'got it', 'thanks'],
-    'unknown': ['I don\'t understand', 'can you clarify', 'what do you mean', 'sorry, I don\'t know', 'could you please rephrase that'],
-    'abuse': ['fuck','motherfucker','bitch', 'pussy', 'dick', 'vagina','motherchod', 'gandu', 'bhosdike', 'chutiya', 'loda', 'bahanchod', 'chut', 'loda', 'behanchod', 'matherchod', 'randi', 'jhatu', 'jhat', 'lund', 'lawde', 'boobs' ]
-    }
-
+    "greeting": [
+        "hi",
+        "hello",
+        "hey",
+        "good morning",
+        "good afternoon",
+        "good evening",
+        "howdy",
+    ],
+    "compliment": [
+        "beautiful",
+        "nice",
+        "lovely",
+        "stunning",
+        "gorgeous",
+        "amazing",
+        "wonderful",
+    ],
+    "flirtation": [
+        "hug",
+        "kiss",
+        "date",
+        "cuddle",
+        "snuggle",
+        "miss you",
+        "you're so cute",
+        "love",
+    ],
+    "joke": [
+        "haha",
+        "lol",
+        "funny",
+        "that's a good one",
+        "you crack me up",
+        "I can't stop laughing",
+    ],
+    "small talk": [
+        "how are you",
+        "what's up",
+        "what's new",
+        "how was your day",
+        "what are you doing",
+        "nice weather today",
+    ],
+    "timepass": ["okay", "cool", "nice", "alright", "got it", "thanks"],
+    "unknown": [
+        "I don't understand",
+        "can you clarify",
+        "what do you mean",
+        "sorry, I don't know",
+        "could you please rephrase that",
+    ],
+    "abuse": [
+        "fuck",
+        "motherfucker",
+        "bitch",
+        "pussy",
+        "dick",
+        "vagina",
+        "motherchod",
+        "gandu",
+        "bhosdike",
+        "chutiya",
+        "loda",
+        "bahanchod",
+        "chut",
+        "loda",
+        "behanchod",
+        "matherchod",
+        "randi",
+        "jhatu",
+        "jhat",
+        "lund",
+        "lawde",
+        "boobs",
+    ],
+}
 
 
 def chatbot(update: Update, context: CallbackContext):
@@ -173,38 +229,41 @@ def chatbot(update: Update, context: CallbackContext):
 
             message_text = message.text.strip().lower()
 
-
             # Set a threshold to detect timepass messages
             threshold = 30
-            small_threshold =  10
+            small_threshold = 10
 
             prompt = message_text
             temperature = random.uniform(0.5, 1.0)
 
-
             # Check if the message is a timepass or a serious question
             if len(message_text) <= threshold:
-                is_timepass = any(word in message_text for word in rules['timepass'])
+                is_timepass = any(word in message_text for word in rules["timepass"])
                 if is_timepass:
                     # Use Kora API to generate response
-                    yoneurl = requests.get("https://kora-api.vercel.app/chatbot/message=" + message_text)
-                    yone = json.loads(yoneurl.text)['reply']
+                    yoneurl = requests.get(
+                        "https://kora-api.vercel.app/chatbot/message=" + message_text
+                    )
+                    yone = json.loads(yoneurl.text)["reply"]
                 else:
                     for rule, words in rules.items():
                         if any(word in message_text for word in words):
                             # Use Kora API to generate response for certain rules
-                            yoneurl = requests.get("https://kora-api.vercel.app/chatbot/message=" + message_text)
-                            yone = json.loads(yoneurl.text)['reply']
+                            yoneurl = requests.get(
+                                "https://kora-api.vercel.app/chatbot/message="
+                                + message_text
+                            )
+                            yone = json.loads(yoneurl.text)["reply"]
                             break
                     else:
                         if len(message_text) <= small_threshold:
                             yone_url = f"https://kora-api.vercel.app/chatbot/message={message_text}"
-                            yone = json.loads(requests.get(yone_url).text)['reply']
+                            yone = json.loads(requests.get(yone_url).text)["reply"]
                         else:
-                        # If none of the rules match, randomly choose between Kora and OpenAI API
+                            # If none of the rules match, randomly choose between Kora and OpenAI API
                             if random.random() < 0.3:
                                 yone_url = f"https://kora-api.vercel.app/chatbot/message={message_text}"
-                                yone = json.loads(requests.get(yone_url).text)['reply']
+                                yone = json.loads(requests.get(yone_url).text)["reply"]
                             else:
                                 # Use OpenAI API to generate response for unknown intentions
                                 response = openai.Completion.create(
@@ -235,7 +294,9 @@ def chatbot(update: Update, context: CallbackContext):
 
         except Exception as e:
             # Log the error and send a message to the user that there was a problem
-            context.bot.send_message(chat_id=chat_id, text=f"Sorry, I encountered an error: {str(e)}")
+            context.bot.send_message(
+                chat_id=chat_id, text=f"Sorry, I encountered an error: {str(e)}"
+            )
 
 
 def list_all_chats(update: Update, context: CallbackContext):
