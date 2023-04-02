@@ -48,7 +48,7 @@ async def type_and_send(message: Message):
     response = requests.get(f"https://api.princexd.tech/ask?text={query}").json()[
         "answer"
     ]
-    await message.reply_text(response)   
+    await message.reply_text(response)
 
 
 @app.on_message(
