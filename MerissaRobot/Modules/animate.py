@@ -100,6 +100,6 @@ def mangadown(client, message):
     ai_image = get_ai_image(base64_image_string)["media_info_list"][0]["media_data"]
     message.reply_photo(
         photo=ai_image,
-        caption="Powered By @MerissaRobot",     
+        caption="Powered By @MerissaRobot",
     )
     x.delete()
