@@ -72,4 +72,4 @@ async def movie(client, message):
             x = qq_request(img_buffer)
             await message.reply_text(x)
     else:
-        await message.reply_text("Reply to your photo to convert anime avtar"
+        await message.reply_text("Reply to your photo to convert anime avtar")
