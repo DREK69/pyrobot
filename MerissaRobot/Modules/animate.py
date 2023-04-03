@@ -1,87 +1,82 @@
-import base64
-import hashlib
-import json
-import os
-import random
-import uuid
-
 import requests
-from pyrogram import filters
+import json
+import base64
+from pyrogram import Client, filters
+from pyrogram.types import *
 
-from MerissaRobot import pbot
+from MerissaRobot import pbot as app, TOKEN
 
+def get_ai_image(base64_image_string):
 
-def signV1(obj):
-    s = json.dumps(obj)
-    return hashlib.md5(
-        b"https://h5.tu.qq.com" + str(len(s)).encode() + b"HQ31X02e"
-    ).hexdigest()
-
-
-def qq_request(img_buffer):
-    str(uuid.uuid4())
-    images = base64.b64encode(img_buffer).decode()
-
-    data_report = {
-        "parent_trace_id": "4c689320-71ba-1909-ab57-13c0804d4cc6",
-        "root_channel": "",
-        "level": 0,
-    }
-
-    obj = {
-        "busiId": "different_dimension_me_img_entry",  #'ai_painting_anime_entry',
-        "images": [
-            images,
-        ],
-        "extra": json.dumps(
-            {
-                "face_rects": [],
-                "version": 2,
-                "platform": "web",
-                "data_report": data_report,
-            }
-        ),
-    }
-    sign = signV1(obj)
-    url = "https://ai.tu.qq.com/overseas/trpc.shadow_cv.ai_processor_cgi.AIProcessorCgi/Process"
     headers = {
-        "Content-Type": "application/json",
-        "Origin": "https://h5.tu.qq.com",
-        "Referer": "https://h5.tu.qq.com/web/ai-2d/cartoon/index?jump_qq_for_play=true",
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
-        "x-sign-value": sign,
-        "x-sign-version": "v1",
+        "Connection": "keep-alive",
+        "phone_gid": "2862114434",
+        "Accept": "application/json, text/plain, */*",
+        "User-Agent":
+        "Mozilla/5.0 (Linux; Android 7.1.2; SM-G955N Build/NRD90M.G955NKSU1AQDC; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/92.0.4515.131 Mobile Safari/537.36 com.meitu.myxj/11270(android7.1.2)/lang:ru/isDeviceSupport64Bit:false MTWebView/4.8.5",
+        "Content-Type": "application/json;charset=UTF-8",
+        "Origin": "https://titan-h5.meitu.com",
+        "X-Requested-With": "com.meitu.meiyancamera",
+        "Sec-Fetch-Site": "same-site",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Dest": "empty",
+        "Referer": "https://titan-h5.meitu.com/",
+        "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
     }
 
-    timeout = 30000
-    r = requests.get(
-        "https://api.proxynova.com/proxy/find?url=https%3A%2F%2Fwww.proxynova.com%2Fproxy-server-list%2Fcountry-cn%2F"
-    )
-    x = [f"https://{ii['ip']}:{ii['port']}" for ii in r.json()["proxies"]]
-    proxy = random.choice(x)
-    proxies = {
-        "http": proxy,
+    params = {
+        "api_key": "237d6363213c4751ba1775aba648517d",
+        "api_secret": "b7b1c5865a83461ea5865da3ecc7c03d",
     }
+
+    json_data = {
+        "parameter": {
+            "rsp_media_type": "url",
+            "strength": 0.45,
+            "guidance_scale": 7.5,
+            "prng_seed": "-1",
+            "num_inference_steps": "50",
+            "extra_prompt": "",
+            "extra_negative_prompt": "",
+            "random_generation": "False",
+            "type": "1",
+            "type_generation": "True",
+            "sensitive_words": "white_kimono",
+        },
+        "extra": {},
+        "media_info_list": [
+            {
+                "media_data": base64_image_string,
+                "media_profiles": {
+                    "media_data_type": "jpg",
+                },
+            },
+        ],
+    }
+
     response = requests.post(
-        url, json=obj, headers=headers, proxies=proxies, timeout=timeout
+        "https://openapi.mtlab.meitu.com/v1/stable_diffusion_anime",
+        params=params,
+        headers=headers,
+        json=json_data,
     )
-    data = response.json()
-    return data
 
+    return json.loads(response.content)
 
-@pbot.on_message(filters.command("animate") & filters.private)
-async def movie(client, message):
-    reply = message.reply_to_message
-    if reply:
-        logo = await message.reply_text("Creating your anime avtar...wait!")
-        download_location = await client.download_media(
-            message=reply,
-            file_name="root/downloads/",
-        )
-        with open(download_location, "rb") as f:
-            img_buffer = f.read()
-            x = qq_request(img_buffer)
-            await logo.edit_text(x)
-            os.remove(download_location)
-    else:
-        await message.reply_text("Reply to your photo to convert anime avtar")
+@app.on_message(filters.command("animate") & filters.private)
+def mangadown(client, message):
+    if not message.reply_to_message:
+        if (not message.photo):
+            message.reply_text("Reply To Image")
+            return   
+    file_id = message.photo.file_id
+    filepath = bot.get_file(file_id).file_path
+    K = message.reply_text("Creating your Anime Avtar... Please Wait!")
+    r = requests.get("https://api.telegram.org/file/bot" + TOKEN + "/" + filepath)
+    base64_image_string = base64.b64encode(r.content).decode("utf-8")
+    ai_image = get_ai_image(base64_image_string)["media_info_list"][0]["media_data"]
+    message.reply_photo(
+            photo=ai_image,
+            caption=
+            f"Hello **[{message.from_user.first_name}-Kun](tg://user?id={message.from_user.id})**\n Join @MerissaxSupport"
+    )    
