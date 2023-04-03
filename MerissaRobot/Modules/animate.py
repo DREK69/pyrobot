@@ -1,19 +1,18 @@
 import base64
 import json
-
+import random
+import string
 import requests
 import telebot
 from pyrogram import filters
+from pyrogram.types import *
 
 from MerissaRobot import TOKEN
 from MerissaRobot import pbot as app
 
 bot = telebot.TeleBot(TOKEN)
-import random
-import string
 
 y = {}
-
 
 def get_ai_image(base64_image_string):
     headers = {
