@@ -134,7 +134,9 @@ async def movie(client, message):
                     ),
                 ],
                 [
-                    InlineKeyboardButton("Change Logo 🔂", callback_data=f"logo|{name}|{key}|{font}"),
+                    InlineKeyboardButton(
+                        "Change Logo 🔂", callback_data=f"logo|{name}|{key}|{font}"
+                    ),
                 ],
             ]
         )
@@ -217,7 +219,9 @@ async def hmeme(_, query: CallbackQuery):
                     ),
                 ],
                 [
-                    InlineKeyboardButton("Change Logo 🔂", callback_data=f"logo|{name}|{key}|{font}"),
+                    InlineKeyboardButton(
+                        "Change Logo 🔂", callback_data=f"logo|{name}|{key}|{font}"
+                    ),
                 ],
             ],
         ),
