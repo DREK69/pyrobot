@@ -77,7 +77,7 @@ async def movie(client, message):
         download_location = await client.download_media(
             message=reply,
             file_name="root/downloads/",
-        )        
+        )
         with open(download_location, "rb") as f:
             img_buffer = f.read()
             x = qq_request(img_buffer)
