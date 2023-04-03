@@ -1,9 +1,10 @@
 import base64
 import hashlib
 import json
+import os
 import random
 import uuid
-import os
+
 import requests
 from pyrogram import filters
 
@@ -84,4 +85,3 @@ async def movie(client, message):
             os.remove("animate.jpg")
     else:
         await message.reply_text("Reply to your photo to convert anime avtar")
-    
