@@ -71,7 +71,7 @@ def mangadown(client, message):
         if not message.photo:
             message.reply_text("Reply To Image")
             return
-    file_id = message.photo.file_id
+    file_id = message.Photo.file_id
     filepath = bot.get_file(file_id).file_path
     message.reply_text("Creating your Anime Avtar... Please Wait!")
     r = requests.get("https://api.telegram.org/file/bot" + TOKEN + "/" + filepath)
