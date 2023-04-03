@@ -95,8 +95,9 @@ async def movie(client, message):
             message=reply,
             file_name="root/downloads/",
         )
-        key = uf(download_location)[0]
-        imglink = "https://te.legra.ph" + key
+        x = uf(download_location)[0]
+        imglink = "https://te.legra.ph" + x
+        key = imglink.split("/")[4]
         url = get(
             f"https://api.princexd.tech/logoimg?imglink={imglink}&text={name}"
         ).url
@@ -175,7 +176,7 @@ async def hmeme(_, query: CallbackQuery):
     data = callback_data.split("|")
     name = data[1]
     key = data[2]
-    imglink = "https://te.legra.ph" + key
+    imglink = "https://te.legra.ph/file/" + key
     url = get(f"https://api.princexd.tech/logoimg?imglink={imglink}&text={name}").url
     await query.edit_message_media(
         InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
