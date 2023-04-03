@@ -3,7 +3,7 @@ import hashlib
 import json
 import random
 import uuid
-
+import os
 import requests
 from pyrogram import filters
 
@@ -81,5 +81,7 @@ async def movie(client, message):
             img_buffer = f.read()
             x = qq_request(img_buffer)
             await logo.edit_text(x)
+            os.remove("animate.jpg")
     else:
         await message.reply_text("Reply to your photo to convert anime avtar")
+    
