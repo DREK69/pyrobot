@@ -66,6 +66,7 @@ pyrate-limiter
 pyrogram>=2.0.93
 pyromod==1.5
 pySmartDL
+pyTelegramBotAPI==4.8.0
 python-arq
 python-barcode==0.14.0
 python-dotenv==0.*
