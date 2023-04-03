@@ -4,7 +4,6 @@ import json
 import requests
 import telebot
 from pyrogram import filters
-from pyrogram.types import *
 
 from MerissaRobot import TOKEN
 from MerissaRobot import pbot as app
@@ -101,37 +100,6 @@ def mangadown(client, message):
     ai_image = get_ai_image(base64_image_string)["media_info_list"][0]["media_data"]
     message.reply_photo(
         photo=ai_image,
-        caption="Powered By @MerissaRobot",
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        text="Change 🔂",
-                        callback_data=f"animate_{base64_image_string}",
-                    ),
-                ],
-            ],
-        ),
+        caption="Powered By @MerissaRobot",     
     )
     x.delete()
-
-
-@app.on_callback_query(filters.regex(pattern=r"animate"))
-async def hmeme(_, query: CallbackQuery):
-    await query.answer("Generating Your Logo Please Wait....", show_alert=True)
-    callback_data = query.data.strip()
-    base64_image_string = callback_data.split("_")[1]
-    ai_image = get_ai_image(base64_image_string)["media_info_list"][0]["media_data"]
-    await query.edit_message_media(
-        InputMediaPhoto(ai_image, caption="Powered by @MerissaRobot"),
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        text="Change 🔂",
-                        callback_data=f"animate_{base64_image_string}",
-                    ),
-                ],
-            ],
-        ),
-    )
