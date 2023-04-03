@@ -121,8 +121,9 @@ def merissa_message(context: CallbackContext, message):
     if message.text.lower() == "merissa":
         return True
     if message.chat.type == "private":
+        if message.text.lower() == "https":
+            return
         return True
-
     if reply_message:
         if reply_message.from_user.id == context.bot.get_me().id:
             return True
