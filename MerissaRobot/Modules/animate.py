@@ -85,6 +85,7 @@ def animats(client, message):
     )
     x.delete()
 
+
 @app.on_message(filters.photo & filters.private)
 def mangadown(client, message):
     if not message.reply_to_message:
