@@ -7,7 +7,6 @@ import uuid
 
 import requests
 from pyrogram import filters
-from telegraph import upload_file as uf
 
 from MerissaRobot import pbot
 
@@ -78,11 +77,8 @@ async def movie(client, message):
         download_location = await client.download_media(
             message=reply,
             file_name="root/downloads/",
-        )
-        key = uf(download_location)[0]
-        imglink = "https://te.legra.ph" + key
-        wget.download(imglink, "animate.jpg")
-        with open("./animate.jpg", "rb") as f:
+        )        
+        with open(download_location, "rb") as f:
             img_buffer = f.read()
             x = qq_request(img_buffer)
             await logo.edit_text(x)
