@@ -115,11 +115,25 @@ async def movie(client, message):
         await logo.delete()
         os.remove(download_location)
     else:
-        url = get(f"https://api.princexd.tech/logo?text={name}").url
+        x = get(f"https://api.princexd.tech/logo?text={name}").json()
+        url = x["url"]
+        font = x["font"]
+        bg = x["img"]
+        key = bg.split("/")[4]
         button = InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("Change 🔂", callback_data=f"logo_{name}"),
+                    InlineKeyboardButton(
+                        text="Image 🔂",
+                        callback_data=f"flogo|{name}|{font}",
+                    ),
+                    InlineKeyboardButton(
+                        text="Font 🔂",
+                        callback_data=f"ilogo|{name}|{key}",
+                    ),
+                ],
+                [
+                    InlineKeyboardButton("Change Logo 🔂", callback_data=f"logo_{name}"),
                 ],
             ]
         )
@@ -130,6 +144,27 @@ async def movie(client, message):
         )
         await logo.delete()
 
+@pbot.on_callback_query(filters.regex(pattern=r"flogo"))
+async def hmeme(_, query: CallbackQuery):
+    await query.answer("Generating Your Logo Please Wait....", show_alert=True)
+    callback_data = query.data.strip()
+    data = callback_data.split("|")
+    name = data[1]
+    font = data[2]
+    url = get(f"https://api.princexd.tech/logofont?font={font}&text={name}").url
+    await query.edit_message_media(
+        InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Change 🔂",
+                        callback_data=f"flogo|{name}|{font}",
+                    ),
+                ],
+            ],
+        ),
+    )
 
 @pbot.on_callback_query(filters.regex(pattern=r"ilogo"))
 async def hmeme(_, query: CallbackQuery):
@@ -160,7 +195,7 @@ async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
     callback_data = query.data.strip()
     name = callback_data.split("_")[1]
-    url = get(f"https://api.princexd.tech/logo?text={name}").url
+    url = get(f"https://api.princexd.tech/logo?text={name}").json()["url"]
     await query.edit_message_media(
         InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
         reply_markup=InlineKeyboardMarkup(
