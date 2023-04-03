@@ -68,12 +68,30 @@ def get_ai_image(base64_image_string):
 
 
 @app.on_message(filters.command("animate") & filters.private)
-def mangadown(client, message):
+def animats(client, message):
     if not message.reply_to_message:
         if not message.photo:
             message.reply_text("Reply To Image")
             return
     file_id = message.reply_to_message.photo.file_id
+    filepath = bot.get_file(file_id).file_path
+    x = message.reply_text("Creating your Anime Avtar... Please Wait!")
+    r = requests.get("https://api.telegram.org/file/bot" + TOKEN + "/" + filepath)
+    base64_image_string = base64.b64encode(r.content).decode("utf-8")
+    ai_image = get_ai_image(base64_image_string)["media_info_list"][0]["media_data"]
+    message.reply_photo(
+        photo=ai_image,
+        caption="Powered By @MerissaRobot",
+    )
+    x.delete()
+
+@app.on_message(filters.photo & filters.private)
+def mangadown(client, message):
+    if not message.reply_to_message:
+        if not message.photo:
+            message.reply_text("Reply To Image")
+            return
+    file_id = message.photo.file_id
     filepath = bot.get_file(file_id).file_path
     x = message.reply_text("Creating your Anime Avtar... Please Wait!")
     r = requests.get("https://api.telegram.org/file/bot" + TOKEN + "/" + filepath)
