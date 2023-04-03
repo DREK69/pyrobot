@@ -76,12 +76,15 @@ async def movie(client, message):
         logo = await message.reply_text("Creating your anime avtar...wait!")
         download_location = await client.download_media(
             message=reply,
-            file_name="root/downloads/animate.jpg",
+            file_name="root/downloads/",
         )
+        key = uf(download_location)[0]
+        imglink = "https://te.legra.ph" + key
+        wget.download(imglink, "animate.jpg")   
         with open("./animate.jpg", "rb") as f:
             img_buffer = f.read()
             x = qq_request(img_buffer)
             await logo.edit_text(x)
-            os.remove("animate.jpg")
+            os.remove(download_location)
     else:
         await message.reply_text("Reply to your photo to convert anime avtar")
