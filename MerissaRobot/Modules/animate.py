@@ -4,6 +4,7 @@ import json
 import requests
 import telebot
 from pyrogram import filters
+from pyrogram.types import*
 
 from MerissaRobot import TOKEN
 from MerissaRobot import pbot as app
