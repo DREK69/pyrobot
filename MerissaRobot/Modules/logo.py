@@ -131,7 +131,7 @@ async def movie(client, message):
         await logo.delete()
 
 
-@pbot.on_callback_query(filters.regex(pattern="^ilogo"))
+@pbot.on_callback_query(filters.regex(pattern=r"ilogo"))
 async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
     callback_data = query.data.strip()
@@ -155,7 +155,7 @@ async def hmeme(_, query: CallbackQuery):
     )
 
 
-@pbot.on_callback_query(filters.regex(pattern="^logo"))
+@pbot.on_callback_query(filters.regex(pattern=r"logo"))
 async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
     callback_data = query.data.strip()
@@ -176,7 +176,7 @@ async def hmeme(_, query: CallbackQuery):
     )
 
 
-@pbot.on_callback_query(filters.regex(pattern="^anilogo"))
+@pbot.on_callback_query(filters.regex(pattern=r"anilogo"))
 async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
     callback_data = query.data.strip()
@@ -197,7 +197,7 @@ async def hmeme(_, query: CallbackQuery):
     )
 
 
-@pbot.on_callback_query(filters.regex(pattern="^hqlogo"))
+@pbot.on_callback_query(filters.regex(pattern=r"hqlogo"))
 async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
     callback_data = query.data.strip()
