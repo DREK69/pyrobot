@@ -75,11 +75,12 @@ def mangadown(client, message):
             return
     file_id = message.reply_to_message.photo.file_id
     filepath = bot.get_file(file_id).file_path
-    message.reply_text("Creating your Anime Avtar... Please Wait!")
+    x = message.reply_text("Creating your Anime Avtar... Please Wait!")
     r = requests.get("https://api.telegram.org/file/bot" + TOKEN + "/" + filepath)
     base64_image_string = base64.b64encode(r.content).decode("utf-8")
     ai_image = get_ai_image(base64_image_string)["media_info_list"][0]["media_data"]
     message.reply_photo(
         photo=ai_image,
-        caption=f"Hello **[{message.from_user.first_name}-Kun](tg://user?id={message.from_user.id})**\n Join @MerissaxSupport",
+        caption="Powered By @MerissaRobot",
     )
+    x.delete()
