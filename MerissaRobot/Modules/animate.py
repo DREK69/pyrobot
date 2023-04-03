@@ -114,6 +114,7 @@ def mangadown(client, message):
     )
     x.delete()
 
+
 @app.on_callback_query(filters.regex(pattern=r"animate"))
 async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
