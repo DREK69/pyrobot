@@ -14,6 +14,7 @@ import string
 
 y = {}
 
+
 def get_ai_image(base64_image_string):
     headers = {
         "Connection": "keep-alive",
@@ -81,9 +82,7 @@ def animats(client, message):
     x = message.reply_text("Creating your Anime Avtar... Please Wait!")
     r = requests.get("https://api.telegram.org/file/bot" + TOKEN + "/" + filepath)
     base64_image_string = base64.b64encode(r.content).decode("utf-8")
-    ran_hash = "".join(
-        random.choices(string.ascii_uppercase + string.digits, k=10)
-    )
+    ran_hash = "".join(random.choices(string.ascii_uppercase + string.digits, k=10))
     y[ran_hash] = base64_image_string
     ai_image = get_ai_image(base64_image_string)["media_info_list"][0]["media_data"]
     message.reply_photo(
@@ -114,9 +113,7 @@ def mangadown(client, message):
     x = message.reply_text("Creating your Anime Avtar... Please Wait!")
     r = requests.get("https://api.telegram.org/file/bot" + TOKEN + "/" + filepath)
     base64_image_string = base64.b64encode(r.content).decode("utf-8")
-    ran_hash = "".join(
-        random.choices(string.ascii_uppercase + string.digits, k=10)
-    )
+    ran_hash = "".join(random.choices(string.ascii_uppercase + string.digits, k=10))
     y[ran_hash] = base64_image_string
     ai_image = get_ai_image(base64_image_string)["media_info_list"][0]["media_data"]
     message.reply_photo(
@@ -134,6 +131,7 @@ def mangadown(client, message):
         ),
     )
     x.delete()
+
 
 @app.on_callback_query(filters.regex(pattern=r"animate"))
 async def hmeme(_, query: CallbackQuery):
