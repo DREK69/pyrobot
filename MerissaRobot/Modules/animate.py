@@ -80,7 +80,7 @@ async def movie(client, message):
         )
         key = uf(download_location)[0]
         imglink = "https://te.legra.ph" + key
-        wget.download(imglink, "animate.jpg")   
+        wget.download(imglink, "animate.jpg")
         with open("./animate.jpg", "rb") as f:
             img_buffer = f.read()
             x = qq_request(img_buffer)
