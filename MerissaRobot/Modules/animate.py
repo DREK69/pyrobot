@@ -10,7 +10,6 @@ from MerissaRobot import pbot
 
 def signV1(obj):
     s = json.dumps(obj)
-    #print(str(len(s)).encode())
     return hashlib.md5(
         b'https://h5.tu.qq.com' + str(len(s)).encode() + b'HQ31X02e'
     ).hexdigest()
@@ -38,7 +37,6 @@ def qq_request(img_buffer):
         })
     }
     sign = signV1(obj)
-    #url = "https://ai.tu.qq.com/trpc.shadow_cv.ai_processor_cgi.AIProcessorCgi/Process"
     url = "https://ai.tu.qq.com/overseas/trpc.shadow_cv.ai_processor_cgi.AIProcessorCgi/Process"
     headers = {
         'Content-Type': 'application/json',
