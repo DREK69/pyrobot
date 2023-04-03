@@ -9,7 +9,10 @@ from MerissaRobot import TOKEN
 from MerissaRobot import pbot as app
 
 bot = telebot.TeleBot(TOKEN)
+import random
+import string
 
+y = {}
 
 def get_ai_image(base64_image_string):
     headers = {
@@ -78,10 +81,24 @@ def animats(client, message):
     x = message.reply_text("Creating your Anime Avtar... Please Wait!")
     r = requests.get("https://api.telegram.org/file/bot" + TOKEN + "/" + filepath)
     base64_image_string = base64.b64encode(r.content).decode("utf-8")
+    ran_hash = "".join(
+        random.choices(string.ascii_uppercase + string.digits, k=10)
+    )
+    y[ran_hash] = base64_image_string
     ai_image = get_ai_image(base64_image_string)["media_info_list"][0]["media_data"]
     message.reply_photo(
         photo=ai_image,
         caption="Powered By @MerissaRobot",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Change 🔂",
+                        callback_data=f"animate_{ran_hash}",
+                    ),
+                ],
+            ],
+        ),
     )
     x.delete()
 
@@ -97,9 +114,44 @@ def mangadown(client, message):
     x = message.reply_text("Creating your Anime Avtar... Please Wait!")
     r = requests.get("https://api.telegram.org/file/bot" + TOKEN + "/" + filepath)
     base64_image_string = base64.b64encode(r.content).decode("utf-8")
+    ran_hash = "".join(
+        random.choices(string.ascii_uppercase + string.digits, k=10)
+    )
+    y[ran_hash] = base64_image_string
     ai_image = get_ai_image(base64_image_string)["media_info_list"][0]["media_data"]
     message.reply_photo(
         photo=ai_image,
         caption="Powered By @MerissaRobot",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Change 🔂",
+                        callback_data=f"animate_{ran_hash}",
+                    ),
+                ],
+            ],
+        ),
     )
     x.delete()
+
+@app.on_callback_query(filters.regex(pattern=r"animate"))
+async def hmeme(_, query: CallbackQuery):
+    await query.answer("Generating Your Logo Please Wait....", show_alert=True)
+    callback_data = query.data.strip()
+    ran_hash = callback_data.split("_")[1]
+    base64_image_string = y.get(ran_hash)
+    ai_image = get_ai_image(base64_image_string)["media_info_list"][0]["media_data"]
+    await query.edit_message_media(
+        InputMediaPhoto(ai_image, caption="Powered by @MerissaRobot"),
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Change 🔂",
+                        callback_data=f"animate_{ran_hash}",
+                    ),
+                ],
+            ],
+        ),
+    )
