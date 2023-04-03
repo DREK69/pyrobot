@@ -29,7 +29,7 @@ async def animememes(_, m):
     )
 
 
-@bot.on_callback_query(filters.regex("ameme"))
+@bot.on_callback_query(filters.regex(pattern=r"ameme"))
 async def ameme(_, query: CallbackQuery):
     res = requests.get("https://api.princexd.tech/reddit?query=Animememe").json()[
         "data"
@@ -74,7 +74,7 @@ async def memes(_, m):
     )
 
 
-@bot.on_callback_query(filters.regex("bmeme"))
+@bot.on_callback_query(filters.regex(pattern=r"bmeme"))
 async def memess(_, query: CallbackQuery):
     res = requests.get("https://api.princexd.tech/meme").json()
     url = res["image"]
@@ -117,7 +117,7 @@ async def hetaimemes(_, m):
     )
 
 
-@bot.on_callback_query(filters.regex("cmeme"))
+@bot.on_callback_query(filters.regex(pattern=r"cmeme"))
 async def hmeme(_, query: CallbackQuery):
     res = requests.get("https://meme-api.herokuapp.com/gimme/hentaimemes").json()
     url = res["url"]
