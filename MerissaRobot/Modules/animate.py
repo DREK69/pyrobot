@@ -10,6 +10,7 @@ from MerissaRobot import pbot as app
 
 bot = telebot.TeleBot(TOKEN)
 
+
 def get_ai_image(base64_image_string):
     headers = {
         "Connection": "keep-alive",
