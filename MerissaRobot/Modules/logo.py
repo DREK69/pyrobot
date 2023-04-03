@@ -134,7 +134,7 @@ async def movie(client, message):
                     ),
                 ],
                 [
-                    InlineKeyboardButton("Change Logo 🔂", callback_data=f"logo_{name}"),
+                    InlineKeyboardButton("Change Logo 🔂", callback_data=f"logo|{name}|{key}|{font}"),
                 ],
             ]
         )
@@ -160,7 +160,7 @@ async def hmeme(_, query: CallbackQuery):
             [
                 [
                     InlineKeyboardButton(
-                        text="Change 🔂",
+                        text="Change Image 🔂",
                         callback_data=f"flogo|{name}|{font}",
                     ),
                 ],
@@ -184,7 +184,7 @@ async def hmeme(_, query: CallbackQuery):
             [
                 [
                     InlineKeyboardButton(
-                        text="Change 🔂",
+                        text="Change Font 🔂",
                         callback_data=f"ilogo|{name}|{key}",
                     ),
                 ],
@@ -197,7 +197,10 @@ async def hmeme(_, query: CallbackQuery):
 async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
     callback_data = query.data.strip()
-    name = callback_data.split("_")[1]
+    data = callback_data.split("|")
+    name = data[1]
+    key = data[2]
+    font = data[3]
     url = get(f"https://api.princexd.tech/logo?text={name}").json()["url"]
     await query.edit_message_media(
         InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
@@ -205,9 +208,16 @@ async def hmeme(_, query: CallbackQuery):
             [
                 [
                     InlineKeyboardButton(
-                        text="Change 🔂",
-                        callback_data=f"logo_{name}",
+                        text="Image 🔂",
+                        callback_data=f"flogo|{name}|{font}",
                     ),
+                    InlineKeyboardButton(
+                        text="Font 🔂",
+                        callback_data=f"ilogo|{name}|{key}",
+                    ),
+                ],
+                [
+                    InlineKeyboardButton("Change Logo 🔂", callback_data=f"logo|{name}|{key}|{font}"),
                 ],
             ],
         ),
