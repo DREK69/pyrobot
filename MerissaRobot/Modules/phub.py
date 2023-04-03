@@ -48,9 +48,10 @@ async def options(c: Client, m: Message):
     )
 
 
-@Client.on_callback_query(filters.regex(pattern="^phubdl"))
+@Client.on_callback_query(filters.regex(pattern=r"phubdl"))
 async def get_video(c: Client, q: CallbackQuery):
-    id = q.data.split("_")[1]
+    callback_data = q.data.strip()
+    id = callback_data.split("_")[1]
     url = f"https://www.pornhub.com/view_video.php?viewkey={id}"
     message = await q.message.edit(
         "Downloading Started\n\nDownloading Speed could be Slow Plase wait..."
