@@ -1,19 +1,20 @@
-import requests
-import json
 import base64
-from pyrogram import Client, filters
+import json
+
+import requests
+from pyrogram import filters
 from pyrogram.types import *
 
-from MerissaRobot import pbot as app, TOKEN
+from MerissaRobot import TOKEN
+from MerissaRobot import pbot as app
+
 
 def get_ai_image(base64_image_string):
-
     headers = {
         "Connection": "keep-alive",
         "phone_gid": "2862114434",
         "Accept": "application/json, text/plain, */*",
-        "User-Agent":
-        "Mozilla/5.0 (Linux; Android 7.1.2; SM-G955N Build/NRD90M.G955NKSU1AQDC; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/92.0.4515.131 Mobile Safari/537.36 com.meitu.myxj/11270(android7.1.2)/lang:ru/isDeviceSupport64Bit:false MTWebView/4.8.5",
+        "User-Agent": "Mozilla/5.0 (Linux; Android 7.1.2; SM-G955N Build/NRD90M.G955NKSU1AQDC; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/92.0.4515.131 Mobile Safari/537.36 com.meitu.myxj/11270(android7.1.2)/lang:ru/isDeviceSupport64Bit:false MTWebView/4.8.5",
         "Content-Type": "application/json;charset=UTF-8",
         "Origin": "https://titan-h5.meitu.com",
         "X-Requested-With": "com.meitu.meiyancamera",
@@ -63,20 +64,20 @@ def get_ai_image(base64_image_string):
 
     return json.loads(response.content)
 
+
 @app.on_message(filters.command("animate") & filters.private)
 def mangadown(client, message):
     if not message.reply_to_message:
-        if (not message.photo):
+        if not message.photo:
             message.reply_text("Reply To Image")
-            return   
+            return
     file_id = message.photo.file_id
     filepath = bot.get_file(file_id).file_path
-    K = message.reply_text("Creating your Anime Avtar... Please Wait!")
+    message.reply_text("Creating your Anime Avtar... Please Wait!")
     r = requests.get("https://api.telegram.org/file/bot" + TOKEN + "/" + filepath)
     base64_image_string = base64.b64encode(r.content).decode("utf-8")
     ai_image = get_ai_image(base64_image_string)["media_info_list"][0]["media_data"]
     message.reply_photo(
-            photo=ai_image,
-            caption=
-            f"Hello **[{message.from_user.first_name}-Kun](tg://user?id={message.from_user.id})**\n Join @MerissaxSupport"
-    )    
+        photo=ai_image,
+        caption=f"Hello **[{message.from_user.first_name}-Kun](tg://user?id={message.from_user.id})**\n Join @MerissaxSupport",
+    )
