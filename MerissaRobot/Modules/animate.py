@@ -76,7 +76,7 @@ async def movie(client, message):
         logo = await message.reply_text("Creating your anime avtar...wait!")
         download_location = await client.download_media(
             message=reply,
-            file_name="animate.jpg",
+            file_name="root/downloads/animate.jpg",
         )
         with open("./animate.jpg", "rb") as f:
             img_buffer = f.read()
