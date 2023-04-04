@@ -135,7 +135,7 @@ async def movie(client, message):
                 ],
                 [
                     InlineKeyboardButton(
-                        "Change Logo 🔂", callback_data=f"logo|{name}|{key}|{font}"
+                        "Change Logo 🔂", callback_data=f"slogo|{name}|{key}|{font}"
                     ),
                 ],
             ]
@@ -195,7 +195,7 @@ async def hmeme(_, query: CallbackQuery):
     )
 
 
-@pbot.on_callback_query(filters.regex(pattern=r"logo"))
+@pbot.on_callback_query(filters.regex(pattern=r"slogo"))
 async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
     callback_data = query.data.strip()
@@ -220,7 +220,7 @@ async def hmeme(_, query: CallbackQuery):
                 ],
                 [
                     InlineKeyboardButton(
-                        "Change Logo 🔂", callback_data=f"logo|{name}|{key}|{font}"
+                        "Change Logo 🔂", callback_data=f"slogo|{name}|{key}|{font}"
                     ),
                 ],
             ],
