@@ -990,8 +990,8 @@ def main():
     updater.idle()
 
 
-def merissa_startup():
-    pbot.start()
+async def merissa_startup():
+    await pbot.start()
 
 
 if __name__ == "__main__":
