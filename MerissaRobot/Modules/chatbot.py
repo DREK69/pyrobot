@@ -121,7 +121,6 @@ def merissa_message(context: CallbackContext, message):
     if message.text.lower() == "merissa":
         return True
     if message.chat.type == "private":
-        
         return True
     if reply_message:
         if reply_message.from_user.id == context.bot.get_me().id:
@@ -351,7 +350,12 @@ ADD_CHAT_HANDLER = CallbackQueryHandler(merissaadd, pattern=r"add_chat", run_asy
 RM_CHAT_HANDLER = CallbackQueryHandler(merissarm, pattern=r"rm_chat", run_async=True)
 CHATBOT_HANDLER = MessageHandler(
     Filters.text
-    & (~Filters.regex(r"^#[^\s]+") & ~Filters.regex(r"^!") & ~Filters.regex(r"^\/") & ~Filters.regex(r'^https')),
+    & (
+        ~Filters.regex(r"^#[^\s]+")
+        & ~Filters.regex(r"^!")
+        & ~Filters.regex(r"^\/")
+        & ~Filters.regex(r"^https")
+    ),
     chatbot,
     run_async=True,
 )
