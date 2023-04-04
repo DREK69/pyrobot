@@ -112,7 +112,7 @@ def merissa(update: Update, context: CallbackContext):
     message.reply_text(
         msg,
         reply_markup=keyboard,
-        parse_mode=ParseMode.HTML,
+        parse_mode=ParseMode.MARKDOWN,
     )
 
 
