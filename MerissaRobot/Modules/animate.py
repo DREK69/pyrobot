@@ -136,7 +136,7 @@ def mangadown(client, message):
 
 @app.on_callback_query(filters.regex(pattern=r"animate"))
 async def hmeme(_, query: CallbackQuery):
-    await query.answer("Generating Your Logo Please Wait....", show_alert=True)
+    await query.answer("Generating your Anime Avatar\nPlease Wait....", show_alert=True)
     callback_data = query.data.strip()
     ran_hash = callback_data.split("_")[1]
     base64_image_string = y.get(ran_hash)
