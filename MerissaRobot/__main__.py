@@ -1,10 +1,10 @@
+import asyncio
 import html
 import importlib
 import json
 import re
 import time
 import traceback
-import asyncio
 from sys import argv
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
@@ -989,13 +989,14 @@ def main():
 
     updater.idle()
 
+
 def merissa_startup():
     pbot.start()
 
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    asyncio.get_event_loop().run_until_complete(merissa_startup())   
+    asyncio.get_event_loop().run_until_complete(merissa_startup())
     try:
         telethn.start(bot_token=TOKEN)
     except FloodWaitError as e:
