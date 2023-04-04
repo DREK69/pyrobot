@@ -25,7 +25,9 @@ async def animememes(_, message):
 
 @bot.on_callback_query(filters.regex(pattern=r"asupan"))
 async def hmeme(_, query: CallbackQuery):
-    await query.answer("Generating another Asupan Video\nPlease Wait....", show_alert=True)
+    await query.answer(
+        "Generating another Asupan Video\nPlease Wait....", show_alert=True
+    )
     res = wget.download("https://api.princexd.tech/asupan/tiktok", "asupan.mp4")
     await query.edit_message_media(
         InputMediaVideo("asupan.mp4", caption="Powered by @MerissaRobot"),
