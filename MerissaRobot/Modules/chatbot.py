@@ -123,7 +123,6 @@ def merissa_message(context: CallbackContext, message):
     if message.chat.type == "private":
         if "https" in message.text:
             return False
-    else:
         return True
     if reply_message:
         if reply_message.from_user.id == context.bot.get_me().id:
