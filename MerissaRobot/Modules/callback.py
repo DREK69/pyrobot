@@ -17,9 +17,18 @@ def cb_callback(update: Update, context: CallbackContext):
 
 The first thing to do is to add Merissa to your group! For doing that, press the under button and select your group, then press "Done" to continue the tutorial.""",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("✚ Add Me To Your Group ✚", url="t.me/MerissaRobot?startgroup=new")],
-                 [InlineKeyboardButton("🔙 Back", callback_data="merissa_back"),
-                  InlineKeyboardButton("Done ✅", callback_data="cb_done")]]
+                [
+                    [
+                        InlineKeyboardButton(
+                            "✚ Add Me To Your Group ✚",
+                            url="t.me/MerissaRobot?startgroup=new",
+                        )
+                    ],
+                    [
+                        InlineKeyboardButton("🔙 Back", callback_data="merissa_back"),
+                        InlineKeyboardButton("Done ✅", callback_data="cb_done"),
+                    ],
+                ]
             ),
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
@@ -40,13 +49,21 @@ To do that, follow this easy steps:
 ▫️ Search @MerissaRobot
 ▫️ Confirm""",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Tutorial Video 🎥", callback_data="cb_tutorial")],
-                 [InlineKeyboardButton("🔙 Back", callback_data="help_back"),
-                  InlineKeyboardButton("Done ✅", callback_data="cb_done1")]]
+                [
+                    [
+                        InlineKeyboardButton(
+                            "Tutorial Video 🎥", callback_data="cb_tutorial"
+                        )
+                    ],
+                    [
+                        InlineKeyboardButton("🔙 Back", callback_data="help_back"),
+                        InlineKeyboardButton("Done ✅", callback_data="cb_done1"),
+                    ],
+                ]
             ),
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
-        )      
+        )
     elif query.data == "cb_tutorial":
         query.message.reply_video(
             video="https://te.legra.ph/file/fe561673c9f58e2a9889a.mp4",
@@ -69,7 +86,7 @@ If You Need More Help Click on Below Button""",
             ),
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
-        )          
+        )
     elif query.data == "cb_donet":
         query.message.reply_text(
             text="""Excellent! 
@@ -81,8 +98,8 @@ If You Need More Help Click on Below Button""",
             ),
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
-        )  
-        query.message.delete()     
+        )
+        query.message.delete()
     elif query.data == "cb_setup":
         query.message.edit_text(
             text="""──「 Help of Setup Assistant 」──
