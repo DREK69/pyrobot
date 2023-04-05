@@ -8,7 +8,7 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     Message,
 )
-
+from pyrogram.enums import ParseMode
 from MerissaRobot import OWNER_ID
 from MerissaRobot import pbot as app
 from MerissaRobot.Database.sql.users_sql import get_all_chats, get_all_users
@@ -40,6 +40,7 @@ async def broadcast(client, message: Message):
         text=text,
         reply_markup=reply_markup,
         quote=False,
+        parse_mode=ParseMode.MARKDOWN
     )
 
 
