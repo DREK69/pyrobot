@@ -115,7 +115,7 @@ Merissa is a Telegram group managment bot made using Telethon and Pyrogram which
 """
     answers.append(
         InlineQueryResultPhoto(
-            photo_url="https://telegra.ph/file/1acba17236ed11813854d.jpg",
+            photo_url="https://te.legra.ph/file/90b1aa10cf8b77d5b781b.jpg",
             title="About Merissa",
             description="To Know More About Merissa",
             caption=msg,
