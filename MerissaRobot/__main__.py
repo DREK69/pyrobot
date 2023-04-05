@@ -502,7 +502,7 @@ def merissa_about_callback(update, context):
                             text=gs(chat.id, "lang_button"), callback_data="cblang"
                         ),
                         InlineKeyboardButton(
-                            text=gs(chat.id, "font_button"), callback_data="cb_tutorial"
+                            text=gs(chat.id, "font_button"), callback_data="cb_howtouse"
                         ),
                     ],
                     [
