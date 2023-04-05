@@ -11,6 +11,78 @@ def cb_callback(update: Update, context: CallbackContext):
     update.effective_chat
     if query.data == "cb_":
         query.message.edit_text(text="hi", parse_mode=ParseMode.MARKDOWN)
+    elif query.data == "cb_howtouse":
+        query.message.edit_text(
+            text="""Welcome to the Merissa Configuration Tutorial.
+
+The first thing to do is to add Merissa to your group! For doing that, press the under button and select your group, then press "Done" to continue the tutorial.""",
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("✚ Add Me To Your Group ✚", url="t.me/MerissaRobot?startgroup=new")],
+                 [InlineKeyboardButton("🔙 Back", callback_data="merissa_back"),
+                  InlineKeyboardButton("Done ✅", callback_data="cb_done")]]
+            ),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=False,
+        )
+    elif query.data == "cb_done":
+        query.message.edit_text(
+            text="""Ok, well done!
+
+Now for let me work correctly, you need to make me Admin of your Group!
+
+To do that, follow this easy steps: 
+▫️ Go to your group
+▫️ Press the Group's name
+▫️ Press Modify
+▫️ Press on Administrator
+▫️ Press Add Administrator
+▫️ Press the Magnifying Glass
+▫️ Search @MerissaRobot
+▫️ Confirm""",
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("Tutorial Video 🎥", callback_data="cb_tutorial")],
+                 [InlineKeyboardButton("🔙 Back", callback_data="help_back"),
+                  InlineKeyboardButton("Done ✅", callback_data="cb_done1")]]
+            ),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=False,
+        )      
+    elif query.data == "cb_tutorial":
+        query.message.reply_video(
+            video="https://te.legra.ph/file/fe561673c9f58e2a9889a.mp4",
+            caption="""To add MerissaRobot in your chat, follow the steps shown in the video.""",
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("Done ✅", callback_data="cb_donet")]]
+            ),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=False,
+        )
+        query.message.delete()
+elif query.data == "cb_done1":
+        query.message.edit_text(
+            text="""Excellent! 
+Now the Bot is ready to use!
+
+If You Need More Help Click on Below Button""",
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("Help Menu", callback_data="help_back")]]
+            ),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=False,
+        )          
+    elif query.data == "cb_donet":
+        query.message.reply_text(
+            text="""Excellent! 
+Now the Bot is ready to use!
+
+If You Need More Help Click on Below Button""",
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("Help Menu", callback_data="help_back")]]
+            ),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=False,
+        )  
+        query.message.delete()     
     elif query.data == "cb_setup":
         query.message.edit_text(
             text="""──「 Help of Setup Assistant 」──
