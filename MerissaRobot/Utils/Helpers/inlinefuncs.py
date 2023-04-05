@@ -197,7 +197,8 @@ async def cbothers(_, cq):
             for i in keywords_list
         ]
     )
-    buttons.add([InlineKeyboardButton(text="🔙 Back", callback_data="cbback")])
+    buttons.add(
+        *[(InlineKeyboardButton(text="🔙 Back", callback_data="cbback"))])
     inline_message_id = cq.inline_message_id
     msg = """
 Click Below Buttons to Search.
