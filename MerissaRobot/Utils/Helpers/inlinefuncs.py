@@ -132,12 +132,50 @@ async def cbgames(_, cq):
         [
             [
                 InlineKeyboardButton(
-                    text="Youtube",
+                    text="🎥 Youtube",
                     switch_inline_query_current_chat="yt",
                 ),
                 InlineKeyboardButton(
-                    text="P-Hub",
+                    text="🔞 P-Hub",
                     switch_inline_query_current_chat="ph",
+                ),
+            ],
+            [   
+                InlineKeyboardButton(
+                    text="🔙 Back",
+                    callback_data="cbback",
+                ),
+            ]
+        ]
+    )
+    inline_message_id = cq.inline_message_id
+    msg = """
+Click Below Buttons To Search Videos.
+"""
+    await app.edit_inline_caption(inline_message_id, msg, reply_markup=buttons)
+
+@app.on_callback_query(filters.regex("cbback"))
+async def cbgames(_, cq):
+    buttons = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    text="Downloader",
+                    callback_data="cbdownloader",
+                ),
+                InlineKeyboardButton(
+                    text="Others",
+                    callback_data="cbothers",
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Updates",
+                    url="https://t.me/MerissaxUpdates",
+                ),
+                InlineKeyboardButton(
+                    text="Support",
+                    url="https://t.me/MerissaxSupport",
                 ),
             ],
         ]
@@ -148,7 +186,6 @@ Click Below Buttons To Search Videos.
 """
     await app.edit_inline_caption(inline_message_id, msg, reply_markup=buttons)
 
-
 @app.on_callback_query(filters.regex("cbothers"))
 async def cbothers(_, cq):
     buttons = InlineKeyboard(row_width=4)
@@ -158,6 +195,7 @@ async def cbothers(_, cq):
             for i in keywords_list
         ]
     )
+    buttons.add([InlineKeyboardButton(text="🔙 Back", callback_data="cbback")]
     inline_message_id = cq.inline_message_id
     msg = """
 Click Below Buttons to Search.
@@ -175,7 +213,7 @@ async def translate_func(answers, lang, tex):
                 input_message_content=InputTextMessageContent(result.result),
             )
         )
-        return answers
+        return answers    
     result = result.result
     msg = f"""
 __**Translated from {result.src} to {result.dest}**__
