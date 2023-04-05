@@ -91,7 +91,7 @@ async def about_function(answers):
             [
                 InlineKeyboardButton(
                     text="Downloader",
-                    callback_data="cbdownload",
+                    callback_data="cbdownloader",
                 ),
                 InlineKeyboardButton(
                     text="Others",
