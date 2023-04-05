@@ -25,6 +25,11 @@ The first thing to do is to add Merissa to your group! For doing that, press the
                         )
                     ],
                     [
+                        InlineKeyboardButton(
+                            "Tutorial Video 🎥", callback_data="cb_tutorial"
+                        )
+                    ],
+                    [
                         InlineKeyboardButton("🔙 Back", callback_data="merissa_back"),
                         InlineKeyboardButton("Done ✅", callback_data="cb_done"),
                     ],
