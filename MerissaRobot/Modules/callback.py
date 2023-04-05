@@ -58,7 +58,7 @@ To do that, follow this easy steps:
             disable_web_page_preview=False,
         )
         query.message.delete()
-elif query.data == "cb_done1":
+    elif query.data == "cb_done1":
         query.message.edit_text(
             text="""Excellent! 
 Now the Bot is ready to use!
