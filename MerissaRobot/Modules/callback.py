@@ -70,9 +70,7 @@ To do that, follow this easy steps:
             caption="""To add MerissaRobot in your chat, follow the steps shown in the video.""",
             reply_markup=InlineKeyboardMarkup(
                 [[InlineKeyboardButton("Done ✅", callback_data="cb_donet")]]
-            ),
-            parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=False,
+            )                        
         )
         query.message.delete()
     elif query.data == "cb_done1":
