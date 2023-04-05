@@ -54,7 +54,7 @@ async def get_video(c: Client, q: CallbackQuery):
     id = callback_data.split("_")[1]
     url = f"https://www.pornhub.com/view_video.php?viewkey={id}"
     message = await q.message.edit(
-        "Downloading Started\n\nDownloading Speed could be Slow Plase wait..."
+        "Downloading Started\n\nDownloading Speed could be Slow Please wait..."
     )
     user_id = q.message.from_user.id
     if "some" in active:
