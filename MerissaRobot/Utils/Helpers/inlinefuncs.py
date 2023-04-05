@@ -90,8 +90,8 @@ async def about_function(answers):
         [
             [
                 InlineKeyboardButton(
-                    text="Games",
-                    callback_data="cbgames",
+                    text="Downloader",
+                    callback_data="cbdownload",
                 ),
                 InlineKeyboardButton(
                     text="Others",
@@ -126,18 +126,18 @@ Merissa is a Telegram group managment bot made using Telethon and Pyrogram which
     return answers
 
 
-@app.on_callback_query(filters.regex("cbgames"))
+@app.on_callback_query(filters.regex("cbdownloader"))
 async def cbgames(_, cq):
     buttons = InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    text="Updates",
-                    url="https://t.me/MerissaxUpdates",
+                    text="Youtube",
+                    switch_inline_query_current_chat="yt",
                 ),
                 InlineKeyboardButton(
-                    text="Support",
-                    url="https://t.me/MerissaxSupport",
+                    text="P-Hub",
+                    switch_inline_query_current_chat="ph",
                 ),
             ],
         ]
@@ -151,20 +151,13 @@ Click Below Buttons To Play Games.
 
 @app.on_callback_query(filters.regex("cbothers"))
 async def cbothers(_, cq):
-    buttons = InlineKeyboardMarkup(
-        [
-            [
-                InlineKeyboardButton(
-                    text="Updates",
-                    url="https://t.me/MerissaxUpdates",
-                ),
-                InlineKeyboardButton(
-                    text="Support",
-                    url="https://t.me/MerissaxSupport",
-                ),
-            ],
+    buttons = InlineKeyboard(row_width=4)
+    buttons.add(
+        *[
+            (InlineKeyboardButton(text=i, switch_inline_query_current_chat=i))
+            for i in keywords_list
         ]
-    )
+    )    
     inline_message_id = cq.inline_message_id
     msg = """
 Click Below Buttons To know more about me.
