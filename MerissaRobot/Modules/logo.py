@@ -147,6 +147,28 @@ async def movie(client, message):
         )
         await logo.delete()
 
+@pbot.on_message(filters.command("phlogo"))
+async def phlogo(_, message):
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "Give me some text to make logo\n\nEx. /phlogo [Merissa or Merissa;Hub]"
+        )
+    text = message.text.split(None, 1)[1]    
+    logo = await message.reply_text("Creating your logo...wait!")    
+    url = get(f"https://api.princexd.tech/phlogo?text={text}").json()["url"]
+    button = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton("Telegraph Link 🔗", url=f"{url}"),
+            ],
+        ]
+    )
+    await message.reply_photo(
+        photo=url,
+        caption="Powered by @MerissaRobot",
+        reply_markup=button,
+    )
+    await logo.delete()
 
 @pbot.on_callback_query(filters.regex(pattern=r"flogo"))
 async def hmeme(_, query: CallbackQuery):
@@ -276,11 +298,13 @@ async def hmeme(_, query: CallbackQuery):
 __mod_name__ = "Logo 🎇"
 
 __help__ = """ 
-- Logo Maker Command
-❂ /logo <text/name> - Create a logo with random view.
-❂ /logo Merissa;Robot -  use ; for write in next line
+- Logo Maker Command:
+❂ /logo Merissa or Merissa;Robot-  use ; for write in next line
+❂ /phlogo Merissa or Merissa;Hub - to get P*rnHub Logo.
 ❂ /hqlogo <text> - To create random logo.
 ❂ /alogo <text> - To create anime logo.
+
+- Others:
 ❂ /write <text/name> - Write Text on Note Book
 ❂ /carbon <reply to text> - Create carbon Logo
 """
