@@ -157,7 +157,7 @@ async def cbothers(_, cq):
             (InlineKeyboardButton(text=i, switch_inline_query_current_chat=i))
             for i in keywords_list
         ]
-    )    
+    )
     inline_message_id = cq.inline_message_id
     msg = """
 Click Below Buttons To know more about me.
