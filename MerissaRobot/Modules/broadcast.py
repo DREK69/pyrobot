@@ -1,7 +1,6 @@
 import asyncio
 
 from pyrogram import filters
-from pyrogram.enums import ParseMode
 from pyrogram.errors import FloodWait
 from pyrogram.types import (
     CallbackQuery,
@@ -9,7 +8,7 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     Message,
 )
-
+from pyrogram.enums import ParseMode
 from MerissaRobot import OWNER_ID
 from MerissaRobot import pbot as app
 from MerissaRobot.Database.sql.users_sql import get_all_chats, get_all_users
@@ -38,7 +37,10 @@ async def broadcast(client, message: Message):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     await message.reply_text(
-        text=text, reply_markup=reply_markup, quote=False, parse_mode=ParseMode.MARKDOWN
+        text=text,
+        reply_markup=reply_markup,
+        quote=False,
+        parse_mode=ParseMode.MARKDOWN,
     )
 
 
@@ -76,6 +78,7 @@ async def process_callback_data(client, callback_query: CallbackQuery):
                     chat_id=int(chat.chat_id),
                     text=text,
                     disable_web_page_preview=False,
+                    parse_mode=ParseMode.MARKDOWN,
                 )
                 await asyncio.sleep(0.1)
                 sent += 1
@@ -91,6 +94,7 @@ async def process_callback_data(client, callback_query: CallbackQuery):
                     chat_id=int(user.user_id),
                     text=text,
                     disable_web_page_preview=False,
+                    parse_mode=ParseMode.MARKDOWN,
                 )
                 await asyncio.sleep(0.1)
                 sent_user += 1
