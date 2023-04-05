@@ -144,7 +144,7 @@ async def cbgames(_, cq):
     )
     inline_message_id = cq.inline_message_id
     msg = """
-Click Below Buttons To Play Games.
+Click Below Buttons To Search Videos.
 """
     await app.edit_inline_caption(inline_message_id, msg, reply_markup=buttons)
 
@@ -160,7 +160,7 @@ async def cbothers(_, cq):
     )
     inline_message_id = cq.inline_message_id
     msg = """
-Click Below Buttons To know more about me.
+Click Below Buttons to Search.
 """
     await app.edit_inline_caption(inline_message_id, msg, reply_markup=buttons)
 
