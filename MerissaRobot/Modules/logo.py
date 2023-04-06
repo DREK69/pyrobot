@@ -302,7 +302,7 @@ __mod_name__ = "Logo 🎇"
 __help__ = """ 
 - Logo Maker Command:
 ❂ /logo Merissa or Merissa;Robot-  use ; for write in next line
-❂ /phlogo Merissa or Merissa;Hub - to get P*rnHub Logo.
+❂ /phlogo Merissa or Merissa;Hub - to get P-Hub Logo.
 ❂ /hqlogo <text> - To create random logo.
 ❂ /alogo <text> - To create anime logo.
 
