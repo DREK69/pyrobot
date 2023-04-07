@@ -120,7 +120,7 @@ async def movie(client, message):
         url = x["url"]
         font = x["font"]
         bg = x["img"]
-        key = bg.split("/")[4]
+        key = bg.split("/")[4].split(".")[0]
         button = InlineKeyboardMarkup(
             [
                 [
@@ -202,7 +202,7 @@ async def hmeme(_, query: CallbackQuery):
     data = callback_data.split("|")
     name = data[1]
     key = data[2]
-    imglink = "https://te.legra.ph/file/" + key
+    imglink = "https://te.legra.ph/file/" + key + ".jpg"
     url = get(f"https://api.princexd.tech/logoimg?imglink={imglink}&text={name}").url
     await query.edit_message_media(
         InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
