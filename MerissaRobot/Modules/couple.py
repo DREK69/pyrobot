@@ -1,6 +1,6 @@
 import random
 from datetime import datetime
-
+from requests import get
 from pyrogram import filters
 
 from MerissaRobot import pbot
@@ -76,3 +76,9 @@ __New couple of the day may be chosen at 12AM {tomorrow}__"""
     except Exception as e:
         print(e)
         await message.reply_text(e)
+
+@pbot.on_message(filters.command(["couplepfp", "couplespfp"]))
+async def couplepfp(_, message):
+    x = get("https://api.princexd.tech/couple").json()["url"]
+    for i in x:
+        await message.reply_photo(i)
