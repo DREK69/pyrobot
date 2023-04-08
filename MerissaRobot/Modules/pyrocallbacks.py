@@ -1,9 +1,8 @@
-import requests 
-
-from pyrogram.types import *
+import requests
 from pyrogram import filters
-from MerissaRobot import pbot as bot
+from pyrogram.types import *
 
+from MerissaRobot import pbot as bot
 
 
 @bot.on_callback_query(filters.regex("boob"))
@@ -22,6 +21,7 @@ async def boobsc(_, query: CallbackQuery):
             ],
         ),
     )
+
 
 @bot.on_callback_query(filters.regex("animepfp"))
 async def animepfpc(_, query: CallbackQuery):
