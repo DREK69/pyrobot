@@ -5,7 +5,7 @@ from pyrogram.types import *
 from MerissaRobot import pbot as bot
 
 
-@bot.on_callback_query(filters.regex(pattern="boob"))
+@bot.on_callback_query(filters.regex(pattern=r"boob"))
 async def boobsc(_, query: CallbackQuery):
     res = requests.get("https://api.princexd.tech/boobs").json()
     await query.edit_message_media(
@@ -23,7 +23,7 @@ async def boobsc(_, query: CallbackQuery):
     )
 
 
-@bot.on_callback_query(filters.regex(pattern="animepfp"))
+@bot.on_callback_query(filters.regex(pattern=r"animepfp"))
 async def animepfpc(_, query: CallbackQuery):
     res = requests.get("https://api.princexd.tech/animepfp").json()["url"]
     await query.edit_message_media(
@@ -41,7 +41,7 @@ async def animepfpc(_, query: CallbackQuery):
     )
 
 
-@bot.on_callback_query(filters.regex(pattern="ameme"))
+@bot.on_callback_query(filters.regex(pattern=r"ameme"))
 async def ameme(_, query: CallbackQuery):
     res = requests.get("https://api.princexd.tech/reddit?query=Animememe").json()[
         "data"
@@ -64,7 +64,7 @@ async def ameme(_, query: CallbackQuery):
     )
 
 
-@bot.on_callback_query(filters.regex(pattern="bmeme"))
+@bot.on_callback_query(filters.regex(pattern=r"bmeme"))
 async def memess(_, query: CallbackQuery):
     res = requests.get("https://api.princexd.tech/meme").json()
     url = res["image"]
