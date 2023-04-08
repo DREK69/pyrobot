@@ -5,7 +5,7 @@ from pyrogram.types import *
 from MerissaRobot import pbot as bot
 
 
-@bot.on_callback_query(filters.regex("boob"))
+@bot.on_callback_query(filters.regex(pattern="boob"))
 async def boobsc(_, query: CallbackQuery):
     res = requests.get("https://api.princexd.tech/boobs").json()
     await query.edit_message_media(
@@ -23,7 +23,7 @@ async def boobsc(_, query: CallbackQuery):
     )
 
 
-@bot.on_callback_query(filters.regex("animepfp"))
+@bot.on_callback_query(filters.regex(pattern="animepfp"))
 async def animepfpc(_, query: CallbackQuery):
     res = requests.get("https://api.princexd.tech/animepfp").json()["url"]
     await query.edit_message_media(
@@ -41,7 +41,7 @@ async def animepfpc(_, query: CallbackQuery):
     )
 
 
-@bot.on_callback_query(filters.regex("ameme"))
+@bot.on_callback_query(filters.regex(pattern="ameme"))
 async def ameme(_, query: CallbackQuery):
     res = requests.get("https://api.princexd.tech/reddit?query=Animememe").json()[
         "data"
@@ -64,7 +64,7 @@ async def ameme(_, query: CallbackQuery):
     )
 
 
-@bot.on_callback_query(filters.regex("bmeme"))
+@bot.on_callback_query(filters.regex(pattern="bmeme"))
 async def memess(_, query: CallbackQuery):
     res = requests.get("https://api.princexd.tech/meme").json()
     url = res["image"]
@@ -78,27 +78,6 @@ async def memess(_, query: CallbackQuery):
                     InlineKeyboardButton(
                         text="Change 🔂",
                         callback_data="bmeme",
-                    ),
-                ],
-            ],
-        ),
-    )
-
-
-@bot.on_callback_query(filters.regex("cmeme"))
-async def hmeme(_, query: CallbackQuery):
-    res = requests.get("https://meme-api.herokuapp.com/gimme/hentaimemes").json()
-    url = res["url"]
-    text = res["title"]
-    link = res["postLink"]
-    await query.edit_message_media(
-        InputMediaPhoto(url, caption=f"[{text}]({link})"),
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        text="Change 🔂",
-                        callback_data="cmeme",
                     ),
                 ],
             ],
