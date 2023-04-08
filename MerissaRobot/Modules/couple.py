@@ -2,8 +2,8 @@ import random
 from datetime import datetime
 
 from pyrogram import filters
+from pyrogram.types import InputMediaPhoto
 from requests import get
-from pyrogram.types import InputMediaPhoto 
 
 from MerissaRobot import pbot
 from MerissaRobot.Database.mongo.couple_mongo import get_couple, save_couple
