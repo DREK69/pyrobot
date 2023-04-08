@@ -3,6 +3,7 @@ from datetime import datetime
 
 from pyrogram import filters
 from requests import get
+from pyrogram.types import InputMediaPhoto 
 
 from MerissaRobot import pbot
 from MerissaRobot.Database.mongo.couple_mongo import get_couple, save_couple
@@ -82,5 +83,7 @@ __New couple of the day may be chosen at 12AM {tomorrow}__"""
 @pbot.on_message(filters.command(["couplepfp", "couplespfp"]))
 async def couplepfp(_, message):
     x = get("https://api.princexd.tech/couple").json()["url"]
+    mg = []
     for i in x:
-        await message.reply_photo(i)
+        mg.append(InputMediaPhoto(i))
+    await message.reply_media_group(mg)
