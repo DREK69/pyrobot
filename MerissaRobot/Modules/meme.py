@@ -50,6 +50,7 @@ async def memes(_, m):
         ),
     )
 
+
 @bot.on_message(filters.command(["hmeme", "hentaimeme"]))
 async def hetaimemes(_, m):
     res = requests.get("https://meme-api.herokuapp.com/gimme/hentaimemes").json()
