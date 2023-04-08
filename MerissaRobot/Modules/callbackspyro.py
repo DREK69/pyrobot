@@ -40,6 +40,7 @@ async def animepfpc(_, query: CallbackQuery):
         ),
     )
 
+
 @bot.on_callback_query(filters.regex("ameme"))
 async def ameme(_, query: CallbackQuery):
     res = requests.get("https://api.princexd.tech/reddit?query=Animememe").json()[
@@ -103,5 +104,3 @@ async def hmeme(_, query: CallbackQuery):
             ],
         ),
     )
-
-
