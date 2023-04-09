@@ -7,7 +7,7 @@ from MerissaRobot import OWNER_ID, pbot
 from MerissaRobot.Database.sql.users_sql import get_all_chats, get_all_users
 
 
-@pbot.on_message(filters.command("promo") & filters.user(OWNER_ID))
+@pbot.on_message(filters.command("broadcast") & filters.user(OWNER_ID))
 async def broadcast(_, message):
     to_send = message.text.split(None, 1)
     if len(to_send) >= 2:
