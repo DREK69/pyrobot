@@ -14,4 +14,4 @@ def sendmodule(client, message):
     if os.path.exists(the_plugin_file):
         message.reply_document(the_plugin_file)
     else:
-        await message.reply_text("No File Found")
+        message.reply_text("No File Found")
