@@ -1,29 +1,17 @@
 import os
 
 from MerissaRobot import OWNER_ID
-from MerissaRobot import telethn as tbot
-from MerissaRobot.events import register
+from MerissaRobot import pbot
 
-client = tbot
-
-
-@register(pattern=r"^/send ?(.*)")
-async def Prof(event):
-    if event.sender_id == OWNER_ID:
+@app.on_message(filters.command("module"))
+def animats(client, message):
+    if message.from_user.id == OWNER_ID
         pass
     else:
         return
-    message_id = event.message.id
-    input_str = event.pattern_match.group(1)
+    input_str = message.text.split(None, 1)[1]
     the_plugin_file = "./MerissaRobot/Modules/{}.py".format(input_str)
     if os.path.exists(the_plugin_file):
-        message_id = event.message.id
-        await event.client.send_file(
-            event.chat_id,
-            the_plugin_file,
-            force_document=True,
-            allow_cache=False,
-            reply_to=message_id,
-        )
+        message.reply_document(the_plugin_file)
     else:
-        await event.reply("No File Found, Report It To Support!")
+        await message.reply_text("No File Found")
