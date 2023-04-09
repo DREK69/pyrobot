@@ -8,7 +8,7 @@ from io import StringIO
 from time import time
 
 from pyrogram import filters
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from pyrogram.types import Message
 
 from config import OWNER_ID as SUDO_USER
 from MerissaRobot import pbot as app
@@ -41,7 +41,7 @@ async def executor(client, message):
         cmd = message.text.split(" ", maxsplit=1)[1]
     except IndexError:
         return await message.delete()
-    t1 = time()
+    time()
     old_stderr = sys.stderr
     old_stdout = sys.stdout
     redirected_output = sys.stdout = StringIO()
@@ -69,7 +69,7 @@ async def executor(client, message):
         filename = "output.txt"
         with open(filename, "w+", encoding="utf8") as out_file:
             out_file.write(str(evaluation.strip()))
-        t2 = time()       
+        time()
         await message.reply_document(
             document=filename,
             caption=f"**INPUT:**\n`{cmd[0:980]}`\n\n**OUTPUT:**\n`ᴀᴛᴛᴀᴄʜᴇᴅ ᴅᴏᴄᴜᴍᴇɴᴛ`",
@@ -78,8 +78,9 @@ async def executor(client, message):
         await message.delete()
         os.remove(filename)
     else:
-        t2 = time()        
+        time()
         await edit_or_reply(message, text=final_output)
+
 
 @app.on_message(
     filters.command("sh")

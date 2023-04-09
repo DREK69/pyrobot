@@ -1,17 +1,9 @@
 import asyncio
 
 from pyrogram import filters
-from pyrogram.enums import ParseMode
 from pyrogram.errors import FloodWait
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
 
 from MerissaRobot import OWNER_ID
-from MerissaRobot import pbot as app
 from MerissaRobot.Database.sql.users_sql import get_all_chats, get_all_users
 
 
@@ -35,7 +27,7 @@ async def broadcast(_, message):
             return await message.reply_text(
                 "**Usage**:\n/broadcast [MESSAGE] or [Reply to a Message]"
             )
-        query = message.text.split(None, 1)[1]        
+        query = message.text.split(None, 1)[1]
     sent_group = 0
     sent_user = 0
     chats = get_all_chats() or []
@@ -43,10 +35,12 @@ async def broadcast(_, message):
     if to_group:
         for chat in chats:
             try:
-                chat_id=int(chat.chat_id)
+                chat_id = int(chat.chat_id)
                 await pbot.forward_messages(
-                chat_id, y, x
-                ) if message.reply_to_message else await pbot.send_message(chat_id, text=query)
+                    chat_id, y, x
+                ) if message.reply_to_message else await pbot.send_message(
+                    chat_id, text=query
+                )
                 sent_group += 1
             except FloodWait as e:
                 flood_time = int(e.x)
@@ -58,11 +52,12 @@ async def broadcast(_, message):
     if to_user:
         for user in users:
             try:
-                chat_id=int(user.user_id)
+                chat_id = int(user.user_id)
                 await pbot.forward_messages(
                     chat_id, y, x
-                ) if message.reply_to_message else await pbot.send_message(chat_id, text=query)
-                sent_users += 1
+                ) if message.reply_to_message else await pbot.send_message(
+                    chat_id, text=query
+                )
             except FloodWait as e:
                 flood_time = int(e.x)
                 if flood_time > 200:
@@ -71,6 +66,8 @@ async def broadcast(_, message):
             except Exception:
                 continue
     try:
-        await message.reply_text(f"**Broadcast complete.\nGroups Count: {sent_group}\nUsers Count: {sent_user}**")
+        await message.reply_text(
+            f"**Broadcast complete.\nGroups Count: {sent_group}\nUsers Count: {sent_user}**"
+        )
     except:
         pass

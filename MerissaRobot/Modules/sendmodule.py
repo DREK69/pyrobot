@@ -1,7 +1,7 @@
 import os
 
-from MerissaRobot import OWNER_ID
-from MerissaRobot import pbot
+from MerissaRobot import OWNER_ID, pbot
+
 
 @pbot.on_message(filters.command("module"))
 def sendmodule(client, message):
