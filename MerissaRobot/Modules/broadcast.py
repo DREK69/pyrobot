@@ -20,7 +20,7 @@ async def broadcast(_, message):
         else:
             to_group = to_user = True
     if message.reply_to_message:
-        x = message.reply_to_message.message_id
+        x = message.reply_to_message_id
         y = message.chat.id
     else:
         if len(message.command) < 2:
