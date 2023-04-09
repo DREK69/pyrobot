@@ -3,7 +3,7 @@ import os
 from MerissaRobot import OWNER_ID
 from MerissaRobot import pbot
 
-@app.on_message(filters.command("module"))
+@pbot.on_message(filters.command("module"))
 def animats(client, message):
     if message.from_user.id == OWNER_ID
         pass
