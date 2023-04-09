@@ -3,7 +3,7 @@ import asyncio
 from pyrogram import filters
 from pyrogram.errors import FloodWait
 
-from MerissaRobot import OWNER_ID
+from MerissaRobot import OWNER_ID, pbot
 from MerissaRobot.Database.sql.users_sql import get_all_chats, get_all_users
 
 
