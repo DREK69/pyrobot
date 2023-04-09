@@ -15,95 +15,62 @@ from MerissaRobot import pbot as app
 from MerissaRobot.Database.sql.users_sql import get_all_chats, get_all_users
 
 
-@app.on_message(filters.command("promo"))
-async def broadcast(client, message: Message):
-    if message.from_user.id != OWNER_ID:
-        await message.reply_text("You're not my owner.")
-        return
-
-    args = message.text.split(None, 1)
-    if len(args) < 2:
-        await message.reply_text("Please provide some text to broadcast.")
-        return
-
-    text = args[1]
-
-    keyboard = [
-        [
-            InlineKeyboardButton("Groups", callback_data="promogroups"),
-            InlineKeyboardButton("Users", callback_data="promousers"),
-        ],
-        [InlineKeyboardButton("Broadcast to All", callback_data="promoall")],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    await message.reply_text(
-        text=text,
-        reply_markup=reply_markup,
-        quote=False,
-        parse_mode=ParseMode.MARKDOWN,
-    )
-
-
-@app.on_callback_query()
-async def process_callback_data(client, callback_query: CallbackQuery):
-    action = callback_query.data
-    message = callback_query.message
-
-    await callback_query.answer()
-
-    to_group = False
-    to_user = False
-
-    if action == "promogroups":
-        to_group = True
-    elif action == "promousers":
-        to_user = True
-    elif action == "promoall":
-        to_group = to_user = True
+@pbot.on_message(filters.command("promo") & filters.user(OWNER_ID))
+async def broadcast(_, message):
+    to_send = message.text.split(None, 1)
+    if len(to_send) >= 2:
+        to_group = False
+        to_user = False
+        if to_send[0] == "/broadcastgroups":
+            to_group = True
+        if to_send[0] == "/broadcastusers":
+            to_user = True
+        else:
+            to_group = to_user = True
+    if message.reply_to_message:
+        x = message.reply_to_message.message_id
+        y = message.chat.id
     else:
-        return
-
+        if len(message.command) < 2:
+            return await message.reply_text(
+                "**Usage**:\n/broadcast [MESSAGE] or [Reply to a Message]"
+            )
+        query = message.text.split(None, 1)[1]        
+    sent_group = 0
+    sent_user = 0
     chats = get_all_chats() or []
     users = get_all_users()
-    failed = 0
-    failed_user = 0
-    sent = 0
-    sent_user = 0
-    await callback_query.message.edit_text(text="Broadcast started...")
-    text = message.text
     if to_group:
         for chat in chats:
             try:
-                await app.send_message(
-                    chat_id=int(chat.chat_id),
-                    text=text,
-                    disable_web_page_preview=False,
-                    parse_mode=ParseMode.MARKDOWN,
-                )
-                await asyncio.sleep(0.1)
-                sent += 1
-            except FloodWait:
-                failed += 1
+                chat_id=int(chat.chat_id)
+                await pbot.forward_messages(
+                chat_id, y, x
+                ) if message.reply_to_message else await pbot.send_message(chat_id, text=query)
+                sent_group += 1
+            except FloodWait as e:
+                flood_time = int(e.x)
+                if flood_time > 200:
+                    continue
+                await asyncio.sleep(flood_time)
             except Exception:
-                failed += 1
-
+                continue
     if to_user:
         for user in users:
             try:
-                await app.send_message(
-                    chat_id=int(user.user_id),
-                    text=text,
-                    disable_web_page_preview=False,
-                    parse_mode=ParseMode.MARKDOWN,
-                )
-                await asyncio.sleep(0.1)
-                sent_user += 1
-            except FloodWait:
-                failed_user += 1
+                chat_id=int(user.user_id)
+                await pbot.forward_messages(
+                    chat_id, y, x
+                ) if message.reply_to_message else await pbot.send_message(chat_id, text=query)
+                sent_users += 1
+            except FloodWait as e:
+                flood_time = int(e.x)
+                if flood_time > 200:
+                    continue
+                await asyncio.sleep(flood_time)
             except Exception:
-                failed_user += 1
-
-    await callback_query.message.edit_text(
-        text=f"Broadcast complete.\nGroups Count: {sent}\n Users Count: {sent_user} \nGroups failed: {failed}.\nUsers failed: {failed_user}.",
-    )
+                continue
+    try:
+        await message.reply_text(f"**Broadcast complete.\nGroups Count: {sent_group}\nUsers Count: {sent_user}**")
+    except:
+        pass
