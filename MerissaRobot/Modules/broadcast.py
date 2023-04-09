@@ -12,6 +12,14 @@ from MerissaRobot.Database.sql.users_sql import get_all_chats, get_all_users
     & filters.user(OWNER_ID)
 )
 async def broadcast(_, message):
+    if message.reply_to_message:
+        x = message.reply_to_message.id
+        y = message.chat.id
+    else:
+        if len(message.command) < 2:
+            return await message.reply_text(
+                "**Usage**:\n/broadcast [MESSAGE] or [Reply to a Message]"
+            )
     to_send = message.text.split(None, 1)
     if len(to_send) >= 2:
         to_group = False
