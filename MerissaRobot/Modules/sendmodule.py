@@ -4,8 +4,8 @@ from MerissaRobot import OWNER_ID
 from MerissaRobot import pbot
 
 @pbot.on_message(filters.command("module"))
-def animats(client, message):
-    if message.from_user.id == OWNER_ID
+def sendmodule(client, message):
+    if message.from_user.id == OWNER_ID:
         pass
     else:
         return
