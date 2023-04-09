@@ -52,9 +52,9 @@ def broadcast(update: Update, context: CallbackContext):
     if len(to_send) >= 2:
         to_group = False
         to_user = False
-        if to_send[0] == "/broadcastgroups":
+        if to_send[0] == "/promogroups":
             to_group = True
-        if to_send[0] == "/broadcastusers":
+        if to_send[0] == "/promousers":
             to_user = True
         else:
             to_group = to_user = True
@@ -167,7 +167,7 @@ def __migrate__(old_chat_id, new_chat_id):
 __help__ = ""  # no help string
 
 BROADCAST_HANDLER = CommandHandler(
-    ["broadcastall", "broadcastusers", "broadcastgroups"],
+    ["promoall", "promousers", "promogroups"],
     broadcast,
     run_async=True,
 )
