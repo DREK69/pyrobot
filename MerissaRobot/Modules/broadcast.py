@@ -9,6 +9,7 @@ from MerissaRobot.Database.sql.users_sql import get_all_chats, get_all_users
 
 @pbot.on_message(filters.command("broadcast") & filters.user(OWNER_ID))
 async def broadcast(_, message):
+    to_send = message.text.split(None, 1)
     if len(to_send) >= 2:
         to_group = False
         to_user = False
@@ -26,7 +27,6 @@ async def broadcast(_, message):
                 return await message.reply_text(
                     "**Usage**:\n/broadcast [MESSAGE] or [Reply to a Message]"
                 )
-        to_send = message.text.split(None, 1)
         query = to_send[1]
         sent_group = 0
         sent_user = 0
