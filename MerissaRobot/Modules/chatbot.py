@@ -1,4 +1,4 @@
- import html
+import html
 import re
 from time import sleep
 
@@ -155,11 +155,16 @@ def list_all_chats(update: Update, context: CallbackContext):
 
 
 __mod_name__ = "Chatbot 🤖"
+
 __help__ = """
-Merissa ChatBot is the only ai system which can detect & reply upto 200 language's
+Merissa AI ChatBot is the only ai system which can detect & reply upto 200 language's
 
 For Chatbot turn on/off:
 ❂ `/chatbot`: To On Or Off ChatBot In Your Chat.
+
+For Merissa Chatbot Api:
+❂ `/token` : To get your Merissa Chatbot Token.
+❂ `/revoke` : To revoke/delete Merissa Chatbot Token.
 
 For Asking Questions to ChatGPT:
 ❂ `/ask question` : To get answer from Chatgpt By OpenAI.
