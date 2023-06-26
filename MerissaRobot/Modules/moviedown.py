@@ -7,6 +7,7 @@ from MerissaRobot import pbot
 
 url_list = {}
 
+
 def search_movies(query):
     movies_list = []
     movies_details = {}
