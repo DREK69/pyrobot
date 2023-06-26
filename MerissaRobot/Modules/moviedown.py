@@ -92,8 +92,10 @@ async def movie_result(Client, CallbackQuery):
             f"🎬{i}<br>         └ <a href={links[i]}>Click Here To Download</a><br><br>"
         )
     caption = f"📥 Download Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
-    key = telegraph.create_page(title_of_page, html_content=caption)
-    response = f"https://graph.org/{key['path']}"
+    data = {"content": caption, "ext": "md"}
+    response = requests.post("https://api.princexd.tech/nekobin", json=data).json()[
+            "link"
+        ]
     button = InlineKeyboardMarkup(
         [[InlineKeyboardButton("Download Links", url=response)]]
     )
@@ -182,8 +184,10 @@ async def anime_result(Client, CallbackQuery):
             f"🎬{i}<br>         └ <a href={links[i]}>Click Here To Download</a><br><br>"
         )
     caption = f"📥 Download Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
-    key = telegraph.create_page(title_of_page, html_content=caption)
-    response = f"https://graph.org/{key['path']}"
+    data = {"content": caption, "ext": "md"}
+    response = requests.post("https://api.princexd.tech/nekobin", json=data).json()[
+            "link"
+        ]
     button = InlineKeyboardMarkup(
         [[InlineKeyboardButton("Download Links", url=response)]]
     )
