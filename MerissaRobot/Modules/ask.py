@@ -1,5 +1,5 @@
 from pyrogram import filters
-from requests import get, post
+from requests import post
 
 from MerissaRobot import pbot
 
