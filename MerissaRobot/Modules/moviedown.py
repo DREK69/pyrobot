@@ -1,14 +1,11 @@
-import pyshorteners
 import requests
 from bs4 import BeautifulSoup
 from pyrogram import filters
-from pyrogram.enums import ParseMode
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from MerissaRobot import pbot
 
 url_list = {}
-
 
 def search_movies(query):
     movies_list = []
@@ -30,9 +27,12 @@ def search_movies(query):
 
 async def get_movie(query):
     movie_details = {}
-    movie_page_link = BeautifulSoup(
-        requests.get(f"{url_list[query]}").text, "html.parser"
-    )
+    if "https" in query:
+        movie_page_link = BeautifulSoup(requests.get(query).text, "html.parser")
+    else:
+        movie_page_link = BeautifulSoup(
+            requests.get(f"{url_list[query]}").text, "html.parser"
+        )
     if movie_page_link:
         title = movie_page_link.find("div", {"class": "mvic-desc"}).h3.text
         movie_details["title"] = title
@@ -43,8 +43,7 @@ async def get_movie(query):
         )
         final_links = {}
         for i in links:
-            s = pyshorteners.Shortener()
-            url = s.tinyurl.short(i["href"])
+            url = i["href"]
             final_links[f"{i.text}"] = url
         movie_details["links"] = final_links
     return movie_details
@@ -88,20 +87,18 @@ async def movie_result(Client, CallbackQuery):
     link = ""
     links = s["links"]
     for i in links:
-        link += f"🎬{i}\n         └ [Click Here To Download]({links[i]})\n\n"
-    caption = f"📥 Download Links is Here:-\n\n{link}Credits To MKVCinemas\nPowered By @MerissaRobot"
-    if len(caption) > 4095:
-        for x in range(0, len(caption), 4095):
-            await CallbackQuery.message.reply_text(
-                text=caption[x : x + 4095],
-                reply_markup=None,
-                parse_mode=ParseMode.MARKDOWN,
-            )
-            await m.delete()
-    else:
-        await m.edit_text(
-            text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN
+        link += (
+            f"🎬{i}<br>         └ <a href={links[i]}>Click Here To Download</a><br><br>"
         )
+    caption = f"📥 Download Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
+    key = telegraph.create_page(title_of_page, html_content=caption)
+    response = f"https://graph.org/{key['path']}"
+    button = InlineKeyboardMarkup(
+        [[InlineKeyboardButton("Download Links", url=response)]]
+    )
+    await m.edit_text(
+        text="Your Movie/Series Downloading Link is in Button", reply_markup=button
+    )
 
 
 def search_anime(query):
@@ -137,8 +134,7 @@ def get_anime(query):
         )
         final_links = {}
         for i in links:
-            s = pyshorteners.Shortener()
-            url = s.tinyurl.short(i["href"])
+            url = i["href"]
             final_links[f"{i.text}"] = url
         movie_details["links"] = final_links
     return movie_details
@@ -181,15 +177,15 @@ async def anime_result(Client, CallbackQuery):
     link = ""
     links = s["links"]
     for i in links:
-        link += f"🎬{i}\n         └ [Click Here To Download]({links[i]})\n\n"
-    caption = f"📥 Download Links is Here:-\n\n{link}Credits To MKVCinemas\nPowered By @MerissaRobot"
-    if len(caption) > 4095:
-        for x in range(0, len(caption), 4095):
-            await CallbackQuery.message.reply_text(
-                text=caption[x : x + 4095],
-                reply_markup=None,
-                parse_mode=ParseMode.MARKDOWN,
-            )
-            await m.delete()
-    else:
-        await m.edit(text=caption, reply_markup=None, parse_mode=ParseMode.MARKDOWN)
+        link += (
+            f"🎬{i}<br>         └ <a href={links[i]}>Click Here To Download</a><br><br>"
+        )
+    caption = f"📥 Download Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
+    key = telegraph.create_page(title_of_page, html_content=caption)
+    response = f"https://graph.org/{key['path']}"
+    button = InlineKeyboardMarkup(
+        [[InlineKeyboardButton("Download Links", url=response)]]
+    )
+    await m.edit_text(
+        text="Your Movie/Series Downloading Link is in Button", reply_markup=button
+    )
