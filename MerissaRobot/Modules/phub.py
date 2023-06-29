@@ -47,12 +47,15 @@ async def options(c: Client, m: Message):
         ),
     )
 
+
 @Client.on_callback_query(filters.regex(pattern=r"phubstr"))
 async def get_video(c: Client, q: CallbackQuery):
     await q.answer("Please Wait Generating Streaming Link")
     callback_data = q.data.strip()
     id = callback_data.split("_")[1]
-    durl = requests.get(f"https://api.princexd.tech/ytinfo?link=https://www.pornhub.com/view_video.php?viewkey={id}").json()["formats"][8]["url"]
+    durl = requests.get(
+        f"https://api.princexd.tech/ytinfo?link=https://www.pornhub.com/view_video.php?viewkey={id}"
+    ).json()["formats"][8]["url"]
     await q.edit_reply_markup(
         reply_markup=InlineKeyboardMarkup(
             [
@@ -68,7 +71,8 @@ async def get_video(c: Client, q: CallbackQuery):
                 ],
             ],
         ),
-)
+    )
+
 
 @Client.on_callback_query(filters.regex(pattern=r"phubdl"))
 async def get_video(c: Client, q: CallbackQuery):
