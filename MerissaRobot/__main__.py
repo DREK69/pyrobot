@@ -1,4 +1,3 @@
-import asyncio
 import html
 import importlib
 import json
@@ -911,6 +910,7 @@ def main():
         telethn.run_until_disconnected()
 
     updater.idle()
+
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
