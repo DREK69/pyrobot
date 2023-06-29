@@ -57,7 +57,7 @@ async def get_video(c: Client, q: CallbackQuery):
     durl = requests.get(
         f"https://api.princexd.tech/ytinfo?link=https://www.pornhub.com/view_video.php?viewkey={id}"
     ).json()["formats"][8]["url"]
-    await q.edit_reply_markup(
+    await q.edit_message_reply_markup(
         reply_markup=InlineKeyboardMarkup(
             [
                 [
