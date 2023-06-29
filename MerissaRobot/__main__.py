@@ -72,8 +72,6 @@ def get_readable_time(seconds: int) -> str:
     return ping_time
 
 
-loop = asyncio.get_event_loop()
-
 IMPORTED = {}
 MIGRATEABLE = []
 HELPABLE = {}
