@@ -40,13 +40,35 @@ async def options(c: Client, m: Message):
                     ),
                     InlineKeyboardButton(
                         "🎥 Watch Online",
-                        url=m.text,
+                        url=f"phubstr_{id}",
                     ),
                 ],
             ],
         ),
     )
 
+@Client.on_callback_query(filters.regex(pattern=r"phubstr"))
+async def get_video(c: Client, q: CallbackQuery):
+    await q.answer("Please Wait Generating Streaming Link")
+    callback_data = q.data.strip()
+    id = callback_data.split("_")[1]
+    durl = requests.get(f"https://api.princexd.tech/ytinfo?link=https://www.pornhub.com/view_video.php?viewkey={id}").json()["formats"][8]["url"]
+    await q.edit_reply_markup(
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "📥 Download",
+                        callback_data=f"phubdl_{id}",
+                    ),
+                    InlineKeyboardButton(
+                        "🎥 Watch Online",
+                        url=durl,
+                    ),
+                ],
+            ],
+        ),
+)
 
 @Client.on_callback_query(filters.regex(pattern=r"phubdl"))
 async def get_video(c: Client, q: CallbackQuery):
