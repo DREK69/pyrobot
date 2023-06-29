@@ -32,11 +32,11 @@ from MerissaRobot import (
     LOGGER,
     OWNER_ID,
     SUPPORT_CHAT,
+    TOKEN,
     dispatcher,
     pbot,
     telethn,
     updater,
-    TOKEN
 )
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
