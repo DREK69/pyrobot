@@ -54,24 +54,26 @@ async def get_video(c: Client, q: CallbackQuery):
     await q.answer("Please Wait Generating Streaming Link")
     callback_data = q.data.strip()
     id = callback_data.split("_")[1]
-    durl = requests.get(
+    formats = requests.get(
         f"https://api.princexd.tech/ytinfo?link=https://www.pornhub.com/view_video.php?viewkey={id}"
-    ).json()["formats"][8]["url"]
+    ).json()["formats"]
+    row = []
+    keyboards = []
+    for i in formats:
+        format = i["resolution"]
+        dlink = i["url"]
+        button = InlineKeyboardButton(format, url=dlink)     
+        if len(format) < 4:       
+            row.append(button)    
+        else:  
+            keyboards.append(row)
+            row = [button]
+    if row:
+        keyboards.append(row)
+
+    markup = InlineKeyboardMarkup(keyboards)
     await q.edit_message_reply_markup(
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "📥 Download",
-                        callback_data=f"phubdl_{id}",
-                    ),
-                    InlineKeyboardButton(
-                        "🎥 Watch Online",
-                        url=durl,
-                    ),
-                ],
-            ],
-        ),
+        reply_markup=markup
     )
 
 
