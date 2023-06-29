@@ -40,7 +40,21 @@ from MerissaRobot import (
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
 from MerissaRobot.Modules import ALL_MODULES
-from MerissaRobot.text import PM_START_TEXT, PM_START_BUTTON, PM_ABOUT_TEXT, PM_ABOUT_BUTTON, PM_SUPPORT_TEXT, PM_SUPPORT_BUTTON, PM_DONATE_TEXT, HELP_MODULE_TEXT, HELP_STRINGS, GROUP_START_TEXT, GROUP_START_BUTTON, GROUP_HELP_BUTTON, MERISSA_UPDATE_TEXT, MERISSA_VID
+from MerissaRobot.text import (
+    GROUP_HELP_BUTTON,
+    GROUP_START_BUTTON,
+    GROUP_START_TEXT,
+    HELP_MODULE_TEXT,
+    HELP_STRINGS,
+    MERISSA_UPDATE_TEXT,
+    PM_ABOUT_BUTTON,
+    PM_ABOUT_TEXT,
+    PM_DONATE_TEXT,
+    PM_START_BUTTON,
+    PM_START_TEXT,
+    PM_SUPPORT_BUTTON,
+    PM_SUPPORT_TEXT,
+)
 
 # needed to dynamically load Modules
 # NOTE: Module order is not guaranteed, specify that in the config file!
