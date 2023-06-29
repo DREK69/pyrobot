@@ -912,14 +912,9 @@ def main():
 
     updater.idle()
 
-
-async def merissa_startup():
-    await pbot.start()
-
-
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    asyncio.get_event_loop().run_until_complete(merissa_startup())
+    pbot.start()
     try:
         telethn.start(bot_token=TOKEN)
     except FloodWaitError as e:
