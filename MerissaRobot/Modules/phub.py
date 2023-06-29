@@ -62,8 +62,8 @@ async def get_video(c: Client, q: CallbackQuery):
     for i in formats:
         format = i["resolution"]
         dlink = i["url"]
-        button = InlineKeyboardButton(format, url=dlink)     
-        if len(format) < 4:       
+        button = InlineKeyboardButton(format, url=dlink)
+        if len(row) < 3:       
             row.append(button)    
         else:  
             keyboards.append(row)
