@@ -92,11 +92,59 @@ async def inline_query_handler(client, query):
                 return await client.answer_inline_query(
                     query.id,
                     results=answers,
-                    switch_pm_text="saavn Search | saavn [QUERY]",
+                    switch_pm_text="Saavn Search | saavn [QUERY]",
                     switch_pm_parameter="inline",
                 )
             tex = text.split(None, 1)[1].strip()
             answerss = await saavn_func(answers, tex)
+            await client.answer_inline_query(query.id, results=answerss)
+
+        elif text.split()[0] == "ytdl":
+            if len(text.split()) < 2:
+                return await client.answer_inline_query(
+                    query.id,
+                    results=answers,
+                    switch_pm_text="Youtube Video Download | ytdown [QUERY]",
+                    switch_pm_parameter="inline",
+                )
+            tex = text.split(None, 1)[1].strip()
+            answerss = await ytdown_func(answers, tex)
+            await client.answer_inline_query(query.id, results=answerss)
+
+        elif text.split()[0] == "ymdl":
+            if len(text.split()) < 2:
+                return await client.answer_inline_query(
+                    query.id,
+                    results=answers,
+                    switch_pm_text="Youtube Music Download | ymdl [QUERY]",
+                    switch_pm_parameter="inline",
+                )
+            tex = text.split(None, 1)[1].strip()
+            answerss = await ytmdown_func(answers, tex)
+            await client.answer_inline_query(query.id, results=answerss)
+
+        elif text.split()[0] == "ymlink":
+            if len(text.split()) < 2:
+                return await client.answer_inline_query(
+                    query.id,
+                    results=answers,
+                    switch_pm_text="Youtube Music Search | ytmlink [QUERY]",
+                    switch_pm_parameter="inline",
+                )
+            tex = text.split(None, 1)[1].strip()
+            answerss = await ytmusic_func(answers, tex)
+            await client.answer_inline_query(query.id, results=answerss)
+
+        elif text.split()[0] == "spotify":
+            if len(text.split()) < 2:
+                return await client.answer_inline_query(
+                    query.id,
+                    results=answers,
+                    switch_pm_text="Spotify Music Search | spotify [QUERY]",
+                    switch_pm_parameter="inline",
+                )
+            tex = text.split(None, 1)[1].strip()
+            answerss = await spotify_func(answers, tex)
             await client.answer_inline_query(query.id, results=answerss)
 
         elif text.split()[0] == "torrent":
@@ -114,7 +162,19 @@ async def inline_query_handler(client, query):
                 results=answerss,
             )
 
-        elif text.split()[0] == "yt":
+        elif text.split()[0] == "anime":
+            if len(text.split()) < 2:
+                return await client.answer_inline_query(
+                    query.id,
+                    results=answers,
+                    switch_pm_text="Anime Search | anime [QUERY]",
+                    switch_pm_parameter="inline",
+                )
+            tex = text.split(None, 1)[1].strip()
+            answerss = await anime_func(answers, tex)
+            await client.answer_inline_query(query.id, results=answerss)
+
+        elif text.split()[0] == "ytlink":
             if len(text.split()) < 2:
                 return await client.answer_inline_query(
                     query.id,
@@ -172,7 +232,7 @@ async def inline_query_handler(client, query):
                     switch_pm_parameter="inline",
                 )
             tex = text.split(None, 1)[1].strip()
-            answerss = await music_inline_func(answers, tex)
+            answerss = await ytmdown_func(answers, tex)
             await client.answer_inline_query(query.id, results=answerss, cache_time=2)
 
         elif text.split()[0] == "wiki":
