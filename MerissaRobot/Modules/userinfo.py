@@ -24,12 +24,12 @@ from MerissaRobot import (
     INFOPIC,
     OWNER_ID,
     TIGERS,
+    TOKEN,
     WOLVES,
     StartTime,
     dispatcher,
     sw,
     telethn,
-    TOKEN
 )
 from MerissaRobot.__main__ import STATS, USER_INFO
 from MerissaRobot.Database.sql.afk_sql import is_afk, set_afk
