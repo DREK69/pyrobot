@@ -1,4 +1,4 @@
-from telegram import *
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 PM_START_TEXT = """Hi Dear! My name is Merissa [👱‍♀](https://te.legra.ph/file/90b1aa10cf8b77d5b781b.jpg).
 ───────────────────────
