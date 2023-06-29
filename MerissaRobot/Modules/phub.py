@@ -40,7 +40,7 @@ async def options(c: Client, m: Message):
                     ),
                     InlineKeyboardButton(
                         "🎥 Watch Online",
-                        url=f"phubstr_{id}",
+                        callback_data=f"phubstr_{id}",
                     ),
                 ],
             ],
