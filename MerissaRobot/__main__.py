@@ -1,12 +1,12 @@
-import asyncio
+ import asyncio
 import html
 import importlib
 import json
 import re
-import time
 import traceback
-from sys import argv
 
+import requests
+from pyrogram import idle
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import (
     BadRequest,
@@ -23,33 +23,19 @@ from telegram.ext import (
     Filters,
     MessageHandler,
 )
+from telethon.errors.rpcerrorlist import FloodWaitError
 from telegram.ext.dispatcher import DispatcherHandlerStop
 from telegram.utils.helpers import escape_markdown
-from telethon.errors.rpcerrorlist import FloodWaitError
 
 import MerissaRobot.Database.sql.users_sql as sql
-from MerissaRobot import BOT_USERNAME as bu
-from MerissaRobot import (
-    CERT_PATH,
-    LOGGER,
-    OWNER_ID,
-    PORT,
-    SUPPORT_CHAT,
-    TOKEN,
-    URL,
-    WEBHOOK,
-    dispatcher,
-    pbot,
-    telethn,
-    updater,
-)
+from MerissaRobot import LOGGER, OWNER_ID, SUPPORT_CHAT, dispatcher, pbot, updater, telethn
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
 from MerissaRobot.Modules import ALL_MODULES
+from MerissaRobot.text import *
 
 # needed to dynamically load Modules
 # NOTE: Module order is not guaranteed, specify that in the config file!
-from MerissaRobot.Modules.language import gs
 
 
 def get_readable_time(seconds: int) -> str:
@@ -77,11 +63,7 @@ def get_readable_time(seconds: int) -> str:
     return ping_time
 
 
-MERISSA_VID = "https://telegra.ph/file/50a69f6e684653fd626f4.mp4"
-
-
-HELP_STRINGS = """
-Click on the button bellow to get description about specifics command."""
+loop = asyncio.get_event_loop()
 
 IMPORTED = {}
 MIGRATEABLE = []
@@ -142,6 +124,14 @@ def send_help(chat_id, text, keyboard=None):
     )
 
 
+def convertmin(duration):
+    seconds = int(duration)
+    minutes = seconds // 60
+    remaining_seconds = seconds % 60
+    result = f"{minutes}:{remaining_seconds}"
+    return result
+
+
 def test(update: Update, context: CallbackContext):
     # pprint(eval(str(update)))
     # update.effective_message.reply_text("Hola tester! _I_ *have* `markdown`", parse_mode=ParseMode.MARKDOWN)
@@ -157,9 +147,11 @@ def start(update: Update, context: CallbackContext):
         if len(args) >= 1:
             if args[0].lower() == "help":
                 send_help(update.effective_chat.id, HELP_STRINGS)
-            elif args[0].lower().startswith("ghelp_"):
+            elif args[0].lower().startswith("help_"):
                 mod = args[0].lower().split("_", 1)[1]
-                if not HELPABLE.get(mod, False):
+                if not HELPABLE[imported_module.__mod_name__.lower().split(" ")[0]].get(
+                    mod, False
+                ):
                     return
                 send_help(
                     update.effective_chat.id,
@@ -168,14 +160,48 @@ def start(update: Update, context: CallbackContext):
                         [
                             [
                                 InlineKeyboardButton(
-                                    text=gs(chat.id, "back_button"),
+                                    text="🔙 Back",
                                     callback_data="help_back",
                                 )
                             ]
                         ]
                     ),
                 )
-
+            elif args[0].startswith("ytdl_"):
+                videoid = args[0].split("ytdl_")[1]
+                link = f"https://m.youtube.com/watch?v={videoid}"
+                yt = requests.get(
+                    f"https://api.princexd.tech/ytinfo?link={link}"
+                ).json()
+                videoid = yt["id"]
+                thumbnail = requests.get(
+                    f"https://api.princexd.tech/ytthumb?videoid={videoid}"
+                ).json()["url"]
+                title = yt["title"]
+                duration = yt["duration"]
+                dur = convertmin(duration)
+                update.effective_message.reply_photo(
+                    thumbnail,
+                    caption=f"Title: {title}\nDuration: {dur}\n\nSelect Your Preferred Format from Below:",
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [
+                                InlineKeyboardButton(
+                                    "🔊 Audio",
+                                    callback_data=f"audio {videoid}",
+                                ),
+                                InlineKeyboardButton(
+                                    "🎥 Video", callback_data=f"formats {videoid}"
+                                ),
+                            ],
+                            [
+                                InlineKeyboardButton(
+                                    "🗑️ Close", callback_data="cb_close"
+                                ),
+                            ],
+                        ]
+                    ),
+                )
             elif args[0].lower().startswith("stngs_"):
                 match = re.match("stngs_(.*)", args[0].lower())
                 chat = dispatcher.bot.getChat(match.group(1))
@@ -189,64 +215,16 @@ def start(update: Update, context: CallbackContext):
                 IMPORTED["rules"].send_rules(update, args[0], from_pm=True)
         else:
             update.effective_message.reply_text(
-                text=gs(chat.id, "pm_start_text"),
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                text=gs(chat.id, "add_bot_to_group_button"),
-                                url=f"t.me/{bu}?startgroup=new",
-                            ),
-                        ],
-                        [
-                            InlineKeyboardButton(
-                                text=gs(chat.id, "help_button"),
-                                callback_data="help_back",
-                            ),
-                            InlineKeyboardButton(
-                                text=gs(chat.id, "info_button"),
-                                callback_data="merissa_",
-                            ),
-                        ],
-                        [
-                            InlineKeyboardButton(
-                                text=gs(chat.id, "lang_button"),
-                                callback_data="cblang",
-                            ),
-                            InlineKeyboardButton(
-                                text=gs(chat.id, "font_button"),
-                                callback_data="chfont",
-                            ),
-                        ],
-                        [
-                            InlineKeyboardButton(
-                                text=gs(chat.id, "web_button"),
-                                url="merissarobot.tk",
-                            ),
-                        ],
-                    ]
-                ),
+                text=PM_START_TEXT,
+                reply_markup=PM_START_BUTTON,
                 parse_mode=ParseMode.MARKDOWN,
                 disable_web_page_preview=False,
             )
     else:
         update.effective_message.reply_text(
-            text=gs(chat.id, "group_start_text"),
+            text=GROUP_START_TEXT,
             parse_mode=ParseMode.HTML,
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "lang_button"), callback_data="cbglang"
-                        ),
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "help_button"),
-                            callback_data="merissa_setting",
-                        ),
-                    ],
-                    [InlineKeyboardButton(text="Close ❌", callback_data="cbclose")],
-                ]
-            ),
+            reply_markup=GROUP_START_BUTTON,
         )
 
 
@@ -309,7 +287,7 @@ def error_callback(update: Update, context: CallbackContext):
 
 
 def help_button(update, context):
-    chat = update.effective_chat
+    update.effective_chat
     query = update.callback_query
     mod_match = re.match(r"help_module\((.+?)\)", query.data)
     prev_match = re.match(r"help_prev\((.+?)\)", query.data)
@@ -322,7 +300,7 @@ def help_button(update, context):
         if mod_match:
             module = mod_match.group(1)
             text = (
-                gs(chat.id, "pm_help_module_text").format(HELPABLE[module].__mod_name__)
+                HELP_MODULE_TEXT.format(HELPABLE[module].__mod_name__)
                 + HELPABLE[module].__help__
             )
             if hasattr(HELPABLE[module], "__helpbtns__"):
@@ -339,7 +317,7 @@ def help_button(update, context):
         elif prev_match:
             curr_page = int(prev_match.group(1))
             query.message.edit_text(
-                text=gs(chat.id, "pm_help_text"),
+                text=HELP_STRINGS,
                 parse_mode=ParseMode.MARKDOWN,
                 reply_markup=InlineKeyboardMarkup(
                     paginate_modules(curr_page - 1, HELPABLE, "help")
@@ -349,7 +327,7 @@ def help_button(update, context):
         elif next_match:
             next_page = int(next_match.group(1))
             query.message.edit_text(
-                text=gs(chat.id, "pm_help_text"),
+                text=HELP_STRINGS,
                 parse_mode=ParseMode.MARKDOWN,
                 reply_markup=InlineKeyboardMarkup(
                     paginate_modules(next_page + 1, HELPABLE, "help")
@@ -358,7 +336,7 @@ def help_button(update, context):
 
         elif back_match:
             query.message.edit_text(
-                text=gs(chat.id, "pm_help_text"),
+                text=HELP_STRINGS,
                 parse_mode=ParseMode.MARKDOWN,
                 reply_markup=InlineKeyboardMarkup(
                     paginate_modules(0, HELPABLE, "help")
@@ -372,7 +350,7 @@ def help_button(update, context):
 
 
 def ghelp_button(update, context):
-    chat = update.effective_chat
+    update.effective_chat
     query = update.callback_query
     mod_match = re.match(r"ghelp_module\((.+?)\)", query.data)
     prev_match = re.match(r"ghelp_prev\((.+?)\)", query.data)
@@ -385,7 +363,7 @@ def ghelp_button(update, context):
         if mod_match:
             module = mod_match.group(1)
             text = (
-                gs(chat.id, "pm_help_module_text").format(HELPABLE[module].__mod_name__)
+                HELP_MODULE_TEXT.format(HELPABLE[module].__mod_name__)
                 + HELPABLE[module].__help__
             )
             if hasattr(HELPABLE[module], "__helpbtns__"):
@@ -402,7 +380,7 @@ def ghelp_button(update, context):
         elif prev_match:
             curr_page = int(prev_match.group(1))
             query.message.edit_text(
-                text=gs(chat.id, "pm_help_text"),
+                text=HELP_STRINGS,
                 parse_mode=ParseMode.MARKDOWN,
                 reply_markup=InlineKeyboardMarkup(
                     gpaginate_modules(curr_page - 1, HELPABLE, "ghelp")
@@ -412,7 +390,7 @@ def ghelp_button(update, context):
         elif next_match:
             next_page = int(next_match.group(1))
             query.message.edit_text(
-                text=gs(chat.id, "pm_help_text"),
+                text=HELP_STRINGS,
                 parse_mode=ParseMode.MARKDOWN,
                 reply_markup=InlineKeyboardMarkup(
                     gpaginate_modules(next_page + 1, HELPABLE, "ghelp")
@@ -421,7 +399,7 @@ def ghelp_button(update, context):
 
         elif back_match:
             query.message.edit_text(
-                text=gs(chat.id, "pm_help_text"),
+                text=HELP_STRINGS,
                 parse_mode=ParseMode.MARKDOWN,
                 reply_markup=InlineKeyboardMarkup(
                     gpaginate_modules(0, HELPABLE, "ghelp")
@@ -435,93 +413,28 @@ def ghelp_button(update, context):
 
 
 def merissa_about_callback(update, context):
-    chat = update.effective_chat
+    update.effective_chat
     query = update.callback_query
     if query.data == "merissa_":
         query.message.edit_text(
-            text=gs(chat.id, "pm_help_text"),
+            text=HELP_STRINGS,
             parse_mode=ParseMode.MARKDOWN,
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "about_button"),
-                            callback_data="merissa_about",
-                        ),
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "donate_button"),
-                            callback_data="merissa_donate",
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "supportchat_button"),
-                            callback_data="merissa_support",
-                        ),
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "source_button"),
-                            callback_data="merissa_source",
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            "──「 Merissa v2.0 Update 」──",
-                            callback_data="merissa_update",
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "back_button"),
-                            callback_data="merissa_back",
-                        ),
-                    ],
-                ]
-            ),
+            reply_markup=PM_ABOUT_BUTTON,
         )
     elif query.data == "merissa_back":
         query.message.edit_text(
-            text=gs(chat.id, "pm_start_text"),
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "add_bot_to_group_button"),
-                            url=f"t.me/{bu}?startgroup=new",
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "help_button"), callback_data="help_back"
-                        ),
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "info_button"), callback_data="merissa_"
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "lang_button"), callback_data="cblang"
-                        ),
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "font_button"), callback_data="cb_howtouse"
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "web_button"), url="merissarobot.tk"
-                        ),
-                    ],
-                ]
-            ),
+            text=PM_START_TEXT,
+            reply_markup=PM_START_BUTTON,
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
     elif query.data == "merissa_about":
         query.message.edit_text(
-            text=gs(chat.id, "pm_about_text"),
+            text=PM_ABOUT_TEXT,
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton(text="Back", callback_data="merissa_")]]
+                [[InlineKeyboardButton(text="🔙 Back", callback_data="merissa_")]]
             ),
         )
 
@@ -531,89 +444,89 @@ def merissa_about_callback(update, context):
         )
         query.message.delete()
 
-    elif query.data == "merissa_soon":
-        query.answer(
-            "This Language is Under Maintenance Mode. You can wait for this Language Updates or You can Help Us to Translate using Below Button",
-            show_alert=True,
-        )
-
-    elif query.data == "merissa_update":
+    elif query.data == "merissa_latestup":
         query.message.edit_text(
-            """──「 Merissa v2.0 Update 」──
+            MERISSA_UPDATE_TEXT,
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            text="🔙 Back", callback_data="merissa_back"
+                        ),
+                        InlineKeyboardButton(
+                            text="Previous ▶️", callback_data="merissa_upv2"
+                        ),
+                    ]
+                ]
+            ),
+        )
+    elif query.data == "merissa_upv1":
+        query.message.edit_text(
+            """──「 Merissa v1.0 Update 」──
+
+- Added Anti-Language, Anti-Spam, Anti-Channel, Anti-Services
+- Added Tagalert, Tagall, Chatbot, UrlLock, Captcha, GenQR
+- Update Help Menu Bar""",
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton(text="🔙 Back", callback_data="merissa_upv2")]]
+            ),
+        )
+    elif query.data == "merissa_upv2":
+        query.message.edit_text(
+            text="""──「 Merissa v2.0 Update 」──
 
 - Added Anti-Raid, Games, Animations, Attendance, Whisper, Rename, SessionHack, Insta, Tiktok and Movie Downloader, Mod Apk Downloader.
-- Update Chatbot, Quotly, Federation Like Rose Bot
+- Update Chatbot, Quotly, Federation Like Rose Bot, Captcha
 - Update Afk Added Gif
 - Multi Language Bot""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton(text="Back", callback_data="merissa_")]]
+                [
+                    [
+                        InlineKeyboardButton(
+                            text="🔙 Back", callback_data="merissa_latestup"
+                        ),
+                        InlineKeyboardButton(
+                            text="Previous ▶️", callback_data="merissa_upv1"
+                        ),
+                    ]
+                ]
             ),
         )
     elif query.data == "merissa_support":
         query.message.edit_text(
-            text=gs(chat.id, "pm_about_support_text"),
+            text=PM_SUPPORT_TEXT,
             parse_mode=ParseMode.MARKDOWN,
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "supportchat_button"),
-                            url="t.me/MerissaxSupport",
-                        ),
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "updatechat_button"),
-                            url="https://t.me/MerissaxUpdates",
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "back_button"), callback_data="merissa_"
-                        ),
-                    ],
-                ]
-            ),
+            reply_markup=PM_SUPPORT_BUTTON,
         )
     elif query.data == "merissa_setting":
         query.message.edit_text(
-            text=gs(chat.id, "pm_help_text"),
+            text="Choose where you want help section using below Button",
             parse_mode=ParseMode.MARKDOWN,
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text="👤 Open in Private Chat",
-                            callback_data=f"merissa_private",
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            text="👥 Open Here", callback_data="ghelp_back"
-                        ),
-                    ],
-                ]
-            ),
+            reply_markup=GROUP_HELP_BUTTON,
         )
     elif query.data == "merissa_private":
         userid = query.from_user.id
         query.answer("Help Menu Sent in Private Chat", show_alert=True)
         send_help(
             userid,
-            text="Click on the button bellow to get description about specifics command.",
+            text=HELP_STRINGS,
         )
 
     elif query.data == "merissa_donate":
         query.message.edit_text(
-            text=gs(chat.id, "pm_donate_text"),
+            text=PM_DONATE_TEXT,
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "back_button"), callback_data="merissa_"
-                        ),
+                        InlineKeyboardButton(text="🔙 Back", callback_data="merissa_"),
                     ]
                 ]
             ),
@@ -663,7 +576,7 @@ def get_help(update: Update, context: CallbackContext):
 
     # ONLY send help in PM
     if chat.type != chat.PRIVATE:
-        if len(args) >= 2 and any(args[1].lower() == x for x in HELPABLE):
+        if len(args) >= 2 and any(args[1].lower().split(" ")[0] == x for x in HELPABLE):
             module = args[1].lower()
             update.effective_message.reply_text(
                 f"Contact me in PM to get help of {module.capitalize()}",
@@ -671,7 +584,7 @@ def get_help(update: Update, context: CallbackContext):
                     [
                         [
                             InlineKeyboardButton(
-                                text=gs(chat.id, "group_help_button"),
+                                text="Help ❓",
                                 url="t.me/{}?start=help_{}".format(
                                     context.bot.username, module
                                 ),
@@ -682,7 +595,7 @@ def get_help(update: Update, context: CallbackContext):
             )
             return
         update.effective_message.reply_text(
-            text=gs(chat.id, "group_help_text"),
+            text="Contact me in PM to get the list of possible commands.",
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
@@ -713,13 +626,7 @@ def get_help(update: Update, context: CallbackContext):
             chat.id,
             text,
             InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text=gs(chat.id, "back_button"), callback_data="help_back"
-                        )
-                    ]
-                ]
+                [[InlineKeyboardButton(text="🔙 Back", callback_data="help_back")]]
             ),
         )
 
@@ -736,7 +643,9 @@ def send_settings(chat_id, user_id, user=False):
             )
             dispatcher.bot.send_message(
                 user_id,
-                text=gs(chat_id, "pm_settings_personal_text") + "\n\n" + settings,
+                text="Which module would you like to check {}'s settings for?"
+                + "\n\n"
+                + settings,
                 parse_mode=ParseMode.MARKDOWN,
             )
 
@@ -780,7 +689,7 @@ def settings_button(update: Update, context: CallbackContext):
             chat_id = mod_match.group(1)
             module = mod_match.group(2)
             chat = bot.get_chat(chat_id)
-            text = gs(chat.id, "pm_settings_groups_text").format(
+            text = "*{}* has the following settings for the *{}* module:\n\n".format(
                 escape_markdown(chat.title), CHAT_SETTINGS[module].__mod_name__
             ) + CHAT_SETTINGS[module].__chat_settings__(chat_id, user.id)
             query.message.reply_text(
@@ -803,7 +712,9 @@ def settings_button(update: Update, context: CallbackContext):
             curr_page = int(prev_match.group(2))
             chat = bot.get_chat(chat_id)
             query.message.reply_text(
-                text=gs(chat.id, "pm_settings_groupss_text").format(chat.title),
+                text="Hi there! There are quite a few settings for {} - go ahead and pick what you're interested in.".format(
+                    chat.title
+                ),
                 reply_markup=InlineKeyboardMarkup(
                     paginate_modules(
                         curr_page - 1, CHAT_SETTINGS, "stngs", chat=chat_id
@@ -816,7 +727,9 @@ def settings_button(update: Update, context: CallbackContext):
             next_page = int(next_match.group(2))
             chat = bot.get_chat(chat_id)
             query.message.reply_text(
-                text=gs(chat.id, "pm_settings_groupss_text").format(chat.title),
+                text="Hi there! There are quite a few settings for {} - go ahead and pick what you're interested in.".format(
+                    chat.title
+                ),
                 reply_markup=InlineKeyboardMarkup(
                     paginate_modules(
                         next_page + 1, CHAT_SETTINGS, "stngs", chat=chat_id
@@ -828,7 +741,7 @@ def settings_button(update: Update, context: CallbackContext):
             chat_id = back_match.group(1)
             chat = bot.get_chat(chat_id)
             query.message.reply_text(
-                text=gs(chat.id, "pm_settings_groupss_text").format(
+                text="Hi there! There are quite a few settings for {} - go ahead and pick what you're interested in.".format(
                     escape_markdown(chat.title)
                 ),
                 parse_mode=ParseMode.MARKDOWN,
@@ -864,7 +777,7 @@ def get_settings(update: Update, context: CallbackContext):
                     [
                         [
                             InlineKeyboardButton(
-                                text=gs(chat.id, "group_settings_button"),
+                                text="Settings ⚙️",
                                 url="t.me/{}?start=stngs_{}".format(
                                     context.bot.username, chat.id
                                 ),
@@ -885,7 +798,7 @@ def donate(update: Update, context: CallbackContext):
     chat = update.effective_chat  # type: Optional[Chat]
     context.bot
     update.effective_message.reply_text(
-        text=gs(chat.id, "pm_donate_text"),
+        text=PM_DONATE_TEXT,
         parse_mode=ParseMode.MARKDOWN,
         disable_web_page_preview=True,
     )
@@ -908,6 +821,11 @@ def migrate_chats(update: Update, context: CallbackContext):
 
     LOGGER.info("Successfully migrated!")
     raise DispatcherHandlerStop
+
+
+async def merissa_startup():
+    await pbot.start()
+    await idle()
 
 
 def main():
@@ -969,18 +887,8 @@ def main():
 
     dispatcher.add_error_handler(error_callback)
 
-    if WEBHOOK:
-        LOGGER.info("Using webhooks.")
-        updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)
-
-        if CERT_PATH:
-            updater.bot.set_webhook(url=URL + TOKEN, certificate=open(CERT_PATH, "rb"))
-        else:
-            updater.bot.set_webhook(url=URL + TOKEN)
-
-    else:
-        LOGGER.info("Using long polling.")
-        updater.start_polling(timeout=15, read_latency=4, drop_pending_updates=True)
+    LOGGER.info("MerissaRobot Started Successfully")
+    updater.start_polling(timeout=15, read_latency=4, drop_pending_updates=True)
 
     if len(argv) not in (1, 3, 4):
         telethn.disconnect()
