@@ -1,9 +1,13 @@
 import asyncio
+import os
 import socket
 from html import escape
 from re import sub as re_sub
 from time import ctime, time
 
+import aiohttp
+import requests
+import yt_dlp
 from fuzzysearch import find_near_matches
 from pornhub_api import PornhubApi
 from pornhub_api.backends.aiohttp import AioHttpBackend
@@ -16,6 +20,8 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     InlineQueryResultArticle,
     InlineQueryResultPhoto,
+    InputMediaAudio,
+    InputMediaVideo,
     InputTextMessageContent,
 )
 from search_engine_parser import GoogleSearch
@@ -23,42 +29,54 @@ from youtubesearchpython import VideosSearch
 
 from MerissaRobot import DEV_USERS, EVENT_LOGS, arq
 from MerissaRobot import pbot as app
+from MerissaRobot.helpers import get_ytthumb, save_file
 from MerissaRobot.Modules.info import get_chat_info, get_user_info
 from MerissaRobot.Utils.Helpers.pastebin import paste
-from MerissaRobot.Utils.Helpers.pluginhelper import (
-    convert_seconds_to_minutes as time_convert,
-)
-from MerissaRobot.Utils.Helpers.pluginhelper import fetch
 from MerissaRobot.Utils.Services.tasks import _get_tasks_text, all_tasks, rm_task
 from MerissaRobot.Utils.Services.types import InlineQueryResultCachedDocument
 
 MESSAGE_DUMP_CHAT = EVENT_LOGS
 
+
+async def fetch(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            try:
+                data = await resp.json()
+            except Exception:
+                data = await resp.text()
+    return data
+
+
+def convert_bytes(size: float) -> str:
+    """humanize size"""
+    if not size:
+        return ""
+    power = 1024
+    t_n = 0
+    power_dict = {0: " ", 1: "K", 2: "M", 3: "G", 4: "T"}
+    while size > power:
+        size /= power
+        t_n += 1
+    return "{:.2f} {}B".format(size, power_dict[t_n])
+
+
 keywords_list = [
     "alive",
-    "image",
-    "wall",
+    "image" "wall",
     "tmdb",
     "lyrics",
-    "exec",
-    "search",
-    "ping",
     "webss",
-    "fakegen",
-    "gsearch",
     "paste",
-    "tr",
-    "ud",
-    "yt",
-    "info",
     "google",
-    "gh",
     "torrent",
-    "pokedex",
     "saavn",
-    "wiki",
-    "music",
-    "ytmusic",
+    "ytdown",
+    "ytlink",
+    "ud",
+    "ytmdown",
+    "gh",
+    "ytmlink",
 ]
 
 
@@ -126,6 +144,85 @@ Merissa is a Telegram group managment bot made using Telethon and Pyrogram which
     return answers
 
 
+async def ytmdown_func(answers, text):
+    results = requests.get(f"https://api.princexd.tech/ytmsearch?query={text}").json()[
+        "results"
+    ]
+    for i in results:
+        thumb = i["thumbnails"][0]["url"]
+        thumbnail = thumb.replace("w60-h60", "w500-h500")
+        description = (
+            f"{i['title']} | {i['duration']} " + f"| {i['artists'][0]['name']}"
+        )
+        buttons = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="📥 Download",
+                        callback_data=f"inymaud {i['videoId']}",
+                    ),
+                    InlineKeyboardButton(
+                        text="🗑️ Close",
+                        callback_data="iclose",
+                    ),
+                ]
+            ]
+        )
+        cap = f"**Title**: {i['title']}\n**Duration**: {i['duration']}\n\n**Click below button to Download Your Song:**"
+        answers.append(
+            InlineQueryResultPhoto(
+                photo_url=thumbnail,
+                title=i["title"],
+                caption=cap,
+                description=description,
+                thumb_url=thumb,
+                reply_markup=buttons,
+            )
+        )
+    return answers
+
+
+async def ytdown_func(answers, text):
+    search = VideosSearch(text, limit=50)
+    for result in search.result()["result"]:
+        videoid = result["id"]
+        thumbnail = result["thumbnails"][0]["url"]
+        thumb = thumbnail.split("?")[0]
+        buttons = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "🔊 Audio",
+                        callback_data=f"inytaud {videoid}",
+                    ),
+                    InlineKeyboardButton(
+                        "🎥 Video", callback_data=f"informats {videoid}"
+                    ),
+                ],
+                [
+                    InlineKeyboardButton(
+                        text="🗑️ Close",
+                        callback_data="iclose",
+                    ),
+                ],
+            ]
+        )
+        cap = f"**Title**: {result['title']}\n**Duration**: {result['duration']}\n\n**Click below button to Download Your Song:**"
+        answers.append(
+            InlineQueryResultPhoto(
+                photo_url=thumb,
+                title=result["title"],
+                description="{}, {} views.".format(
+                    result["duration"], result["viewCount"]["short"]
+                ),
+                caption=cap,
+                thumb_url=result["thumbnails"][0]["url"],
+                reply_markup=buttons,
+            )
+        )
+    return answers
+
+
 @app.on_callback_query(filters.regex("cbdownloader"))
 async def cbgames(_, cq):
     buttons = InlineKeyboardMarkup(
@@ -133,7 +230,23 @@ async def cbgames(_, cq):
             [
                 InlineKeyboardButton(
                     text="🎥 Youtube",
-                    switch_inline_query_current_chat="yt",
+                    switch_inline_query_current_chat="ytdl",
+                ),
+                InlineKeyboardButton(
+                    text="🎧 Saavn",
+                    switch_inline_query_current_chat="saavn",
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text="🎵 Youtube Music",
+                    switch_inline_query_current_chat="ymdl",
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text="🥷 Anime",
+                    switch_inline_query_current_chat="anime",
                 ),
                 InlineKeyboardButton(
                     text="🔞 P-Hub",
@@ -183,9 +296,211 @@ async def cbgames(_, cq):
     )
     inline_message_id = cq.inline_message_id
     msg = """
-Click Below Buttons To Search Videos.
+Merissa is a Telegram group managment bot made using Telethon and Pyrogram which makes it modern and faster than most of the exisitng Telegram Chat Managers.
 """
     await app.edit_inline_caption(inline_message_id, msg, reply_markup=buttons)
+
+
+@app.on_callback_query(filters.regex("informats"))
+async def cbgames(_, cq):
+    inline_message_id = cq.inline_message_id
+    callback_data = cq.data.strip()
+    videoid = callback_data.split(None, 1)[1]
+    link = f"https://m.youtube.com/watch?v={videoid}"
+    ytdl_opts = {"quiet": True}
+    ydl = yt_dlp.YoutubeDL(ytdl_opts)
+    with ydl:
+        formats_available = []
+        r = ydl.extract_info(link, download=False)
+        for format in r["formats"]:
+            try:
+                str(format["format"])
+            except:
+                continue
+            if not "dash" in str(format["format"]).lower():
+                try:
+                    format["format"]
+                    format["filesize"]
+                    format["format_id"]
+                    format["ext"]
+                    format["format_note"]
+                except:
+                    continue
+                formats_available.append(
+                    {
+                        "format": format["format"],
+                        "filesize": format["filesize"],
+                        "format_id": format["format_id"],
+                        "ext": format["ext"],
+                        "format_note": format["format_note"],
+                        "yturl": link,
+                    }
+                )
+    keyboard = InlineKeyboard()
+    done = [160, 133, 134, 135, 136, 137, 298, 299, 264, 304, 266]
+    for x in formats_available:
+        check = x["format"]
+        if x["filesize"] is None:
+            continue
+        if int(x["format_id"]) not in done:
+            continue
+        sz = convert_bytes(x["filesize"])
+        ap = check.split("-")[1]
+        to = f"{ap} = {sz}"
+        keyboard.row(
+            InlineKeyboardButton(
+                text=to,
+                callback_data=f"invideo {x['format_id']}|{videoid}",
+            )
+        )
+    keyboard.row(
+        InlineKeyboardButton(text="🗑️ Close", callback_data="inclose"),
+    )
+    await app.edit_inline_reply_markup(inline_message_id, reply_markup=keyboard)
+
+
+@app.on_callback_query(filters.regex("invideo"))
+async def cbgames(_, cq):
+    inline_message_id = cq.inline_message_id
+    callback_data = cq.data.strip()
+    callback_request = callback_data.split(None, 1)[1]
+    format_id, videoid = callback_request.split("|")
+    link = f"https://m.youtube.com/watch?v={videoid}"
+    dbutton = InlineKeyboardMarkup(
+        [[InlineKeyboardButton(text="📥 Downloading....", callback_data="agdjhdggd")]]
+    )
+    await app.edit_inline_reply_markup(inline_message_id, reply_markup=dbutton)
+    formats = f"{format_id}+140"
+    opts = {
+        "format": formats,
+        "addmetadata": True,
+        "key": "FFmpegMetadata",
+        "prefer_ffmpeg": True,
+        "geo_bypass": True,
+        "nocheckcertificate": True,
+        "postprocessors": [{"key": "FFmpegVideoConvertor", "preferedformat": "mp4"}],
+        "outtmpl": "%(id)s.mp4",
+        "logtostderr": False,
+        "quiet": True,
+    }
+    try:
+        with yt_dlp.YoutubeDL(opts) as ytdl:
+            info_dict = ytdl.extract_info(link, download=True)
+    except Exception as e:
+        await app.edit_inline_caption(
+            inline_message_id, f"Failed to Download.** \n**Error :** `{str(e)}`"
+        )
+        return
+    thumb = await get_ytthumb(info_dict["id"])
+    thumbnail = save_file(thumb, "thumb.jpg")
+    download_720 = f"{info_dict['id']}.mp4"
+    med = InputMediaVideo(
+        media=download_720,
+        thumb=thumbnail,
+        caption=str(info_dict["title"]),
+        supports_streaming=True,
+    )
+    ubutton = InlineKeyboardMarkup(
+        [[InlineKeyboardButton(text="📤 Uploading....", callback_data="agdjhdggd")]]
+    )
+    await app.edit_inline_reply_markup(inline_message_id, reply_markup=ubutton)
+    button = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    text="Search again", switch_inline_query_current_chat="ytdl"
+                )
+            ]
+        ]
+    )
+    await app.edit_inline_media(inline_message_id, media=med, reply_markup=button)
+    os.remove(download_720)
+    os.remove(thumbnail)
+
+
+@app.on_callback_query(filters.regex("inymaud"))
+async def cbgames(_, cq):
+    inline_message_id = cq.inline_message_id
+    callback_data = cq.data.strip()
+    videoid = callback_data.split(None, 1)[1]
+    link = f"https://m.youtube.com/watch?v={videoid}"
+    dbutton = InlineKeyboardMarkup(
+        [[InlineKeyboardButton(text="📥 Downloading....", callback_data="agdjhdggd")]]
+    )
+    await app.edit_inline_reply_markup(inline_message_id, reply_markup=dbutton)
+    ydl_opts = {"format": "bestaudio[ext=m4a]"}
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info_dict = ydl.extract_info(link, download=False)
+        audio_file = ydl.prepare_filename(info_dict)
+        ydl.process_info(info_dict)
+    yt = requests.get(f"https://api.princexd.tech/ytmsearch?query={link}").json()[
+        "results"
+    ]["videoDetails"]
+    thumb = info_dict["thumbnails"][0]["url"]
+    thumb.replace("60-", "1080-")
+    thumbnail = save_file(thumb, "thumbnail.png")
+    med = InputMediaAudio(
+        audio_file,
+        caption=str(info_dict["title"]),
+        thumb=thumbnail,
+        title=str(info_dict["title"]),
+        performer=yt["author"],
+        duration=int(info_dict["duration"]),
+    )
+    ubutton = InlineKeyboardMarkup(
+        [[InlineKeyboardButton(text="📤 Uploading....", callback_data="agdjhdggd")]]
+    )
+    await app.edit_inline_reply_markup(inline_message_id, reply_markup=ubutton)
+    button = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    text="Search again", switch_inline_query_current_chat="ymdl"
+                )
+            ]
+        ]
+    )
+    await app.edit_inline_media(inline_message_id, media=med, reply_markup=button)
+    os.remove(audio_file)
+    os.remove(thumbnail)
+
+
+@app.on_callback_query(filters.regex("inytaud"))
+async def cbgames(_, cq):
+    inline_message_id = cq.inline_message_id
+    callback_data = cq.data.strip()
+    videoid = callback_data.split(None, 1)[1]
+    link = f"https://m.youtube.com/watch?v={videoid}"
+    dbutton = InlineKeyboardMarkup(
+        [[InlineKeyboardButton(text="📥 Downloading....", callback_data="agdjhdggd")]]
+    )
+    await app.edit_inline_reply_markup(inline_message_id, reply_markup=dbutton)
+    ydl_opts = {"format": "bestaudio[ext=m4a]"}
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info_dict = ydl.extract_info(link, download=False)
+        audio_file = ydl.prepare_filename(info_dict)
+        ydl.process_info(info_dict)
+    med = InputMediaAudio(
+        audio_file,
+        caption=str(info_dict["title"]),
+        title=str(info_dict["title"]),
+        duration=int(info_dict["duration"]),
+    )
+    ubutton = InlineKeyboardMarkup(
+        [[InlineKeyboardButton(text="📤 Uploading....", callback_data="agdjhdggd")]]
+    )
+    await app.edit_inline_reply_markup(inline_message_id, reply_markup=ubutton)
+    button = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    text="Search again", switch_inline_query_current_chat="ytdl"
+                )
+            ]
+        ]
+    )
+    await app.edit_inline_media(inline_message_id, media=med, reply_markup=button)
+    os.remove(audio_file)
 
 
 @app.on_callback_query(filters.regex("cbothers"))
@@ -295,6 +610,25 @@ async def google_search_func(answers, text):
     return answers
 
 
+async def spotify_func(answers, text):
+    search = requests.get(f"https://api.princexd.tech/spsearch?query={text}").json()[
+        "tracks"
+    ]["items"]
+    for result in search:
+        answers.append(
+            InlineQueryResultArticle(
+                title=result["name"],
+                description="{}".format(result["album"]["artists"][0]["name"]),
+                input_message_content=InputTextMessageContent(
+                    "{}".format(result["external_urls"]["spotify"]),
+                    disable_web_page_preview=True,
+                ),
+                thumb_url=result["album"]["images"][0]["url"],
+            )
+        )
+    return answers
+
+
 async def wall_func(answers, text):
     results = await arq.wall(text)
     if not results.ok:
@@ -374,6 +708,37 @@ async def youtube_func(answers, text):
                 thumb_url=result["thumbnails"][0]["url"],
             )
         )
+    return answers
+
+
+async def anime_func(answers, text):
+    search = requests.get(f"https://api.yukkiflix.ml/search?keyw={text}&page=1").json()
+    try:
+        for result in search:
+            answers.append(
+                InlineQueryResultArticle(
+                    title=result["name"],
+                    description="{}".format(result["status"]),
+                    input_message_content=InputTextMessageContent(
+                        "https://anikatsu.me/anime/{}".format(result["anime_id"]),
+                        disable_web_page_preview=True,
+                    ),
+                    thumb_url=result["img_url"],
+                )
+            )
+    except Exception:
+        for result in search:
+            answers.append(
+                InlineQueryResultArticle(
+                    title=result["name"],
+                    description="{}".format(result["status"]),
+                    input_message_content=InputTextMessageContent(
+                        "https://anikatsu.me/anime/{}".format(result["anime_id"]),
+                        disable_web_page_preview=True,
+                    ),
+                    thumb_url="https://te.legra.ph/file/96786556f0cc818a50c87.jpg",
+                )
+            )
     return answers
 
 
@@ -593,39 +958,45 @@ async def webss(url):
 
 
 async def saavn_func(answers, text):
-    buttons_list = []
-    results = await arq.saavn(text)
-    if not results.ok:
-        answers.append(
-            InlineQueryResultArticle(
-                title="Error",
-                description=results.result,
-                input_message_content=InputTextMessageContent(results.result),
-            )
+    results = requests.get(f"https://saavn.me/search/songs?query={text}").json()[
+        "data"
+    ]["results"]
+    for i in results:
+        caption = f"{i['url']}"
+        description = (
+            f"{i['album']['name']} | {i['duration']} "
+            + f"| {i['primaryArtists']} ({i['year']})"
         )
-        return answers
-    results = results.result
-    for count, i in enumerate(results):
-        buttons = InlineKeyboard(row_width=1)
-        buttons.add(InlineKeyboardButton("Download | Play", url=i.media_url))
-        buttons_list.append(buttons)
-        duration = await time_convert(i.duration)
-        caption = f"""
-**Title:** {i.song}
-**Album:** {i.album}
-**Duration:** {duration}
-**Release:** {i.year}
-**Singers:** {i.singers}"""
-        description = f"{i.album} | {duration} " + f"| {i.singers} ({i.year})"
         answers.append(
             InlineQueryResultArticle(
-                title=i.song,
+                title=i["name"],
                 input_message_content=InputTextMessageContent(
                     caption, disable_web_page_preview=True
                 ),
                 description=description,
-                thumb_url=i.image,
-                reply_markup=buttons_list[count],
+                thumb_url=i["image"][2]["link"],
+            )
+        )
+    return answers
+
+
+async def ytmusic_func(answers, text):
+    results = requests.get(f"https://api.princexd.tech/ytmusic?query={text}").json()[
+        "results"
+    ]
+    for i in results:
+        caption = f"https://music.youtube.com/watch?v={i['videoId']}&feature=share"
+        description = (
+            f"{i['title']} | {i['duration']} " + f"| {i['artists'][0]['name']}"
+        )
+        answers.append(
+            InlineQueryResultArticle(
+                title=i["title"],
+                input_message_content=InputTextMessageContent(
+                    caption, disable_web_page_preview=True
+                ),
+                description=description,
+                thumb_url=i["thumbnails"][0]["url"],
             )
         )
     return answers
