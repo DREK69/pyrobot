@@ -63,7 +63,7 @@ async def get_video(c: Client, q: CallbackQuery):
         format = i["resolution"]
         dlink = i["url"]
         button = InlineKeyboardButton(format, url=dlink)
-        keyboards.append(button)
+        keyboards.append(button)
     markup = InlineKeyboardMarkup(keyboards)
     await q.edit_message_reply_markup(
         reply_markup=markup
