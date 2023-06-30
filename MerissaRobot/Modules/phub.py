@@ -57,7 +57,6 @@ async def get_video(c: Client, q: CallbackQuery):
     formats = requests.get(
         f"https://api.princexd.tech/ytinfo?link=https://www.pornhub.com/view_video.php?viewkey={id}"
     ).json()["formats"]
-    row = []
     keyboards = []
     for i in formats:
         format = i["resolution"]
@@ -65,9 +64,7 @@ async def get_video(c: Client, q: CallbackQuery):
         button = InlineKeyboardButton(format, url=dlink)
         keyboards.append(button)
     markup = InlineKeyboardMarkup(keyboards)
-    await q.edit_message_reply_markup(
-        reply_markup=markup
-    )
+    await q.edit_message_reply_markup(reply_markup=markup)
 
 
 @Client.on_callback_query(filters.regex(pattern=r"phubdl"))
