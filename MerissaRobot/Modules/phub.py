@@ -67,7 +67,7 @@ async def get_video(c: Client, q: CallbackQuery):
             col.append(button)
         else:
             keyboards.append(col)
-            col = [button] 
+            col = [button]
     if col:
         keyboards.append(col)
     markup = InlineKeyboardMarkup(keyboards)
