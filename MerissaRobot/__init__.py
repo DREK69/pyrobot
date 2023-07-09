@@ -45,7 +45,7 @@ class InterceptHandler(logging.Handler):
 
 
 logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
-logging.getLogger("pyrogram").setLevel(logging.INFO)
+# logging.getLogger("pyrogram").setLevel(logging.INFO)
 logger.add(
     "log.txt",
     rotation="1 d",
