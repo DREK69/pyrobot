@@ -1,23 +1,53 @@
-import requests
+import os
+
+from PIL import Image, ImageDraw, ImageFont
 from pyrogram import filters
-from pyrogram.enums import ChatAction
 
-from MerissaRobot import pbot
+from MerissaRobot import pbot as app
+
+def text_set(text):
+    lines = []
+    if len(text) <= 55:
+        lines.append(text)
+    else:
+        all_lines = text.split("\n")
+        for line in all_lines:
+            if len(line) <= 55:
+                lines.append(line)
+            else:
+                k = len(line) // 55
+                lines.extend(line[((z - 1) * 55) : (z * 55)] for z in range(1, k + 2))
+    return lines[:25]
 
 
-@pbot.on_message(filters.command("write"))
-async def handwriting(_, message):
-    if len(message.command) < 2:
-        return await message.reply_text("Gɪᴠᴇ Sᴏᴍᴇ Tᴇxᴛ Tᴏ Wʀɪᴛᴇ Iᴛ Oɴ Mʏ Cᴏᴩʏ...")
-    m = await message.reply_text("Wᴀɪᴛ A Sᴇᴄ, Lᴇᴛ Mᴇ Wʀɪᴛᴇ Tʜᴀᴛ Tᴇxᴛ...")
-    name = (
-        message.text.split(None, 1)[1]
-        if len(message.command) < 3
-        else message.text.split(None, 1)[1].replace(" ", "%20")
-    )
-    merissa = requests.get(f"https://api.prince-xd.ml/write?text={name}").json()["url"]
-    await m.edit("Uᴩʟᴏᴀᴅɪɴɢ...")
-    await pbot.send_chat_action(message.chat.id, ChatAction.UPLOAD_PHOTO)
-    await message.reply_photo(
-        merissa, caption="Wʀɪᴛᴛᴇɴ Wɪᴛʜ 🖊 Bʏ [Merissa](t.me/MerissaRobot)"
-    )
+@app.on_message(filters.command(["write"]))
+async def handwrite(client, message):
+    if message.reply_to_message and message.reply_to_message.text:
+        txt = message.reply_to_message.text
+    elif len(message.command) > 1:
+        txt = message.text.split(None, 1)[1]
+    else:
+        return await message.reply(
+            "Please reply to message or write after command to use write CMD."
+        )
+    nan = await message.reply_msg("Processing...")
+    try:
+        img = Image.open("MerissRobot/Utils/Resource/kertas.jpg")
+        draw = ImageDraw.Draw(img)
+        font = ImageFont.truetype("assets/assfont.ttf", 30)
+        x, y = 150, 140
+        lines = text_set(txt)
+        line_height = font.getbbox("hg")[3]
+        for line in lines:
+            draw.text((x, y), line, fill=(1, 22, 55), font=font)
+            y = y + line_height - 5
+        file = f"merissa_{message.from_user.id}.jpg"
+        img.save(file)
+        if os.path.exists(file):
+            await message.reply_photo(
+                photo=file, caption=f"<b>Written By :</b> {client.me.mention}"
+            )
+            os.remove(file)
+            await nan.delete()
+    except Exception as e:
+        return await message.reply(e)
