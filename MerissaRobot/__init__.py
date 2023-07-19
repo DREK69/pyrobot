@@ -8,7 +8,6 @@ from logging import ERROR, INFO, StreamHandler, basicConfig, getLogger, handlers
 import spamwatch
 import telegram.ext as tg
 from aiohttp import ClientSession
-from loguru import logger
 from pyrogram import Client, errors
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 from pyrogram.types import Message
@@ -145,9 +144,6 @@ pbot = Client(
 BOT_ID = dispatcher.bot.id
 BOT_USERNAME = dispatcher.bot.username
 BOT_NAME = dispatcher.bot.first_name
-
-# ARQ Client
-LOGGER.info("[ARQ CLIENT] Checking Arq Connections...")
 
 arq = ARQ("https://arq.hamker.dev", "IXJDNK-GURMUL-HPGZYX-TPJKKT-ARQ", aiohttpsession)
 
