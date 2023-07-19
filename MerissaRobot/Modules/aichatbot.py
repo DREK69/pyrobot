@@ -20,7 +20,7 @@ async def ask(_, message):
     x = post("https://api.safone.me/chatgpt", data=json).json()["message"]
     await m.edit(x, disable_web_page_preview=True)
 
-@app.on_message(filters.command("bard")
+@app.on_message(filters.command("bard"))
 async def bard_chatbot(_, message):
     text = message.text.split(' ', 1)[1]
     if len(message.command) == 1:
