@@ -1,6 +1,5 @@
 import json
 import os
-import random
 
 import requests
 import wget
@@ -28,8 +27,10 @@ async def instadown(_, message):
     link = message.text
     msg = await message.reply_text("Processing...")
     try:
-        response = requests.get(f"https://igdownloader.onrender.com/dl?key=ashok&url={link}")
-        data = response.json()['urls']
+        response = requests.get(
+            f"https://igdownloader.onrender.com/dl?key=ashok&url={link}"
+        )
+        data = response.json()["urls"]
         if len(data) == 1:
             for i in data:
                 if "mp4" in i:
@@ -42,8 +43,8 @@ async def instadown(_, message):
                 if "mp4" in i:
                     mg.append(
                         InputMediaVideo(
-                             post["urls"], caption=f"Powered By @MerissaRobot"
-                         )
+                            post["urls"], caption=f"Powered By @MerissaRobot"
+                        )
                     )
                 else:
                     mg.append(
