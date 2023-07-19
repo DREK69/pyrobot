@@ -1,9 +1,9 @@
 import asyncio
-from logging import ERROR, INFO, StreamHandler, basicConfig, getLogger, handlers
 import os
 import sys
 import time
 from inspect import getfullargspec
+from logging import ERROR, INFO, StreamHandler, basicConfig, getLogger, handlers
 
 import spamwatch
 import telegram.ext as tg
