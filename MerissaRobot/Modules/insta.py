@@ -25,23 +25,33 @@ async def instadown(_, message):
         response = requests.get(
             f"https://igdownloader.onrender.com/dl?key=ashok&url={link}"
         )
-        data = response.json()    
+        data = response.json()
         if len(data["urls"]) == 1:
             for i in data["urls"]:
                 if "mp4" in i:
-                    await message.reply_video(i, caption=f"{data['caption']}\nUploaded by @MerissaRobot")
+                    await message.reply_video(
+                        i, caption=f"{data['caption']}\nUploaded by @MerissaRobot"
+                    )
                 else:
-                    await message.reply_photo(i, caption=f"{data['caption']}\nUploaded by @MerissaRobot")
+                    await message.reply_photo(
+                        i, caption=f"{data['caption']}\nUploaded by @MerissaRobot"
+                    )
         else:
             mg = []
             for post in data:
                 if "mp4" in post:
                     mg.append(
-                        InputMediaVideo(post, caption=f"{data['caption']}\nUploaded by @MerissaRobot")
+                        InputMediaVideo(
+                            post,
+                            caption=f"{data['caption']}\nUploaded by @MerissaRobot",
+                        )
                     )
                 else:
                     mg.append(
-                        InputMediaPhoto(post, caption=f"{data['caption']}\nUploaded by @MerissaRobot")
+                        InputMediaPhoto(
+                            post,
+                            caption=f"{data['caption']}\nUploaded by @MerissaRobot",
+                        )
                     )
             await message.reply_media_group(mg)
         await msg.delete()
