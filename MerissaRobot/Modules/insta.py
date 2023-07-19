@@ -16,11 +16,6 @@ tiktokregex = r"^https:\/\/(www\.tiktok.com|vm\.tiktok\.com|vt\.tiktok\.com)\/?(
 snapregex = r"^https:\/\/www\.snapchat\.com\/add"
 fbregex = r"^https:\/\/www\.facebook\.com\/reel\/"
 
-apikey = [
-    "22a34ac86fmsh648c15a7abb6555p1cb539jsn4b193ae50c9f",
-    "81b89ef962msh19a67d63d479365p122483jsn6af26adfd7a5",
-]
-
 
 @pbot.on_message(filters.regex(instaregex) & filters.incoming & filters.private)
 async def instadown(_, message):
@@ -40,7 +35,7 @@ async def instadown(_, message):
         else:
             mg = []
             for post in data:
-                if "mp4" in i:
+                if "mp4" in post:
                     mg.append(
                         InputMediaVideo(
                             post["urls"], caption=f"Powered By @MerissaRobot"
