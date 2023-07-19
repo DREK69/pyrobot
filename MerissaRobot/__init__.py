@@ -1,5 +1,5 @@
 import asyncio
-import logging
+from logging import ERROR, INFO, StreamHandler, basicConfig, getLogger, handlers
 import os
 import sys
 import time
@@ -21,43 +21,19 @@ from config import *
 
 StartTime = time.time()
 
-# logging enable
-# enable logging
 
-
-class InterceptHandler(logging.Handler):
-    LEVELS_MAP = {
-        logging.CRITICAL: "CRITICAL",
-        logging.ERROR: "ERROR",
-        logging.WARNING: "WARNING",
-        logging.INFO: "INFO",
-        logging.DEBUG: "DEBUG",
-    }
-
-    def _get_level(self, record):
-        return self.LEVELS_MAP.get(record.levelno, record.levelno)
-
-    def emit(self, record):
-        logger_opt = logger.opt(
-            depth=6, exception=record.exc_info, ansi=True, lazy=True
-        )
-        logger_opt.log(self._get_level(record), record.getMessage())
-
-
-logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
-# logging.getLogger("pyrogram").setLevel(logging.INFO)
-logger.add(
-    "log.txt",
-    rotation="1 d",
-    compression="tar.xz",
-    backtrace=True,
-    diagnose=True,
-    level="INFO",
+basicConfig(
+    level=INFO,
+    format="[%(asctime)s - %(levelname)s] - %(name)s.%(funcName)s - %(message)s",
+    datefmt="%d-%b-%y %H:%M:%S",
+    handlers=[
+        handlers.RotatingFileHandler("log.txt", mode="w+", maxBytes=1000000),
+        StreamHandler(),
+    ],
 )
-
-LOGGER = logging.getLogger(__name__)
-
-LOGGER.info("Enabled logging intro Merissa.log file.")
+getLogger("pyrogram").setLevel(ERROR)
+getLogger("telethon").setLevel(ERROR)
+getLogger("telegram").setLevel(ERROR)
 
 # if version < 3.6, stop bot.
 if sys.version_info[0] < 3 or sys.version_info[1] < 6:
