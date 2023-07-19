@@ -1,5 +1,5 @@
 from pyrogram import filters
-from requests import post, get
+from requests import get, post
 
 from MerissaRobot import pbot
 
@@ -20,11 +20,14 @@ async def ask(_, message):
     x = post("https://api.safone.me/chatgpt", data=json).json()["message"]
     await m.edit(x, disable_web_page_preview=True)
 
+
 @app.on_message(filters.command("bard"))
 async def bard_chatbot(_, message):
-    text = message.text.split(' ', 1)[1]
+    text = message.text.split(" ", 1)[1]
     if len(message.command) == 1:
-        return await message.reply_msg("Give me some questions to ask Bard AI. Example- /bard question")
+        return await message.reply_msg(
+            "Give me some questions to ask Bard AI. Example- /bard question"
+        )
     msg = await message.reply_msg("Wait a moment looking for your answer..", quote=True)
     try:
         req = get(f"https://yasirapi.eu.org/bard?input={text}").json()["content"]
