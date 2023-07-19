@@ -20,6 +20,7 @@ from config import *
 
 StartTime = time.time()
 
+LOGGER = getLogger("[MerissaRobot]")
 
 basicConfig(
     level=INFO,
