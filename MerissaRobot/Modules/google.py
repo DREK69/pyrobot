@@ -10,7 +10,6 @@ import requests
 from bing_image_downloader import downloader
 from bs4 import BeautifulSoup
 from PIL import Image
-from search_engine_parser import GoogleSearch
 
 from MerissaRobot import telethn as tbot
 from MerissaRobot.events import register
