@@ -27,22 +27,15 @@ async def _(event):
 
     webevent = await event.reply("searching........")
     match = event.pattern_match.group(1)
-    page = re.findall(r"page=\d+", match)
-    try:
-        page = page[0]
-        page = page.replace("page=", "")
-        match = match.replace("page=" + page[0], "")
-    except IndexError:
-        page = 1
-    search_args = (str(match), int(page))
-    gsearch = GoogleSearch()
-    gresults = await gsearch.async_search(*search_args)
+    gresults = requests.get(
+        f"https://api.safone.me/google?query={match}&limit=5"
+    ).json()
     msg = ""
-    for i in range(len(gresults["links"])):
+    for i in gresults["results"]:
         try:
-            title = gresults["titles"][i]
-            link = gresults["links"][i]
-            desc = gresults["descriptions"][i]
+            title = gresults["title"]
+            link = gresults["link"][i]
+            desc = gresults["description"][i]
             msg += f"❍[{title}]({link})\n**{desc}**\n\n"
         except IndexError:
             break
