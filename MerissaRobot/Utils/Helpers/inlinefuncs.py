@@ -63,7 +63,8 @@ def convert_bytes(size: float) -> str:
 
 keywords_list = [
     "alive",
-    "image" "wall",
+    "image",
+    "wall",
     "tmdb",
     "lyrics",
     "webss",
