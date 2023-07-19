@@ -27,59 +27,35 @@ apikey = [
 async def instadown(_, message):
     link = message.text
     msg = await message.reply_text("Processing...")
-    if "reel" in link:
-        try:
-            dlink = link.replace("www.instagram.com", "ddinstagram.com")
-            await message.reply_video(dlink)
-            await msg.delete()
-        except:
-            try:
-                key = random.choice(apikey)
-                posts = requests.get(
-                    f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
-                ).json()["links"][0]
-                await message.reply_video(
-                    posts["url"], caption=f"Powered By @MerissaRobot"
-                )
-                await msg.delete()
-            except:
-                await msg.edit_text("Something went Wrong contact on supportchat")
-    else:
-        try:
-            key = random.choice(apikey)
-            posts = requests.get(
-                f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
-            ).json()["links"]
-            singlelink = posts[0]
-            if len(posts) == 1:
-                if singlelink["type"] == "video":
-                    await message.reply_video(
-                        singlelink["url"], caption=f"Powered By @MerissaRobot"
+    try:
+        response = requests.get(f"https://igdownloader.onrender.com/dl?key=ashok&url={link}")
+        data = response.json()['urls']
+        if len(data) == 1:
+            for i in data:
+                if "mp4" in i:
+                    await message.reply_video(i)
+                else:
+                    await message.reply_photo(i)
+        else:
+            mg = []
+            for post in data:
+                if "mp4" in i:
+                    mg.append(
+                        InputMediaVideo(
+                             post["urls"], caption=f"Powered By @MerissaRobot"
+                         )
                     )
                 else:
-                    await message.reply_photo(
-                        singlelink["url"], caption=f"Powered By @MerissaRobot"
+                    mg.append(
+                        InputMediaPhoto(
+                            post["urls"], caption=f"Powered By @MerissaRobot"
+                        )
                     )
-            else:
-                mg = []
-                for post in posts:
-                    if post["type"] == "video":
-                        mg.append(
-                            InputMediaVideo(
-                                post["url"], caption=f"Powered By @MerissaRobot"
-                            )
-                        )
-                    else:
-                        mg.append(
-                            InputMediaPhoto(
-                                post["url"], caption=f"Powered By @MerissaRobot"
-                            )
-                        )
-                await message.reply_media_group(mg)
-            await msg.delete()
-        except Exception as e:
-            print(e)
-            await msg.edit_text("Something Went wrong report in @MerissaxSupport")
+            await message.reply_media_group(mg)
+        await msg.delete()
+    except Exception as e:
+        print(e)
+        await msg.edit_text("Something Went wrong report in @MerissaxSupport")
 
 
 @pbot.on_message(filters.regex(fbregex) & filters.incoming & filters.private)
