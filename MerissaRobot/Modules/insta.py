@@ -37,15 +37,11 @@ async def instadown(_, message):
             for post in data:
                 if "mp4" in post:
                     mg.append(
-                        InputMediaVideo(
-                            post, caption=f"Powered By @MerissaRobot"
-                        )
+                        InputMediaVideo(post, caption=f"Powered By @MerissaRobot")
                     )
                 else:
                     mg.append(
-                        InputMediaPhoto(
-                            post, caption=f"Powered By @MerissaRobot"
-                        )
+                        InputMediaPhoto(post, caption=f"Powered By @MerissaRobot")
                     )
             await message.reply_media_group(mg)
         await msg.delete()
