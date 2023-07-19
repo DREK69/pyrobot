@@ -21,7 +21,7 @@ async def ask(_, message):
     await m.edit(x, disable_web_page_preview=True)
 
 
-@app.on_message(filters.command("bard"))
+@pbot.on_message(filters.command("bard"))
 async def bard_chatbot(_, message):
     text = message.text.split(" ", 1)[1]
     if len(message.command) == 1:
