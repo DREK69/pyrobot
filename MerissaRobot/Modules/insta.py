@@ -51,7 +51,7 @@ async def instadown(_, message):
         await msg.delete()
     except Exception as e:
         print(e)
-        await msg.edit_text("Something Went wrong report in @MerissaxSupport")
+        await msg.edit_text(f"Error: {e}")
 
 
 @pbot.on_message(filters.regex(fbregex) & filters.incoming & filters.private)
