@@ -28,9 +28,9 @@ async def bard_chatbot(_, message):
         return await message.reply_msg(
             "Give me some questions to ask Bard AI. Example- /bard question"
         )
-    msg = await message.reply_msg("Wait a moment looking for your answer..", quote=True)
+    msg = await message.reply_text("Wait a moment looking for your answer..", quote=True)
     try:
         req = get(f"https://yasirapi.eu.org/bard?input={text}").json()["content"]
-        await msg.edit_msg(req)
+        await msg.edit_text(req)
     except Exception as e:
-        await msg.edit_msg(str(e))
+        await msg.edit_text(str(e))
