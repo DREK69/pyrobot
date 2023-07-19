@@ -5,6 +5,7 @@ from pyrogram import filters
 
 from MerissaRobot import pbot as app
 
+
 def text_set(text):
     lines = []
     if len(text) <= 55:
