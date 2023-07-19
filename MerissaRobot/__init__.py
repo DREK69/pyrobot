@@ -37,9 +37,6 @@ getLogger("telegram").setLevel(ERROR)
 
 # if version < 3.6, stop bot.
 if sys.version_info[0] < 3 or sys.version_info[1] < 6:
-    LOGGER.error(
-        "You MUST have a python version of at least 3.6! Multiple features depend on this. Bot quitting."
-    )
     quit(1)
 
     from config import *
@@ -132,16 +129,7 @@ if sys.version_info[0] < 3 or sys.version_info[1] < 6:
 
 DEV_USERS.add(OWNER_ID)
 
-if not SPAMWATCH_API:
-    sw = None
-    LOGGER.warning("SpamWatch API key missing! recheck your config.")
-else:
-    try:
-        sw = spamwatch.Client(SPAMWATCH_API)
-    except:
-        sw = None
-        LOGGER.warning("Can't connect to SpamWatch!")
-
+sw = None
 
 updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
 telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
@@ -163,24 +151,10 @@ LOGGER.info("[ARQ CLIENT] Checking Arq Connections...")
 
 arq = ARQ("https://arq.hamker.dev", "IXJDNK-GURMUL-HPGZYX-TPJKKT-ARQ", aiohttpsession)
 
-REDIS = StrictRedis.from_url(REDIS_URL, decode_responses=True)
-try:
-    REDIS.ping()
-    LOGGER.info("Connecting To Redis Database")
-except BaseException:
-    raise Exception(
-        "[MerissaRobot Error]: Your Redis Database Is Not Alive, Please Check Again."
-    )
-finally:
-    REDIS.ping()
-    LOGGER.info("Connection To The Redis Database Established Successfully!")
-
-
 async def eor(msg: Message, **kwargs):
     func = msg.edit_text if msg.from_user.is_self else msg.reply
     spec = getfullargspec(func.__wrapped__).args
     return await func(**{k: v for k, v in kwargs.items() if k in spec})
-
 
 DRAGONS = list(DRAGONS) + list(DEV_USERS)
 DEV_USERS = list(DEV_USERS)
