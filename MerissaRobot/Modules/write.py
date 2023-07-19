@@ -33,9 +33,9 @@ async def handwrite(client, message):
         )
     nan = await message.reply_text("Processing...")
     try:
-        img = Image.open("MerissRobot/Utils/Resource/kertas.jpg")
+        img = Image.open("MerissRobot/Utils/Resources/kertas.jpg")
         draw = ImageDraw.Draw(img)
-        font = ImageFont.truetype("MerissRobot/Utils/Resource/assfont.ttf", 30)
+        font = ImageFont.truetype("MerissRobot/Utils/Resources/assfont.ttf", 30)
         x, y = 150, 140
         lines = text_set(txt)
         line_height = font.getbbox("hg")[3]
