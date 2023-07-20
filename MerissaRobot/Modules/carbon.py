@@ -1,6 +1,6 @@
 import requests
-
 from pyrogram import filters
+
 from MerissaRobot import pbot as app
 
 
@@ -16,17 +16,17 @@ async def carbon(client, message):
         )
     nan = await message.reply_text("Processing...")
     try:
-        data = {
-            "code": txt,
-            "bgcolor": "white"
-        }
-        file = requests.post("https://api.princexd.tech/carbon", json=data).json()["url"]
+        data = {"code": txt, "bgcolor": "white"}
+        file = requests.post("https://api.princexd.tech/carbon", json=data).json()[
+            "url"
+        ]
         await message.reply_photo(
             photo=file, caption=f"<b>Carbonimg By :</b> {client.me.mention}"
         )
         await nan.delete()
     except Exception as e:
         return await message.reply(e)
+
 
 @app.on_message(filters.command(["rayso"]))
 async def carbon(client, message):
@@ -42,12 +42,7 @@ async def carbon(client, message):
         )
     nan = await message.reply_text("Processing...")
     try:
-        data = {
-           "code": txt,
-           "title": title,
-           "theme": "breeze",
-           "darkMode": true
-        }
+        data = {"code": txt, "title": title, "theme": "breeze", "darkMode": true}
         file = requests.post("https://api.princexd.tech/rayso", json=data).json()["url"]
         await message.reply_photo(
             photo=file, caption=f"<b>Raysoimg By :</b> {client.me.mention}"
