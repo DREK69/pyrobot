@@ -8,11 +8,13 @@ from time import ctime, time
 import aiohttp
 import requests
 import yt_dlp
+from bs4 import BeautifulSoup
 from fuzzysearch import find_near_matches
 from pornhub_api import PornhubApi
 from pornhub_api.backends.aiohttp import AioHttpBackend
 from pykeyboard import InlineKeyboard
 from pyrogram import filters
+from pyrogram.enums import ParseMode
 from pyrogram.raw.functions import Ping
 from pyrogram.types import (
     CallbackQuery,
@@ -585,29 +587,40 @@ async def urban_func(answers, text):
 
 
 async def google_search_func(answers, text):
-    gresults = await GoogleSearch().async_search(text)
-    limit = 0
-    for i in gresults:
-        if limit > 48:
-            break
-        limit += 1
-
+    headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edge/107.0.1418.42"
+        }
+    search_results = await http.get(
+            f"https://www.google.com/search?q={text}&num=20", headers=headers
+        )
+    soup = BeautifulSoup(search_results.text, "lxml")
+    data = []
+    for result in soup.find_all("div", class_="kvH3mc BToiNc UK95Uc"):
+        link = result.find("div", class_="yuRUbf").find("a").get("href")
+        title = result.find("div", class_="yuRUbf").find("h3").get_text()
         try:
-            msg = f"""
-[{i['titles']}]({i['links']})
-{i['descriptions']}"""
-
-            answers.append(
-                InlineQueryResultArticle(
-                    title=i["titles"],
-                    description=i["descriptions"],
-                    input_message_content=InputTextMessageContent(
-                        msg, disable_web_page_preview=True
-                    ),
-                )
+            snippet = result.find(
+                "div", class_="VwiC3b yXK7lf MUxGbd yDYNvb lyLwlc lEBKkf"
+            ).get_text()
+        except:
+            snippet = "-"
+        message_text = f"<a href='{link}'>{title}</a>\nDeskription: {snippet}"
+        answers.append(
+            InlineQueryResultArticle(
+                title=f"{title}",
+                input_message_content=InputTextMessageContent(
+                    message_text=message_text,
+                    parse_mode=ParseMode.HTML,
+                    disable_web_page_preview=False,
+                ),
+                url=link,
+                description=snippet,
+                thumb_url="https://te.legra.ph/file/ed8ea62ae636793000bb4.jpg",
+                reply_markup=InlineKeyboardMarkup(
+                        [[InlineKeyboardButton(text="Open Website", url=link)]]
+                ),
             )
-        except KeyError:
-            pass
+        )
     return answers
 
 

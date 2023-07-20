@@ -1,5 +1,7 @@
 import traceback
 
+from pyrogram.enums import ParseMode
+
 from MerissaRobot import pbot as app
 from MerissaRobot.Utils.Helpers.inlinefuncs import *
 
@@ -247,34 +249,39 @@ async def inline_query_handler(client, query):
             answerss = await wiki_func(answers, tex)
             await client.answer_inline_query(query.id, results=answerss, cache_time=2)
 
-        elif text.split()[0] == "gh":
+        elif text.split()[0] == "github":
             if len(text.split()) < 2:
                 return await client.answer_inline_query(
                     query.id,
                     results=answers,
-                    switch_pm_text="gh | gh [USERNAME]",
+                    switch_pm_text="github | github [repo]",
                     switch_pm_parameter="inline",
                 )
             results = []
             gett = text.split(None, 1)[1]
-            text = gett + ' "site:github.com"'
-            gresults = await GoogleSearch().async_search(text, 1)
-            result = ""
-            for i in range(4):
-                try:
-                    title = gresults["titles"][i].replace("\n", " ")
-                    source = gresults["links"][i]
-                    description = gresults["descriptions"][i]
-                    result += f"[{title}]({source})\n"
-                    result += f"`{description}`\n\n"
-                except IndexError:
-                    pass
-            results.append(
-                InlineQueryResultArticle(
-                    title=f"Results for {gett}",
-                    description=f" Github info of {title}\n  Touch to read",
+            item = requests.get(f"https://api.github.com/search/repositories?q={query}").json()["items"]
+            results = []
+            for sraeo in item:
+                title = sraeo.get("full_name")
+                link = sraeo.get("html_url")
+                deskripsi = sraeo.get("description")
+                lang = sraeo.get("language")
+                message_text = f"🔗: {sraeo.get('html_url')}\n│\n└─🍴Forks: {sraeo.get('forks')}    ┃┃    🌟Stars: {sraeo.get('stargazers_count')}\n\n"
+                message_text += f"<b>Description:</b> {deskripsi}\n"
+                message_text += f"<b>Language:</b> {lang}"
+                results.append(
+                    InlineQueryResultArticle(
+                    title=f"{title}",
                     input_message_content=InputTextMessageContent(
-                        result, disable_web_page_preview=True
+                        message_text=message_text,
+                        parse_mode=ParseMode.HTML,
+                        disable_web_page_preview=False,
+                    ),
+                    url=link,
+                    description=deskripsi,
+                    thumb_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+                    reply_markup=InlineKeyboardMarkup(
+                        [[InlineKeyboardButton(text="Open Github Link", url=link)]]
                     ),
                 )
             )
@@ -283,6 +290,7 @@ async def inline_query_handler(client, query):
         elif text.split()[0] == "ping":
             answerss = await ping_func(answers)
             await client.answer_inline_query(query.id, results=answerss, cache_time=2)
+
         elif text.split()[0] == "webss":
             if len(text.split()) < 2:
                 return await client.answer_inline_query(
@@ -294,6 +302,43 @@ async def inline_query_handler(client, query):
             tex = text.split(None, 1)[1].strip()
             answerss = await webss(tex)
             await client.answer_inline_query(query.id, results=answerss, cache_time=2)
+
+         elif text.split()[0] == "pypi":
+            if len(text.split()) < 2:
+                return await client.answer_inline_query(
+                    query.id,
+                    results=answers,
+                    switch_pm_text="pypi | pypi [query]",
+                    switch_pm_parameter="inline",
+                )
+            tex = text.split(None, 1)[1].strip()
+            search_results = requests.get(f"https://yasirapi.eu.org/pypi?q={tex}")
+            srch_results = search_results.json()
+            answers = []
+            for sraeo in srch_results["result"]:
+                title = sraeo.get("name")
+                link = sraeo.get("url")
+                deskripsi = sraeo.get("description")
+                version = sraeo.get("version")
+                message_text = f"<a href='{link}'>{title} {version}</a>\n"
+                message_text += f"Description: {deskripsi}\n"
+                answers.append(
+                InlineQueryResultArticle(
+                    title=f"{title}",
+                    input_message_content=InputTextMessageContent(
+                        message_text=message_text,
+                        parse_mode=enums.ParseMode.HTML,
+                        disable_web_page_preview=False,
+                    ),
+                    url=link,
+                    description=deskripsi,
+                    thumb_url="https://raw.githubusercontent.com/github/explore/666de02829613e0244e9441b114edb85781e972c/topics/pip/pip.png",
+                    reply_markup=InlineKeyboardMarkup(
+                        [[InlineKeyboardButton(text="Open Link", url=link)]]
+                    ),
+                )
+            )
+            await client.answer_inline_query(query.id, results=answers, cache_time=2)
 
         elif text.split()[0] == "info":
             if len(text.split()) < 2:
@@ -307,18 +352,54 @@ async def inline_query_handler(client, query):
             answerss = await info_inline_func(answers, tex)
             await client.answer_inline_query(query.id, results=answerss, cache_time=2)
 
-        elif text.split()[0] == "tmdb":
+        elif text.split()[0] == "imdb":
             if len(text.split()) < 2:
                 answerss = await tmdb_func(answers, "")
                 return await client.answer_inline_query(
                     query.id,
                     results=answerss,
-                    switch_pm_text="TMDB Search | tmdb [QUERY]",
+                    switch_pm_text="IMDB Search | imdb [QUERY]",
                     switch_pm_parameter="inline",
                 )
             tex = text.split()[1].strip()
-            answerss = await tmdb_func(answers, tex)
-            await client.answer_inline_query(query.id, results=answerss, cache_time=2)
+            search_results = requests.get(
+                f"https://yasirapi.eu.org/imdb-search?q={tex}"
+            )
+            res = json.loads(search_results.text).get("result")
+            answers = []
+            for midb in res:
+                title = midb.get("l", "")
+                description = midb.get("q", "")
+                stars = midb.get("s", "")
+                imdb_url = f"https://imdb.com/title/{midb.get('id')}"
+                year = f"({midb.get('y', '')})"
+                image_url = (
+                    midb.get("i").get("imageUrl").replace(".jpg", "._V1_UX360.jpg")
+                    if midb.get("i")
+                    else "https://te.legra.ph/file/e263d10ff4f4426a7c664.jpg"
+                )
+                caption = f"<a href='{image_url}'>🎬</a>"
+                caption += f"<a href='{imdb_url}'>{title} {year}</a>"
+                answers.append(
+                    InlineQueryResultPhoto(
+                    title=f"{title} {year}",
+                    caption=caption,
+                    description=f" {description} | {stars}",
+                    photo_url=image_url,
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [
+                                InlineKeyboardButton(
+                                    text="Get IMDB details",
+                                    callback_data=f"imdbinl#{inline_query.from_user.id}#{midb.get('id')}",
+                                )
+                            ]
+                        ]
+                    ),
+                )
+            )
+            await client.answer_inline_query(query.id, results=answers, cache_time=2)
+
         elif text.split()[0] == "pokedex":
             if len(text.split()) < 2:
                 await client.answer_inline_query(
