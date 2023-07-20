@@ -26,7 +26,6 @@ from pyrogram.types import (
     InputMediaVideo,
     InputTextMessageContent,
 )
-from search_engine_parser import GoogleSearch
 from youtubesearchpython import VideosSearch
 
 from MerissaRobot import DEV_USERS, EVENT_LOGS, arq
@@ -588,13 +587,12 @@ async def urban_func(answers, text):
 
 async def google_search_func(answers, text):
     headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edge/107.0.1418.42"
-        }
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edge/107.0.1418.42"
+    }
     search_results = await http.get(
-            f"https://www.google.com/search?q={text}&num=20", headers=headers
-        )
+        f"https://www.google.com/search?q={text}&num=20", headers=headers
+    )
     soup = BeautifulSoup(search_results.text, "lxml")
-    data = []
     for result in soup.find_all("div", class_="kvH3mc BToiNc UK95Uc"):
         link = result.find("div", class_="yuRUbf").find("a").get("href")
         title = result.find("div", class_="yuRUbf").find("h3").get_text()
@@ -617,7 +615,7 @@ async def google_search_func(answers, text):
                 description=snippet,
                 thumb_url="https://te.legra.ph/file/ed8ea62ae636793000bb4.jpg",
                 reply_markup=InlineKeyboardMarkup(
-                        [[InlineKeyboardButton(text="Open Website", url=link)]]
+                    [[InlineKeyboardButton(text="Open Website", url=link)]]
                 ),
             )
         )

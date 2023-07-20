@@ -258,8 +258,10 @@ async def inline_query_handler(client, query):
                     switch_pm_parameter="inline",
                 )
             results = []
-            gett = text.split(None, 1)[1]
-            item = requests.get(f"https://api.github.com/search/repositories?q={query}").json()["items"]
+            text.split(None, 1)[1]
+            item = requests.get(
+                f"https://api.github.com/search/repositories?q={query}"
+            ).json()["items"]
             results = []
             for sraeo in item:
                 title = sraeo.get("full_name")
@@ -271,20 +273,20 @@ async def inline_query_handler(client, query):
                 message_text += f"<b>Language:</b> {lang}"
                 results.append(
                     InlineQueryResultArticle(
-                    title=f"{title}",
-                    input_message_content=InputTextMessageContent(
-                        message_text=message_text,
-                        parse_mode=ParseMode.HTML,
-                        disable_web_page_preview=False,
-                    ),
-                    url=link,
-                    description=deskripsi,
-                    thumb_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
-                    reply_markup=InlineKeyboardMarkup(
-                        [[InlineKeyboardButton(text="Open Github Link", url=link)]]
-                    ),
+                        title=f"{title}",
+                        input_message_content=InputTextMessageContent(
+                            message_text=message_text,
+                            parse_mode=ParseMode.HTML,
+                            disable_web_page_preview=False,
+                        ),
+                        url=link,
+                        description=deskripsi,
+                        thumb_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+                        reply_markup=InlineKeyboardMarkup(
+                            [[InlineKeyboardButton(text="Open Github Link", url=link)]]
+                        ),
+                    )
                 )
-            )
             await client.answer_inline_query(query.id, cache_time=0, results=results)
 
         elif text.split()[0] == "ping":
@@ -323,21 +325,21 @@ async def inline_query_handler(client, query):
                 message_text = f"<a href='{link}'>{title} {version}</a>\n"
                 message_text += f"Description: {deskripsi}\n"
                 answers.append(
-                InlineQueryResultArticle(
-                    title=f"{title}",
-                    input_message_content=InputTextMessageContent(
-                        message_text=message_text,
-                        parse_mode=enums.ParseMode.HTML,
-                        disable_web_page_preview=False,
-                    ),
-                    url=link,
-                    description=deskripsi,
-                    thumb_url="https://raw.githubusercontent.com/github/explore/666de02829613e0244e9441b114edb85781e972c/topics/pip/pip.png",
-                    reply_markup=InlineKeyboardMarkup(
-                        [[InlineKeyboardButton(text="Open Link", url=link)]]
-                    ),
+                    InlineQueryResultArticle(
+                        title=f"{title}",
+                        input_message_content=InputTextMessageContent(
+                            message_text=message_text,
+                            parse_mode=enums.ParseMode.HTML,
+                            disable_web_page_preview=False,
+                        ),
+                        url=link,
+                        description=deskripsi,
+                        thumb_url="https://raw.githubusercontent.com/github/explore/666de02829613e0244e9441b114edb85781e972c/topics/pip/pip.png",
+                        reply_markup=InlineKeyboardMarkup(
+                            [[InlineKeyboardButton(text="Open Link", url=link)]]
+                        ),
+                    )
                 )
-            )
             await client.answer_inline_query(query.id, results=answers, cache_time=2)
 
         elif text.split()[0] == "info":
@@ -382,22 +384,22 @@ async def inline_query_handler(client, query):
                 caption += f"<a href='{imdb_url}'>{title} {year}</a>"
                 answers.append(
                     InlineQueryResultPhoto(
-                    title=f"{title} {year}",
-                    caption=caption,
-                    description=f" {description} | {stars}",
-                    photo_url=image_url,
-                    reply_markup=InlineKeyboardMarkup(
-                        [
+                        title=f"{title} {year}",
+                        caption=caption,
+                        description=f" {description} | {stars}",
+                        photo_url=image_url,
+                        reply_markup=InlineKeyboardMarkup(
                             [
-                                InlineKeyboardButton(
-                                    text="Get IMDB details",
-                                    callback_data=f"imdbinl#{inline_query.from_user.id}#{midb.get('id')}",
-                                )
+                                [
+                                    InlineKeyboardButton(
+                                        text="Get IMDB details",
+                                        callback_data=f"imdbinl#{inline_query.from_user.id}#{midb.get('id')}",
+                                    )
+                                ]
                             ]
-                        ]
-                    ),
+                        ),
+                    )
                 )
-            )
             await client.answer_inline_query(query.id, results=answers, cache_time=2)
 
         elif text.split()[0] == "pokedex":
