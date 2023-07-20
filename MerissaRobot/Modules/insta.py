@@ -55,7 +55,7 @@ async def instadown(_, message):
                 else:
                     if post == "":
                         await message.reply_text("Failed To fetch Url")
-                    else:   
+                    else:
                         mg.append(
                             InputMediaPhoto(
                                 post,
