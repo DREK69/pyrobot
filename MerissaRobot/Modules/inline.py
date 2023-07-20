@@ -326,8 +326,7 @@ async def inline_query_handler(client, query):
                 message_text = f"<a href='{link}'>{title} {version}</a>\n"
                 message_text += f"Description: {deskripsi}\n"
                 answers.append(
-<<<<<<< HEAD
-                InlineQueryResultArticle(
+                    InlineQueryResultArticle(
                     title=f"{title}",
                     input_message_content=InputTextMessageContent(
                         message_text=message_text,
