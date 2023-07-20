@@ -46,18 +46,18 @@ async def instadown(_, message):
                     await message.reply_text("failed to Fetch URL")
                 elif "mp4" in post:
                     mg.append(
-                            InputMediaVideo(
-                                post,
-                                caption=f"{data['caption']}\nUploaded by @MerissaRobot",
-                            )
+                        InputMediaVideo(
+                            post,
+                            caption=f"{data['caption']}\nUploaded by @MerissaRobot",
                         )
+                    )
                 else:
                     mg.append(
-                            InputMediaPhoto(
-                                post,
-                                caption=f"{data['caption']}\nUploaded by @MerissaRobot",
-                            )
+                        InputMediaPhoto(
+                            post,
+                            caption=f"{data['caption']}\nUploaded by @MerissaRobot",
                         )
+                    )
             await message.reply_media_group(mg)
         await msg.delete()
     except Exception as e:
