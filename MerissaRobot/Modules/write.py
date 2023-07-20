@@ -1,5 +1,3 @@
-import os
-
 from pyrogram import filters
 
 from MerissaRobot import pbot as app
@@ -17,12 +15,10 @@ async def handwrite(client, message):
         )
     nan = await message.reply_text("Processing...")
     try:
-        data = {
-            "text": txt
-        }
-        file = requests.post("https://api.princexd.tech/write", json=data).json()['url']
+        data = {"text": txt}
+        file = requests.post("https://api.princexd.tech/write", json=data).json()["url"]
         await message.reply_photo(
-             photo=file, caption=f"<b>Written By :</b> {client.me.mention}"
+            photo=file, caption=f"<b>Written By :</b> {client.me.mention}"
         )
         await nan.delete()
     except Exception as e:
