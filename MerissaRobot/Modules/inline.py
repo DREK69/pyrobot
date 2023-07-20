@@ -339,23 +339,8 @@ async def inline_query_handler(client, query):
                     reply_markup=InlineKeyboardMarkup(
                         [[InlineKeyboardButton(text="Open Link", url=link)]]
                     ),
-=======
-                    InlineQueryResultArticle(
-                        title=f"{title}",
-                        input_message_content=InputTextMessageContent(
-                            message_text=message_text,
-                            parse_mode=enums.ParseMode.HTML,
-                            disable_web_page_preview=False,
-                        ),
-                        url=link,
-                        description=deskripsi,
-                        thumb_url="https://raw.githubusercontent.com/github/explore/666de02829613e0244e9441b114edb85781e972c/topics/pip/pip.png",
-                        reply_markup=InlineKeyboardMarkup(
-                            [[InlineKeyboardButton(text="Open Link", url=link)]]
-                        ),
-                    )
->>>>>>> b59b57a2d08841d9d5c0d2f05bc3f57b18c722bd
-                )
+                 )
+              )
             await client.answer_inline_query(query.id, results=answers, cache_time=2)
 
         elif text.split()[0] == "info":
