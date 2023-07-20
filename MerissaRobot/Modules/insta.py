@@ -42,17 +42,20 @@ async def instadown(_, message):
         else:
             mg = []
             for post in data:
-                if post == "":
-                    await message.reply_text("failed to Fetch URL")
-                else:
-                    if "mp4" in post:
+                if "mp4" in post:
+                    if post == "":
+                        await message.reply_text("failed to Fetch URL")
+                    else:
                         mg.append(
                             InputMediaVideo(
                                 post,
                                 caption=f"{data['caption']}\nUploaded by @MerissaRobot",
                             )
                         )
-                    else:
+                else:
+                    if post == "":
+                        await message.reply_text("Failed To fetch Url")
+                    else:   
                         mg.append(
                             InputMediaPhoto(
                                 post,
