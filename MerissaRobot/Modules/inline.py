@@ -258,9 +258,9 @@ async def inline_query_handler(client, query):
                     switch_pm_parameter="inline",
                 )
             results = []
-            text.split(None, 1)[1]
+            tex = text.split(None, 1)[1]
             item = requests.get(
-                f"https://api.github.com/search/repositories?q={query}"
+                f"https://api.github.com/search/repositories?q={tex}"
             ).json()["items"]
             results = []
             for sraeo in item:
@@ -325,6 +325,21 @@ async def inline_query_handler(client, query):
                 message_text = f"<a href='{link}'>{title} {version}</a>\n"
                 message_text += f"Description: {deskripsi}\n"
                 answers.append(
+<<<<<<< HEAD
+                InlineQueryResultArticle(
+                    title=f"{title}",
+                    input_message_content=InputTextMessageContent(
+                        message_text=message_text,
+                        parse_mode=ParseMode.HTML,
+                        disable_web_page_preview=False,
+                    ),
+                    url=link,
+                    description=deskripsi,
+                    thumb_url="https://raw.githubusercontent.com/github/explore/666de02829613e0244e9441b114edb85781e972c/topics/pip/pip.png",
+                    reply_markup=InlineKeyboardMarkup(
+                        [[InlineKeyboardButton(text="Open Link", url=link)]]
+                    ),
+=======
                     InlineQueryResultArticle(
                         title=f"{title}",
                         input_message_content=InputTextMessageContent(
@@ -339,6 +354,7 @@ async def inline_query_handler(client, query):
                             [[InlineKeyboardButton(text="Open Link", url=link)]]
                         ),
                     )
+>>>>>>> b59b57a2d08841d9d5c0d2f05bc3f57b18c722bd
                 )
             await client.answer_inline_query(query.id, results=answers, cache_time=2)
 
