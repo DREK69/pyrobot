@@ -307,6 +307,7 @@ __help__ = """
 ❂ /alogo <text> - To create anime logo.
 
 - Others:
-❂ /write <text/name> - Write Text on Note Book
-❂ /carbon <reply to text> - Create carbon Logo
+❂ /write <text> or <reply to text> - Write Text on Note Book Page
+❂ /carbon <text> or <reply to text> - Create carbon Logo
+❂ /rayso <text> or <reply to text> - Create rayso Logo
 """
