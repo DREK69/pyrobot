@@ -303,7 +303,7 @@ async def inline_query_handler(client, query):
             answerss = await webss(tex)
             await client.answer_inline_query(query.id, results=answerss, cache_time=2)
 
-         elif text.split()[0] == "pypi":
+        elif text.split()[0] == "pypi":
             if len(text.split()) < 2:
                 return await client.answer_inline_query(
                     query.id,
