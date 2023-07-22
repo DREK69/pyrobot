@@ -10,10 +10,10 @@ pinregex = r"^https:\/\/(pin\.it|www\.pinterest\.com|pinterest\.com)"
 async def pindown(_, message):
     link = message.text
     m = await message.reply_text("Processing...")
-    pin = get(
-        f"https://api.princexd.tech/pin?link={link}"
-    ).json()
-    file = pin["media"]
-    title = pin['title']
-    await message.reply_document(pinvid, caption=f"{title}\n\nUploaded by @MerissaRobot")
+    pin = get(f"https://api.princexd.tech/pin?link={link}").json()
+    pin["media"]
+    title = pin["title"]
+    await message.reply_document(
+        pinvid, caption=f"{title}\n\nUploaded by @MerissaRobot"
+    )
     await m.delete()
