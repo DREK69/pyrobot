@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import requests
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -102,6 +103,38 @@ async def movie_result(Client, CallbackQuery):
     await m.edit_text(
         text="Your Movie/Series Downloading Link is in Button", reply_markup=button
     )
+
+@pbot.on_message(filters.command("movie"))
+def find_streammovie(_, message):
+    if len(message.command) < 2:
+        return message.reply_text(
+            "Give some Movie/Series name to Find it on my Database\n\nEx. /moviedl pathaan"
+        )
+    search_results = message.reply_text("Processing...")
+    query = message.text.split(None, 1)[1]
+    movies_list = requests.get(f'https://yasirapi.eu.org/lk21?q={query}').json()['result']
+    if movies_list:
+        link = ""
+        for movie in movies_list:
+            link += (
+            f"🎬Movie: {movie['judul']}<br>└ <a href={movie['dl']}>Click Here To Download | <a href={link}>Stream</a><br><br>"
+        )
+    caption = f"📥 Download/Stream Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
+    data = {"content": caption, "ext": "md"}
+    response = requests.post("https://api.princexd.tech/nekobin", json=data).json()[
+        "link"
+    ]
+    button = InlineKeyboardMarkup(
+        [[InlineKeyboardButton(f"{query}", url=response)]]
+    )
+    await m.edit_text(
+        text="Your Movie Downloading/Streaming Link", reply_markup=button
+    )
+    else:
+        search_results.edit_text(
+            "Sorry 🙏, No Result Found!\nCheck If You Have Misspelled The Movie Name."
+        )
+
 
 
 def search_anime(query):

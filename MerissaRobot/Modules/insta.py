@@ -70,7 +70,6 @@ async def fbdown(_, message):
     link = message.text
     msg = await message.reply_text("Processing...")
     url = "https://facebook-reel-and-video-downloader.p.rapidapi.com/app/main.php"
-    link = "https://www.facebook.com/reel/222165100424520?mibextid=QgjjxJ&s=chYV2B&fs=e"
     querystring = {"url": link}
     headers = {
         "X-RapidAPI-Key": "6a90d6d4efmsh32f9758380f3589p11e571jsn642878f330b1",

@@ -309,5 +309,5 @@ __help__ = """
 - Others:
 ❂ /write <text> or <reply to text> - Write Text on Note Book Page
 ❂ /carbon <text> or <reply to text> - Create carbon Logo
-❂ /rayso <text> or <reply to text> - Create rayso Logo
+❂ /rayso <reply to text> - Create rayso Logo
 """

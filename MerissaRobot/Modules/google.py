@@ -10,8 +10,9 @@ import requests
 from bing_image_downloader import downloader
 from bs4 import BeautifulSoup
 from PIL import Image
+from pyrogram import filters
 
-from MerissaRobot import telethn as tbot
+from MerissaRobot import telethn as tbot, pbot
 from MerissaRobot.events import register
 
 opener = urllib.request.build_opener()
@@ -19,27 +20,26 @@ useragent = "Mozilla/5.0 (Linux; Android 9; SM-G960F Build/PPR1.180610.011; wv) 
 opener.addheaders = [("User-agent", useragent)]
 
 
-@register(pattern="^/google (.*)")
-async def _(event):
-    if event.fwd_from:
-        return
-
-    webevent = await event.reply("searching........")
-    match = event.pattern_match.group(1)
+@pbot.on_message(filters.command("google"))
+async def google(_, message):
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "Give me some query to search on google\n\nex: /google who is merissarobot?"
+        )
+    webevent = await message.reply_text("Searching...")
+    query = message.text.split(None, 1)[1]
     gresults = requests.get(
-        f"https://api.safone.me/google?query={match}&limit=5"
+        f"https://api.safone.me/google?query={query}&limit=5"
     ).json()
     msg = ""
     for i in gresults["results"]:
-        try:
-            title = gresults["title"]
-            link = gresults["link"][i]
-            desc = gresults["description"][i]
-            msg += f"❍[{title}]({link})\n**{desc}**\n\n"
-        except IndexError:
-            break
-    await webevent.edit(
-        "**Search Query:**\n`" + match + "`\n\n**Results:**\n" + msg, link_preview=False
+        title = i["title"]
+        link = i["link"]
+        desc = i["description"]
+        msg += f"❍[{title}]({link})\n**{desc}**\n\n"
+    await webevent.edit_text(
+        "**Search Query:**\n`" + query + "`\n\n**Results:**\n" + msg,
+        disable_web_page_preview=True,
     )
 
 

@@ -168,6 +168,7 @@ For Merissa Chatbot Api:
 
 For Asking Questions to ChatGPT:
 ❂ `/ask question` : To get answer from Chatgpt By OpenAI.
+❂ `/bard question` : To get answer from BardAI By Google.
 """
 
 CHATBOTK_HANDLER = CommandHandler("chatbot", merissa)

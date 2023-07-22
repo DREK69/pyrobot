@@ -14,10 +14,9 @@ from pyrogram.types import (
     InputMediaPhoto,
     InputMediaVideo,
 )
-from pytube import YouTube
 
 from MerissaRobot import pbot as Client
-from MerissaRobot.Utils.Helpers.http import http
+from MerissaRobot.helpers import get_ytthumb
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
@@ -35,52 +34,80 @@ def convert_bytes(size: float) -> str:
     return "{:.2f} {}B".format(size, power_dict[t_n])
 
 
-@Client.on_message(filters.regex(ytregex) & filters.private)
-async def song(client, message):
+async def convertmin(duration):
+    seconds = int(duration)
+    minutes = seconds // 60
+    remaining_seconds = seconds % 60
+    result = f"{minutes} min {remaining_seconds} sec"
+    return result
+
+
+@Client.on_message(filters.regex(ytregex) & filters.incoming & filters.private)
+async def ytregex(client, message):
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
-    user_id = message.from_user.id
-    user_name = message.from_user.first_name
-    user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
     link = message.text
-    yt = YouTube(link)
-    videoid = yt.video_id
-    title = yt.title
-    dur = yt.length
-    thumbnail = await get_ytthumb(videoid)
-    await m.delete()
-    await message.reply_photo(
-        thumbnail,
-        caption=f"**Title**: {title}\n**Duration**: {dur} seconds\n\n**Select Your Preferred Format from Below**:",
-        reply_markup=InlineKeyboardMarkup(
-            [
+    if "music" in link:
+        yt = requests.get(f"https://api.princexd.tech/ytmsearch?query={link}").json()[
+            "results"
+        ]["videoDetails"]
+        videoid = yt["videoId"]
+        title = yt["title"]
+        duration = yt["lengthSeconds"]
+        thumb = yt["thumbnail"]["thumbnails"][0]["url"]
+        thumbnail = thumb.replace("60-", "500-")
+        dur = await convertmin(duration)
+        await message.reply_photo(
+            thumbnail,
+            caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
+            reply_markup=InlineKeyboardMarkup(
                 [
-                    InlineKeyboardButton(
-                        "🔊 Audio",
-                        callback_data=f"audio {videoid}",
-                    ),
-                    InlineKeyboardButton("🎥 Video", callback_data=f"formats {videoid}"),
-                ],
+                    [
+                        InlineKeyboardButton(
+                            "📥 Download",
+                            callback_data=f"audio {videoid}",
+                        ),
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                    ]
+                ]
+            ),
+        )
+        await m.delete()
+    else:
+        yt = requests.get(f"https://api.princexd.tech/ytinfo?link={link}").json()
+        videoid = yt["id"]
+        title = yt["title"]
+        duration = yt["duration"]
+        dur = await convertmin(duration)
+        thumbnail = await get_ytthumb(videoid)
+        await message.reply_photo(
+            thumbnail,
+            caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
+            reply_markup=InlineKeyboardMarkup(
                 [
-                    InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
-                ],
-            ]
-        ),
-    )
+                    [
+                        InlineKeyboardButton(
+                            "🔊 Audio",
+                            callback_data=f"audio {videoid}",
+                        ),
+                        InlineKeyboardButton(
+                            "🎥 Video", callback_data=f"formats {videoid}"
+                        ),
+                    ],
+                    [
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                    ],
+                ]
+            ),
+        )
+        await m.delete()
 
 
-@Client.on_message(filters.command(["music", "ytdl", "song", "video"]))
-async def song(client, message):
+@Client.on_message(filters.command(["ytdl", "video"]))
+async def video(client, message):
     if len(message.command) < 2:
         return await message.reply_text("Give me some text to search on Youtube")
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
-    user_id = message.from_user.id
-    user_name = message.from_user.first_name
-    user = "[" + user_name + "](tg://user?id=" + str(user_id) + ")"
-
-    query = ""
-    for i in message.command[1:]:
-        query += " " + str(i)
-    print(query)
+    query = message.text.split(None, 1)[1]
     search = requests.get(
         f"https://api.princexd.tech/ytsearch?query={query}&limit=50"
     ).json()
@@ -90,7 +117,6 @@ async def song(client, message):
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
     thumbnail = await get_ytthumb(videoid)
-    await m.delete()
     await message.reply_photo(
         thumbnail,
         caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = 1 out of {len(search['result'])}\n\n**Select Your Track from Below and Download It**:",
@@ -111,11 +137,138 @@ async def song(client, message):
             ]
         ),
     )
+    await m.delete()
 
 
-@Client.on_callback_query(filters.regex(pattern=r"ytnext"))
-async def callback_query(Client, CallbackQuery):
-    callback_data = CallbackQuery.data.strip()
+@Client.on_message(filters.command(["music", "ytmusic", "song"]))
+async def song(client, message):
+    if len(message.command) < 2:
+        return await message.reply_text("Give me some text to search on Youtube")
+    m = await message.reply_text("🔄 Processing Query... Please Wait!")
+    query = message.text.split(None, 1)[1]
+    search = requests.get(f"https://api.princexd.tech/ytmsearch?query={query}").json()
+    yt = search["results"][0]
+    title = yt["title"]
+    dur = yt["duration"]
+    videoid = yt["videoId"]
+    link = f"https://music.youtube.com/watch?v={yt['videoId']}&feature=share"
+    thumb_url = yt["thumbnails"][0]["url"]
+    thumbnail = thumb_url.replace("60-", "500-")
+    await message.reply_photo(
+        thumbnail,
+        caption=f"**Title**: [{title}]({link})\n**Duration**: {dur}\n\n**Click Below Button to Download**:",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "Next Track ➡", callback_data=f"ymnext|{query}|1"
+                    ),
+                ],
+                [
+                    InlineKeyboardButton(
+                        "📥 Download",
+                        callback_data=f"audio {videoid}",
+                    ),
+                    InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                ],
+            ]
+        ),
+    )
+    await m.delete()
+
+
+@Client.on_callback_query(filters.regex("^ymnext"))
+async def ymnext_query(client, callbackquery):
+    callback_data = callbackquery.data.strip()
+    callback = callback_data.split("|")
+    query = callback[1]
+    page = int(callback[2])
+    search = requests.get(f"https://api.princexd.tech/ytmsearch?query={query}").json()
+    yt = search["results"][page]
+    title = yt["title"]
+    dur = yt["duration"]
+    videoid = yt["videoId"]
+    link = f"https://music.youtube.com/watch?v={yt['videoId']}&feature=share"
+    tpage = len(search["results"]) - 1
+    thumb_url = yt["thumbnails"][0]["url"]
+    thumbnail = thumb_url.replace("60-", "500-")
+    if page == 0:
+        await callbackquery.edit_message_media(
+            InputMediaPhoto(
+                thumbnail,
+                caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['results'])}\n\n**Select your track from Below and Download It**:",
+            ),
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            "Next Track ➡", callback_data=f"ymnext|{query}|1"
+                        ),
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            "📥 Download",
+                            callback_data=f"audio {videoid}",
+                        ),
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                    ],
+                ]
+            ),
+        )
+    elif page == tpage:
+        await callbackquery.edit_message_media(
+            InputMediaPhoto(
+                thumbnail,
+                caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['results'])}\n\n**Select your track from Below and Download It**:",
+            ),
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            "⬅️ Prev Track", callback_data=f"ymnext|{query}|{page-1}"
+                        ),
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            "📥 Download",
+                            callback_data=f"audio {videoid}",
+                        ),
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                    ],
+                ]
+            ),
+        )
+    else:
+        await callbackquery.edit_message_media(
+            InputMediaPhoto(
+                thumbnail,
+                caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['results'])}\n\n**Select your track from Below and Download It**:",
+            ),
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            "⬅️", callback_data=f"ymnext|{query}|{page-1}"
+                        ),
+                        InlineKeyboardButton(
+                            "➡", callback_data=f"ymnext|{query}|{page+1}"
+                        ),
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            "📥 Download",
+                            callback_data=f"audio {videoid}",
+                        ),
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                    ],
+                ]
+            ),
+        )
+
+
+@Client.on_callback_query(filters.regex("^ytnext"))
+async def ytnext_query(client, callbackquery):
+    callback_data = callbackQuery.data.strip()
     callback = callback_data.split("|")
     query = callback[1]
     page = int(callback[2])
@@ -127,37 +280,87 @@ async def callback_query(Client, CallbackQuery):
     dur = yt["duration"]
     videoid = yt["id"]
     link = f"https://m.youtube.com/watch?v={videoid}"
+    tpage = len(search["result"]) - 1
     thumbnail = await get_ytthumb(videoid)
-    await CallbackQuery.edit_message_media(
-        InputMediaPhoto(
-            thumbnail,
-            caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['result'])}\n\n**Select your track from Below and Download It**:",
-        ),
-        reply_markup=InlineKeyboardMarkup(
-            [
+    if page == 0:
+        await callbackquery.edit_message_media(
+            InputMediaPhoto(
+                thumbnail,
+                caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['result'])}\n\n**Select your track from Below and Download It**:",
+            ),
+            reply_markup=InlineKeyboardMarkup(
                 [
-                    InlineKeyboardButton(
-                        "⬅️", callback_data=f"ytnext|{query}|{page-1}"
-                    ),
-                    InlineKeyboardButton("➡", callback_data=f"ytnext|{query}|{page+1}"),
-                ],
+                    [
+                        InlineKeyboardButton(
+                            "Next Track ➡", callback_data=f"ytnext|{query}|1"
+                        ),
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            "📥 Download",
+                            callback_data=f"ytdown {videoid}",
+                        ),
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                    ],
+                ]
+            ),
+        )
+    elif page == tpage:
+        await callbackquery.edit_message_media(
+            InputMediaPhoto(
+                thumbnail,
+                caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['result'])}\n\n**Select your track from Below and Download It**:",
+            ),
+            reply_markup=InlineKeyboardMarkup(
                 [
-                    InlineKeyboardButton(
-                        "📥 Download",
-                        callback_data=f"ytdown {videoid}",
-                    ),
-                    InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
-                ],
-            ]
-        ),
-    )
+                    [
+                        InlineKeyboardButton(
+                            "⬅️ Prev Track", callback_data=f"ytnext|{query}|{page-1}"
+                        ),
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            "📥 Download",
+                            callback_data=f"ytdown {videoid}",
+                        ),
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                    ],
+                ]
+            ),
+        )
+    else:
+        await callbackquery.edit_message_media(
+            InputMediaPhoto(
+                thumbnail,
+                caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['result'])}\n\n**Select your track from Below and Download It**:",
+            ),
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            "⬅️", callback_data=f"ytnext|{query}|{page-1}"
+                        ),
+                        InlineKeyboardButton(
+                            "➡", callback_data=f"ytnext|{query}|{page+1}"
+                        ),
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            "📥 Download",
+                            callback_data=f"ytdown {videoid}",
+                        ),
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                    ],
+                ]
+            ),
+        )
 
 
-@Client.on_callback_query(filters.regex(pattern=r"ytdown"))
-async def callback_query(Client, CallbackQuery):
-    callback_data = CallbackQuery.data.strip()
+@Client.on_callback_query(filters.regex("^ytdown"))
+async def ytdown_query(client, callbackquery):
+    callback_data = callbackquery.data.strip()
     videoid = callback_data.split(None, 1)[1]
-    await CallbackQuery.edit_message_reply_markup(
+    await callbackquery.edit_message_reply_markup(
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -175,10 +378,10 @@ async def callback_query(Client, CallbackQuery):
     )
 
 
-@Client.on_callback_query(filters.regex(pattern=r"formats"))
-async def callback_query(Client, CallbackQuery):
-    await CallbackQuery.answer("Getting Formats..\n\nPlease Wait..", show_alert=True)
-    callback_data = CallbackQuery.data.strip()
+@Client.on_callback_query(filters.regex("^formats"))
+async def formats_query(client, callbackquery):
+    await callbackquery.answer("Getting Formats..\n\nPlease Wait..", show_alert=True)
+    callback_data = callbackquery.data.strip()
     videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     ytdl_opts = {"quiet": True}
@@ -234,16 +437,16 @@ async def callback_query(Client, CallbackQuery):
         ),
         InlineKeyboardButton(text="🗑️ Close", callback_data=f"cb_close"),
     )
-    await CallbackQuery.edit_message_reply_markup(reply_markup=keyboard)
+    await callbackquery.edit_message_reply_markup(reply_markup=keyboard)
 
 
-@Client.on_callback_query(filters.regex(pattern=r"audio"))
-async def callback_query(Client, CallbackQuery):
-    chatid = CallbackQuery.message.chat.id
-    m = await CallbackQuery.edit_message_text(
+@Client.on_callback_query(filters.regex("^audio"))
+async def audio_query(client, callbackquery):
+    chatid = callbackquery.message.chat.id
+    m = await callbackquery.edit_message_text(
         "Downloading Started\n\nDownload Speed could be slow. Please hold on.."
     )
-    callback_data = CallbackQuery.data.strip()
+    callback_data = callbackquery.data.strip()
     videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
     ydl_opts = {"format": "bestaudio[ext=m4a]"}
@@ -251,34 +454,62 @@ async def callback_query(Client, CallbackQuery):
         info_dict = ydl.extract_info(link, download=False)
         audio_file = ydl.prepare_filename(info_dict)
         ydl.process_info(info_dict)
-    thumb = await CallbackQuery.message.download()
+    yt = requests.get(f"https://api.princexd.tech/ytmsearch?query={link}").json()[
+        "results"
+    ]["videoDetails"]
+    yt["thumbnail"]["thumbnails"][0]["url"].replace("60-", "500-")
+    thumb = await callbackquery.message.download()
     med = InputMediaAudio(
         audio_file,
         caption=str(info_dict["title"]),
         thumb=thumb,
         title=str(info_dict["title"]),
-        performer=f"{info_dict['channel']}",
+        performer=yt["author"],
         duration=int(info_dict["duration"]),
     )
-    try:
-        await m.edit(
-            "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
+    query = f"{info_dict['title']} {yt['author']}"
+    lyr = requests.get(
+        f"https://editor-choice-api.vercel.app/lyrics?query={query}"
+    ).json()
+    if lyr["error"] == False:
+        link = lyr["url"]
+        button = InlineKeyboardMarkup(
+            [[InlineKeyboardButton(text="🎵 Lyrics", url=link)]]
         )
-        await Client.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
-        await CallbackQuery.edit_message_media(media=med)
-    except Exception as error:
-        await CallbackQuery.edit_message_text(f"Something happened!\n<i>{error}</i>")
+        try:
+            await m.edit(
+                "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
+            )
+
+            await client.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
+            await callbackquery.edit_message_media(media=med, reply_markup=button)
+        except Exception as error:
+            await callbackquery.edit_message_text(
+                f"Something happened!\n<i>{error}</i>"
+            )
+    else:
+        try:
+            await m.edit(
+                "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
+            )
+
+            await client.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
+            await callbackquery.edit_message_media(media=med)
+        except Exception as error:
+            await callbackquery.edit_message_text(
+                f"Something happened!\n<i>{error}</i>"
+            )
     os.remove(thumb)
     os.remove(audio_file)
 
 
-@Client.on_callback_query(filters.regex(pattern=r"video"))
-async def callback_query(Client, CallbackQuery):
-    chatid = CallbackQuery.message.chat.id
-    m = await CallbackQuery.edit_message_text(
+@Client.on_callback_query(filters.regex("^video"))
+async def video_query(client, callbackquery):
+    chatid = callbackquery.message.chat.id
+    m = await callbackquery.edit_message_text(
         "Downloading Started\n\nDownload Speed could be slow. Please hold on.."
     )
-    callback_data = CallbackQuery.data.strip()
+    callback_data = callbackquery.data.strip()
     callback_request = callback_data.split(None, 1)[1]
     format_id, videoid = callback_request.split("|")
     link = f"https://m.youtube.com/watch?v={videoid}"
@@ -302,9 +533,9 @@ async def callback_query(Client, CallbackQuery):
         await m.edit(f"**Failed to Download.** \n**Error :** `{str(e)}`")
         return
     download_720 = f"{info_dict['id']}.mp4"
-    thumb = await CallbackQuery.message.download()
-    width = CallbackQuery.message.photo.width
-    height = CallbackQuery.message.photo.height
+    thumb = await callbackquery.message.download()
+    width = callbackquery.message.photo.width
+    height = callbackquery.message.photo.height
     med = InputMediaVideo(
         media=download_720,
         width=width,
@@ -317,10 +548,10 @@ async def callback_query(Client, CallbackQuery):
         await m.edit(
             "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
         )
-        await Client.send_chat_action(chatid, ChatAction.UPLOAD_VIDEO)
-        await CallbackQuery.edit_message_media(media=med)
+        await client.send_chat_action(chatid, ChatAction.UPLOAD_VIDEO)
+        await callbackquery.edit_message_media(media=med)
     except Exception as error:
-        await CallbackQuery.edit_message_text(f"Error occurred!!\n<i>{error}</i>")
+        await callbackquery.edit_message_text(f"Error occurred!!\n<i>{error}</i>")
     os.remove(thumb)
     os.remove(download_720)
 
@@ -331,33 +562,9 @@ async def lyrics(client, message):
         return await message.reply_text(
             "Give me some text to find lyrics\n\nEx. /lyrics songname"
         )
-    query = message.text.split(None, 1)[1]
-    api_key = "JVv8pud-25QRBYyRwcH34AlAygySsSAU3owRNGBw6hXO96x0JiTMn-3R4PvsjcTf"
-    y = lg.Genius(
-        api_key,
-        skip_non_songs=True,
-        excluded_terms=["(Remix)", "(Live)"],
-        remove_section_headers=True,
-    )
-    y.verbose = False
-    S = y.search_song(query, get_full_info=False).lyrics
-    if "Embed" in S:
-        lyrics = re.sub(r"\d*You might also likeEmbed", "", S)
-    await message.reply_text(lyrics)
-
-
-async def get_ytthumb(videoid: str):
-    thumb_quality = [
-        "hq720.jpg",  # Best quality
-        "hqdefault.jpg",
-        "sddefault.jpg",
-        "mqdefault.jpg",
-        "default.jpg",  # Worst quality
-    ]
-    thumb_link = "https://i.imgur.com/4LwPLai.png"
-    for qualiy in thumb_quality:
-        link = f"https://i.ytimg.com/vi/{videoid}/{qualiy}"
-        if (await http.get(link)).status_code == 200:
-            thumb_link = link
-            break
-    return thumb_link
+    title = message.text.split(None, 1)[1]
+    try:
+        lyrics = requests.get(f"https://api.princexd.tech/lyrics?query={title}").json()['lyrics']
+        await message.reply_text(lyrics)
+    except:
+        await message.reply_text("Lyrics Not Found")
