@@ -1,7 +1,5 @@
 import os
-import re
 
-import lyricsgenius as lg
 import requests
 import yt_dlp
 from pykeyboard import InlineKeyboard
@@ -564,7 +562,9 @@ async def lyrics(client, message):
         )
     title = message.text.split(None, 1)[1]
     try:
-        lyrics = requests.get(f"https://api.princexd.tech/lyrics?query={title}").json()['lyrics']
+        lyrics = requests.get(f"https://api.princexd.tech/lyrics?query={title}").json()[
+            "lyrics"
+        ]
         await message.reply_text(lyrics)
     except:
         await message.reply_text("Lyrics Not Found")

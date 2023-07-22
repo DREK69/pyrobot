@@ -12,7 +12,8 @@ from bs4 import BeautifulSoup
 from PIL import Image
 from pyrogram import filters
 
-from MerissaRobot import telethn as tbot, pbot
+from MerissaRobot import pbot
+from MerissaRobot import telethn as tbot
 from MerissaRobot.events import register
 
 opener = urllib.request.build_opener()
