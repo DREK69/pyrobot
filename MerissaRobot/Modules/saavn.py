@@ -202,7 +202,7 @@ async def callback_query(client, query):
     result = search["data"][0]
     title = result["name"]
     dur = result["duration"]
-    img = result["image"][2]["link"]
+    result["image"][2]["link"]
     singers = result["primaryArtists"]
     if "," in singers:
         performer = singers.split(",")[0]
@@ -226,7 +226,9 @@ async def callback_query(client, query):
             f"https://editor-choice-api.vercel.app/lyrics?query={query}"
         ).json()["url"]
         link = lyrics.replace("https://telegra.ph", "https://graph.org")
-        button = InlineKeyboardMarkup([[InlineKeyboardButton(text="🎵 Lyrics", url=link)]])
+        button = InlineKeyboardMarkup(
+            [[InlineKeyboardButton(text="🎵 Lyrics", url=link)]]
+        )
         await m.edit(
             "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
         )

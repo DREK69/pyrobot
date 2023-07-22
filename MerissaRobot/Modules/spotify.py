@@ -179,14 +179,14 @@ async def spotdl(Client, CallbackQuery):
     img = result["album"]["images"][0]["url"]
     artist = result["album"]["artists"][0]["name"]
     query = f"{name} {artist}"
-    id = result["id"]
+    result["id"]
     thumbnail = wget.download(img, "thumbnail.png")
     search = requests.get(f"https://saavn.me/search/songs?query={query}").json()[
         "data"
     ]["results"][0]
     dlink = search["downloadUrl"][4]["link"]
     duration = search["duration"]
-    performer = search["primaryArtists"]
+    search["primaryArtists"]
     dl = wget.download(dlink)
     file = dl.replace("mp4", "mp3")
     os.rename(dl, file)
@@ -198,7 +198,9 @@ async def spotdl(Client, CallbackQuery):
             f"https://editor-choice-api.vercel.app/lyrics?query={query}"
         ).json()["url"]
         link = lyrics.replace("https://telegra.ph", "https://graph.org")
-        button = InlineKeyboardMarkup([[InlineKeyboardButton(text="🎵 Lyrics", url=link)]])
+        button = InlineKeyboardMarkup(
+            [[InlineKeyboardButton(text="🎵 Lyrics", url=link)]]
+        )
         try:
             await m.edit(
                 "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
