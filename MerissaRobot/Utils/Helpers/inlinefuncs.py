@@ -806,13 +806,13 @@ async def ph_func(answers, text):
 
 
 async def lyrics_func(answers, text):
-    song = requests.get(f"https://api.princexd.tech/lyrics?query={text}")
+    song = requests.get(f"https://api.princexd.tech/lyrics?query={text}").json()
     if song["error"] == True:
         answers.append(
             InlineQueryResultArticle(
                 title="No Lyrics Found",
-                description="404 Error No Found",
-                input_message_content=InputTextMessageContent(song.result),
+                description="404 Error | Please Enter Correct Song Name",
+                input_message_content=InputTextMessageContent("404 error | Song Lyrics Not Found"),
             )
         )
         return answers
