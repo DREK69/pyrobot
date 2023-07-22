@@ -118,7 +118,7 @@ def find_streammovie(_, message):
     if movies_list:
         link = ""
         for movie in movies_list:
-            link += f"🎬Movie: {movie['judul']}<br>└ <a href={movie['dl']}>Click Here To Download | <a href={link}>Stream</a><br><br>"
+            link += f"🎬Movie: {movie['judul']}<br>└ <a href={movie['dl']}>Click Here To Download | <a href={movie['link']}>Stream</a><br><br>"
         caption = f"📥 Download/Stream Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
         data = {"content": caption, "ext": "md"}
         response = requests.post("https://api.princexd.tech/nekobin", json=data).json()[
