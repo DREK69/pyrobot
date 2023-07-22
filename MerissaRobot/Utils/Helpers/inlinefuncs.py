@@ -820,7 +820,7 @@ async def lyrics_func(answers, text):
         return answers
 
     song_name = song["title"]
-    artist = song["aritst"]
+    artist = song["artist"]
     lyrics = song["lyrics"]
     thumb = song["thumb"]
     if len(lyrics) > 4095:
