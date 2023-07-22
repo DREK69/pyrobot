@@ -119,17 +119,15 @@ def find_streammovie(_, message):
             link += (
             f"🎬Movie: {movie['judul']}<br>└ <a href={movie['dl']}>Click Here To Download | <a href={link}>Stream</a><br><br>"
         )
-    caption = f"📥 Download/Stream Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
-    data = {"content": caption, "ext": "md"}
-    response = requests.post("https://api.princexd.tech/nekobin", json=data).json()[
-        "link"
-    ]
-    button = InlineKeyboardMarkup(
-        [[InlineKeyboardButton(f"{query}", url=response)]]
-    )
-    await m.edit_text(
-        text="Your Movie Downloading/Streaming Link", reply_markup=button
-    )
+        caption = f"📥 Download/Stream Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
+        data = {"content": caption, "ext": "md"}
+        response = requests.post("https://api.princexd.tech/nekobin", json=data).json()["link"]
+        button = InlineKeyboardMarkup(
+            [[InlineKeyboardButton(f"{query}", url=response)]]
+        )
+        await m.edit_text(
+            text="Your Movie Downloading/Streaming Link", reply_markup=button
+        )
     else:
         search_results.edit_text(
             "Sorry 🙏, No Result Found!\nCheck If You Have Misspelled The Movie Name."
