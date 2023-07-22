@@ -812,7 +812,9 @@ async def lyrics_func(answers, text):
             InlineQueryResultArticle(
                 title="No Lyrics Found",
                 description="404 Error | Please Enter Correct Song Name",
-                input_message_content=InputTextMessageContent("404 error | Song Lyrics Not Found"),
+                input_message_content=InputTextMessageContent(
+                    "404 error | Song Lyrics Not Found"
+                ),
             )
         )
         return answers
