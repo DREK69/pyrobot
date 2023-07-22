@@ -2,7 +2,6 @@ import os
 
 import requests
 import wget
-from html_telegraph_poster import TelegraphPoster
 from pyrogram import filters
 from pyrogram.enums import ChatAction
 from pyrogram.types import *
@@ -196,23 +195,10 @@ async def spotdl(Client, CallbackQuery):
     )
     try:
         lyrics = requests.get(
-            f"https://api.princexd.tech/splyrics?trackid={id}"
-        ).json()["lyrics"]
-        lyr = lyrics.replace("\n", "<br>")
-        test = (
-            f"""<p align="center"><a href="#"><img src="{img}" width="250"></a></p>"""
-        )
-        final = test + f"{lyr}"
-        post_client = TelegraphPoster(use_api=True)
-        auth_name = "@MerissaRobot"
-        bish = "https://t.me/MerissaRobot"
-        post_client.create_api_token(auth_name)
-        post_page = post_client.post(
-            title=f"{name} - {performer}", author=auth_name, author_url=bish, text=final
-        )
-        linkhttp = post_page["url"]
-        link = linkhttp.replace("http://telegra.ph", "https://te.legra.ph")
-        button = InlineKeyboardMarkup([[InlineKeyboardButton(text="Lyrics", url=link)]])
+            f"https://editor-choice-api.vercel.app/lyrics?query={query}"
+        ).json()["url"]
+        link = lyrics.replace("https://telegra.ph", "https://graph.org")
+        button = InlineKeyboardMarkup([[InlineKeyboardButton(text="🎵 Lyrics", url=link)]])
         try:
             await m.edit(
                 "Uploading Started\n\nUpload Speed could be slow. Please hold on.."

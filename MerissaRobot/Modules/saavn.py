@@ -2,7 +2,6 @@ import os
 
 import requests
 import wget
-from html_telegraph_poster import TelegraphPoster
 from pyrogram import filters
 from pyrogram.enums import ChatAction
 from pyrogram.types import (
@@ -221,57 +220,13 @@ async def callback_query(client, query):
         performer=performer,
         duration=int(dur),
     )
-    spsearch = f"{title} {performer}"
+    query = f"{title} {performer}"
     try:
-        result = requests.get(
-            f"https://api.princexd.tech/spsearch?query={spsearch}"
-        ).json()["tracks"]["items"][0]
-        spotify_id = result["id"]
-        searchlyrics = requests.get(
-            f"https://api.princexd.tech/splyrics?trackid={spotify_id}"
-        ).json()
-        if searchlyrics["error"] == False:
-            lyrics = searchlyrics["lyrics"]
-            lyr = lyrics.replace("\n", "<br>")
-            test = f"""<p align="center"><a href="#"><img src="{img}" width="250"></a></p>"""
-            final = test + lyr
-            post_client = TelegraphPoster(use_api=True)
-            auth_name = "@MerissaRobot"
-            bish = "https://t.me/MerissaRobot"
-            post_client.create_api_token(auth_name)
-            post_page = post_client.post(
-                title=f"{title} - {performer}",
-                author=auth_name,
-                author_url=bish,
-                text=final,
-            )
-            linkhttp = post_page["url"]
-            link = linkhttp.replace("http://telegra.ph", "https://te.legra.ph")
-            button = InlineKeyboardMarkup(
-                [[InlineKeyboardButton(text="Lyrics", url=link)]]
-            )
-        else:
-            ly = requests.get(f"https://api.princexd.tech/svlyrics?svid={id}").json()[
-                "lyrics"
-            ]
-            png = f"""<p align="center"><a href="#"><img src="{img}" width="250"></a></p>"""
-            merge = png + ly
-            final = merge.replace("\n", "<br>")
-            post_client = TelegraphPoster(use_api=True)
-            auth_name = "@MerissaRobot"
-            bish = "https://t.me/MerissaRobot"
-            post_client.create_api_token(auth_name)
-            post_page = post_client.post(
-                title=f"{title} - {performer}",
-                author=auth_name,
-                author_url=bish,
-                text=final,
-            )
-            linkhttp = post_page["url"]
-            link = linkhttp.replace("http://telegra.ph", "https://te.legra.ph")
-            button = InlineKeyboardMarkup(
-                [[InlineKeyboardButton(text="Lyrics", url=link)]]
-            )
+        lyrics = requests.get(
+            f"https://editor-choice-api.vercel.app/lyrics?query={query}"
+        ).json()["url"]
+        link = lyrics.replace("https://telegra.ph", "https://graph.org")
+        button = InlineKeyboardMarkup([[InlineKeyboardButton(text="🎵 Lyrics", url=link)]])
         await m.edit(
             "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
         )
