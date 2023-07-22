@@ -127,7 +127,7 @@ def find_streammovie(_, message):
         button = InlineKeyboardMarkup(
             [[InlineKeyboardButton(f"{query}", url=response)]]
         )
-        await m.edit_text(
+        search_results.edit_text(
             text="Your Movie Downloading/Streaming Link", reply_markup=button
         )
     else:
