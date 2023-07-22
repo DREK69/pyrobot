@@ -816,11 +816,11 @@ async def lyrics_func(answers, text):
             )
         )
         return answers
-    
-    song_name = song['title']
-    artist = song['aritst']
-    lyrics = song['lyrics']
-    thumb = song['thumb']
+
+    song_name = song["title"]
+    artist = song["aritst"]
+    lyrics = song["lyrics"]
+    thumb = song["thumb"]
     if len(lyrics) > 4095:
         lyrics = await paste(lyrics)
         lyrics = f"**LYRICS_TOO_LONG:** [URL]({lyrics})"
