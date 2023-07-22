@@ -829,7 +829,7 @@ async def lyrics_func(answers, text):
         InlineQueryResultArticle(
             title=song_name,
             description=artist,
-            input_message_content=InputTextMessageContent(lyrics)
+            input_message_content=InputTextMessageContent(lyrics),
             thumb_url=thumb,
         )
     )
