@@ -314,7 +314,7 @@ async def inline_query_handler(client, query):
                     switch_pm_text="pypi | pypi [query]",
                     switch_pm_parameter="inline",
                 )
-            tex = text.split(None, 1)[1].strip()
+            tex = text.split(None, 1)[1]
             search_results = requests.get(f"https://yasirapi.eu.org/pypi?q={tex}")
             srch_results = search_results.json()
             answers = []

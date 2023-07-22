@@ -806,31 +806,31 @@ async def ph_func(answers, text):
 
 
 async def lyrics_func(answers, text):
-    song = await arq.lyrics(text)
-    if not song.ok:
+    song = requests.get(f"https://api.princexd.tech/lyrics?query={text}")
+    if song["error"] == True:
         answers.append(
             InlineQueryResultArticle(
-                title="Error",
-                description=song.result,
+                title="No Lyrics Found",
+                description="404 Error No Found",
                 input_message_content=InputTextMessageContent(song.result),
             )
         )
         return answers
-    lyrics = song.result
-    song = lyrics.splitlines()
-    song_name = song[0]
-    artist = song[1]
+    
+    song_name = song['title']
+    artist = song['aritst']
+    lyrics = song['lyrics']
+    thumb = song['thumb']
     if len(lyrics) > 4095:
         lyrics = await paste(lyrics)
         lyrics = f"**LYRICS_TOO_LONG:** [URL]({lyrics})"
-
-    msg = f"**__{lyrics}__**"
 
     answers.append(
         InlineQueryResultArticle(
             title=song_name,
             description=artist,
-            input_message_content=InputTextMessageContent(msg),
+            input_message_content=InputTextMessageContent(lyrics)
+            thumb_url=thumb,
         )
     )
     return answers
