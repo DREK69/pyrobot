@@ -10,7 +10,7 @@ from MerissaRobot import pbot as bot
 @bot.on_message(filters.command("asupan"))
 async def animememes(_, message):
     x = await message.reply_text("Please Wait Video Uploading...")
-    res = wget.download("https://api.princexd.tech/asupan/tiktok", "asupan.mp4")
+    res = wget.download("https://api.akuari.my.id/asupan/tiktok", "asupan.mp4")
     button = InlineKeyboardMarkup(
         [
             [
@@ -28,7 +28,7 @@ async def hmeme(_, query: CallbackQuery):
     await query.answer(
         "Generating another Asupan Video\nPlease Wait....", show_alert=True
     )
-    res = wget.download("https://api.princexd.tech/asupan/tiktok", "asupan.mp4")
+    res = wget.download("https://api.akuari.my.id/asupan/tiktok", "asupan.mp4")
     await query.edit_message_media(
         InputMediaVideo("asupan.mp4", caption="Powered by @MerissaRobot"),
         reply_markup=InlineKeyboardMarkup(
