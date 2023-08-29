@@ -42,13 +42,13 @@ loguru
 lxml
 lyrics_extractor
 lyricsgenius==3.0.1
-motor>==2.3.1
+motor
 multicolorcaptcha
 markdown2==2.4.3
 nekos.py
 nltk
 nudepy
-odmantic==0.4.0
+odmantic
 openai
 opencv-python-headless
 pendulum
