@@ -60,7 +60,7 @@ psycopg2-binary
 PyDictionary
 pygithub>=1.55
 pykeyboard
-pymongo
+pymongo==4.4.0
 pynewtonmath
 pyrate-limiter==2.10.0
 pyrogram>=2.0.93
