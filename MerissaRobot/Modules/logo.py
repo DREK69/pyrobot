@@ -13,7 +13,6 @@ from MerissaRobot import pbot
 
 
 def genlogo(text, image, tfont):
-    text = quew
     if ";" in text:
         upper_text, lower_text = text.split(";")
         upper_text = upper_text.strip()
