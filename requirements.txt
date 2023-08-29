@@ -52,7 +52,7 @@ odmantic
 openai
 opencv-python-headless
 pendulum
-Pillow
+Pillow==9.4.0
 pornhub-api==0.2.0
 pretty_errors
 psutil
