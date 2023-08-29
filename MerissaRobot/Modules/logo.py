@@ -12,7 +12,7 @@ from telegraph import upload_file as uf
 from MerissaRobot import pbot
 
 
-def logo(text, image, tfont):
+def genlogo(text, image, tfont):
     text = quew
     if ";" in text:
         upper_text, lower_text = text.split(";")
