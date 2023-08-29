@@ -261,7 +261,7 @@ async def movie(client, message):
         await logo.delete()
         os.remove(download_location)
     else:
-        logo = genlogo(name, None, None):
+        logo = genlogo(name, None, None)
         url = logo[0]
         bg = logo[1]
         font = logo[2]
@@ -324,7 +324,7 @@ async def hmeme(_, query: CallbackQuery):
     data = callback_data.split("|")
     name = data[1]
     font = data[2]
-    logo = genlogo(name, None, font):
+    logo = genlogo(name, None, font)
     url = logo[0]
     await query.edit_message_media(
         InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
@@ -348,7 +348,7 @@ async def hmeme(_, query: CallbackQuery):
     data = callback_data.split("|")
     name = data[1]
     key = data[2]
-    logo = genlogo(name, key, None):
+    logo = genlogo(name, key, None)
     url = logo[0]
     await query.edit_message_media(
         InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
@@ -373,7 +373,7 @@ async def hmeme(_, query: CallbackQuery):
     name = data[1]
     key = data[2]
     font = data[3]
-    logo = genlogo(name, None, None):
+    logo = genlogo(name, None, None)
     url = logo[0]
     await query.edit_message_media(
         InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
