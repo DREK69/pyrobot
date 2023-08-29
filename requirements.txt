@@ -1,5 +1,5 @@
 aiofiles
-aiohttp
+aiohttp==3.8.1
 alphabet_detector
 apscheduler
 asyncio
