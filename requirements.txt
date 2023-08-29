@@ -42,8 +42,7 @@ loguru
 lxml
 lyrics_extractor
 lyricsgenius==3.0.1
-markdown2
-motor
+motor==3.3.0
 multicolorcaptcha
 nekos.py
 nltk
