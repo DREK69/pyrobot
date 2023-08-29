@@ -62,7 +62,7 @@ pygithub>=1.55
 pykeyboard
 pymongo==3.12.1
 pynewtonmath
-pyrate-limiter
+pyrate-limiter==3.0.1
 pyrogram>=2.0.93
 pyromod==1.5
 pySmartDL
