@@ -47,7 +47,7 @@ multicolorcaptcha
 nekos.py
 nltk
 nudepy
-odmantic
+odmantic==0.1.0
 openai
 opencv-python-headless
 pendulum
