@@ -47,7 +47,6 @@ multicolorcaptcha
 markdown2==2.4.3
 nekos.py
 nltk
-nudepy
 odmantic
 openai
 opencv-python-headless
