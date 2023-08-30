@@ -297,7 +297,7 @@ async def phlogo(_, message):
             "Give me some text to make logo\n\nEx. /phlogo [Merissa or Merissa;Hub]"
         )
     text = message.text.split(None, 1)[1]
-    logo = await message.reply_text("Creating your logo...wait!")
+    await message.reply_text("Creating your logo...wait!")
     url = get(f"https://api.princexd.tech/phlogo?text={text}").json()["url"]
     button = InlineKeyboardMarkup(
         [
