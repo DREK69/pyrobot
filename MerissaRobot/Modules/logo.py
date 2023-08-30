@@ -306,7 +306,7 @@ async def phlogo(_, message):
             ],
         ]
     )
-   m = await message.reply_photo(
+    m = await message.reply_photo(
         photo=url,
         caption="Powered by @MerissaRobot",
         reply_markup=button,
