@@ -306,12 +306,12 @@ async def phlogo(_, message):
             ],
         ]
     )
-    await message.reply_photo(
+   m = await message.reply_photo(
         photo=url,
         caption="Powered by @MerissaRobot",
         reply_markup=button,
     )
-    await logo.delete()
+    await m.delete()
 
 
 @pbot.on_callback_query(filters.regex(pattern=r"flogo"))
