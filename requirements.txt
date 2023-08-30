@@ -15,7 +15,7 @@ coffeehouse
 countryinfo
 CurrencyConverter
 dateparser
-dnspython
+dnspython==2.3.0
 emoji==1.7.0
 EmojiCaptcha==0.1.2
 emoji-country-flag
