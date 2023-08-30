@@ -223,7 +223,7 @@ def genlogo(text, image, tfont):
 @pbot.on_message(filters.command("logo") & filters.private)
 async def movie(client, message):
     reply = message.reply_to_message
-    logo = await message.reply_text("Creating your logo...wait!")
+    m = await message.reply_text("Creating your logo...wait!")
     if len(message.command) < 2:
         return await message.reply_text(
             "Give me some text to make logo\n\nEx. /logo Merissa or Merissa;Robot"
@@ -255,7 +255,6 @@ async def movie(client, message):
         await message.reply_photo(
             photo=url, caption="Powered by @MerissaRobot", reply_markup=button
         )
-        await logo.delete()
         os.remove(download_location)
     else:
         logo = genlogo(name, None, None)
@@ -287,7 +286,7 @@ async def movie(client, message):
             caption="Powered by @MerissaRobot",
             reply_markup=button,
         )
-        await logo.delete()
+    await m.delete()
 
 
 @pbot.on_message(filters.command("phlogo"))
@@ -297,7 +296,7 @@ async def phlogo(_, message):
             "Give me some text to make logo\n\nEx. /phlogo [Merissa or Merissa;Hub]"
         )
     text = message.text.split(None, 1)[1]
-    await message.reply_text("Creating your logo...wait!")
+    logo = await message.reply_text("Creating your logo...wait!")
     url = get(f"https://api.princexd.tech/phlogo?text={text}").json()["url"]
     button = InlineKeyboardMarkup(
         [
@@ -311,7 +310,7 @@ async def phlogo(_, message):
         caption="Powered by @MerissaRobot",
         reply_markup=button,
     )
-    await m.delete()
+    await logo.delete()
 
 
 @pbot.on_callback_query(filters.regex(pattern=r"flogo"))
