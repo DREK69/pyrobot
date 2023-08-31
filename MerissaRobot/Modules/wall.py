@@ -13,10 +13,12 @@ px = PeakPx()
 @pbot.on_message(filters.command("wallpaper"))
 async def wallpaper(bot, message):
     if len(message.command) < 2:
-        return await message.reply("No Keyword Found for Search wallpaper", quote=True)
+        return await message.reply_text("Give me some text to search for wallpaper")
+    m = await message.reply_text("🔄 Processing Query... Please Wait!")
     search = message.text.split(None, 1)[1]
-    wall = px.search_wallpapers(search)[0]["url"]
-    wallpaper = save_file(wall, "wall.jpg")
+    wallsearch = px.search_wallpapers(search)
+    wall = wallsearch[0]["url"]
+    wallpaper = save_file(wall, "wall.png")
     await message.reply_photo(
         wallpaper,
         caption="Powered by @MerissaRobot",
@@ -30,13 +32,14 @@ async def wallpaper(bot, message):
                 [
                     InlineKeyboardButton(
                         "📥 Download",
-                        callback_data="wall|{search}|0",
+                        callback_data=f"wall|{search}|0",
                     ),
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
         ),
     )
+    await m.delete()
 
 
 @pbot.on_callback_query(filters.regex("^wnext"))
@@ -46,7 +49,8 @@ async def wnext_query(client, callbackquery):
     search = callback[1]
     page = int(callback[2])
     wallsearch = px.search_wallpapers(query=search)
-    wallpaper = wallsearch[page]["url"]
+    wall = wallsearch[page]["url"]
+    wallpaper = save_file(wall, "wall.png")
     tpage = len(wallsearch) - 1
     if page == 0:
         await callbackquery.edit_message_media(
