@@ -265,7 +265,7 @@ async def ymnext_query(client, callbackquery):
 
 @Client.on_callback_query(filters.regex("^ytnext"))
 async def ytnext_query(client, callbackquery):
-    callback_data = callbackQuery.data.strip()
+    callback_data = callbackquery.data.strip()
     callback = callback_data.split("|")
     query = callback[1]
     page = int(callback[2])
