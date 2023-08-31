@@ -1,23 +1,23 @@
 import os
-import requests
 
+import requests
 from pyrogram import filters
 from pyrogram.types import *
 
-from PeakPxApi import PeakPx
 from MerissaRobot import pbot
 
 px = Peakpx()
+
 
 @pbot.on_message(filters.command("wallpaper"))
 async def wallpaper(bot, message):
     if len(message.command) < 2:
         return await message.reply("No Keyword Found for Search wallpaper", quote=True)
-    search = message.text.split(None, 1)[1]    
-    wallpaper = px.search_wallpapers(query=search)[0]['url']
+    search = message.text.split(None, 1)[1]
+    wallpaper = px.search_wallpapers(query=search)[0]["url"]
     await message.reply_photo(
-        wallpaper, 
-        caption="Powered by @MerissaRobot", 
+        wallpaper,
+        caption="Powered by @MerissaRobot",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -33,8 +33,9 @@ async def wallpaper(bot, message):
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ]
-        )
+        ),
     )
+
 
 @Client.on_callback_query(filters.regex("^wnext"))
 async def wnext_query(client, callbackquery):
@@ -43,7 +44,7 @@ async def wnext_query(client, callbackquery):
     search = callback[1]
     page = int(callback[2])
     wallsearch = px.search_wallpapers(query=search)
-    wallpaper = wallsearch[page]['url']
+    wallpaper = wallsearch[page]["url"]
     tpage = len(wallsearch) - 1
     if page == 0:
         await callbackquery.edit_message_media(
@@ -78,7 +79,8 @@ async def wnext_query(client, callbackquery):
                 [
                     [
                         InlineKeyboardButton(
-                            "⬅️ Prev Wallpaper", callback_data=f"ymnext|{search}|{page-1}"
+                            "⬅️ Prev Wallpaper",
+                            callback_data=f"ymnext|{search}|{page-1}",
                         ),
                     ],
                     [
@@ -118,6 +120,7 @@ async def wnext_query(client, callbackquery):
             ),
         )
 
+
 @Client.on_callback_query(filters.regex("^wall"))
 async def ymnext_query(client, callbackquery):
     callback_data = callbackquery.data.strip()
@@ -125,7 +128,7 @@ async def ymnext_query(client, callbackquery):
     search = callback[1]
     page = int(callback[2])
     wallsearch = px.search_wallpapers(query=search)
-    wallpaper = wallsearch[page]['url']
-    open("wall.png", 'wb').write(requests.get(wallpaper).content)
+    wallpaper = wallsearch[page]["url"]
+    open("wall.png", "wb").write(requests.get(wallpaper).content)
     await message.reply_document("wall.png")
     os.remove("wall.png")

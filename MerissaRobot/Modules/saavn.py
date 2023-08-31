@@ -2,6 +2,7 @@ import os
 
 import requests
 import wget
+from mutagen.mp4 import MP4
 from pyrogram import filters
 from pyrogram.enums import ChatAction
 from pyrogram.types import (
@@ -12,9 +13,7 @@ from pyrogram.types import (
 )
 
 from MerissaRobot import pbot
-from mutagen.mp4 import MP4
-
-from MerissaRobot.helpers import save_file, embed_album_art
+from MerissaRobot.helpers import embed_album_art, save_file
 
 spregex = r"https:\/\/www\.jiosaavn\.com\/song\/"
 
@@ -213,8 +212,8 @@ async def callback_query(client, query):
     file = save_file(dlink, f"{title}.m4a")
     audio = MP4(audio_file)
     audio["\xa9nam"] = title
-    audio['\xa9alb'] = album 
-    audio['\xa9ART'] = artist
+    audio["\xa9alb"] = album
+    audio["\xa9ART"] = artist
     audio.save()
     embed_album_art(thumbnail, file)
     med = InputMediaAudio(

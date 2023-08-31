@@ -1,5 +1,6 @@
-import requests
 import mutagen
+import requests
+
 
 def save_file(url, name):
     with open(name, "wb") as f:
@@ -23,16 +24,19 @@ async def get_ytthumb(videoid: str):
             break
     return thumb_link
 
+
 def embed_album_art(cover_filepath, filepath):
     with open(cover_filepath, "rb") as f:
         cover_data = f.read()
     mf = mutagen.File(filepath)
-    if (isinstance(mf.tags, mutagen.mp4.MP4Tags) or isinstance(mf, mutagen.mp4.MP4)):
-        mf["covr"] = [mutagen.mp4.MP4Cover(cover_data, imageformat=mutagen.mp4.AtomDataType.JPEG)]
+    if isinstance(mf.tags, mutagen.mp4.MP4Tags) or isinstance(mf, mutagen.mp4.MP4):
+        mf["covr"] = [
+            mutagen.mp4.MP4Cover(cover_data, imageformat=mutagen.mp4.AtomDataType.JPEG)
+        ]
     else:
         picture = mutagen.flac.Picture()
         picture.type = 3
         picture.data = cover_data
-        picture.desc = 'front cover'
+        picture.desc = "front cover"
         mf.add_picture(picture)
     mf.save()

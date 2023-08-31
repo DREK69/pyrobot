@@ -2,6 +2,7 @@ import os
 
 import requests
 import yt_dlp
+from mutagen.mp4 import MP4
 from pykeyboard import InlineKeyboard
 from pyrogram import Client, filters
 from pyrogram.enums import ChatAction
@@ -12,11 +13,10 @@ from pyrogram.types import (
     InputMediaPhoto,
     InputMediaVideo,
 )
-from mutagen.mp4 import MP4
 from youtubesearchpython import VideosSearch
 
 from MerissaRobot import pbot as Client
-from MerissaRobot.helpers import get_ytthumb, embed_album_art
+from MerissaRobot.helpers import embed_album_art, get_ytthumb
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
@@ -455,12 +455,14 @@ async def audio_query(client, callbackquery):
         album = info_dict["album"]
     except:
         album = title
-    artist = requests.get(f"https://api.princexd.tech/ytmsearch?query={link}").json()["results"]["videoDetails"]["author"]
+    artist = requests.get(f"https://api.princexd.tech/ytmsearch?query={link}").json()[
+        "results"
+    ]["videoDetails"]["author"]
     thumb = await callbackquery.message.download()
     audio = MP4(audio_file)
     audio["\xa9nam"] = title
-    audio['\xa9alb'] = album 
-    audio['\xa9ART'] = artist
+    audio["\xa9alb"] = album
+    audio["\xa9ART"] = artist
     audio.save()
     embed_album_art(thumb, audio_file)
     med = InputMediaAudio(
@@ -568,9 +570,9 @@ async def lyrics(client, message):
         )
     title = message.text.split(None, 1)[1]
     try:
-        lyrics = requests.get(f"https://api.princexd.tech/lyrics/text?query={title}").json()[
-            "lyrics"
-        ]
+        lyrics = requests.get(
+            f"https://api.princexd.tech/lyrics/text?query={title}"
+        ).json()["lyrics"]
         await message.reply_text(lyrics)
     except:
         await message.reply_text("Lyrics Not Found")
