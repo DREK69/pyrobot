@@ -5,6 +5,7 @@ from pyrogram import filters
 from pyrogram.types import *
 
 from MerissaRobot import pbot
+from PeakPxApi import PeakPx
 
 px = PeakPx()
 
