@@ -107,7 +107,7 @@ async def video(client, message):
         return await message.reply_text("Give me some text to search on Youtube")
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     query = message.text.split(None, 1)[1]
-    search = VideosSearch(query, 20).json()
+    search = VideosSearch(query, 20).result()
     yt = search["result"][0]
     title = yt["title"]
     dur = yt["duration"]
@@ -269,7 +269,7 @@ async def ytnext_query(client, callbackquery):
     callback = callback_data.split("|")
     query = callback[1]
     page = int(callback[2])
-    search = VideosSearch(query, 20)
+    search = VideosSearch(query, 20).result()
     yt = search["result"][page]
     title = yt["title"]
     dur = yt["duration"]
