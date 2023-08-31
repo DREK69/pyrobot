@@ -107,7 +107,7 @@ async def video(client, message):
         return await message.reply_text("Give me some text to search on Youtube")
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     query = message.text.split(None, 1)[1]
-    search = VideosSearch(query, 20)
+    search = VideosSearch(query, 20).json()
     yt = search["result"][0]
     title = yt["title"]
     dur = yt["duration"]
