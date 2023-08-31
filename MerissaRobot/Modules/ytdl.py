@@ -15,6 +15,7 @@ from pyrogram.types import (
 
 from MerissaRobot import pbot as Client
 from MerissaRobot.helpers import get_ytthumb
+from youtubesearchpython import VideosSearch
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
@@ -106,9 +107,7 @@ async def video(client, message):
         return await message.reply_text("Give me some text to search on Youtube")
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     query = message.text.split(None, 1)[1]
-    search = requests.get(
-        f"https://api.princexd.tech/ytsearch?query={query}&limit=50"
-    ).json()
+    yt = VideosSearch(query, 20)
     yt = search["result"][0]
     title = yt["title"]
     dur = yt["duration"]
@@ -270,9 +269,7 @@ async def ytnext_query(client, callbackquery):
     callback = callback_data.split("|")
     query = callback[1]
     page = int(callback[2])
-    search = requests.get(
-        f"https://api.princexd.tech/ytsearch?query={query}&limit=50"
-    ).json()
+    search = VideosSearch(query, 20)
     yt = search["result"][page]
     title = yt["title"]
     dur = yt["duration"]
