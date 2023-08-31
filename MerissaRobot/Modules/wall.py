@@ -6,6 +6,7 @@ from pyrogram import filters
 from pyrogram.types import *
 
 from MerissaRobot import pbot
+from MerissaRobot.helpers import save_file
 
 px = PeakPx()
 
@@ -15,7 +16,8 @@ async def wallpaper(bot, message):
     if len(message.command) < 2:
         return await message.reply("No Keyword Found for Search wallpaper", quote=True)
     search = message.text.split(None, 1)[1]
-    wallpaper = px.search_wallpapers(query=search)[0]["url"]
+    wall = px.search_wallpapers(search)[0]["url"]
+    wallpaper = save_file(wall, "wall.jpg")
     await message.reply_photo(
         wallpaper,
         caption="Powered by @MerissaRobot",
@@ -129,7 +131,7 @@ async def wall_down(client, callbackquery):
     search = callback[1]
     page = int(callback[2])
     wallsearch = px.search_wallpapers(query=search)
-    wallpaper = wallsearch[page]["url"]
-    open("wall.png", "wb").write(requests.get(wallpaper).content)
+    wall = wallsearch[page]["url"]
+    wallpaper = save_file(wall, "wall.jpg")
     await message.reply_document("wall.png")
     os.remove("wall.png")
