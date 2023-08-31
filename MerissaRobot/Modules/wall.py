@@ -1,11 +1,11 @@
 import os
 
 import requests
-from PeakPxApi import PeakPx
 from pyrogram import filters
 from pyrogram.types import *
 
 from MerissaRobot import pbot
+from PeakPxApi import PeakPx
 
 px = PeakPx()
 
@@ -38,7 +38,7 @@ async def wallpaper(bot, message):
     )
 
 
-@Client.on_callback_query(filters.regex("^wnext"))
+@pbot.on_callback_query(filters.regex("^wnext"))
 async def wnext_query(client, callbackquery):
     callback_data = callbackquery.data.strip()
     callback = callback_data.split("|")
@@ -122,8 +122,8 @@ async def wnext_query(client, callbackquery):
         )
 
 
-@Client.on_callback_query(filters.regex("^wall"))
-async def ymnext_query(client, callbackquery):
+@pbot.on_callback_query(filters.regex("^wall"))
+async def wall_down(client, callbackquery):
     callback_data = callbackquery.data.strip()
     callback = callback_data.split("|")
     search = callback[1]
