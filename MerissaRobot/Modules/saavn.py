@@ -12,6 +12,9 @@ from pyrogram.types import (
 )
 
 from MerissaRobot import pbot
+from mutagen.mp4 import MP4
+
+from MerissaRobot.helpers import save_file, embed_album_art
 
 spregex = r"https:\/\/www\.jiosaavn\.com\/song\/"
 
@@ -203,21 +206,22 @@ async def callback_query(client, query):
     title = result["name"]
     dur = result["duration"]
     result["image"][2]["link"]
-    singers = result["primaryArtists"]
-    if "," in singers:
-        performer = singers.split(",")[0]
-    else:
-        performer = singers
+    artist = result["primaryArtists"]
+    album = result["album"]["name"]
     thumbnail = await query.message.download()
     dlink = result["downloadUrl"][4]["link"]
-    dl = wget.download(dlink)
-    file = dl.replace("mp4", "mp3")
-    os.rename(dl, file)
+    file = save_file(dlink, f"{title}.m4a")
+    audio = MP4(audio_file)
+    audio["\xa9nam"] = title
+    audio['\xa9alb'] = album 
+    audio['\xa9ART'] = artist
+    audio.save()
+    embed_album_art(thumbnail, file)
     med = InputMediaAudio(
         file,
         thumb=thumbnail,
         title=title,
-        performer=performer,
+        performer=artist,
         duration=int(dur),
     )
     query = f"{title} {performer}"

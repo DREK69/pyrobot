@@ -12,10 +12,11 @@ from pyrogram.types import (
     InputMediaPhoto,
     InputMediaVideo,
 )
+from mutagen.mp4 import MP4
 from youtubesearchpython import VideosSearch
 
 from MerissaRobot import pbot as Client
-from MerissaRobot.helpers import get_ytthumb
+from MerissaRobot.helpers import get_ytthumb, embed_album_art
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
@@ -449,20 +450,28 @@ async def audio_query(client, callbackquery):
         info_dict = ydl.extract_info(link, download=False)
         audio_file = ydl.prepare_filename(info_dict)
         ydl.process_info(info_dict)
-    yt = requests.get(f"https://api.princexd.tech/ytmsearch?query={link}").json()[
-        "results"
-    ]["videoDetails"]
-    yt["thumbnail"]["thumbnails"][0]["url"].replace("60-", "500-")
+    title = info_dict["title"]
+    try:
+        album = info_dict["album"]
+    except:
+        album = title
+    artist = requests.get(f"https://api.princexd.tech/ytmsearch?query={link}").json()["results"]["videoDetails"]["author"]
     thumb = await callbackquery.message.download()
+    audio = MP4(audio_file)
+    audio["\xa9nam"] = title
+    audio['\xa9alb'] = album 
+    audio['\xa9ART'] = artist
+    audio.save()
+    embed_album_art(thumb, audio_file)
     med = InputMediaAudio(
         audio_file,
         caption=str(info_dict["title"]),
         thumb=thumb,
         title=str(info_dict["title"]),
-        performer=yt["author"],
+        performer=artist,
         duration=int(info_dict["duration"]),
     )
-    query = f"{info_dict['title']} {yt['author']}"
+    query = f"{info_dict['title']} {artist}"
     lyr = requests.get(
         f"https://editor-choice-api.vercel.app/lyrics?query={query}"
     ).json()
@@ -559,7 +568,7 @@ async def lyrics(client, message):
         )
     title = message.text.split(None, 1)[1]
     try:
-        lyrics = requests.get(f"https://api.princexd.tech/lyrics?query={title}").json()[
+        lyrics = requests.get(f"https://api.princexd.tech/lyrics/text?query={title}").json()[
             "lyrics"
         ]
         await message.reply_text(lyrics)
