@@ -239,8 +239,7 @@ async def _bet(client, message):
             )
         )
     else:
-        okay = to_bet * 2
-        new_wallet = coins + okay
+        new_wallet = coins + to_bet
         gamesdb.update_one({"user_id": user.id}, {"$set": {"coins": new_wallet}})
         return await message.reply_text(
             "✅ The coin landed on {0}!\nYou won `{1:,}`$\nTotal Balance : `{2:,}`$".format(
