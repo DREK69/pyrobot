@@ -6,7 +6,7 @@ from pyrogram.types import *
 
 from MerissaRobot import pbot
 
-px = Peakpx()
+px = PeakPx()
 
 
 @pbot.on_message(filters.command("wallpaper"))
