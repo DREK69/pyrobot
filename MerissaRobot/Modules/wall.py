@@ -26,7 +26,7 @@ async def wallpaper(bot, message):
             [
                 [
                     InlineKeyboardButton(
-                        "Next Photo ➡", callback_data=f"wnext|{search}|1"
+                        "Next Wallpaper ➡", callback_data=f"wnext|{search}|1"
                     ),
                 ],
                 [
@@ -129,12 +129,5 @@ async def wnext_query(client, callbackquery):
 
 @pbot.on_callback_query(filters.regex("^wall"))
 async def wall_down(client, callbackquery):
-    callback_data = callbackquery.data.strip()
-    callback = callback_data.split("|")
-    search = callback[1]
-    page = int(callback[2])
-    wallsearch = px.search_wallpapers(query=search)
-    wall = wallsearch[page]["url"]
-    save_file(wall, "wall.jpg")
-    await message.reply_document("wall.png")
+    await callbackquery.message.reply_document("wall.png")
     os.remove("wall.png")
