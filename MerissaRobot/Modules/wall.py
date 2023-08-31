@@ -1,6 +1,5 @@
 import os
 
-import requests
 from PeakPxApi import PeakPx
 from pyrogram import filters
 from pyrogram.types import *
@@ -132,6 +131,6 @@ async def wall_down(client, callbackquery):
     page = int(callback[2])
     wallsearch = px.search_wallpapers(query=search)
     wall = wallsearch[page]["url"]
-    wallpaper = save_file(wall, "wall.jpg")
+    save_file(wall, "wall.jpg")
     await message.reply_document("wall.png")
     os.remove("wall.png")
