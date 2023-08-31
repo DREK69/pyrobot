@@ -1,20 +1,20 @@
-import requests
+from PIL import Image, ImageDraw, ImageFont
 from pyrogram import filters
 
 from MerissaRobot import pbot as app
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+
 
 @app.on_message(filters.command(["write"]))
 async def handwrite(client, message):
     if message.reply_to_message and message.reply_to_message.text:
-        txt = message.reply_to_message.text
+        message.reply_to_message.text
     elif len(message.command) > 1:
-        txt = message.text.split(None, 1)[1]
+        message.text.split(None, 1)[1]
     else:
         return await message.reply(
             "Please reply to message or write after command to use write CMD."
         )
-    nan = await message.reply_text("Processing...")
+    await message.reply_text("Processing...")
     try:
         img = Image.open("./MerissaRobot/Utils/Resources/template.jpg")
         draw = ImageDraw.Draw(img)
