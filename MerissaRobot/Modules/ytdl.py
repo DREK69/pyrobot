@@ -12,10 +12,10 @@ from pyrogram.types import (
     InputMediaPhoto,
     InputMediaVideo,
 )
+from youtubesearchpython import VideosSearch
 
 from MerissaRobot import pbot as Client
 from MerissaRobot.helpers import get_ytthumb
-from youtubesearchpython import VideosSearch
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
