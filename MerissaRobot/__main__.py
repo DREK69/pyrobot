@@ -34,7 +34,6 @@ from MerissaRobot import (
     SUPPORT_CHAT,
     TOKEN,
     dispatcher,
-    pbot,
     telethn,
     updater,
 )
