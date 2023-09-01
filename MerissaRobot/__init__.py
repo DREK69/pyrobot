@@ -137,6 +137,13 @@ telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
 dispatcher = updater.dispatcher
 aiohttpsession = ClientSession()
 
+pbot = Client(
+    "MerissaRobot",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=TOKEN,
+)
+
 BOT_ID = dispatcher.bot.id
 BOT_USERNAME = dispatcher.bot.username
 BOT_NAME = dispatcher.bot.first_name
@@ -167,11 +174,3 @@ from MerissaRobot.Handler.handlers import (
 tg.RegexHandler = CustomRegexHandler
 tg.CommandHandler = CustomCommandHandler
 tg.MessageHandler = CustomMessageHandler
-
-pbot = Client(
-    "MerissaRobot",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    bot_token=TOKEN,
-)
-pbot.start()
