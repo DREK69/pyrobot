@@ -4,7 +4,6 @@ import sys
 import time
 from inspect import getfullargspec
 from logging import ERROR, INFO, StreamHandler, basicConfig, getLogger, handlers
-from pyromod import listen # ignore 
 
 import spamwatch
 import telegram.ext as tg
@@ -12,6 +11,7 @@ from aiohttp import ClientSession
 from pyrogram import Client, errors
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 from pyrogram.types import Message
+from pyromod import listen  # ignore
 from Python_ARQ import ARQ
 from redis import StrictRedis
 from telethon import TelegramClient
