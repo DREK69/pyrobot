@@ -7,6 +7,7 @@ import traceback
 from sys import argv
 
 import requests
+from pyromod import listen  # ignore
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import (
     BadRequest,
@@ -38,7 +39,6 @@ from MerissaRobot import (
     telethn,
     updater,
 )
-from pyromod import listen # ignore
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
 from MerissaRobot.Modules import ALL_MODULES
