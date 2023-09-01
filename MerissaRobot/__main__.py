@@ -7,7 +7,6 @@ import traceback
 from sys import argv
 
 import requests
-from pyromod import listen  # ignore
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import (
     BadRequest,
@@ -917,7 +916,6 @@ def main():
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    pbot.start()
     try:
         telethn.start(bot_token=TOKEN)
     except FloodWaitError as e:
