@@ -60,7 +60,6 @@ from MerissaRobot.text import (
 
 # needed to dynamically load Modules
 # NOTE: Module order is not guaranteed, specify that in the config file!
-loop = asyncio.get_event_loop()
 
 
 def get_readable_time(seconds: int) -> str:
@@ -916,13 +915,9 @@ def main():
     updater.idle()
 
 
-async def initiate_bot():
-    await pbot.start()
-
-
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    loop.run_until_complete(initiate_bot())
+    pbot.start()
     try:
         telethn.start(bot_token=TOKEN)
     except FloodWaitError as e:
