@@ -4,6 +4,7 @@ import sys
 import time
 from inspect import getfullargspec
 from logging import ERROR, INFO, StreamHandler, basicConfig, getLogger, handlers
+from pyromod import listen # ignore 
 
 import spamwatch
 import telegram.ext as tg
@@ -135,12 +136,6 @@ updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
 telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
 dispatcher = updater.dispatcher
 aiohttpsession = ClientSession()
-pbot = Client(
-    "MerissaRobot",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    bot_token=TOKEN,
-)
 
 BOT_ID = dispatcher.bot.id
 BOT_USERNAME = dispatcher.bot.username
@@ -172,3 +167,11 @@ from MerissaRobot.Handler.handlers import (
 tg.RegexHandler = CustomRegexHandler
 tg.CommandHandler = CustomCommandHandler
 tg.MessageHandler = CustomMessageHandler
+
+pbot = Client(
+    "MerissaRobot",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=TOKEN,
+)
+pbot.start()
