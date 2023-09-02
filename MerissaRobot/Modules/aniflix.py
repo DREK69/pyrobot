@@ -16,7 +16,7 @@ async def animedl(_, message):
     search_results = await message.reply_text("Processing...")
     animeinput = message.text.split(None, 1)[1]
     anime = requests.get(
-        f"https://api.yukkiflix.ml/search?keyw={animeinput}&page=1"
+        f"https://anime.princexd.tech/search?keyw={animeinput}&page=1"
     ).json()
     keyboards = []
     if anime:
@@ -44,7 +44,7 @@ async def anime_result(_, CallbackQuery):
     search_results = await CallbackQuery.message.reply_text("Processing...")
     await CallbackQuery.message.delete()
     anime = requests.get(
-        f"https://api.yukkiflix.ml/search?keyw={animeinput}&page=1"
+        f"https://anime.princexd.tech/search?keyw={animeinput}&page=1"
     ).json()
     keyboards = []
     if anime:
@@ -90,7 +90,7 @@ async def movie_result(_, CallbackQuery):
         text="Please Wait Movie/Series Details Fetching From Anikatsu",
         reply_markup=None,
     )
-    search = requests.get(f"https://api.yukkiflix.ml/getAnime/{id}").json()
+    search = requests.get(f"https://anime.princexd.tech/getAnime/{id}").json()
     name = search["name"]
     oname = search["othername"]
     animetype = search["type"]
