@@ -101,7 +101,7 @@ async def movie_result(_, CallbackQuery):
     for episodeId in episodeid:
         episodeid = episodeId["episodeId"]
         episodenum = episodeId["episodeNum"]
-        link = f"https://anikatsu.me/watch/{episodeid}"
+        link = f"https://ryuk.to//watch/{episodeid}"
         text += f"Anime Episode {episodenum}: [Click Here]({link})<br>──────────────────────────────────<br>"
     if animetype == "Movie":
         button = InlineKeyboardMarkup(
