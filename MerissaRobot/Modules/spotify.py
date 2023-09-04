@@ -1,14 +1,13 @@
 import os
 
 import requests
-import wget
+from mutagen.mp4 import MP4
 from pyrogram import filters
 from pyrogram.enums import ChatAction
 from pyrogram.types import *
 
-from mutagen.mp4 import MP4
-from MerissaRobot.helpers import embed_album_art, save_file
 from MerissaRobot import pbot
+from MerissaRobot.helpers import embed_album_art, save_file
 
 spotregex = r"^https:\/\/open\.spotify\.com\/track"
 
@@ -181,7 +180,7 @@ async def spotdl(Client, CallbackQuery):
     img = result["album"]["images"][0]["url"]
     artist = result["album"]["artists"][0]["name"]
     query = f"{name} {artist}"
-    id = result["id"]
+    result["id"]
     thumbnail = save_file(img, "thumbnail.png")
     search = requests.get(f"https://saavn.me/search/songs?query={query}").json()[
         "data"
