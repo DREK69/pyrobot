@@ -209,7 +209,7 @@ async def callback_query(client, query):
     thumbnail = await query.message.download()
     dlink = result["downloadUrl"][4]["link"]
     file = save_file(dlink, f"{title}.m4a")
-    audio = MP4(audio_file)
+    audio = MP4(file)
     audio["\xa9nam"] = title
     audio["\xa9alb"] = album
     audio["\xa9ART"] = artist
