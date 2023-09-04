@@ -16,7 +16,7 @@ async def animedl(_, message):
     search_results = await message.reply_text("Processing...")
     animeinput = message.text.split(None, 1)[1]
     anime = requests.get(
-        f"https://anime.princexd.tech/search?keyw={animeinput}&page=1"
+        f"https://animeapi.princexd.tech/search?keyw={animeinput}&page=1"
     ).json()
     keyboards = []
     if anime:
@@ -44,7 +44,7 @@ async def anime_result(_, CallbackQuery):
     search_results = await CallbackQuery.message.reply_text("Processing...")
     await CallbackQuery.message.delete()
     anime = requests.get(
-        f"https://anime.princexd.tech/search?keyw={animeinput}&page=1"
+        f"https://animeapi.princexd.tech/search?keyw={animeinput}&page=1"
     ).json()
     keyboards = []
     if anime:
@@ -90,18 +90,22 @@ async def movie_result(_, CallbackQuery):
         text="Please Wait Movie/Series Details Fetching From Anikatsu",
         reply_markup=None,
     )
-    search = requests.get(f"https://anime.princexd.tech/getAnime/{id}").json()
+    search = requests.get(f"https://animeapi.princexd.tech/getAnime/{id}").json()
     name = search["name"]
     oname = search["othername"]
     animetype = search["type"]
     release = search["released"]
     image = search["imageUrl"]
     episodeid = search["episode_id"]
+    data = {
+        "search": name
+    }
+    pageid = requests.post("https://api-amvstrm.nyt92.eu.org/api/v2/search",json=data).json()['data'][0]['id']
     text = ""
     for episodeId in episodeid:
         episodeid = episodeId["episodeId"]
         episodenum = episodeId["episodeNum"]
-        link = f"https://ryuk.to//watch/{episodeid}"
+        link = f"https://anime.princexd.tech/watch/{pageid}-{episodeid}"
         text += f"Anime Episode {episodenum}: [Click Here]({link})<br>──────────────────────────────────<br>"
     if animetype == "Movie":
         button = InlineKeyboardMarkup(
