@@ -6,6 +6,8 @@ from pyrogram import filters
 from pyrogram.enums import ChatAction
 from pyrogram.types import *
 
+from mutagen.mp4 import MP4
+from MerissaRobot.helpers import embed_album_art, save_file
 from MerissaRobot import pbot
 
 spotregex = r"^https:\/\/open\.spotify\.com\/track"
@@ -22,7 +24,7 @@ async def spotdown(_, message):
     album_name = result["album"]["name"]
     albumurl = result["album"]["external_urls"]["spotify"]
     img = result["album"]["images"][0]["url"]
-    thumbnail = wget.download(img, "thumbnail.png")
+    thumbnail = save_file(img, "thumbnail.png")
     result["album"]["artists"][0]["name"]
     capt = f"**Song Name: **[{name}]({songurl})\n**Album: **[{album_name}]({albumurl})"
     buttons = InlineKeyboardMarkup(
@@ -179,17 +181,21 @@ async def spotdl(Client, CallbackQuery):
     img = result["album"]["images"][0]["url"]
     artist = result["album"]["artists"][0]["name"]
     query = f"{name} {artist}"
-    result["id"]
-    thumbnail = wget.download(img, "thumbnail.png")
+    id = result["id"]
+    thumbnail = save_file(img, "thumbnail.png")
     search = requests.get(f"https://saavn.me/search/songs?query={query}").json()[
         "data"
     ]["results"][0]
     dlink = search["downloadUrl"][4]["link"]
     duration = search["duration"]
-    search["primaryArtists"]
-    dl = wget.download(dlink)
-    file = dl.replace("mp4", "mp3")
-    os.rename(dl, file)
+    album = search["album"]["name"]
+    file = save_file(dlink, f"{name}.m4a")
+    audio = MP4(file)
+    audio["\xa9nam"] = title
+    audio["\xa9alb"] = album
+    audio["\xa9ART"] = artist
+    audio.save()
+    embed_album_art(thumbnail, file)
     med = InputMediaAudio(
         file, thumb=thumbnail, title=name, performer=artist, duration=int(duration)
     )
