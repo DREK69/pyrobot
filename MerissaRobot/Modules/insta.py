@@ -48,7 +48,7 @@ async def instadown(_, message):
                     video = requests.get(
                         f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
                     ).json()["links"][0]["url"]
-                    try: 
+                    try:
                         await message.reply_video(video)
                         await msg.delete()
                     except:
@@ -57,9 +57,7 @@ async def instadown(_, message):
                         await msg.delete()
                         os.remove(x)
                 except:
-                    await msg.edit_text(
-                        "Something went Wrong Contact @MerissaxSupport"
-                    )
+                    await msg.edit_text("Something went Wrong Contact @MerissaxSupport")
     else:
         try:
             response = requests.get(
