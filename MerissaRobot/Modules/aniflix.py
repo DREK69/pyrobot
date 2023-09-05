@@ -100,7 +100,7 @@ async def movie_result(_, CallbackQuery):
     data = {"search": name}
     pageid = requests.post(
         "https://api-amvstrm.nyt92.eu.org/api/v2/search", json=data
-    ).json()["data"][0]["id"]
+    ).json()["results"][0]["id"]
     text = ""
     for episodeId in episodeid:
         episodeid = episodeId["episodeId"]
