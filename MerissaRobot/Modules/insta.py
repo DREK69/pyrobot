@@ -11,6 +11,7 @@ from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, InputMediaVide
 from telegram import InlineKeyboardButton
 
 from MerissaRobot import pbot
+from MerissaRobot.helpers import save_file
 
 instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stories)\/([A-Za-z0-9\-_]*)"
 tiktokregex = r"^https:\/\/(www\.tiktok.com|vm\.tiktok\.com|vt\.tiktok\.com)\/?(.*)"
@@ -47,17 +48,18 @@ async def instadown(_, message):
                     video = requests.get(
                         f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
                     ).json()["links"][0]["url"]
-                    await message.reply_video(video)
-                    await msg.delete()
-                except:
-                    try:
+                    try: 
+                        await message.reply_video(video)
+                        await msg.delete()
+                    except:
                         x = save_file(video, "video.mp4")
                         await message.reply_video(x)
                         await msg.delete()
-                    except:
-                        await msg.edit_text(
-                            "Something went Wrong Contact @MerissaxSupport"
-                        )
+                        os.remove(x)
+                except:
+                    await msg.edit_text(
+                        "Something went Wrong Contact @MerissaxSupport"
+                    )
     else:
         try:
             response = requests.get(
