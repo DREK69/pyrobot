@@ -49,9 +49,13 @@ async def instadown(_, message):
                     ).json()["links"][0]["url"]
                     await message.reply_video(video)
                     await msg.delete()
-                except Exception as e:
-                    print(e)
-                    await msg.edit_text(f"Error: {str(e)}")
+                except:
+                    try:
+                        x = save_file(video, "video.mp4")
+                        await message.reply_video(x)
+                        await msg.delete()
+                    except:                   
+                        await msg.edit_text("Something went Wrong Contact @MerissaxSupport")
     else:
         try:
             response = requests.get(
