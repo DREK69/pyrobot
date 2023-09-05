@@ -16,6 +16,10 @@ tiktokregex = r"^https:\/\/(www\.tiktok.com|vm\.tiktok\.com|vt\.tiktok\.com)\/?(
 snapregex = r"^https:\/\/www\.snapchat\.com\/add"
 fbregex = r"^https:\/\/www\.facebook\.com\/reel\/"
 
+apikey = [
+    "22a34ac86fmsh648c15a7abb6555p1cb539jsn4b193ae50c9f",
+    "81b89ef962msh19a67d63d479365p122483jsn6af26adfd7a5",
+]
 
 @pbot.on_message(filters.regex(instaregex) & filters.incoming & filters.private)
 async def instadown(_, message):
@@ -24,51 +28,99 @@ async def instadown(_, message):
     if "reel" in link:
         try:
             dlink = link.replace("www.instagram.com", "ddinstagram.com")
+            await message.reply_video(dlink)
+            await msg.delete()
         except:
+            try: 
+                response = requests.get(
+                    f"https://igdownloader.onrender.com/dl?key=ashok&url={link}"
+                )
+                data = response.json()
+                dlink = data["urls"][0]
+                await message.reply_video(dlink, caption=data['caption'])
+                await msg.delete()
+            except:
+                try:
+                    key = random.choice(apikey)
+                    posts = requests.get(
+                        f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
+                    ).json()["links"][0]["url"]
+                    await message.reply_video(dlink)
+                    await msg.delete()
+                except:
+                    await msg.edit_text("Something went Wrong contact on supportchat")
+    else:
+        try:
             response = requests.get(
                 f"https://igdownloader.onrender.com/dl?key=ashok&url={link}"
             )
-            dlink = response.json()["urls"][0]
-        await message.reply_video(dlink)
-    else:
-        response = requests.get(
-            f"https://igdownloader.onrender.com/dl?key=ashok&url={link}"
-        )
-        data = response.json()
-        if len(data["urls"]) == 1:
-            for i in data["urls"]:
-                if i == "":
-                    await message.reply_text("failed to Fetch URL")
-                else:
-                    if "mp4" in i:
-                        await message.reply_video(
-                            i, caption=f"{data['caption']}\nUploaded by @MerissaRobot"
+            data = response.json()
+            if len(data["urls"]) == 1:
+                for i in data["urls"]:
+                    if i == "":
+                        await message.reply_text("failed to Fetch URL")
+                    else:
+                        if "mp4" in i:
+                            await message.reply_video(
+                                i, caption=f"{data['caption']}\nUploaded by @MerissaRobot"
+                            )
+                        else:
+                            await message.reply_photo(
+                                i, caption=f"{data['caption']}\nUploaded by @MerissaRobot"
+                            )
+            else:
+                mg = []
+                for post in data:
+                    if post == "":
+                        await message.reply_text("failed to Fetch URL")
+                    elif "mp4" in post:
+                        mg.append(
+                            InputMediaVideo(
+                                post,
+                                caption=f"{data['caption']}\nUploaded by @MerissaRobot",
+                            )
                         )
                     else:
-                        await message.reply_photo(
-                            i, caption=f"{data['caption']}\nUploaded by @MerissaRobot"
+                        mg.append(
+                            InputMediaPhoto(
+                                post,
+                                caption=f"{data['caption']}\nUploaded by @MerissaRobot",
+                            )
                         )
-        else:
-            mg = []
-            for post in data:
-                if post == "":
-                    await message.reply_text("failed to Fetch URL")
-                elif "mp4" in post:
-                    mg.append(
-                        InputMediaVideo(
-                            post,
-                            caption=f"{data['caption']}\nUploaded by @MerissaRobot",
-                        )
+                await message.reply_media_group(mg)
+            await msg.delete()
+        except:
+            key = random.choice(apikey)
+            posts = requests.get(
+                f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
+            ).json()["links"]
+            singlelink = posts[0]
+            if len(posts) == 1:
+                if singlelink["type"] == "video":
+                    await message.reply_video(
+                        singlelink["url"], caption=f"Powered By @MerissaRobot"
                     )
                 else:
-                    mg.append(
-                        InputMediaPhoto(
-                            post,
-                            caption=f"{data['caption']}\nUploaded by @MerissaRobot",
-                        )
+                    await message.reply_photo(
+                        singlelink["url"], caption=f"Powered By @MerissaRobot"
                     )
-            await message.reply_media_group(mg)
-        await msg.delete()
+            else:
+                mg = []
+                for post in posts:
+                    if post["type"] == "video":
+                        mg.append(
+                            InputMediaVideo(
+                                post["url"], caption=f"Powered By @MerissaRobot"
+                            )
+                        )
+                    else:
+                        mg.append(
+                            InputMediaPhoto(
+                                post["url"], caption=f"Powered By @MerissaRobot"
+                            )
+                        )
+                await message.reply_media_group(mg)
+            await msg.delete()
 
 
 @pbot.on_message(filters.regex(fbregex) & filters.incoming & filters.private)
