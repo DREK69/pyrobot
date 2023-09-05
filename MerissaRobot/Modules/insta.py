@@ -44,7 +44,7 @@ async def instadown(_, message):
             except:
                 try:
                     key = random.choice(apikey)
-                    posts = requests.get(
+                    dlink = requests.get(
                         f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
                     ).json()["links"][0]["url"]
                     await message.reply_video(dlink)
