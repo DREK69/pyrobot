@@ -21,7 +21,16 @@ fbregex = r"^https:\/\/www\.facebook\.com\/reel\/"
 async def instadown(_, message):
     link = message.text
     msg = await message.reply_text("Processing...")
-    try:
+    if "reel" in link:
+        try:
+            dlink = link.replace("www.instagram.com", "ddinstagram.com")
+        except:
+            response = requests.get(
+                f"https://igdownloader.onrender.com/dl?key=ashok&url={link}"
+            )
+            dlink = response.json()["urls"][0]
+        await message.reply_video(dlink)
+    else:
         response = requests.get(
             f"https://igdownloader.onrender.com/dl?key=ashok&url={link}"
         )
@@ -60,9 +69,6 @@ async def instadown(_, message):
                     )
             await message.reply_media_group(mg)
         await msg.delete()
-    except Exception as e:
-        print(e)
-        await msg.edit_text(f"Error: {str(e)}")
 
 
 @pbot.on_message(filters.regex(fbregex) & filters.incoming & filters.private)
