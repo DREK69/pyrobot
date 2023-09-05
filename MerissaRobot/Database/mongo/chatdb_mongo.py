@@ -1,5 +1,6 @@
-from MerissaRobot.Database.mongo import db
 from datetime import date
+
+from MerissaRobot.Database.mongo import db
 
 chatdb = db.chatdb
 
