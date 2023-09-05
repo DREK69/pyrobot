@@ -12,7 +12,6 @@ from MerissaRobot import pbot as app
 from MerissaRobot.Database.mongo.chatdb_mongo import chatdb, get_name, increase_count
 
 
-
 @app.on_message(
     ~filters.bot
     & ~filters.forwarded
