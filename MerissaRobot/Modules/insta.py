@@ -44,13 +44,14 @@ async def instadown(_, message):
             except:
                 try:
                     key = random.choice(apikey)
-                    dlink = requests.get(
+                    video = requests.get(
                         f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
                     ).json()["links"][0]["url"]
-                    await message.reply_video(dlink)
+                    await message.reply_video(video)
                     await msg.delete()
-                except:
-                    await msg.edit_text("Something went Wrong contact on supportchat")
+                except Exception as e:
+                    print(e)
+                    await msg.edit_text(f"Error: {str(e)}")
     else:
         try:
             response = requests.get(
