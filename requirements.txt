@@ -94,7 +94,6 @@ TgCrypto
 tswift
 tzlocal
 ujson
-uvloop
 webcolors
 wget
 wikipedia

@@ -1,6 +1,5 @@
 from datetime import date
 
-import uvloop
 from pyrogram import filters
 from pyrogram.types import (
     CallbackQuery,
@@ -12,7 +11,6 @@ from pyrogram.types import (
 from MerissaRobot import pbot as app
 from MerissaRobot.Database.mongo.chatdb_mongo import chatdb, get_name, increase_count
 
-uvloop.install()
 
 
 @app.on_message(
@@ -77,7 +75,7 @@ async def show_top_today(_, message: Message):
     )
 
 
-@app.on_callback_query(filters.regex("overall"))
+@app.on_callback_query(filters.regex("^overall"))
 async def show_top_overall_callback(_, query: CallbackQuery):
     print("overall top in", query.message.chat.id)
     chat = chatdb.find_one({"chat": query.message.chat.id})
