@@ -459,37 +459,6 @@ async def _pay(client, message):
     )
 
 
-@app.on_message(filters.command(["top", "leaderboard"]))
-async def _top(client, message):
-    x = gamesdb.find().sort("coins", pymongo.DESCENDING)
-    msg = "**📈 GLOBAL LEADERBOARD | 🌍**\n\n"
-    counter = 1
-    for i in await x.to_list(length=None):
-        if counter == 11:
-            break
-        if i["coins"] == 0:
-            pass
-        else:
-            user_name = i["username"]
-            link = f"[{user_name}](https://t.me/{user_name})"
-            if not user_name:
-                user_name = i["user_id"]
-                try:
-                    link = (await app.get_users(user_name)).mention
-                except Exception as e:
-                    print(e)
-                    link = user_name
-
-            coins = i["coins"]
-            if counter == 1:
-                msg += f"{counter:02d}.**👑 {link}** ⪧ {coins:,}\n"
-
-            else:
-                msg += f"{counter:02d}.**👤 {link}** ⪧ {coins:,}\n"
-            counter += 1
-    await message.reply(msg, disable_web_page_preview=True)
-
-
 @app.on_message(filters.command(["bal", "balance", "dalcs"]))
 async def _bal(client, message):
     user = message.from_user
