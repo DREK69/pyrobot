@@ -2,7 +2,6 @@ import asyncio
 import datetime
 import random
 
-import pymongo
 from pyrogram import filters
 
 from MerissaRobot import DEV_USERS as SUPREME_USERS
