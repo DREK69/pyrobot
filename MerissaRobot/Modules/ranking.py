@@ -1,15 +1,16 @@
-import uvloop
-from pyrogram import Client
-from pyrogram import filters
 from datetime import date
+
+import uvloop
+from pyrogram import filters
 from pyrogram.types import (
-    Message,
     CallbackQuery,
-    InlineKeyboardMarkup,
     InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
 )
+
 from MerissaRobot import pbot as app
-from MerissaRobot.Database.mongo.chatdb_mongo import get_name, increase_count, chatdb
+from MerissaRobot.Database.mongo.chatdb_mongo import chatdb, get_name, increase_count
 
 uvloop.install()
 
@@ -41,16 +42,20 @@ async def show_top_today(_, message: Message):
     today = str(date.today())
 
     if not chat:
-        return await message.reply_text("no data available",
-        reply_markup=InlineKeyboardMarkup(
-            [[InlineKeyboardButton("Overall Ranking", callback_data="overall")]]
-        ),)
+        return await message.reply_text(
+            "no data available",
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("Overall Ranking", callback_data="overall")]]
+            ),
+        )
 
     if not chat.get(today):
-        return await message.reply_text("no data available for today",
-        reply_markup=InlineKeyboardMarkup(
-            [[InlineKeyboardButton("Overall Ranking", callback_data="overall")]]
-        ),)
+        return await message.reply_text(
+            "no data available for today",
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("Overall Ranking", callback_data="overall")]]
+            ),
+        )
 
     t = "🔰 **Today's Top Users :**\n\n"
 
@@ -62,7 +67,7 @@ async def show_top_today(_, message: Message):
         pos += 1
 
     total = sum(chat[today].values())
-    t += f'\n✉️ Today messages: {total}'
+    t += f"\n✉️ Today messages: {total}"
 
     await message.reply_text(
         t,
@@ -85,7 +90,7 @@ async def show_top_overall_callback(_, query: CallbackQuery):
     t = "🔰 **Overall Top Users :**\n\n"
 
     overall_dict = {}
-    total =0
+    total = 0
     for i, k in chat.items():
         if i == "chat" or i == "_id":
             continue
@@ -97,7 +102,6 @@ async def show_top_overall_callback(_, query: CallbackQuery):
                 overall_dict[j] += l
 
         total += sum(k.values())
-    
 
     pos = 1
     for i, k in sorted(overall_dict.items(), key=lambda x: x[1], reverse=True)[:10]:
@@ -106,7 +110,7 @@ async def show_top_overall_callback(_, query: CallbackQuery):
         t += f"**{pos}.** {i} - {k}\n"
         pos += 1
 
-    t += f'\n✉️ Today messages: {total}'
+    t += f"\n✉️ Today messages: {total}"
 
     await query.message.edit_text(
         t,
@@ -139,10 +143,8 @@ async def show_top_today_callback(_, query: CallbackQuery):
         t += f"**{pos}.** {i} - {k}\n"
         pos += 1
 
-
     total = sum(chat[today].values())
-    t += f'\n✉️ Today messages: {total}'
-
+    t += f"\n✉️ Today messages: {total}"
 
     await query.message.edit_text(
         t,
