@@ -21,6 +21,7 @@ apikey = [
     "81b89ef962msh19a67d63d479365p122483jsn6af26adfd7a5",
 ]
 
+
 @pbot.on_message(filters.regex(instaregex) & filters.incoming & filters.private)
 async def instadown(_, message):
     link = message.text
@@ -31,13 +32,13 @@ async def instadown(_, message):
             await message.reply_video(dlink)
             await msg.delete()
         except:
-            try: 
+            try:
                 response = requests.get(
                     f"https://igdownloader.onrender.com/dl?key=ashok&url={link}"
                 )
                 data = response.json()
                 dlink = data["urls"][0]
-                await message.reply_video(dlink, caption=data['caption'])
+                await message.reply_video(dlink, caption=data["caption"])
                 await msg.delete()
             except:
                 try:
@@ -62,11 +63,13 @@ async def instadown(_, message):
                     else:
                         if "mp4" in i:
                             await message.reply_video(
-                                i, caption=f"{data['caption']}\nUploaded by @MerissaRobot"
+                                i,
+                                caption=f"{data['caption']}\nUploaded by @MerissaRobot",
                             )
                         else:
                             await message.reply_photo(
-                                i, caption=f"{data['caption']}\nUploaded by @MerissaRobot"
+                                i,
+                                caption=f"{data['caption']}\nUploaded by @MerissaRobot",
                             )
             else:
                 mg = []
