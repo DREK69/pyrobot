@@ -54,8 +54,10 @@ async def instadown(_, message):
                         x = save_file(video, "video.mp4")
                         await message.reply_video(x)
                         await msg.delete()
-                    except:                   
-                        await msg.edit_text("Something went Wrong Contact @MerissaxSupport")
+                    except:
+                        await msg.edit_text(
+                            "Something went Wrong Contact @MerissaxSupport"
+                        )
     else:
         try:
             response = requests.get(
