@@ -8,6 +8,7 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     InlineKeyboardButton,
 )
+from MerissaRobot import pbot as app
 from MerissaRobot.Database.mongo.chatdb_mongo import get_name, increase_count, chatdb
 
 uvloop.install()
@@ -32,7 +33,7 @@ async def inc_user(_, message: Message):
     user = message.from_user.id
     increase_count(chat, user)
     print(chat, user, "increased")
-    
+
 
 async def show_top_today(_, message: Message):
     print("today top in", message.chat.id)
