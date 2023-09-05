@@ -2,6 +2,7 @@ from MerissaRobot.Database.mongo import db
 
 chatdb = db.chatdb
 
+
 def increase_count(chat, user):
     user = str(user)
     today = str(date.today())
