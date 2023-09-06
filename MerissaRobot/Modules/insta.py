@@ -44,20 +44,30 @@ async def instadown(_, message):
                 await msg.delete()
             except:
                 try:
-                    key = random.choice(apikey)
-                    video = requests.get(
-                        f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
-                    ).json()["links"][0]["url"]
+                    response = requests.get(f"https://api.princexd.tech/instadown?link={link}").json()
                     try:
-                        await message.reply_video(video)
-                        await msg.delete()
+                        await message.reply_video(response['media'][0], caption="Downloaded By @MerissaRobot")
                     except:
                         x = save_file(video, "video.mp4")
                         await message.reply_video(x)
                         await msg.delete()
                         os.remove(x)
                 except:
-                    await msg.edit_text("Something went Wrong Contact @MerissaxSupport")
+                    try:
+                        key = random.choice(apikey)
+                        video = requests.get(
+                            f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
+                        ).json()["links"][0]["url"]
+                        try:
+                            await message.reply_video(video)
+                            await msg.delete()
+                        except:
+                            x = save_file(video, "video.mp4")
+                            await message.reply_video(x)
+                            await msg.delete()
+                            os.remove(x)
+                    except:
+                        await msg.edit_text("Something went Wrong Contact @MerissaxSupport")
     else:
         try:
             response = requests.get(
@@ -72,12 +82,12 @@ async def instadown(_, message):
                         if "mp4" in i:
                             await message.reply_video(
                                 i,
-                                caption=f"{data['caption']}\nUploaded by @MerissaRobot",
+                                caption=f"{data['caption']}\nDownloaded by @MerissaRobot",
                             )
                         else:
                             await message.reply_photo(
                                 i,
-                                caption=f"{data['caption']}\nUploaded by @MerissaRobot",
+                                caption=f"{data['caption']}\nDownloaded by @MerissaRobot",
                             )
             else:
                 mg = []
@@ -88,50 +98,82 @@ async def instadown(_, message):
                         mg.append(
                             InputMediaVideo(
                                 post,
-                                caption=f"{data['caption']}\nUploaded by @MerissaRobot",
+                                caption=f"{data['caption']}\nDownloaded by @MerissaRobot",
                             )
                         )
                     else:
                         mg.append(
                             InputMediaPhoto(
                                 post,
-                                caption=f"{data['caption']}\nUploaded by @MerissaRobot",
+                                caption=f"{data['caption']}\nDownloaded by @MerissaRobot",
                             )
                         )
                 await message.reply_media_group(mg)
             await msg.delete()
         except:
-            key = random.choice(apikey)
-            posts = requests.get(
-                f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
-            ).json()["links"]
-            singlelink = posts[0]
-            if len(posts) == 1:
-                if singlelink["type"] == "video":
-                    await message.reply_video(
-                        singlelink["url"], caption=f"Powered By @MerissaRobot"
-                    )
-                else:
-                    await message.reply_photo(
-                        singlelink["url"], caption=f"Powered By @MerissaRobot"
-                    )
-            else:
-                mg = []
-                for post in posts:
-                    if post["type"] == "video":
-                        mg.append(
-                            InputMediaVideo(
-                                post["url"], caption=f"Powered By @MerissaRobot"
-                            )
+            try:
+                posts = requests.get(
+                    f"https://api.princexd.tech/instadown?link={link}"
+                ).json()["media"]
+                singlelink = posts[0]
+                if len(posts) == 1:
+                    if 'mp4' in singlelink:
+                        await message.reply_video(
+                            singlelink, caption="Downloaded By @MerissaRobot"
                         )
                     else:
-                        mg.append(
-                            InputMediaPhoto(
-                                post["url"], caption=f"Powered By @MerissaRobot"
-                            )
+                        await message.reply_photo(
+                            singlelink, caption="Downloaded By @MerissaRobot"
                         )
-                await message.reply_media_group(mg)
-            await msg.delete()
+                else:
+                    mg = []
+                    for post in posts:
+                        if 'mp4' in post:
+                            mg.append(
+                                InputMediaVideo(
+                                    post, caption="Downloaded By @MerissaRobot"
+                                )
+                            )
+                        else:
+                            mg.append(
+                                InputMediaPhoto(
+                                    post, caption="Downloaded By @MerissaRobot"
+                                )
+                            )
+                    await message.reply_media_group(mg)
+                await msg.delete()
+            except:
+                key = random.choice(apikey)
+                posts = requests.get(
+                    f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
+                ).json()["links"]
+                singlelink = posts[0]
+                if len(posts) == 1:
+                    if singlelink["type"] == "video":
+                        await message.reply_video(
+                        singlelink["url"], caption=f"Downloaded By @MerissaRobot"
+                        )
+                    else:
+                        await message.reply_photo(
+                            singlelink["url"], caption=f"Downloaded By @MerissaRobot"
+                        )
+                else:
+                    mg = []
+                    for post in posts:
+                        if post["type"] == "video":
+                            mg.append(
+                                InputMediaVideo(
+                                    post["url"], caption=f"Downloaded By @MerissaRobot"
+                                )
+                            )
+                        else:
+                            mg.append(
+                                InputMediaPhoto(
+                                    post["url"], caption=f"Downloaded By @MerissaRobot"
+                                )
+                            )
+                    await message.reply_media_group(mg)
+                await msg.delete()
 
 
 @pbot.on_message(filters.regex(fbregex) & filters.incoming & filters.private)
