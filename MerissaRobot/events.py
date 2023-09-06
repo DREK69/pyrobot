@@ -2,7 +2,6 @@ import inspect
 import re
 from pathlib import Path
 
-from pymongo import MongoClient
 from telethon import events
 
 from MerissaRobot import telethn
