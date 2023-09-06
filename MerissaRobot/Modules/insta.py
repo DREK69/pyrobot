@@ -53,7 +53,9 @@ async def instadown(_, message):
                         )
                     except:
                         x = save_file(video, "video.mp4")
-                        await message.reply_video(x, caption="Downloaded By @MerissaRobot")
+                        await message.reply_video(
+                            x, caption="Downloaded By @MerissaRobot"
+                        )
                         await msg.delete()
                         os.remove(x)
                 except:
@@ -101,11 +103,7 @@ async def instadown(_, message):
                     if post == "":
                         await message.reply_text("failed to Fetch URL")
                     elif "mp4" in post:
-                        mg.append(
-                            InputMediaVideo(
-                                post
-                            )
-                        )
+                        mg.append(InputMediaVideo(post))
                     else:
                         mg.append(
                             InputMediaPhoto(
@@ -134,11 +132,7 @@ async def instadown(_, message):
                     mg = []
                     for post in posts:
                         if "jpg" in post:
-                            mg.append(
-                                InputMediaPhoto(
-                                    post
-                                )
-                            )
+                            mg.append(InputMediaPhoto(post))
                         else:
                             mg.append(
                                 InputMediaVideo(
@@ -166,11 +160,7 @@ async def instadown(_, message):
                     mg = []
                     for post in posts:
                         if post["type"] == "video":
-                            mg.append(
-                                InputMediaVideo(
-                                    post["url"]
-                                )
-                            )
+                            mg.append(InputMediaVideo(post["url"]))
                         else:
                             mg.append(
                                 InputMediaPhoto(
