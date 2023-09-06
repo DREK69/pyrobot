@@ -22,3 +22,4 @@ def rename(_, message):
         x.edit("📤 Uploading.....")
         message.reply_document(path)
         os.remove(path)
+        x.delete()
