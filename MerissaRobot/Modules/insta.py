@@ -54,7 +54,7 @@ async def instadown(_, message):
                     except:
                         x = save_file(video, "video.mp4")
                         await message.reply_video(
-                            x, caption="Downloaded By @MerissaRobot"
+                            x, caption="Uploaded By @MerissaRobot"
                         )
                         await msg.delete()
                         os.remove(x)
@@ -69,7 +69,9 @@ async def instadown(_, message):
                             await msg.delete()
                         except:
                             x = save_file(video, "video.mp4")
-                            await message.reply_video(x)
+                            await message.reply_video(x,
+                                caption="Downloaded By @MerissaRobot"
+                            )
                             await msg.delete()
                             os.remove(x)
                     except:
