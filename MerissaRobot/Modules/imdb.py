@@ -32,7 +32,7 @@ async def imdb(_, message):
                 [
                     InlineKeyboardButton(
                         text="Next Result ➡",
-                        callback_data=f"imnext|{query}|1,
+                        callback_data=f"imnext|{query}|1",
                     ),
                 ],
                 [
