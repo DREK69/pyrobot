@@ -5,11 +5,9 @@ from pathlib import Path
 from pymongo import MongoClient
 from telethon import events
 
-from MerissaRobot import MONGO_DB_URI, telethn
+from MerissaRobot import telethn
+from MerissaRobot.Database.mongo import db
 
-client = MongoClient()
-client = MongoClient(MONGO_DB_URI)
-db = client["MerissaRobot"]
 gbanned = db.gban
 
 
