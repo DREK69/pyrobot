@@ -121,10 +121,33 @@ async def instadown(_, message):
                 posts = requests.get(
                     f"https://api.princexd.tech/instadown?link={link}"
                 ).json()["media"]
-                for singlelink in posts:
-                    await message.reply_document(
-                        singlelink, caption="Downloaded By @MerissaRobot"
-                    )
+                singlelink = posts[0]
+                if len(posts) == 1:
+                    if "jpg" in singlelink:
+                        await message.reply_photo(
+                            singlelink, caption="Downloaded By @MerissaRobot"
+                        )
+                    else:
+                        await message.reply_video(
+                            singlelink, caption="Downloaded By @MerissaRobot"
+                        )
+                else:
+                    mg = []
+                    for post in posts:
+                        if "jpg" in post:
+                            mg.append(
+                                InputMediaPhoto(
+                                    post, caption=f"Downloaded By @MerissaRobot"
+                                )
+                            )
+                        else:
+                            mg.append(
+                                InputMediaVideo(
+                                    post, caption=f"Downloaded By @MerissaRobot"
+                                )
+                            )
+                    await message.reply_media_group(mg)
+                await msg.delete()
             except:
                 key = random.choice(apikey)
                 posts = requests.get(
