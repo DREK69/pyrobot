@@ -53,7 +53,7 @@ async def instadown(_, message):
                         )
                     except:
                         x = save_file(video, "video.mp4")
-                        await message.reply_video(x)
+                        await message.reply_video(x, caption="Downloaded By @MerissaRobot")
                         await msg.delete()
                         os.remove(x)
                 except:
@@ -103,8 +103,7 @@ async def instadown(_, message):
                     elif "mp4" in post:
                         mg.append(
                             InputMediaVideo(
-                                post,
-                                caption=f"{data['caption']}\nDownloaded by @MerissaRobot",
+                                post
                             )
                         )
                     else:
@@ -137,13 +136,13 @@ async def instadown(_, message):
                         if "jpg" in post:
                             mg.append(
                                 InputMediaPhoto(
-                                    post, caption=f"Uploaded By @MerissaRobot"
+                                    post
                                 )
                             )
                         else:
                             mg.append(
                                 InputMediaVideo(
-                                    post, caption=f"Uploaded By @MerissaRobot"
+                                    post, caption="Uploaded By @MerissaRobot"
                                 )
                             )
                     await message.reply_media_group(mg)
@@ -169,7 +168,7 @@ async def instadown(_, message):
                         if post["type"] == "video":
                             mg.append(
                                 InputMediaVideo(
-                                    post["url"], caption=f"Downloaded By @MerissaRobot"
+                                    post["url"]
                                 )
                             )
                         else:
