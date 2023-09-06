@@ -44,9 +44,13 @@ async def instadown(_, message):
                 await msg.delete()
             except:
                 try:
-                    response = requests.get(f"https://api.princexd.tech/instadown?link={link}").json()
+                    response = requests.get(
+                        f"https://api.princexd.tech/instadown?link={link}"
+                    ).json()
                     try:
-                        await message.reply_video(response['media'][0], caption="Downloaded By @MerissaRobot")
+                        await message.reply_video(
+                            response["media"][0], caption="Downloaded By @MerissaRobot"
+                        )
                     except:
                         x = save_file(video, "video.mp4")
                         await message.reply_video(x)
@@ -67,7 +71,9 @@ async def instadown(_, message):
                             await msg.delete()
                             os.remove(x)
                     except:
-                        await msg.edit_text("Something went Wrong Contact @MerissaxSupport")
+                        await msg.edit_text(
+                            "Something went Wrong Contact @MerissaxSupport"
+                        )
     else:
         try:
             response = requests.get(
@@ -117,7 +123,7 @@ async def instadown(_, message):
                 ).json()["media"]
                 singlelink = posts[0]
                 if len(posts) == 1:
-                    if 'mp4' in singlelink:
+                    if "mp4" in singlelink:
                         await message.reply_video(
                             singlelink, caption="Downloaded By @MerissaRobot"
                         )
@@ -128,7 +134,7 @@ async def instadown(_, message):
                 else:
                     mg = []
                     for post in posts:
-                        if 'mp4' in post:
+                        if "mp4" in post:
                             mg.append(
                                 InputMediaVideo(
                                     post, caption="Downloaded By @MerissaRobot"
@@ -151,7 +157,7 @@ async def instadown(_, message):
                 if len(posts) == 1:
                     if singlelink["type"] == "video":
                         await message.reply_video(
-                        singlelink["url"], caption=f"Downloaded By @MerissaRobot"
+                            singlelink["url"], caption=f"Downloaded By @MerissaRobot"
                         )
                     else:
                         await message.reply_photo(
