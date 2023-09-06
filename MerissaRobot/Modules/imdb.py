@@ -126,6 +126,7 @@ async def ymnext_query(client, callbackquery):
                         InlineKeyboardButton(
                             text="Stream",
                             url=f"https://api.princexd.tech/stream?imdbid={url['imdbId']}",
+                        ),
                     ],
                     [
                         InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
@@ -166,6 +167,7 @@ async def ymnext_query(client, callbackquery):
                         InlineKeyboardButton(
                             text="Stream",
                             url=f"https://api.princexd.tech/stream?imdbid={url['imdbId']}",
+                        ),
                     ],
                     [
                         InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
