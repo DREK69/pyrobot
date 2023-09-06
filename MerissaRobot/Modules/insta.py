@@ -46,13 +46,14 @@ async def instadown(_, message):
                 try:
                     response = requests.get(
                         f"https://api.princexd.tech/instadown?link={link}"
-                    ).json()
+                    ).json()["media"][0]
                     try:
                         await message.reply_video(
-                            response["media"][0], caption="Downloaded By @MerissaRobot"
+                            response, caption="Downloaded By @MerissaRobot"
                         )
+                        await msg.delete()
                     except:
-                        x = save_file(video, "video.mp4")
+                        x = save_file(response, "video.mp4")
                         await message.reply_video(
                             x, caption="Uploaded By @MerissaRobot"
                         )
