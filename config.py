@@ -27,13 +27,7 @@ JOIN_LOGGER = os.environ.get("JOIN_LOGGER", "-1001325865052")
 OWNER_USERNAME = os.environ.get("OWNER_USERNAME", "NoobxCoder")
 DB_URL = os.environ.get(
     "DATABASE_URL",
-    "postgres://mnhstyfd:H_v1tOXElHq6Lg_BXPpOyVL_08sRqlVj@heffalump.db.elephantsql.com/mnhstyfd",
-)
-DB_URI = DB_URL.replace("postgres://", "postgresql://", 1)
-REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", "")
-MONGO_DB_URI = os.environ.get(
-    "MONGO_DB_URI",
-    "mongodb+srv://merissa:merissa@cluster0.tuhlo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "postgres://mnhstyfd:cRMS80LPYDB32Q27_2Xk-_K3a5rf5s_-@heffalump.db.elephantsql.com/mnhstyfd",
 )
 DONATION_LINK = os.environ.get("DONATION_LINK", "https://t.me/noobxcoder")
 LOAD = os.environ.get("LOAD", "").split()
