@@ -137,13 +137,13 @@ async def instadown(_, message):
                         if "jpg" in post:
                             mg.append(
                                 InputMediaPhoto(
-                                    post, caption=f"Downloaded By @MerissaRobot"
+                                    post, caption=f"Uploaded By @MerissaRobot"
                                 )
                             )
                         else:
                             mg.append(
                                 InputMediaVideo(
-                                    post, caption=f"Downloaded By @MerissaRobot"
+                                    post, caption=f"Uploaded By @MerissaRobot"
                                 )
                             )
                     await message.reply_media_group(mg)
