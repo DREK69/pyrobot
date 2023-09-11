@@ -203,7 +203,6 @@ async def callback_query(client, query):
     result = search["data"][0]
     title = result["name"]
     dur = result["duration"]
-    result["image"][2]["link"]
     artist = result["primaryArtists"]
     album = result["album"]["name"]
     thumbnail = await query.message.download()
@@ -215,11 +214,11 @@ async def callback_query(client, query):
     audio["\xa9ART"] = artist
     audio.save()
     embed_album_art(thumbnail, file)
-    query = f"{title} - {artist}"
+    capt = f"{title} - {artist}"
     med = InputMediaAudio(
         file,
         thumb=thumbnail,
-        caption=query,
+        caption=capt,
         title=title,
         performer=artist,
         duration=int(dur),
