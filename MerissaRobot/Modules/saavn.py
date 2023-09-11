@@ -222,7 +222,7 @@ async def callback_query(client, query):
         performer=artist,
         duration=int(dur),
     )
-    query = f"{title} {performer}"
+    query = f"{title} {artist}"
     try:
         lyrics = requests.get(
             f"https://editor-choice-api.vercel.app/lyrics?query={query}"
