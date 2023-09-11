@@ -474,37 +474,20 @@ async def audio_query(client, callbackquery):
         performer=artist,
         duration=int(info_dict["duration"]),
     )
-    lyr = requests.get(
-        f"https://editor-choice-api.vercel.app/lyrics?query={query}"
-    ).json()
-    if lyr["error"] == False:
-        link = lyr["url"]
-        button = InlineKeyboardMarkup(
-            [[InlineKeyboardButton(text="🎵 Lyrics", url=link)]]
+    button = InlineKeyboardMarkup(
+            [[InlineKeyboardButton(text="🎵 Lyrics", callback_data="lyrics")]]
+    )
+    try:
+        await m.edit(
+                "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
         )
-        try:
-            await m.edit(
-                "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
-            )
 
-            await client.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
-            await callbackquery.edit_message_media(media=med, reply_markup=button)
-        except Exception as error:
-            await callbackquery.edit_message_text(
+        await client.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
+        await callbackquery.edit_message_media(media=med, reply_markup=button)
+    except Exception as error:
+        await callbackquery.edit_message_text(
                 f"Something happened!\n<i>{error}</i>"
-            )
-    else:
-        try:
-            await m.edit(
-                "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
-            )
-
-            await client.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
-            await callbackquery.edit_message_media(media=med)
-        except Exception as error:
-            await callbackquery.edit_message_text(
-                f"Something happened!\n<i>{error}</i>"
-            )
+        )
     os.remove(thumb)
     os.remove(audio_file)
 
