@@ -577,16 +577,19 @@ async def lyrics(client, message):
     except:
         await message.reply_text("Lyrics Not Found")
 
+
 @Client.on_callback_query(filters.regex("^lyrics"))
 async def lyrics_cb(bot, query):
     if query.from_user.id != query.message.reply_to_message.from_user.id:
-        return await query.answer("Search and download a song by using /song [song name]", show_alert=True)
+        return await query.answer(
+            "Search and download a song by using /song [song name]", show_alert=True
+        )
     qur = query.message.caption
     q = qur.replace("- ", "")
     if "," in q:
-        slyrics = q.split(",")[0]
+        q.split(",")[0]
     else:
-        slyrics = q
+        pass
     await query.answer("Getting lyrics...", show_alert=True)
     lyr = requests.get(f"https://editor-choice-api.vercel.app/lyrics?query={q}").json()
     if not lyr["error"]:
@@ -600,5 +603,13 @@ async def lyrics_cb(bot, query):
         )
         await query.message.edit_reply_markup(button)
     else:
-        button = InlineKeyboardMarkup([[InlineKeyboardButton("Sorry, Not Found.", callback_data="_LYR_NOT_FOUND")]])
+        button = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "Sorry, Not Found.", callback_data="_LYR_NOT_FOUND"
+                    )
+                ]
+            ]
+        )
         await query.message.edit_reply_markup(button)
