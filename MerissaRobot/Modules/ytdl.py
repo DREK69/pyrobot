@@ -475,19 +475,17 @@ async def audio_query(client, callbackquery):
         duration=int(info_dict["duration"]),
     )
     button = InlineKeyboardMarkup(
-            [[InlineKeyboardButton(text="🎵 Lyrics", callback_data="lyrics")]]
+        [[InlineKeyboardButton(text="🎵 Lyrics", callback_data="lyrics")]]
     )
     try:
         await m.edit(
-                "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
+            "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
         )
 
         await client.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
         await callbackquery.edit_message_media(media=med, reply_markup=button)
     except Exception as error:
-        await callbackquery.edit_message_text(
-                f"Something happened!\n<i>{error}</i>"
-        )
+        await callbackquery.edit_message_text(f"Something happened!\n<i>{error}</i>")
     os.remove(thumb)
     os.remove(audio_file)
 
