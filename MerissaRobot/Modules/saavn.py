@@ -215,16 +215,17 @@ async def callback_query(client, query):
     audio["\xa9ART"] = artist
     audio.save()
     embed_album_art(thumbnail, file)
+    query = f"{title} {artist}"
     med = InputMediaAudio(
         file,
         thumb=thumbnail,
+        caption=query,
         title=title,
         performer=artist,
         duration=int(dur),
     )
-    query = f"{title} {artist}"
     button = InlineKeyboardMarkup(
-        [[InlineKeyboardButton(text="🎵 Lyrics", callback_data="okay")]]
+        [[InlineKeyboardButton(text="🎵 Lyrics", callback_data="lyrics")]]
     )
     await m.edit("Uploading Started\n\nUpload Speed could be slow. Please hold on..")
     await pbot.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
