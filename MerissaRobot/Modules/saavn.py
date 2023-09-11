@@ -224,11 +224,9 @@ async def callback_query(client, query):
     )
     query = f"{title} {artist}"
     button = InlineKeyboardMarkup(
-            [[InlineKeyboardButton(text="🎵 Lyrics", callback_data="okay")]]
-        )
-    await m.edit(
-            "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
-        )
+        [[InlineKeyboardButton(text="🎵 Lyrics", callback_data="okay")]]
+    )
+    await m.edit("Uploading Started\n\nUpload Speed could be slow. Please hold on..")
     await pbot.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
     await query.edit_message_media(media=med, reply_markup=button)
     os.remove(file)
