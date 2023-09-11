@@ -215,7 +215,7 @@ async def callback_query(client, query):
     audio["\xa9ART"] = artist
     audio.save()
     embed_album_art(thumbnail, file)
-    query = f"{title} {artist}"
+    query = f"{title} - {artist}"
     med = InputMediaAudio(
         file,
         thumb=thumbnail,
