@@ -223,27 +223,13 @@ async def callback_query(client, query):
         duration=int(dur),
     )
     query = f"{title} {artist}"
-    try:
-        lyrics = requests.get(
-            f"https://editor-choice-api.vercel.app/lyrics?query={query}"
-        ).json()["url"]
-        link = lyrics.replace("https://telegra.ph", "https://graph.org")
-        button = InlineKeyboardMarkup(
-            [[InlineKeyboardButton(text="🎵 Lyrics", url=link)]]
+    button = InlineKeyboardMarkup(
+            [[InlineKeyboardButton(text="🎵 Lyrics", callback_data="okay")]]
         )
-        await m.edit(
+    await m.edit(
             "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
         )
-        await pbot.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
-        await query.edit_message_media(media=med, reply_markup=button)
-        os.remove(file)
-        os.remove(thumbnail)
-    except KeyError:
-        try:
-            await m.edit(
-                "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
-            )
-            await pbot.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
-            await query.edit_message_media(media=med)
-        except Exception as error:
-            await query.edit_message_text(f"Something happened!\n<i>{error}</i>")
+    await pbot.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
+    await query.edit_message_media(media=med, reply_markup=button)
+    os.remove(file)
+    os.remove(thumbnail)
