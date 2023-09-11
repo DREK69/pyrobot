@@ -561,10 +561,6 @@ async def lyrics(client, message):
 
 @Client.on_callback_query(filters.regex("^lyrics"))
 async def lyrics_cb(bot, query):
-    if query.from_user.id != query.message.reply_to_message.from_user.id:
-        return await query.answer(
-            "Search and download a song by using /song [song name]", show_alert=True
-        )
     qur = query.message.caption
     q = qur.replace("- ", "")
     if "," in q:
