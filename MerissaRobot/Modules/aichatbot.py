@@ -12,12 +12,15 @@ async def ask(_, message):
         )
     m = await message.reply_text("Wait a moment looking for your answer..")
     query = message.text.split(None, 1)[1]
-    json = {
-        "message": query,
-        "chat_mode": "assistant",
-        "dialog_messages": '[{"bot":"Merissa","user":"Prince"}]',
-    }
-    x = post("https://api.safone.me/chatgpt", data=json).json()["message"]
+    try:
+        json = {
+            "message": query,
+            "chat_mode": "assistant",
+            "dialog_messages": '[{"bot":"Merissa","user":"Prince"}]',
+        }
+        x = post("https://api.safone.me/chatgpt", data=json).json()["message"]
+    except:
+        x = "Something went wrong"
     await m.edit(x, disable_web_page_preview=True)
 
 
@@ -32,7 +35,7 @@ async def bard_chatbot(_, message):
         "Wait a moment looking for your answer..", quote=True
     )
     try:
-        req = get(f"https://yasirapi.eu.org/bard?input={text}").json()["content"]
-        await msg.edit_text(req)
-    except Exception as e:
-        await msg.edit_text(str(e))
+        x = get(f"https://yasirapi.eu.org/bard?input={text}").json()["content"]
+    except:
+        x = "Something went wrong"
+    await msg.edit_text(x)
