@@ -1,6 +1,6 @@
 import os
 
-TOKEN = os.environ.get("TOKEN", "5294959338:AAH2-iWEv4B6hEsXw7dtgVzXp-Hiw7qTLbE")
+TOKEN = os.environ.get("TOKEN", "5294959338:AAGYVu5Iv8n4HmBnMLMtT5YhAwHoXZAa6Tg")
 INFOPIC = bool(os.environ.get("INFOPIC", True))
 BOT_USERNAME = os.environ.get("BOT_USERNAME", "MerissaRobot")
 EVENT_LOGS = os.environ.get("EVENT_LOGS", "-1001325865052")
@@ -27,7 +27,7 @@ JOIN_LOGGER = os.environ.get("JOIN_LOGGER", "-1001325865052")
 OWNER_USERNAME = os.environ.get("OWNER_USERNAME", "NoobxCoder")
 DB_URL = os.environ.get(
     "DATABASE_URL",
-    "postgres://mnhstyfd:cRMS80LPYDB32Q27_2Xk-_K3a5rf5s_-@heffalump.db.elephantsql.com/mnhstyfd",
+    "postgres://default:78rWBpeVFJLz@ep-crimson-haze-80698806.us-east-1.postgres.vercel-storage.com:5432/verceldb",
 )
 DB_URI = DB_URL.replace("postgres://", "postgresql://", 1)
 REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", "")
