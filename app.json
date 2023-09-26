@@ -1,5 +1,5 @@
 {
-      "name": "InnexiaBot",
+      "name": "MerissaRobot",
       "description": "A Powerful  Telegram group management bot with anime theme.",
       "keywords": [
          "telegram",
@@ -131,11 +131,6 @@
          "required": false,
          "value": ""
      },
-        "ARQ_API_KEY": {
-            "description": "Get this from @ARQRobot.",
-            "required": true
-        },
-
       "SPAMWATCH_API": {
          "description": "Spamwatch API Token, Get one from @SpamWatchBot.",
          "required": false,
