@@ -40,6 +40,7 @@ MESSAGE_DUMP_CHAT = EVENT_LOGS
 
 arq = ""
 
+
 async def fetch(url):
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
