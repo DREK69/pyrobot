@@ -11,7 +11,6 @@ from aiohttp import ClientSession
 from pyrogram import Client, errors
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 from pyrogram.types import Message
-from Python_ARQ import ARQ
 from redis import StrictRedis
 from telethon import TelegramClient
 from telethon.sessions import MemorySession, StringSession
@@ -147,9 +146,6 @@ pbot = Client(
 BOT_ID = dispatcher.bot.id
 BOT_USERNAME = dispatcher.bot.username
 BOT_NAME = dispatcher.bot.first_name
-
-arq = ARQ("https://arq.hamker.dev", "IXJDNK-GURMUL-HPGZYX-TPJKKT-ARQ", aiohttpsession)
-
 
 async def eor(msg: Message, **kwargs):
     func = msg.edit_text if msg.from_user.is_self else msg.reply
