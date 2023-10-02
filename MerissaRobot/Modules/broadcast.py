@@ -11,40 +11,28 @@ from MerissaRobot.Database.sql.users_sql import get_all_chats, get_all_users
     filters.command(["broadcastall", "broadcastgroups", "broadcastusers"])
     & filters.user(OWNER_ID)
 )
-async def broadcast(_, message):
+async def broadcast(_, message):  
+    okay = message.text.split(None, 1)
     if message.reply_to_message:
         x = message.reply_to_message.id
         y = message.chat.id
+    else:      
+        query = okay[1]
+    if len(okay) >= 2:
+        return await message.reply_text("Please add something")
     else:
-        if len(message.command) < 2:
-            return await message.reply_text(
-                "**Usage**:\n/broadcast [MESSAGE] or [Reply to a Message]"
-            )
-    to_send = message.text.split(None, 1)
-    if len(to_send) >= 2:
-        to_group = False
-        to_user = False
-        if to_send[0] == "/broadcastgroups":
+        if message.command[0] == "/broadcastgroups":
             to_group = True
-        if to_send[0] == "/broadcastusers":
+        if message.command[0] == "/broadcastusers":
             to_user = True
         else:
             to_group = to_user = True
-        if message.reply_to_message:
-            x = message.reply_to_message.id
-            y = message.chat.id
-        else:
-            if len(message.command) < 2:
-                return await message.reply_text(
-                    "**Usage**:\n/broadcast [MESSAGE] or [Reply to a Message]"
-                )
-        query = to_send[1]
         sent_group = 0
         sent_user = 0
         chats = get_all_chats() or []
         users = get_all_users()
         broadcast = await message.reply_text(
-            "**Usage**:\n/broadcast [MESSAGE] or [Reply to a Message]"
+            "**Broadcasting Message Started...**"
         )
         if to_group:
             for chat in chats:
