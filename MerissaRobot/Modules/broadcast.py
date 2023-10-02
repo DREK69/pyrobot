@@ -17,9 +17,12 @@ async def broadcast(_, message):
         x = message.reply_to_message.id
         y = message.chat.id
     else:
-        query = okay[1]
-    if len(okay) < 2:
-        return await message.reply_text("Please add something")
+        if len(okay) < 2:
+            return await message.reply_text(
+                "**Usage**:\n/broadcast [MESSAGE] or [Reply to a Message]"
+            )
+        else:
+            query = okay[1]
     else:
         if message.command[0] == "/broadcastgroups":
             to_group = True
