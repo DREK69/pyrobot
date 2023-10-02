@@ -8,7 +8,7 @@ from MerissaRobot.Database.sql.users_sql import get_all_chats, get_all_users
 
 
 @pbot.on_message(
-    filters.command(["broadcastall", "broadcastgroups", "broadcastusers"])
+    filters.command(["broadcast", "broadcastgroups", "broadcastusers"])
     & filters.user(OWNER_ID)
 )
 async def broadcast(_, message):
@@ -22,9 +22,9 @@ async def broadcast(_, message):
                 "**Usage**:\n/broadcast [MESSAGE] or [Reply to a Message]"
             )
         query = okay[1]
-    if message.command[0] == "/broadcastgroups":
+    if okay[0] == "/broadcastgroups":
         to_group = True
-    if message.command[0] == "/broadcastusers":
+    if okay[0] == "/broadcastusers":
         to_user = True
     else:
         to_group = to_user = True
