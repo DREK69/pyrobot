@@ -68,7 +68,7 @@ async def broadcast(_, message):
                 continue
     try:
         await broadcast.edit_text(
-                f"**Broadcast complete.\nGroups Count: {sent_group}\nUsers Count: {sent_user}**"
+            f"**Broadcast complete.\nGroups Count: {sent_group}\nUsers Count: {sent_user}**"
         )
     except:
         pass
