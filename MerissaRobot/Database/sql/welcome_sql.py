@@ -2,7 +2,7 @@ import random
 import threading
 from typing import Union
 
-from sqlalchemy import BigInteger, Boolean, Column, Integer, String, UnicodeText
+from sqlalchemy import BigInteger, Boolean, Column, String, UnicodeText
 
 from MerissaRobot.Database.sql import BASE, SESSION
 from MerissaRobot.Handler.msg_types import Types
@@ -255,7 +255,7 @@ class WelcomeButtons(BASE):
 
 class GoodbyeButtons(BASE):
     __tablename__ = "leave_urls"
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
     chat_id = Column(String(14), primary_key=True)
     name = Column(UnicodeText, nullable=False)
     url = Column(UnicodeText, nullable=False)
@@ -326,8 +326,8 @@ class DefenseMode(BASE):
     __tablename__ = "defense_mode"
     chat_id = Column(String(14), primary_key=True)
     status = Column(Boolean, default=False)
-    time = Column(Integer, default=21600)
-    acttime = Column(Integer, default=3600)
+    time = Column(BigInteger, default=21600)
+    acttime = Column(BigInteger, default=3600)
     permanent = Column(Boolean, default=False)
 
     def __init__(self, chat_id, status, time, acttime, permanent):
@@ -342,8 +342,8 @@ class RaidMode(BASE):
     __tablename__ = "raid_mode"
     chat_id = Column(String(14), primary_key=True)
     status = Column(Boolean, default=False)
-    time = Column(Integer, default=21600)
-    acttime = Column(Integer, default=3600)
+    time = Column(BigInteger, default=21600)
+    acttime = Column(BigInteger, default=3600)
     # permanent = Column(Boolean, default=False)
 
     def __init__(self, chat_id, status, time, acttime):
