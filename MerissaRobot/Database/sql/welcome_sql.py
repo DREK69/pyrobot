@@ -220,10 +220,10 @@ class Welcome(BASE):
     custom_welcome = Column(
         UnicodeText, default=random.choice(DEFAULT_WELCOME_MESSAGES)
     )
-    welcome_type = Column(Integer, default=Types.TEXT.value)
+    welcome_type = Column(BigInteger, default=Types.TEXT.value)
 
     custom_leave = Column(UnicodeText, default=random.choice(DEFAULT_GOODBYE_MESSAGES))
-    leave_type = Column(Integer, default=Types.TEXT.value)
+    leave_type = Column(BigInteger, default=Types.TEXT.value)
 
     clean_welcome = Column(BigInteger)
 
@@ -240,7 +240,7 @@ class Welcome(BASE):
 
 class WelcomeButtons(BASE):
     __tablename__ = "welcome_urls"
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
     chat_id = Column(String(14), primary_key=True)
     name = Column(UnicodeText, nullable=False)
     url = Column(UnicodeText, nullable=False)
