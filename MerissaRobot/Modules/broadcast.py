@@ -21,8 +21,7 @@ async def broadcast(_, message):
             return await message.reply_text(
                 "**Usage**:\n/broadcast [MESSAGE] or [Reply to a Message]"
             )
-        else:
-            query = okay[1]
+        query = okay[1]
     else:
         if message.command[0] == "/broadcastgroups":
             to_group = True
