@@ -1,6 +1,6 @@
 import threading
 
-from sqlalchemy import Column, BigInteger, String
+from sqlalchemy import BigInteger, Column, String
 
 from MerissaRobot.Database.sql import BASE, SESSION
 
