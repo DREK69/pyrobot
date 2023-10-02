@@ -11,12 +11,12 @@ from MerissaRobot.Database.sql.users_sql import get_all_chats, get_all_users
     filters.command(["broadcastall", "broadcastgroups", "broadcastusers"])
     & filters.user(OWNER_ID)
 )
-async def broadcast(_, message):  
+async def broadcast(_, message):
     okay = message.text.split(None, 1)
     if message.reply_to_message:
         x = message.reply_to_message.id
         y = message.chat.id
-    else:      
+    else:
         query = okay[1]
     if len(okay) >= 2:
         return await message.reply_text("Please add something")
@@ -31,9 +31,7 @@ async def broadcast(_, message):
         sent_user = 0
         chats = get_all_chats() or []
         users = get_all_users()
-        broadcast = await message.reply_text(
-            "**Broadcasting Message Started...**"
-        )
+        broadcast = await message.reply_text("**Broadcasting Message Started...**")
         if to_group:
             for chat in chats:
                 try:
