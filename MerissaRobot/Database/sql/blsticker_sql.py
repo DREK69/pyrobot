@@ -1,6 +1,6 @@
 import threading
 
-from sqlalchemy import Column, Integer, String, UnicodeText, distinct, func
+from sqlalchemy import Column, BigInteger, String, UnicodeText, distinct, func
 
 from MerissaRobot.Database.sql import BASE, SESSION
 
@@ -28,7 +28,7 @@ class StickersFilters(BASE):
 class StickerSettings(BASE):
     __tablename__ = "blsticker_settings"
     chat_id = Column(String(14), primary_key=True)
-    blacklist_type = Column(Integer, default=1)
+    blacklist_type = Column(BigInteger, default=1)
     value = Column(UnicodeText, default="0")
 
     def __init__(self, chat_id, blacklist_type=1, value="0"):
