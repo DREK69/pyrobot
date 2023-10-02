@@ -3,7 +3,7 @@ import os
 import sys
 import time
 from inspect import getfullargspec
-from logging import ERROR, INFO, StreamHandler, basicConfig, getLogger, handlers
+from logging import ERROR, INFO, StreamHandler, basicConfig, getLogger, handlers, WARNING
 
 import spamwatch
 import telegram.ext as tg
@@ -34,6 +34,7 @@ getLogger("pyrogram").setLevel(ERROR)
 getLogger("telethon").setLevel(ERROR)
 getLogger("telegram").setLevel(ERROR)
 getLogger("sqlalchemy").setLevel(ERROR)
+getLogger("ptbcontrib.postgres_persistence.postgrespersistence").setLevel(WARNING)
 
 # if version < 3.6, stop bot.
 if sys.version_info[0] < 3 or sys.version_info[1] < 6:
