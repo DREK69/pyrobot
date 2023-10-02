@@ -18,7 +18,7 @@ async def broadcast(_, message):
         y = message.chat.id
     else:
         query = okay[1]
-    if len(okay) >= 2:
+    if len(okay) < 2:
         return await message.reply_text("Please add something")
     else:
         if message.command[0] == "/broadcastgroups":
