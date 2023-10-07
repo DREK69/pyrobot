@@ -10,9 +10,9 @@ from logging import (
     WARNING,
     StreamHandler,
     basicConfig,
+    disable,
     getLogger,
     handlers,
-    disable,
 )
 
 import spamwatch
