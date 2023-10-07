@@ -7,13 +7,13 @@ from logging import (
     CRITICAL,
     ERROR,
     INFO,
+    NOTSET,
     WARNING,
     StreamHandler,
     basicConfig,
     disable,
     getLogger,
     handlers,
-    NOTSET
 )
 
 import spamwatch
