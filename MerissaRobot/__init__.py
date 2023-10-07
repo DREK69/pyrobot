@@ -4,6 +4,7 @@ import sys
 import time
 from inspect import getfullargspec
 from logging import (
+    CRITICAL,
     ERROR,
     INFO,
     WARNING,
@@ -11,7 +12,6 @@ from logging import (
     basicConfig,
     getLogger,
     handlers,
-    CRITICAL,
 )
 
 import spamwatch
