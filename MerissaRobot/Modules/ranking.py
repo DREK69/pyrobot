@@ -27,9 +27,9 @@ async def inc_user(_, message: Message):
         ):
             return await show_top_today(_, message)
 
-    chat = message.chat.id
-    user = message.from_user.id
-    increase_count(chat, user)
+        chat = message.chat.id
+        user = message.from_user.id
+        increase_count(chat, user)
 
 
 async def show_top_today(_, message: Message):
