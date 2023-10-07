@@ -41,11 +41,10 @@ basicConfig(
         StreamHandler(),
     ],
 )
-getLogger("pyrogram").setLevel(ERROR)
+getLogger("pyrogram").setLevel(INFO)
 getLogger("telethon").setLevel(ERROR)
 getLogger("telegram").setLevel(ERROR)
-getLogger("sqlalchemy").setLevel(DEBUG)
-disable(DEBUG)
+getLogger("sqlalchemy").setLevel(CRITICAL)
 
 # if version < 3.6, stop bot.
 if sys.version_info[0] < 3 or sys.version_info[1] < 6:
