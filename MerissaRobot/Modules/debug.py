@@ -8,15 +8,13 @@ from telethon import events
 from MerissaRobot import dispatcher, telethn
 from MerissaRobot.Handler.chat_status import dev_plus
 
-DEBUG_MODE = True
-
+DEBUG_MODE = False
 
 @dev_plus
 def debug(update: Update, context: CallbackContext):
     global DEBUG_MODE
     args = update.effective_message.text.split(None, 1)
     message = update.effective_message
-    print(DEBUG_MODE)
     if len(args) > 1:
         if args[1] in ("yes", "on"):
             DEBUG_MODE = True
