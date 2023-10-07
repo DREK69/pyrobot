@@ -12,6 +12,7 @@ from logging import (
     basicConfig,
     getLogger,
     handlers,
+    disable,
 )
 
 import spamwatch
@@ -42,7 +43,7 @@ basicConfig(
 getLogger("pyrogram").setLevel(ERROR)
 getLogger("telethon").setLevel(ERROR)
 getLogger("telegram").setLevel(ERROR)
-getLogger("sqlalchemy").setLevel(CRITICAL)
+disable("sqlalchemy").setLevel(CRITICAL)
 
 # if version < 3.6, stop bot.
 if sys.version_info[0] < 3 or sys.version_info[1] < 6:
