@@ -43,7 +43,7 @@ basicConfig(
 )
 getLogger("pyrogram").setLevel(INFO)
 getLogger("telethon").setLevel(ERROR)
-getLogger("telegram").setLevel(ERROR)
+getLogger("telegram").setLevel(CRITICAL)
 getLogger("sqlalchemy").setLevel(CRITICAL)
 
 # if version < 3.6, stop bot.
