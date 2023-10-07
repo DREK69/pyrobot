@@ -7,7 +7,7 @@ from logging import (
     CRITICAL,
     ERROR,
     INFO,
-    NOTSET,
+    DEBUG,
     WARNING,
     StreamHandler,
     basicConfig,
