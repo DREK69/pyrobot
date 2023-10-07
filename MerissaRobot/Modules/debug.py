@@ -10,6 +10,7 @@ from MerissaRobot.Handler.chat_status import dev_plus
 
 DEBUG_MODE = False
 
+
 @dev_plus
 def debug(update: Update, context: CallbackContext):
     global DEBUG_MODE
