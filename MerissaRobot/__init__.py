@@ -7,10 +7,10 @@ from logging import (
     CRITICAL,
     ERROR,
     INFO,
-    disable,
     WARNING,
     StreamHandler,
     basicConfig,
+    disable,
     getLogger,
     handlers,
 )
