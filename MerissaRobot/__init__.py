@@ -5,9 +5,9 @@ import time
 from inspect import getfullargspec
 from logging import (
     CRITICAL,
+    DEBUG,
     ERROR,
     INFO,
-    DEBUG,
     WARNING,
     StreamHandler,
     basicConfig,
