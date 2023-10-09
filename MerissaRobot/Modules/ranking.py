@@ -26,10 +26,12 @@ async def inc_user(_, message: Message):
             or message.text.strip() == "/top"
         ):
             return await show_top_today(_, message)
-
+    try:
         chat = message.chat.id
         user = message.from_user.id
         increase_count(chat, user)
+    except:
+        pass
 
 
 async def show_top_today(_, message: Message):
