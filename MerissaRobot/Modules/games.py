@@ -8,6 +8,7 @@ from pyrogram.types import (
 )
 
 from MerissaRobot import pbot as app
+from MerissaRobot.helpers import subscribed
 
 sologame = ReplyKeyboardMarkup(
     [
@@ -54,7 +55,7 @@ game = ReplyKeyboardMarkup(
 delete = ReplyKeyboardRemove()
 
 
-@app.on_message(filters.command("games") & filters.private)
+@app.on_message(filters.command("games") & filters.private & subscribed)
 async def gamescmd(_, message: Message):
     chat = message.from_user.id
     await app.send_photo(
