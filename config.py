@@ -24,7 +24,7 @@ DEV_USERS = set(int(x) for x in os.environ.get("DEV_USERS", "2030709195").split(
 WOLVES = set(int(x) for x in os.environ.get("WOLVES", "").split())
 TIGERS = set(int(x) for x in os.environ.get("TIGERS", "").split())
 JOIN_LOGGER = os.environ.get("JOIN_LOGGER", "-1001325865052")
-FORCE_CHANNEL = os.environ.get("FORCE_CHANNEL", "-1001325865052")
+FORCE_CHANNEL = os.environ.get("FORCE_CHANNEL", "-1001703270696")
 OWNER_USERNAME = os.environ.get("OWNER_USERNAME", "NoobxCoder")
 DB_URL = os.environ.get(
     "DATABASE_URL",
