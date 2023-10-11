@@ -42,7 +42,9 @@ async def convertmin(duration):
     return result
 
 
-@Client.on_message(filters.regex(ytregex) & filters.incoming & filters.private & subscribed)
+@Client.on_message(
+    filters.regex(ytregex) & filters.incoming & filters.private & subscribed
+)
 async def ytregex(client, message):
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     link = message.text
