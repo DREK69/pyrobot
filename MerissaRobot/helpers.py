@@ -4,7 +4,7 @@ from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 
-from MerissaRobot import DEV_USERS
+from MerissaRobot import DEV_USERS, FORCE_CHANNEL
 
 
 def save_file(url, name):
@@ -63,6 +63,3 @@ def embed_album_art(cover_filepath, filepath):
         picture.desc = "front cover"
         mf.add_picture(picture)
     mf.save()
-
-
-subscribed = filters.create(is_subscribed)
