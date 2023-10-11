@@ -17,9 +17,7 @@ async def is_subscribed(client, userid):
     if user_id in DEV_USERS:
         return True
     try:
-        member = await client.get_chat_member(
-            chat_id=FORCE_CHANMEL, user_id=user_id
-        )
+        member = await client.get_chat_member(chat_id=FORCE_CHANMEL, user_id=user_id)
     except UserNotParticipant:
         return False
 
