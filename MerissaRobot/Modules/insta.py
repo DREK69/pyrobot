@@ -11,7 +11,7 @@ from pyrogram.types import InlineKeyboardButton as Keyboard
 from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, InputMediaVideo
 from telegram import InlineKeyboardButton
 
-from MerissaRobot import pbot, FORCE_CHANNEL
+from MerissaRobot import FORCE_CHANNEL, pbot
 from MerissaRobot.helpers import save_file, subscribed
 
 instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stories)\/([A-Za-z0-9\-_]*)"
