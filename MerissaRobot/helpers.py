@@ -13,15 +13,12 @@ def save_file(url, name):
     return name
 
 
-async def is_subscribed(filter, client, update):
-    if not FORCE_SUB_CHANNEL:
-        return True
-    user_id = update.from_user.id
+async def is_subscribed(client, userid):
     if user_id in DEV_USERS:
         return True
     try:
         member = await client.get_chat_member(
-            chat_id=FORCE_SUB_CHANNEL, user_id=user_id
+            chat_id=FORCE_CHANMEL, user_id=user_id
         )
     except UserNotParticipant:
         return False
