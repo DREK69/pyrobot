@@ -3,14 +3,15 @@ import requests
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
-from pyrogram.errors import FloodWait
 
 from MerissaRobot import DEV_USERS
+
 
 def save_file(url, name):
     with open(name, "wb") as f:
         f.write(requests.get(url).content)
     return name
+
 
 async def is_subscribed(filter, client, update):
     if not FORCE_SUB_CHANNEL:
@@ -19,14 +20,21 @@ async def is_subscribed(filter, client, update):
     if user_id in DEV_USERS:
         return True
     try:
-        member = await client.get_chat_member(chat_id = FORCE_SUB_CHANNEL, user_id = user_id)
+        member = await client.get_chat_member(
+            chat_id=FORCE_SUB_CHANNEL, user_id=user_id
+        )
     except UserNotParticipant:
         return False
 
-    if not member.status in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.MEMBER]:
+    if not member.status in [
+        ChatMemberStatus.OWNER,
+        ChatMemberStatus.ADMINISTRATOR,
+        ChatMemberStatus.MEMBER,
+    ]:
         return False
     else:
         return True
+
 
 async def get_ytthumb(videoid: str):
     thumb_quality = [
@@ -60,5 +68,6 @@ def embed_album_art(cover_filepath, filepath):
         picture.desc = "front cover"
         mf.add_picture(picture)
     mf.save()
+
 
 subscribed = filters.create(is_subscribed)
