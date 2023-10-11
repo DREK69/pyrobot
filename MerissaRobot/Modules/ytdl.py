@@ -16,7 +16,7 @@ from pyrogram.types import (
 from youtubesearchpython import VideosSearch
 
 from MerissaRobot import pbot as Client
-from MerissaRobot.helpers import embed_album_art, get_ytthumb
+from MerissaRobot.helpers import embed_album_art, get_ytthumb, subscribed
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
@@ -42,7 +42,7 @@ async def convertmin(duration):
     return result
 
 
-@Client.on_message(filters.regex(ytregex) & filters.incoming & filters.private)
+@Client.on_message(filters.regex(ytregex) & filters.incoming & filters.private & subscribed)
 async def ytregex(client, message):
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     link = message.text
@@ -102,7 +102,7 @@ async def ytregex(client, message):
         await m.delete()
 
 
-@Client.on_message(filters.command(["ytdl", "video"]))
+@Client.on_message(filters.command(["ytdl", "video"]) & subscribed)
 async def video(client, message):
     if len(message.command) < 2:
         return await message.reply_text("Give me some text to search on Youtube")
@@ -543,7 +543,7 @@ async def video_query(client, callbackquery):
     os.remove(download_720)
 
 
-@Client.on_message(filters.command("lyrics"))
+@Client.on_message(filters.command("lyrics") & subscribed)
 async def lyrics(client, message):
     if len(message.command) < 2:
         return await message.reply_text(
