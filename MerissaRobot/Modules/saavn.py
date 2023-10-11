@@ -12,7 +12,7 @@ from pyrogram.types import (
 )
 
 from MerissaRobot import pbot
-from MerissaRobot.helpers import embed_album_art, save_file
+from MerissaRobot.helpers import embed_album_art, save_file, subscribed
 
 spregex = r"https:\/\/www\.jiosaavn\.com\/song\/"
 
@@ -25,7 +25,7 @@ async def convertmin(duration):
     return result
 
 
-@pbot.on_message(filters.regex(spregex) & filters.incoming & filters.private)
+@pbot.on_message(filters.regex(spregex) & filters.incoming & filters.private & subscribed)
 async def song(client, message):
     link = message.text
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
