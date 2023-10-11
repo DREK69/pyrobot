@@ -6,10 +6,9 @@ import requests
 import wget
 from bs4 import BeautifulSoup
 from pyrogram import filters
+from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.types import InlineKeyboardButton as Keyboard
 from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, InputMediaVideo
-from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
-
 from telegram import InlineKeyboardButton
 
 from MerissaRobot import pbot
@@ -25,16 +24,24 @@ apikey = [
     "81b89ef962msh19a67d63d479365p122483jsn6af26adfd7a5",
 ]
 
+
 @pbot.on_message(filters.command("premium") & filters.private)
 async def premium(client, message):
-    userid = message.from_user.id
+    message.from_user.id
     try:
         member = await client.get_chat_member(chat_id=FORCE_CHANNEL, user_id=user_id)
-        await message.reply_text("You are already Subscribe our @MerissaxUpdates Channel, So you are Premium Users")
+        await message.reply_text(
+            "You are already Subscribe our @MerissaxUpdates Channel, So you are Premium Users"
+        )
     except UserNotParticipant:
-        await message.reply_text("Subscribe our Telegram Update Channel @MerissaxUpdates to Get Premium")
+        await message.reply_text(
+            "Subscribe our Telegram Update Channel @MerissaxUpdates to Get Premium"
+        )
 
-@pbot.on_message(filters.regex(instaregex) & filters.incoming & filters.private & subscribed)
+
+@pbot.on_message(
+    filters.regex(instaregex) & filters.incoming & filters.private & subscribed
+)
 async def instadown(_, message):
     link = message.text
     msg = await message.reply_text("Processing...")
@@ -184,7 +191,9 @@ async def instadown(_, message):
                 await msg.delete()
 
 
-@pbot.on_message(filters.regex(fbregex) & filters.incoming & filters.private & subscribed)
+@pbot.on_message(
+    filters.regex(fbregex) & filters.incoming & filters.private & subscribed
+)
 async def fbdown(_, message):
     link = message.text
     msg = await message.reply_text("Processing...")
@@ -229,7 +238,9 @@ async def tiktokdown(_, message):
     os.remove("cover.jpg")
 
 
-@pbot.on_message(filters.regex(snapregex) & filters.incoming & filters.private & subscribed)
+@pbot.on_message(
+    filters.regex(snapregex) & filters.incoming & filters.private & subscribed
+)
 async def snapdown(_, message):
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"
