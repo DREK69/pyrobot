@@ -16,7 +16,6 @@ from youtube_dl.utils import DownloadError
 from MerissaRobot import pbot as Client
 
 active = []
-queues = []
 
 
 async def run_async(func, *args, **kwargs):
@@ -83,7 +82,7 @@ async def get_video(c: Client, q: CallbackQuery):
         "Downloading Started\n\nDownloading Speed could be Slow Please wait..."
     )
     user_id = q.message.from_user.id
-    if "some" in active:
+    if user_id in active:
         await q.message.edit("Sorry, you can only download videos at a time!")
         return
     else:
