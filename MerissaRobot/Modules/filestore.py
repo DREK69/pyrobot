@@ -2,9 +2,10 @@ import os
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from MerissaRobot import pbot, SUPPORT_CHAT
+from MerissaRobot import pbot
 from MerissaRobot import BOT_USERNAME as botun
 
+TRACK_CHANNEL = "-1001900195958"
 media_group_id = 0
 
 # Start & Get file
@@ -81,7 +82,7 @@ async def __reply(update, copied):
         True,
         reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton('Sharing Link',
-                                  url=f'https://t.me/{xbot_username}?start={unique_idx.lower()}-{str(msg_id)}')]
+                                  url=f'https://t.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}')]
         ])
     )
     await asyncio.sleep(0.5)  # Wait do to avoid 5 sec flood ban 
