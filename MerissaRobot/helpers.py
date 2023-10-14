@@ -1,4 +1,5 @@
 import mutagen
+import aiohttp
 import requests
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
@@ -11,6 +12,24 @@ def save_file(url, name):
     with open(name, "wb") as f:
         f.write(requests.get(url).content)
     return name
+
+async def getreq(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            try:
+                data = await resp.json()
+            except:
+                data = await resp.text()
+    return data
+
+async def postreq(url, data):
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, data=data) as resp:
+            try:
+                data = await resp.json()
+            except:
+                data = await resp.text()
+    return data
 
 
 async def is_subscribed(filter, client, update):
