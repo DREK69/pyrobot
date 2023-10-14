@@ -6,7 +6,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from MerissaRobot import BOT_USERNAME as botun
 from MerissaRobot import pbot
 
-TRACK_CHANNEL = "-1001900195958"
+TRACK_CHANNEL = int("-1001900195958")
 media_group_id = 0
 
 
