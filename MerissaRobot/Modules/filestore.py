@@ -121,9 +121,7 @@ async def _main_grop(bot, update):
         return
 
 
-@pbot.on_message(
-    filters.media & filters.private & ~filters.media_group & filters.incoming
-)
+@pbot.on_message(filters.command("save"))
 async def _main(bot, update):
-    copied = await update.copy(TRACK_CHANNEL)
+    copied = await update.reply_to_message.copy(TRACK_CHANNEL)
     await __reply(update, copied)
