@@ -49,7 +49,7 @@ async def ytregex(client, message):
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     link = message.text
     if "music" in link:
-        yt = await getreq(f"https://api.princexd.tech/ytmsearch?query={link}")[
+        yt = await getreq(f"https://api.princexd.tech/ytmsearch?query={link}").json()[
             "results"
         ]["videoDetails"]
         videoid = yt["videoId"]
@@ -75,7 +75,7 @@ async def ytregex(client, message):
         )
         await m.delete()
     else:
-        yt = await getreq(f"https://api.princexd.tech/ytinfo?link={link}")
+        yt = await getreq(f"https://api.princexd.tech/ytinfo?link={link}").json()
         videoid = yt["id"]
         title = yt["title"]
         duration = yt["duration"]
@@ -146,7 +146,7 @@ async def song(client, message):
         return await message.reply_text("Give me some text to search on Youtube")
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     query = message.text.split(None, 1)[1]
-    search = await getreq(f"https://api.princexd.tech/ytmsearch?query={query}")
+    search = await getreq(f"https://api.princexd.tech/ytmsearch?query={query}").json()
     yt = search["results"][0]
     title = yt["title"]
     dur = yt["duration"]
@@ -183,7 +183,7 @@ async def ymnext_query(client, callbackquery):
     callback = callback_data.split("|")
     query = callback[1]
     page = int(callback[2])
-    search = await getreq(f"https://api.princexd.tech/ytmsearch?query={query}")
+    search = await getreq(f"https://api.princexd.tech/ytmsearch?query={query}").json()
     yt = search["results"][page]
     title = yt["title"]
     dur = yt["duration"]
@@ -457,7 +457,7 @@ async def audio_query(client, callbackquery):
         album = info_dict["album"]
     except:
         album = title
-    artist = await getreq(f"https://api.princexd.tech/ytmsearch?query={link}")[
+    artist = await getreq(f"https://api.princexd.tech/ytmsearch?query={link}").json()[
         "results"
     ]["videoDetails"]["author"]
     thumb = await callbackquery.message.download()
@@ -555,7 +555,7 @@ async def lyrics(client, message):
     try:
         lyrics = await getreq(
             f"https://api.princexd.tech/lyrics/text?query={title}"
-        )["lyrics"]
+        ).json()["lyrics"]
         await message.reply_text(lyrics)
     except:
         await message.reply_text("Lyrics Not Found")
