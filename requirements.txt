@@ -81,6 +81,7 @@ regex
 requests 
 search_engine_parser
 secureme
+shazamio==0.0.2
 spamwatch
 speedtest-cli
 spongemock
