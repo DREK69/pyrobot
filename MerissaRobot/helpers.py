@@ -1,4 +1,5 @@
 import aiohttp
+import aiofiles
 import mutagen
 import requests
 from pyrogram import filters
@@ -7,11 +8,14 @@ from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 
 from MerissaRobot import DEV_USERS, FORCE_CHANNEL
 
-
-def save_file(url, name):
-    with open(name, "wb") as f:
-        f.write(requests.get(url).content)
-    return name
+async def save_file(url, filename):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            if resp.status == 200:
+                f = await aiofiles.open(filename, mode="wb")
+                await f.write(await resp.read())
+                await f.close()
+    return filename
 
 
 async def getreq(url):
