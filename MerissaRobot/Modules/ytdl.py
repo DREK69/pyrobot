@@ -518,7 +518,7 @@ async def video_query(client, callbackquery):
         "quiet": True,
     }
     with yt_dlp.YoutubeDL(opts) as ydl:
-        await run_async(ydl.download, [url])
+        await run_async(ydl.download, [link])
         info_dict = ydl.extract_info(link, download=False)
     download_720 = f"{info_dict['id']}.mp4"
     thumb = await callbackquery.message.download()
