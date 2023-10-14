@@ -104,9 +104,7 @@ async def _main_grop(bot, update):
     if int(media_group_id) != int(update.media_group_id):
         media_group_id = update.media_group_id
         copied = (
-            await bot.copy_media_group(
-                TRACK_CHANNEL, update.from_user.id, update.id
-            )
+            await bot.copy_media_group(TRACK_CHANNEL, update.from_user.id, update.id)
         )[0]
         await __reply(update, copied)
 
