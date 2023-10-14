@@ -105,7 +105,7 @@ async def _main_grop(bot, update):
         media_group_id = update.media_group_id
         copied = (
             await bot.copy_media_group(
-                TRACK_CHANNEL, update.from_user.id, update.message_id
+                TRACK_CHANNEL, update.from_user.id, update.id
             )
         )[0]
         await __reply(update, copied)
