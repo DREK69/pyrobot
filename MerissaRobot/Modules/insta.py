@@ -53,10 +53,9 @@ async def instadown(_, message):
             await msg.delete()
         except:
             try:
-                response = await getreq(
+                data = await getreq(
                     f"https://igdownloader.onrender.com/dl?key=ashok&url={link}"
                 )
-                data = response.json()
                 dlink = data["urls"][0]
                 await message.reply_video(dlink, caption=data["caption"])
                 await msg.delete()
@@ -64,7 +63,7 @@ async def instadown(_, message):
                 try:
                     response = await getreq(
                         f"https://api.princexd.tech/instadown?link={link}"
-                    ).json()["media"][0]
+                    )["media"][0]
                     try:
                         await message.reply_video(
                             response, caption="Downloaded By @MerissaRobot"
@@ -82,7 +81,7 @@ async def instadown(_, message):
                         key = random.choice(apikey)
                         video = await getreq(
                             f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
-                        ).json()["links"][0]["url"]
+                        )["links"][0]["url"]
                         try:
                             await message.reply_video(video)
                             await msg.delete()
@@ -99,10 +98,9 @@ async def instadown(_, message):
                         )
     else:
         try:
-            response = await getreq(
+            data = await getreq(
                 f"https://igdownloader.onrender.com/dl?key=ashok&url={link}"
             )
-            data = response.json()
             if len(data["urls"]) == 1:
                 for i in data["urls"]:
                     if i == "":
@@ -138,7 +136,7 @@ async def instadown(_, message):
             try:
                 posts = await getreq(
                     f"https://api.princexd.tech/instadown?link={link}"
-                ).json()["media"]
+                )["media"]
                 singlelink = posts[0]
                 if len(posts) == 1:
                     if "jpg" in singlelink:
@@ -166,7 +164,7 @@ async def instadown(_, message):
                 key = random.choice(apikey)
                 posts = await getreq(
                     f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
-                ).json()["links"]
+                )["links"]
                 singlelink = posts[0]
                 if len(posts) == 1:
                     if singlelink["type"] == "video":
