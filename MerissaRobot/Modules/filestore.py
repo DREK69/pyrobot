@@ -114,7 +114,8 @@ async def _main_grop(bot, update):
         # This handler catch EVERY message with [update.media_group_id] param
         # So we should ignore next >1_media_group_id messages
         return
-        
+
+
 @pbot.on_message(filters.media & filters.private & ~filters.media_group)
 async def _main(bot, update):
     copied = await update.copy(TRACK_CHANNEL)
