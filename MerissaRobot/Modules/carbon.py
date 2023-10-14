@@ -2,7 +2,7 @@ import requests
 from pyrogram import filters
 
 from MerissaRobot import pbot as app
-from MerissaRobot.helpers import getpost
+from MerissaRobot.helpers import postreq
 
 
 @app.on_message(filters.command(["carbon"]))
@@ -18,7 +18,7 @@ async def carbon(client, message):
     nan = await message.reply_text("Processing...")
     try:
         data = {"code": txt, "bgcolor": "white"}
-        file = await getpost("https://api.princexd.tech/carbon", data).json()[
+        file = await postreq("https://api.princexd.tech/carbon", data).json()[
             "url"
         ]
         await message.reply_photo(
