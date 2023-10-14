@@ -99,15 +99,7 @@ async def __reply(update, copied):
     await asyncio.sleep(0.5)  # Wait do to avoid 5 sec flood ban
 
 
-@pbot.on_message(
-    filters.media
-    & filters.private
-    & filters.media_group
-    & filters.document
-    & filters.video
-    & filters.audio
-    & filters.photo
-)
+@pbot.on_message(filters.media & filters.private & filters.media_group)
 async def _main_grop(bot, update):
     global media_group_id
 
@@ -122,3 +114,8 @@ async def _main_grop(bot, update):
         # This handler catch EVERY message with [update.media_group_id] param
         # So we should ignore next >1_media_group_id messages
         return
+        
+@pbot.on_message(filters.media & filters.private & ~filters.media_group)
+async def _main(bot, update):
+    copied = await update.copy(TRACK_CHANNEL)
+    await __reply(update, copied)
