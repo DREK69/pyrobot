@@ -54,9 +54,7 @@ async def ytregex(client, message):
     link = message.text
     if "music" in link:
         resp = await getreq(f"https://api.princexd.tech/ytmsearch?query={link}")
-        yt = resp[
-            "results"
-        ]["videoDetails"]
+        yt = resp["results"]["videoDetails"]
         videoid = yt["videoId"]
         title = yt["title"]
         duration = yt["lengthSeconds"]
@@ -462,9 +460,7 @@ async def audio_query(client, callbackquery):
     except:
         album = title
     resp = await getreq(f"https://api.princexd.tech/ytmsearch?query={link}")
-    artist = resp[
-        "results"
-    ]["videoDetails"]["author"]
+    artist = resp["results"]["videoDetails"]["author"]
     thumb = await callbackquery.message.download()
     audio_file = f"{videoid}.m4a"
     audio = MP4(audio_file)
@@ -557,9 +553,7 @@ async def lyrics(client, message):
     title = message.text.split(None, 1)[1]
     try:
         resp = await getreq(f"https://api.princexd.tech/lyrics/text?query={title}")
-        lyrics = resp[
-            "lyrics"
-        ]
+        lyrics = resp["lyrics"]
         await message.reply_text(lyrics)
     except:
         await message.reply_text("Lyrics Not Found")
