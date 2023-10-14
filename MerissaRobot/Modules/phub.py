@@ -66,9 +66,10 @@ async def get_video(c: Client, q: CallbackQuery):
     await q.answer("Please Wait Generating Streaming Link")
     callback_data = q.data.strip()
     id = callback_data.split("_")[1]
-    formats = await getreq(
+    resp = await getreq(
         f"https://api.princexd.tech/ytinfo?link=https://www.pornhub.com/view_video.php?viewkey={id}"
-    ).json()["formats"]
+    )
+    formats = resp["formats"]
     keyboards = []
     col = []
     for i in formats:
