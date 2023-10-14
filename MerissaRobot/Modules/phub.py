@@ -36,7 +36,7 @@ async def options(c: Client, m: Message):
                 [
                     InlineKeyboardButton(
                         "📥 Download",
-                        callback_data=f"phubdl_{id}",
+                        callback_data=f"phformats_{id}",
                     ),
                     InlineKeyboardButton(
                         "🎥 Watch Online",
