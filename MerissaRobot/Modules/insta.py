@@ -63,10 +63,11 @@ async def instadown(_, message):
                 try:
                     response = await getreq(
                         f"https://api.princexd.tech/instadown?link={link}"
-                    )["media"][0]
+                    )
+                    video = response["media"][0]
                     try:
                         await message.reply_video(
-                            response, caption="Downloaded By @MerissaRobot"
+                            video, caption="Downloaded By @MerissaRobot"
                         )
                         await msg.delete()
                     except:
@@ -79,9 +80,10 @@ async def instadown(_, message):
                 except:
                     try:
                         key = random.choice(apikey)
-                        video = await getreq(
+                        resp = await getreq(
                             f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
-                        )["links"][0]["url"]
+                        )
+                        video = resp["links"][0]["url"]
                         try:
                             await message.reply_video(video)
                             await msg.delete()
@@ -134,9 +136,10 @@ async def instadown(_, message):
             await msg.delete()
         except:
             try:
-                posts = await getreq(
+                resp = await getreq(
                     f"https://api.princexd.tech/instadown?link={link}"
-                )["media"]
+                )
+                post = resp["media"]
                 singlelink = posts[0]
                 if len(posts) == 1:
                     if "jpg" in singlelink:
@@ -162,9 +165,10 @@ async def instadown(_, message):
                 await msg.delete()
             except:
                 key = random.choice(apikey)
-                posts = await getreq(
+                resp = await getreq(
                     f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
-                )["links"]
+                )
+                posts = resp["links"]
                 singlelink = posts[0]
                 if len(posts) == 1:
                     if singlelink["type"] == "video":
