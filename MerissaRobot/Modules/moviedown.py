@@ -13,7 +13,7 @@ def search_movies(query):
     movies_list = []
     movies_details = {}
     website = BeautifulSoup(
-        requests.get(f"https://185.53.88.104/?s={query.replace(' ', '+')}").text,
+        requests.get(f"https://mkvcinemas.boo/?s={query.replace(' ', '+')}").text,
         "html.parser",
     )
     movies = website.find_all("a", {"class": "ml-mask jt"})
@@ -141,7 +141,7 @@ def search_anime(query):
     movies_list = []
     movies_details = {}
     website = BeautifulSoup(
-        requests.get(f"https://mkvanime.cfd/?s={query.replace(' ', '+')}").text,
+        requests.get(f"https://ww1.mkvanime.site/?s={query.replace(' ', '+')}").text,
         "html.parser",
     )
     movies = website.find_all("a", {"class": "ml-mask jt"})
