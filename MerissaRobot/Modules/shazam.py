@@ -12,37 +12,6 @@ async def recognize(path):
     return await shazam.recognize_song(path)
 
 
-async def related(track_id):
-    try:
-        return (await shazam.related_tracks(track_id=track_id, limit=50, start_from=2))[
-            "tracks"
-        ]
-    except exceptions.FailedDecodeJson:
-        return None
-
-
-async def get_artist(query: str):
-    artists = await shazam.search_artist(query=query, limit=50)
-    hits = []
-    try:
-        for artist in artists["artists"]["hits"]:
-            hits.append(FactoryArtist(artist).serializer())
-        return hits
-    except KeyError:
-        return None
-
-
-async def get_artist_tracks(artist_id: int):
-    tracks = []
-    tem = (await shazam.artist_top_tracks(artist_id=artist_id, limit=50))["tracks"]
-    try:
-        for track in tem:
-            tracks.append(FactoryTrack(data=track).serializer())
-        return tracks
-    except KeyError:
-        return None
-
-
 @pbot.on_message(filters.audio | filters.video | filters.voice)
 async def voice_handler(_, message):
     file_size = message.audio or message.video or message.voice
