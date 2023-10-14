@@ -2,6 +2,7 @@ import html
 import re
 from time import sleep
 
+import requests
 from googletrans import Translator
 from telegram import (
     CallbackQuery,
@@ -26,7 +27,6 @@ import MerissaRobot.Database.sql.chatbot_sql as sql
 from MerissaRobot import dispatcher
 from MerissaRobot.Handler.chat_status import user_admin, user_admin_no_reply
 from MerissaRobot.Handler.filters import CustomFilters
-from MerissaRobot.helpers import getreq
 from MerissaRobot.Modules.log_channel import gloggable
 
 tr = Translator()
@@ -122,7 +122,7 @@ def merissa_message(context: CallbackContext, message):
         return False
 
 
-async def chatbot(update: Update, context: CallbackContext):
+def chatbot(update: Update, context: CallbackContext):
     message = update.effective_message
     chat_id = update.effective_chat.id
     bot = context.bot
@@ -132,10 +132,11 @@ async def chatbot(update: Update, context: CallbackContext):
     if message.text and not message.document:
         if not merissa_message(context, message):
             return
-        await bot.send_chat_action(chat_id, action="typing")
+        bot.send_chat_action(chat_id, action="typing")
         url = f"https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message={message.text}"
-        results = getreq(url)
-        await message.reply_text(results["reply"])
+        results = requests.get(url).json()
+        sleep(0.5)
+        message.reply_text(results["reply"])
 
 
 def list_all_chats(update: Update, context: CallbackContext):
@@ -177,7 +178,6 @@ CHATBOT_HANDLER = MessageHandler(
     Filters.text
     & (~Filters.regex(r"^#[^\s]+") & ~Filters.regex(r"^!") & ~Filters.regex(r"^\/")),
     chatbot,
-    run_async=True,
 )
 LIST_ALL_CHATS_HANDLER = CommandHandler(
     "allchats", list_all_chats, filters=CustomFilters.dev_filter
