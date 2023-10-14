@@ -58,6 +58,7 @@ async def _startfile(bot, update):
             await upmsg.delete()
         except Exception:
             await check.copy(update.from_user.id)
+            await upmsg.delete()
     else:
         return
 
