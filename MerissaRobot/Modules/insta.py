@@ -136,9 +136,7 @@ async def instadown(_, message):
             await msg.delete()
         except:
             try:
-                resp = await getreq(
-                    f"https://api.princexd.tech/instadown?link={link}"
-                )
+                resp = await getreq(f"https://api.princexd.tech/instadown?link={link}")
                 post = resp["media"]
                 singlelink = posts[0]
                 if len(posts) == 1:
