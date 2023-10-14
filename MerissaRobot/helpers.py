@@ -18,10 +18,13 @@ async def getreq(url):
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
             try:
-                await resp.json()
+                data = await resp.json()
             except:
-                await resp.text()
-    return resp
+                try:
+                    data = await resp.text()
+                except:
+                    data = resp
+    return data
 
 
 async def postreq(url, data):
@@ -30,8 +33,11 @@ async def postreq(url, data):
             try:
                 data = await resp.json()
             except:
-                data = await resp.text()
-    return resp
+                try:
+                    data = await resp.text()
+                except:
+                    data = resp
+    return data
 
 
 async def is_subscribed(filter, client, update):
