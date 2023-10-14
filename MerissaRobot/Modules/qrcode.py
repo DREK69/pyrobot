@@ -1,15 +1,13 @@
 import os
-from MerissaRobot import dispatcher
-from asyncio import sleep
 from datetime import datetime
+
+from pymongo import MongoClient
+from requests import get, post
 from telegram.ext import CommandHandler
-from requests import get
-from requests import post
 from telethon import types
 from telethon.tl import functions
-from MerissaRobot import MONGO_DB_URI
-from pymongo import MongoClient
 
+from MerissaRobot import MONGO_DB_URI, dispatcher
 
 client = MongoClient()
 client = MongoClient(MONGO_DB_URI)
@@ -18,7 +16,7 @@ approved_users = db.approve
 
 
 def progress(current, total):
-    """ Calculate and return the download progress with given arguments. """
+    """Calculate and return the download progress with given arguments."""
     print(
         "Downloaded {} of {}\nCompleted {}".format(
             current, total, (current / total) * 100
@@ -28,7 +26,6 @@ def progress(current, total):
 
 async def is_register_admin(chat, user):
     if isinstance(chat, (types.InputPeerChannel, types.InputChannel)):
-
         return isinstance(
             (
                 await tbot(functions.channels.GetParticipantRequest(chat, user))
@@ -36,7 +33,6 @@ async def is_register_admin(chat, user):
             (types.ChannelParticipantAdmin, types.ChannelParticipantCreator),
         )
     if isinstance(chat, types.InputPeerChat):
-
         ui = await tbot.get_peer_id(user)
         ps = (
             await tbot(functions.messages.GetFullChatRequest(chat.chat_id))
@@ -50,7 +46,7 @@ async def is_register_admin(chat, user):
 
 @register(pattern=r"^/getqr$")
 async def parseqr(qr_e):
-    """ For .getqr command, get QR Code content from the replied photo. """
+    """For .getqr command, get QR Code content from the replied photo."""
     if qr_e.fwd_from:
         return
 
@@ -60,7 +56,7 @@ async def parseqr(qr_e):
         userss = ch["user"]
 
     if qr_e.is_group:
-        if (await is_register_admin(qr_e.input_chat, qr_e.message.sender_id)):
+        if await is_register_admin(qr_e.input_chat, qr_e.message.sender_id):
             pass
         elif qr_e.chat_id == iid and qr_e.sender_id == userss:
             pass
@@ -87,7 +83,7 @@ async def parseqr(qr_e):
 
 @register(pattern=r"^/makeqr(?: |$)([\s\S]*)")
 async def makeqr(qrcode):
-    """ For .makeqr command, make a QR Code containing the given content. """
+    """For .makeqr command, make a QR Code containing the given content."""
     if qrcode.fwd_from:
         return
     approved_userss = approved_users.find({})
@@ -96,7 +92,7 @@ async def makeqr(qrcode):
         userss = ch["user"]
 
     if qrcode.is_group:
-        if (await is_register_admin(qrcode.input_chat, qrcode.message.sender_id)):
+        if await is_register_admin(qrcode.input_chat, qrcode.message.sender_id):
             pass
         elif qrcode.chat_id == iid and qrcode.sender_id == userss:
             pass
@@ -145,6 +141,7 @@ size=200x200&charset-source=UTF-8&charset-target=UTF-8\
     os.remove(required_file_name)
     duration = (datetime.now() - start).seconds
     await qrcode.reply("Created QRCode in {} seconds".format(duration))
+
 
 file_help = os.path.basename(__file__)
 file_help = file_help.replace(".py", "")
