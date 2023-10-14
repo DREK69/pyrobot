@@ -30,9 +30,7 @@ async def google(_, message):
         )
     webevent = await message.reply_text("Searching...")
     query = message.text.split(None, 1)[1]
-    gresults = await getreq(
-        f"https://api.safone.me/google?query={query}&limit=5"
-    )
+    gresults = await getreq(f"https://api.safone.me/google?query={query}&limit=5")
     msg = ""
     for i in gresults["results"]:
         title = i["title"]
