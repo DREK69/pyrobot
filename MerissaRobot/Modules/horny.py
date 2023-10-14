@@ -15,7 +15,7 @@ async def wish(_, m):
     if len(m.command) < 2:
         await m.reply("😉 ~~**Add~~ wish!**")
         return
-    api = await getreq("https://nekos.best/api/v2/happy").json()
+    api = await getreq("https://nekos.best/api/v2/happy")
     url = api["results"][0]["url"]
     text = m.text.split(None, 1)[1]
     wish_count = random.randint(1, 100)
