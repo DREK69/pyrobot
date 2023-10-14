@@ -4,8 +4,10 @@ from pyrogram import Client, filters
 from pyrogram.types import Message
 
 import MerissaRobot.Database.sql.users_sql as sql
-from MerissaRobot import DEV_USERS, OWNER_ID, pbot as pgram
+from MerissaRobot import DEV_USERS, OWNER_ID
+from MerissaRobot import pbot as pgram
 from MerissaRobot.Database.sql.users_sql import get_all_users
+
 
 @pgram.on_message(filters.command("broadcast"))
 async def broadcast_cmd(client: Client, message: Message):
@@ -49,9 +51,9 @@ async def broadcast_cmd(client: Client, message: Message):
                 msg = message.text.split(None, 2)[2]
             try:
                 if message.reply_to_message:
-                    aa = await msg.copy(chat.user_id)
+                    await msg.copy(chat.user_id)
                 else:
-                    aa = await client.send_message(chat.user_id, msg)
+                    await client.send_message(chat.user_id, msg)
 
                 usersss += 1
                 await asyncio.sleep(0.3)
@@ -66,9 +68,9 @@ async def broadcast_cmd(client: Client, message: Message):
                 msg = message.text.split(None, 2)[2]
             try:
                 if message.reply_to_message:
-                    aa = await msg.copy(chat.chat_id)
+                    await msg.copy(chat.chat_id)
                 else:
-                    aa = await client.send_message(chat.chat_id, msg)
+                    await client.send_message(chat.chat_id, msg)
 
                 chatttt += 1
                 await asyncio.sleep(0.3)
@@ -78,4 +80,4 @@ async def broadcast_cmd(client: Client, message: Message):
 
     await tex.edit_text(
         f"<b>Message Successfully Sent</b> \nTotal Users: <code>{usersss}</code> \nFailed Users: <code>{uerror}</code> \nTotal GroupChats: <code>{chatttt}</code> \nFailed GroupChats: <code>{cerror}</code>"
-        )
+    )
