@@ -88,7 +88,6 @@ async def __reply(update, copied):
 
     await ok.edit_text(
         "Here is Your Sharing Link:",
-        True,
         reply_markup=InlineKeyboardMarkup(
             [
                 [
