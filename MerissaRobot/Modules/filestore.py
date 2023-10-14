@@ -94,7 +94,7 @@ async def __reply(update, copied):
                 [
                     InlineKeyboardButton(
                         "Sharing Link",
-                        url=f"https://t.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}",
+                        url=f"https://t.me/share/url?url=https://t.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}",
                     )
                 ]
             ]
