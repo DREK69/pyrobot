@@ -2,6 +2,7 @@ import requests
 from pyrogram import filters
 
 from MerissaRobot import pbot as app
+from MerissaRobot.helpers import getpost
 
 
 @app.on_message(filters.command(["carbon"]))
@@ -17,7 +18,7 @@ async def carbon(client, message):
     nan = await message.reply_text("Processing...")
     try:
         data = {"code": txt, "bgcolor": "white"}
-        file = requests.post("https://api.princexd.tech/carbon", json=data).json()[
+        file = await getpost("https://api.princexd.tech/carbon", data).json()[
             "url"
         ]
         await message.reply_photo(
@@ -43,7 +44,7 @@ async def carbon(client, message):
     nan = await message.reply_text("Processing...")
     try:
         data = {"code": txt, "title": title, "theme": "breeze", "darkMode": True}
-        file = requests.post("https://api.princexd.tech/rayso", json=data).json()["url"]
+        file = await getpost("https://api.princexd.tech/rayso", data).json()["url"]
         await message.reply_photo(
             photo=file, caption=f"<b>Raysoimg By :</b> {client.me.mention}"
         )
