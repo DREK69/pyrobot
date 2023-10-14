@@ -1,24 +1,25 @@
 import os
-from configparser import ConfigParser
 
-from pyrogram import Client, filters, types
+from pyrogram import filters, types
 from shazamio import FactoryArtist, FactoryTrack, Shazam, exceptions
 
 from MerissaRobot import pbot
 
 shazam = Shazam()
 
-    
+
 async def recognize(path):
     return await shazam.recognize_song(path)
 
+
 async def related(track_id):
     try:
-        return (
-            await shazam.related_tracks(track_id=track_id, limit=50, start_from=2)
-        )["tracks"]
+        return (await shazam.related_tracks(track_id=track_id, limit=50, start_from=2))[
+            "tracks"
+        ]
     except exceptions.FailedDecodeJson:
         return None
+
 
 async def get_artist(query: str):
     artists = await shazam.search_artist(query=query, limit=50)
@@ -29,6 +30,7 @@ async def get_artist(query: str):
         return hits
     except KeyError:
         return None
+
 
 async def get_artist_tracks(artist_id: int):
     tracks = []
@@ -58,7 +60,7 @@ async def voice_handler(_, message):
     buttons = [
         [
             types.InlineKeyboardButton("🔗 Share", url=f'{r["share"]["html"]}'),
-            types.InlineKeyboardButton("🎵 Listen", url=f'{r["url"]}')
+            types.InlineKeyboardButton("🎵 Listen", url=f'{r["url"]}'),
         ],
     ]
     await message.reply_photo(
