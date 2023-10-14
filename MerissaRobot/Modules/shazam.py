@@ -1,7 +1,7 @@
 import os
 
 from pyrogram import filters, types
-from shazamio import FactoryArtist, FactoryTrack, Shazam, exceptions
+from shazamio import Shazam
 
 from MerissaRobot import pbot
 
