@@ -10,6 +10,7 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     Message,
 )
+from pykeyboard import InlineKeyboard
 
 from MerissaRobot import pbot as Client
 from MerissaRobot.helpers import getreq
