@@ -14,6 +14,7 @@ from pyrogram.types import (
 from youtube_dl.utils import DownloadError
 
 from MerissaRobot import pbot as Client
+from MerissaRobot.helpers import getreq
 
 active = []
 
@@ -53,7 +54,7 @@ async def get_video(c: Client, q: CallbackQuery):
     await q.answer("Please Wait Generating Streaming Link")
     callback_data = q.data.strip()
     id = callback_data.split("_")[1]
-    formats = requests.get(
+    formats = await getreq(
         f"https://api.princexd.tech/ytinfo?link=https://www.pornhub.com/view_video.php?viewkey={id}"
     ).json()["formats"]
     keyboards = []
