@@ -59,7 +59,7 @@ async def options(c: Client, m: Message):
     )
 
 
-@Client.on_callback_query(filters.regex(pattern=r"phubstr"))
+@Client.on_callback_query(filters.regex("^phubstr"))
 async def get_video(c: Client, q: CallbackQuery):
     await q.answer("Please Wait Generating Streaming Link")
     callback_data = q.data.strip()
@@ -137,7 +137,7 @@ async def formats_query(client, callbackquery):
         )
     await callbackquery.edit_message_reply_markup(reply_markup=keyboard)
 
-@Client.on_callback_query(filters.regex(pattern=r"phubdl"))
+@Client.on_callback_query(filters.regex("^phubdl"))
 async def get_video(c: Client, q: CallbackQuery):
     callback_data = q.data.strip()
     callback_request = callback_data.split(None, 1)[1]
