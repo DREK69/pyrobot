@@ -2,7 +2,6 @@ import html
 import re
 from time import sleep
 
-import requests
 from googletrans import Translator
 from telegram import (
     CallbackQuery,
@@ -177,7 +176,7 @@ CHATBOT_HANDLER = MessageHandler(
     Filters.text
     & (~Filters.regex(r"^#[^\s]+") & ~Filters.regex(r"^!") & ~Filters.regex(r"^\/")),
     chatbot,
-    run_async
+    run_async,
 )
 LIST_ALL_CHATS_HANDLER = CommandHandler(
     "allchats", list_all_chats, filters=CustomFilters.dev_filter
