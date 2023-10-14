@@ -15,6 +15,7 @@ from pyrogram import filters
 from MerissaRobot import pbot
 from MerissaRobot import telethn as tbot
 from MerissaRobot.events import register
+from MerissaRobot.helpers import getreq
 
 opener = urllib.request.build_opener()
 useragent = "Mozilla/5.0 (Linux; Android 9; SM-G960F Build/PPR1.180610.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.157 Mobile Safari/537.36"
@@ -29,7 +30,7 @@ async def google(_, message):
         )
     webevent = await message.reply_text("Searching...")
     query = message.text.split(None, 1)[1]
-    gresults = requests.get(
+    gresults = await getreq(
         f"https://api.safone.me/google?query={query}&limit=5"
     ).json()
     msg = ""
