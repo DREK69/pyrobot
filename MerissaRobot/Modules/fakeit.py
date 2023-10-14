@@ -31,21 +31,3 @@ async def hi(event):
         f"<b><u> Fake Information Generated</b></u>\n<b>Name :-</b><code>{name}</code>\n\n<b>Address:-</b><code>{address}</code>\n\n<b>IP Address:-</b><code>{ip}</code>\n\n<b>Credit card:-</b><code>{cc}</code>\n\n<b>Email Id:-</b><code>{email}</code>\n\n<b>Job:-</b><code>{job}</code>\n\n<b>android user agent:-</b><code>{android}</code>\n\n<b>Pc user agent:-</b><code>{pc}</code>\n\nPowered By @MerissaRobot",
         parse_mode="HTML",
     )
-
-
-@telethn.on(events.NewMessage(pattern="/picgen$"))
-async def _(event):
-    if event.fwd_from:
-        return
-    if await is_admin(event, event.message.sender_id):
-        url = "https://thispersondoesnotexist.com/image"
-        response = requests.get(url)
-        if response.status_code == 200:
-            with open("Fakeit.jpg", "wb") as f:
-                f.write(response.content)
-
-        captin = f"Fake Image powered by @MerissaRobot."
-        fole = "Fakeit.jpg"
-        await telethn.send_file(event.chat_id, fole, caption=captin)
-        await event.delete()
-        os.system("rm ./Fakeit.jpg ")
