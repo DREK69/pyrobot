@@ -59,7 +59,7 @@ async def _startfile(bot, update):
 
 
 async def __reply(update, copied):
-    msg_id = copied.message_id
+    msg_id = copied.message.id
     if copied.video:
         unique_idx = copied.video.file_unique_id
     elif copied.photo:
