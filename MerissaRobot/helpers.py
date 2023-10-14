@@ -16,20 +16,12 @@ def save_file(url, name):
 async def getreq(url):
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
-            try:
-                data = await resp.json()
-            except:
-                data = await resp.text()
-    return data
+            return resp
 
 async def postreq(url, data):
     async with aiohttp.ClientSession() as session:
         async with session.post(url, data=data) as resp:
-            try:
-                data = await resp.json()
-            except:
-                data = await resp.text()
-    return data
+            return resp
 
 
 async def is_subscribed(filter, client, update):
@@ -64,7 +56,7 @@ async def get_ytthumb(videoid: str):
     thumb_link = "https://i.imgur.com/4LwPLai.png"
     for qualiy in thumb_quality:
         link = f"https://i.ytimg.com/vi/{videoid}/{qualiy}"
-        if (requests.get(link)).status_code == 200:
+        if (await getreq(link)).status_code == 200:
             thumb_link = link
             break
     return thumb_link
