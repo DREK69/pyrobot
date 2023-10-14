@@ -31,12 +31,12 @@ async def premium(client, message):
     try:
         member = await client.get_chat_member(chat_id=FORCE_CHANNEL, user_id=user_id)
         await message.reply_text(
-            "You are already Subscribe our @MerissaxUpdates Channel, So you are Premium Users"
+            "You are already Subscribe our @MerissaxUpdates Channel, So you are Premium User in MerissaRobot"
         )
     except UserNotParticipant:
         await message.reply_photo(
             photo="https://te.legra.ph/file/2b3a7af1d01513c032739.jpg",
-            "Subscribe our Telegram Update Channel @MerissaxUpdates to Get Premium for free"
+            "Subscribe our Telegram Update Channel @MerissaxUpdates to Get Premium for free in MerissaRobot"
         )
 
 
