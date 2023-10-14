@@ -3,6 +3,7 @@ from pyrogram import filters
 from pyrogram.types import *
 
 from MerissaRobot import pbot
+from MerissaRobot import getreq
 
 
 @pbot.on_message(filters.command(["imdb", "tmdb"]))
@@ -14,7 +15,7 @@ async def imdb(_, message):
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    url = requests.get(f"https://api.safone.me/tmdb?query={query}").json()["results"][0]
+    url = await getreq(f"https://api.safone.me/tmdb?query={query}").json()["results"][0]
     await message.reply_photo(
         photo=url["poster"],
         caption=f"""**IMDB Movie Details :**
@@ -56,7 +57,7 @@ async def ymnext_query(client, callbackquery):
     callback = callback_data.split("|")
     query = callback[1]
     page = int(callback[2])
-    search = requests.get(f"https://api.safone.me/tmdb?query={query}").json()
+    search = await getreq(f"https://api.safone.me/tmdb?query={query}").json()
     url = search["results"][page]
     tpage = len(search["results"]) - 1
     if page == 0:
