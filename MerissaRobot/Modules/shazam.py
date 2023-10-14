@@ -12,17 +12,18 @@ async def recognize(path):
     return await shazam.recognize_song(path)
 
 
-@pbot.on_message(filters.audio | filters.video | filters.voice)
+@pbot.on_message(filters.command("shazam"))
 async def voice_handler(_, message):
-    file_size = message.audio or message.video or message.voice
+    file_size = message.reply_to_message.audio or message.reply_to_message.video or message.reply_to_message.voice
     if 30641629 < file_size.file_size:
         await message.reply_text("**⚠️ Max file size has been reached.**")
         return
-    file = await message.download("merissa.mp3")
+    ok = await message.reply_text("Finding song for You Please Wait...")
+    file = await message.reply_to_message.download("merissa.mp3")
     r = (await recognize(file)).get("track", None)
     os.remove(file)
     if r is None:
-        await message.reply_text("**⚠️ Cannot recognize the audio**")
+        await ok.edit_text("**⚠️ Cannot recognize the audio**")
         return
     out = f'**Title**: `{r["title"]}`\n'
     out += f'**Artist**: `{r["subtitle"]}`\n'
@@ -37,3 +38,4 @@ async def voice_handler(_, message):
         caption=out,
         reply_markup=types.InlineKeyboardMarkup(buttons),
     )
+    await ok.delete()
