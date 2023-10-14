@@ -32,7 +32,7 @@ async def google(_, message):
     query = message.text.split(None, 1)[1]
     gresults = await getreq(
         f"https://api.safone.me/google?query={query}&limit=5"
-    ).json()
+    )
     msg = ""
     for i in gresults["results"]:
         title = i["title"]
