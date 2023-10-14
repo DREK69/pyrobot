@@ -193,6 +193,7 @@ async def instadown(_, message):
                     await message.reply_media_group(mg)
                 await msg.delete()
 
+
 @pbot.on_message(filters.regex(pinregex) & subscribed)
 async def pindown(_, message):
     link = message.text
@@ -204,6 +205,7 @@ async def pindown(_, message):
         pinvid, caption=f"{title}\n\nUploaded by @MerissaRobot"
     )
     await m.delete()
+
 
 @pbot.on_message(
     filters.regex(fbregex) & filters.incoming & filters.private & subscribed
