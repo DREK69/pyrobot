@@ -12,7 +12,7 @@ from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, InputMediaVide
 from telegram import InlineKeyboardButton
 
 from MerissaRobot import FORCE_CHANNEL, pbot
-from MerissaRobot.helpers import save_file, subscribed
+from MerissaRobot.helpers import save_file, subscribed, getreq
 
 instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stories)\/([A-Za-z0-9\-_]*)"
 tiktokregex = r"^https:\/\/(www\.tiktok.com|vm\.tiktok\.com|vt\.tiktok\.com)\/?(.*)"
@@ -53,7 +53,7 @@ async def instadown(_, message):
             await msg.delete()
         except:
             try:
-                response = requests.get(
+                response = await getreq(
                     f"https://igdownloader.onrender.com/dl?key=ashok&url={link}"
                 )
                 data = response.json()
@@ -62,7 +62,7 @@ async def instadown(_, message):
                 await msg.delete()
             except:
                 try:
-                    response = requests.get(
+                    response = await getreq(
                         f"https://api.princexd.tech/instadown?link={link}"
                     ).json()["media"][0]
                     try:
@@ -80,7 +80,7 @@ async def instadown(_, message):
                 except:
                     try:
                         key = random.choice(apikey)
-                        video = requests.get(
+                        video = await getreq(
                             f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
                         ).json()["links"][0]["url"]
                         try:
@@ -99,7 +99,7 @@ async def instadown(_, message):
                         )
     else:
         try:
-            response = requests.get(
+            response = await getreq(
                 f"https://igdownloader.onrender.com/dl?key=ashok&url={link}"
             )
             data = response.json()
@@ -136,7 +136,7 @@ async def instadown(_, message):
             await msg.delete()
         except:
             try:
-                posts = requests.get(
+                posts = await getreq(
                     f"https://api.princexd.tech/instadown?link={link}"
                 ).json()["media"]
                 singlelink = posts[0]
@@ -164,7 +164,7 @@ async def instadown(_, message):
                 await msg.delete()
             except:
                 key = random.choice(apikey)
-                posts = requests.get(
+                posts = await getreq(
                     f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
                 ).json()["links"]
                 singlelink = posts[0]
