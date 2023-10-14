@@ -3,6 +3,7 @@ import os
 
 import wget
 import yt_dlp
+from pykeyboard import InlineKeyboard
 from pyrogram import filters
 from pyrogram.types import (
     CallbackQuery,
@@ -10,7 +11,6 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     Message,
 )
-from pykeyboard import InlineKeyboard
 
 from MerissaRobot import pbot as Client
 from MerissaRobot.helpers import getreq
