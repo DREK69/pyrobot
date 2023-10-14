@@ -3,7 +3,7 @@ import os
 
 import requests
 import wget
-import youtube_dl
+import yt_dlp
 from pyrogram import filters
 from pyrogram.types import (
     CallbackQuery,
@@ -11,7 +11,6 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     Message,
 )
-from youtube_dl.utils import DownloadError
 
 from MerissaRobot import pbot as Client
 from MerissaRobot.helpers import getreq
@@ -73,11 +72,65 @@ async def get_video(c: Client, q: CallbackQuery):
     markup = InlineKeyboardMarkup(keyboards)
     await q.edit_message_reply_markup(reply_markup=markup)
 
+@Client.on_callback_query(filters.regex("^phformats"))
+async def formats_query(client, callbackquery):
+    await callbackquery.answer("Getting Formats..\n\nPlease Wait..", show_alert=True)
+    callback_data = callbackquery.data.strip()
+    id = callback_data.split("_")[1]
+    link = f"https://www.pornhub.com/view_video.php?viewkey={id}"
+    ytdl_opts = {"quiet": True}
+    ydl = yt_dlp.YoutubeDL(ytdl_opts)
+    with ydl:
+        formats_available = []
+        r = ydl.extract_info(link, download=False)
+        for format in r["formats"]:
+            try:
+                str(format["format"])
+            except:
+                continue
+            if not "dash" in str(format["format"]).lower():
+                try:
+                    format["format"]
+                    format["filesize"]
+                    format["format_id"]
+                    format["ext"]
+                    format["format_note"]
+                except:
+                    continue
+                formats_available.append(
+                    {
+                        "format": format["format"],
+                        "filesize": format["filesize"],
+                        "format_id": format["format_id"],
+                        "ext": format["ext"],
+                        "format_note": format["format_note"],
+                        "yturl": link,
+                    }
+                )
+    keyboard = InlineKeyboard()
+    done = [160, 133, 134, 135, 136, 137, 298, 299, 264, 304, 266]
+    for x in formats_available:
+        check = x["format"]
+        if x["filesize"] is None:
+            continue
+        if int(x["format_id"]) not in done:
+            continue
+        sz = convert_bytes(x["filesize"])
+        ap = check.split("-")[1]
+        to = f"{ap} = {sz}"
+        keyboard.row(
+            InlineKeyboardButton(
+                text=to,
+                callback_data=f"phubdl {x['format_id']}|{id}",
+            )
+        )
+    await callbackquery.edit_message_reply_markup(reply_markup=keyboard)
 
 @Client.on_callback_query(filters.regex(pattern=r"phubdl"))
 async def get_video(c: Client, q: CallbackQuery):
     callback_data = q.data.strip()
-    id = callback_data.split("_")[1]
+    callback_request = callback_data.split(None, 1)[1]
+    format_id, id = callback_request.split("|")
     url = f"https://www.pornhub.com/view_video.php?viewkey={id}"
     message = await q.message.edit(
         "Downloading Started\n\nDownloading Speed could be Slow Please wait..."
@@ -89,8 +142,9 @@ async def get_video(c: Client, q: CallbackQuery):
     else:
         active.append(user_id)
 
+    formats = f"{format_id}+140"
     opts = {
-        "format": "best",
+        "format": formats,
         "addmetadata": True,
         "key": "FFmpegMetadata",
         "prefer_ffmpeg": True,
@@ -101,7 +155,7 @@ async def get_video(c: Client, q: CallbackQuery):
         "logtostderr": False,
         "quiet": True,
     }
-    with youtube_dl.YoutubeDL(opts) as ydl:
+    with yt_dlp.YoutubeDL(opts) as ydl:
         try:
             await run_async(ydl.download, [url])
         except DownloadError:
@@ -112,24 +166,18 @@ async def get_video(c: Client, q: CallbackQuery):
     msg = await message.edit(
         "Uploading Started\n\nUploading Speed could be Slow Plase wait..."
     )
-    for file in os.listdir("."):
-        if file.endswith(".mp4"):
-            await Client.send_video(
-                -1001708378054,
-                f"{file}",
-                thumb=thumb,
-                width=1280,
-                height=720,
-                caption="The content you requested has been successfully downloaded!",
+    await Client.send_video(
+        -1001708378054,
+        f"{id}.mp4",
+        thumb=thumb,
+        width=1280,
+        height=720,
+        caption="The content you requested has been successfully downloaded!",
             )
-            os.remove(f"{file}")
-            break
-        else:
-            continue
+    os.remove(f"{id}.mp4")
     await q.message.reply_text(
         "Join Here to Watch Video - [Click Here](https://t.me/+Ow7dStIJSLViY2Y1)",
         disable_web_page_preview=True,
     )
     await msg.delete()
     active.remove(user_id)
-    os.remove(thumb)
