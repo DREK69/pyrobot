@@ -20,7 +20,7 @@ static_data_filter = filters.create(
     lambda _, __, query: query.data == "onUnMuteRequest"
 )
 
-FORCE_IMG = "https://telegra.ph/file/f28fafcec2ea98a69d01c.jpg"
+FORCE_IMG = "https://te.legra.ph/file/2b3a7af1d01513c032739.jpg"
 
 
 @pbot.on_callback_query(static_data_filter)
