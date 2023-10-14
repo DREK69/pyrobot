@@ -122,7 +122,7 @@ def merissa_message(context: CallbackContext, message):
         return False
 
 
-def chatbot(update: Update, context: CallbackContext):
+async def chatbot(update: Update, context: CallbackContext):
     message = update.effective_message
     chat_id = update.effective_chat.id
     bot = context.bot
@@ -132,11 +132,10 @@ def chatbot(update: Update, context: CallbackContext):
     if message.text and not message.document:
         if not merissa_message(context, message):
             return
-        bot.send_chat_action(chat_id, action="typing")
+        await bot.send_chat_action(chat_id, action="typing")
         url = f"https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message={message.text}"
-        results = requests.get(url).json()
-        sleep(0.5)
-        message.reply_text(results["reply"])
+        results = getreq(url)
+        await message.reply_text(results["reply"])
 
 
 def list_all_chats(update: Update, context: CallbackContext):
@@ -178,6 +177,7 @@ CHATBOT_HANDLER = MessageHandler(
     Filters.text
     & (~Filters.regex(r"^#[^\s]+") & ~Filters.regex(r"^!") & ~Filters.regex(r"^\/")),
     chatbot,
+    run_async
 )
 LIST_ALL_CHATS_HANDLER = CommandHandler(
     "allchats", list_all_chats, filters=CustomFilters.dev_filter
