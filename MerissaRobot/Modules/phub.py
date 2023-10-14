@@ -17,6 +17,17 @@ from MerissaRobot.helpers import getreq
 
 active = []
 
+def convert_bytes(size: float) -> str:
+    """humanize size"""
+    if not size:
+        return ""
+    power = 1024
+    t_n = 0
+    power_dict = {0: " ", 1: "K", 2: "M", 3: "G", 4: "T"}
+    while size > power:
+        size /= power
+        t_n += 1
+    return "{:.2f} {}B".format(size, power_dict[t_n])
 
 async def run_async(func, *args, **kwargs):
     loop = asyncio.get_running_loop()
