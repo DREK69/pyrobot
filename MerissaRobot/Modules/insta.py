@@ -36,7 +36,7 @@ async def premium(client, message):
     except UserNotParticipant:
         await message.reply_photo(
             photo="https://te.legra.ph/file/2b3a7af1d01513c032739.jpg",
-            "Subscribe our Telegram Update Channel @MerissaxUpdates to Get Premium for free in MerissaRobot"
+            caption="Subscribe our Telegram Update Channel @MerissaxUpdates to Get Premium for free in MerissaRobot"
         )
 
 
