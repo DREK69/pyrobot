@@ -228,11 +228,7 @@ async def movie(client, message):
         return await message.reply_text(
             "Give me some text to make logo\n\nEx. /logo Merissa or Merissa;Robot"
         )
-    name = (
-        message.text.split(None, 1)[1]
-        if len(message.command) < 3
-        else message.text.split(None, 1)[1].replace(" ", "%20")
-    )
+    name = message.text.split(None, 1)[1]
     if reply:
         download_location = await client.download_media(
             message=reply,
