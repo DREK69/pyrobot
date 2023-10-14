@@ -18,6 +18,8 @@ instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stori
 tiktokregex = r"^https:\/\/(www\.tiktok.com|vm\.tiktok\.com|vt\.tiktok\.com)\/?(.*)"
 snapregex = r"^https:\/\/www\.snapchat\.com\/add"
 fbregex = r"^https:\/\/www\.facebook\.com\/reel\/"
+pinregex = r"^https:\/\/(pin\.it|www\.pinterest\.com|pinterest\.com|in\.pinterest\.com)"
+
 
 apikey = [
     "22a34ac86fmsh648c15a7abb6555p1cb539jsn4b193ae50c9f",
@@ -191,6 +193,17 @@ async def instadown(_, message):
                     await message.reply_media_group(mg)
                 await msg.delete()
 
+@pbot.on_message(filters.regex(pinregex) & subscribed)
+async def pindown(_, message):
+    link = message.text
+    m = await message.reply_text("Processing...")
+    pin = getreq(f"https://api.princexd.tech/pin?link={link}")
+    pinvid = pin["media"]
+    title = pin["title"]
+    await message.reply_document(
+        pinvid, caption=f"{title}\n\nUploaded by @MerissaRobot"
+    )
+    await m.delete()
 
 @pbot.on_message(
     filters.regex(fbregex) & filters.incoming & filters.private & subscribed
