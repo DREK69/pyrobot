@@ -554,9 +554,9 @@ async def lyrics(client, message):
         )
     title = message.text.split(None, 1)[1]
     try:
-        lyrics = await getreq(
-            f"https://api.princexd.tech/lyrics/text?query={title}"
-        )["lyrics"]
+        lyrics = await getreq(f"https://api.princexd.tech/lyrics/text?query={title}")[
+            "lyrics"
+        ]
         await message.reply_text(lyrics)
     except:
         await message.reply_text("Lyrics Not Found")
