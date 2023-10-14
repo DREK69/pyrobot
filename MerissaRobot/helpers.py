@@ -20,10 +20,7 @@ async def getreq(url):
             try:
                 data = await resp.json()
             except:
-                try:
-                    data = await resp.text()
-                except:
-                    data = resp
+                data = await resp.text()
     return data
 
 
@@ -33,10 +30,7 @@ async def postreq(url, data):
             try:
                 data = await resp.json()
             except:
-                try:
-                    data = await resp.text()
-                except:
-                    data = resp
+                data = resp
     return data
 
 
@@ -72,7 +66,7 @@ async def get_ytthumb(videoid: str):
     thumb_link = "https://i.imgur.com/4LwPLai.png"
     for qualiy in thumb_quality:
         link = f"https://i.ytimg.com/vi/{videoid}/{qualiy}"
-        if (await getreq(link)).status_code == 200:
+        if (requests.get(link)).status_code == 200:
             thumb_link = link
             break
     return thumb_link
