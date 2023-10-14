@@ -33,6 +33,9 @@ def convert_bytes(size: float) -> str:
         t_n += 1
     return "{:.2f} {}B".format(size, power_dict[t_n])
 
+async def run_async(func, *args, **kwargs):
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(None, func, *args, **kwargs)
 
 async def convertmin(duration):
     seconds = int(duration)
@@ -447,11 +450,10 @@ async def audio_query(client, callbackquery):
     callback_data = callbackquery.data.strip()
     videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    ydl_opts = {"format": "bestaudio[ext=m4a]"}
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+    ydl_opts =  {"format": "bestaudio[ext=m4a]", 'outtmpl': '%(id)s.%(ext)s'}
+    with yt_dlp.YoutubeDL(opts) as ydl:
+        await run_async(ydl.download, [link])
         info_dict = ydl.extract_info(link, download=False)
-        audio_file = ydl.prepare_filename(info_dict)
-        ydl.process_info(info_dict)
     title = info_dict["title"]
     try:
         album = info_dict["album"]
@@ -461,6 +463,7 @@ async def audio_query(client, callbackquery):
         "results"
     ]["videoDetails"]["author"]
     thumb = await callbackquery.message.download()
+    audio_file = f"{videoid}.m4a"
     audio = MP4(audio_file)
     audio["\xa9nam"] = title
     audio["\xa9alb"] = album
@@ -515,12 +518,9 @@ async def video_query(client, callbackquery):
         "logtostderr": False,
         "quiet": True,
     }
-    try:
-        with yt_dlp.YoutubeDL(opts) as ytdl:
-            info_dict = ytdl.extract_info(link, download=True)
-    except Exception as e:
-        await m.edit(f"**Failed to Download.** \n**Error :** `{str(e)}`")
-        return
+    with yt_dlp.YoutubeDL(opts) as ydl:
+        await run_async(ydl.download, [url])
+        info_dict = ydl.extract_info(link, download=False)
     download_720 = f"{info_dict['id']}.mp4"
     thumb = await callbackquery.message.download()
     width = callbackquery.message.photo.width
@@ -570,7 +570,7 @@ async def lyrics_cb(bot, query):
     else:
         pass
     await query.answer("Getting lyrics...", show_alert=True)
-    lyr = getreq(f"https://editor-choice-api.vercel.app/lyrics?query={q}").json()
+    lyr = await getreq(f"https://editor-choice-api.vercel.app/lyrics?query={q}").json()
     if not lyr["error"]:
         link = lyr["url"]
         button = InlineKeyboardMarkup(
