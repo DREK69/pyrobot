@@ -14,7 +14,11 @@ async def recognize(path):
 
 @pbot.on_message(filters.command("shazam"))
 async def voice_handler(_, message):
-    file_size = message.reply_to_message.audio or message.reply_to_message.video or message.reply_to_message.voice
+    file_size = (
+        message.reply_to_message.audio
+        or message.reply_to_message.video
+        or message.reply_to_message.voice
+    )
     if 30641629 < file_size.file_size:
         await message.reply_text("**⚠️ Max file size has been reached.**")
         return
