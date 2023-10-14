@@ -25,7 +25,7 @@ async def _startfile(bot, update):
             check_media_group = await bot.get_media_group(TRACK_CHANNEL, int(msg_id))
             check = check_media_group[0]  # Because func return`s list obj
         except Exception:
-            check = await bot.get_messages(, int(msg_id))
+            check = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
 
         if check.empty:
             await update.reply_text('Error: [Message does not exist]\n/help for more details...')
