@@ -138,6 +138,9 @@ async def formats_query(client, callbackquery):
                 callback_data=f"phubdl {x['format_id']}|{id}",
             )
         )
+    keyboard.row(
+        InlineKeyboardButton(text="🗑️ Close", callback_data="cb_close"),
+    )
     await callbackquery.edit_message_reply_markup(reply_markup=keyboard)
 
 
