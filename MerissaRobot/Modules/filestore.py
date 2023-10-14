@@ -64,6 +64,7 @@ async def _startfile(bot, update):
 
 
 async def __reply(update, copied):
+    ok = await update.reply_text("Downloading Media...")
     msg_id = copied.id
     if copied.video:
         unique_idx = copied.video.file_unique_id
@@ -85,7 +86,7 @@ async def __reply(update, copied):
         await copied.delete()
         return
 
-    await update.reply_text(
+    await ok.edit_text(
         "Here is Your Sharing Link:",
         True,
         reply_markup=InlineKeyboardMarkup(
@@ -125,7 +126,5 @@ async def _main_grop(bot, update):
     filters.media & filters.private & ~filters.media_group & filters.incoming
 )
 async def _main(bot, update):
-    ok = await update.reply_text("Downloading Media...")
     copied = await update.copy(TRACK_CHANNEL)
     await __reply(update, copied)
-    await ok.delete()
