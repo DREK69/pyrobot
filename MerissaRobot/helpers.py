@@ -17,13 +17,21 @@ def save_file(url, name):
 async def getreq(url):
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
-            return resp
+            try:
+                data = await resp.json()
+            except:
+                data = await resp.text()
+    return resp
 
 
 async def postreq(url, data):
     async with aiohttp.ClientSession() as session:
         async with session.post(url, data=data) as resp:
-            return resp
+            try:
+                data = await resp.json()
+            except:
+                data = await resp.text() 
+    return resp
 
 
 async def is_subscribed(filter, client, update):
