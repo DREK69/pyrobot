@@ -8,6 +8,7 @@ from telethon import Button, events
 
 from MerissaRobot import pbot as bot
 from MerissaRobot import telethn as asst
+from MerissaRobot.helpers import getreq
 
 
 @bot.on_message(filters.command("wish"))
@@ -15,7 +16,7 @@ async def wish(_, m):
     if len(m.command) < 2:
         await m.reply("😉 ~~**Add~~ wish!**")
         return
-    api = requests.get("https://nekos.best/api/v2/happy").json()
+    api = await getreq("https://nekos.best/api/v2/happy").json()
     url = api["results"][0]["url"]
     text = m.text.split(None, 1)[1]
     wish_count = random.randint(1, 100)
@@ -168,7 +169,7 @@ async def cute(e):
 
 @bot.on_message(filters.command("boob"))
 async def boobs(client, message):
-    pic = requests.get("https://api.princexd.tech/boobs").json()
+    pic = await getreq("https://api.princexd.tech/boobs").json()
     await client.send_photo(
         message.chat.id,
         pic,
@@ -188,7 +189,7 @@ async def boobs(client, message):
 
 @bot.on_message(filters.command("animepfp"))
 async def animepfp(client, message):
-    pic = requests.get("https://api.princexd.tech/animepfp").json()["url"]
+    pic = await getreq("https://api.princexd.tech/animepfp").json()["url"]
     await client.send_photo(
         message.chat.id,
         pic,
