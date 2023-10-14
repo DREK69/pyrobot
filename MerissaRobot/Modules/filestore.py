@@ -17,7 +17,7 @@ async def _startfile(bot, update):
         return
     code = update.command[1]
     if "-" in code:
-        upmsg = await update.reply_text("Please Wait Uploading...")
+        ok = await update.reply_text("Uploading Media...")
         msg_id = code.split("-")[-1]
         # due to new type of file_unique_id, it can contain "-" sign like "agadyruaas-puuo"
         unique_id = "-".join(code.split("-")[0:-1])
@@ -55,10 +55,10 @@ async def _startfile(bot, update):
             return
         try:  # If message not belong to media group raise exception
             await bot.copy_media_group(update.from_user.id, TRACK_CHANNEL, int(msg_id))
-            await upmsg.delete()
+            await ok.delete()
         except Exception:
             await check.copy(update.from_user.id)
-            await upmsg.delete()
+            await ok.delete()
     else:
         return
 
@@ -125,5 +125,7 @@ async def _main_grop(bot, update):
     filters.media & filters.private & ~filters.media_group & filters.incoming
 )
 async def _main(bot, update):
+    ok = await update.reply_text("Downloading Media...")
     copied = await update.copy(TRACK_CHANNEL)
     await __reply(update, copied)
+    await ok.delete()
