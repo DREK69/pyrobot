@@ -5,6 +5,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from MerissaRobot import BOT_USERNAME as botun
 from MerissaRobot import pbot
+from MerissaRobot.helpers import subscribed
 
 TRACK_CHANNEL = int("-1001900195958")
 media_group_id = 0
@@ -103,7 +104,7 @@ async def __reply(update, copied):
 
 
 @pbot.on_message(
-    filters.media & filters.private & filters.media_group & filters.incoming
+    filters.media & filters.private & filters.media_group & filters.incoming & subscribed
 )
 async def _main_grop(bot, update):
     global media_group_id
