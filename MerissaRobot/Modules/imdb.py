@@ -14,7 +14,8 @@ async def imdb(_, message):
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    url = await getreq(f"https://api.safone.me/tmdb?query={query}").json()["results"][0]
+    resp = await getreq(f"https://api.safone.me/tmdb?query={query}").json()
+    url = resp["results"][0]
     await message.reply_photo(
         photo=url["poster"],
         caption=f"""**IMDB Movie Details :**
