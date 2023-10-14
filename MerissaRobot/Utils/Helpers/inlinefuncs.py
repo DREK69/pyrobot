@@ -396,7 +396,7 @@ async def cbgames(_, cq):
         )
         return
     thumb = await get_ytthumb(info_dict["id"])
-    thumbnail = save_file(thumb, "thumb.jpg")
+    thumbnail = await save_file(thumb, "thumb.jpg")
     download_720 = f"{info_dict['id']}.mp4"
     med = InputMediaVideo(
         media=download_720,
