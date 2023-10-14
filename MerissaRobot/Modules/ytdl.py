@@ -450,7 +450,7 @@ async def audio_query(client, callbackquery):
     callback_data = callbackquery.data.strip()
     videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    ydl_opts = {"format": "bestaudio[ext=m4a]", "outtmpl": "%(id)s.%(ext)s"}
+    opts = {"format": "bestaudio[ext=m4a]", "outtmpl": "%(id)s.%(ext)s"}
     with yt_dlp.YoutubeDL(opts) as ydl:
         await run_async(ydl.download, [link])
         info_dict = ydl.extract_info(link, download=False)
