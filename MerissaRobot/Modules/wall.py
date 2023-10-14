@@ -18,7 +18,7 @@ async def wallpaper(bot, message):
     search = message.text.split(None, 1)[1]
     wallsearch = px.search_wallpapers(search)
     wall = wallsearch[0]["url"]
-    wallpaper = save_file(wall, "wall.png")
+    wallpaper = await save_file(wall, "wall.png")
     await message.reply_photo(
         wallpaper,
         caption="Powered by @MerissaRobot",
@@ -50,7 +50,7 @@ async def wnext_query(client, callbackquery):
     page = int(callback[2])
     wallsearch = px.search_wallpapers(query=search)
     wall = wallsearch[page]["url"]
-    wallpaper = save_file(wall, "wall.png")
+    wallpaper = await save_file(wall, "wall.png")
     tpage = len(wallsearch) - 1
     if page == 0:
         await callbackquery.edit_message_media(
