@@ -1,7 +1,6 @@
 import asyncio
 import os
 
-import requests
 import wget
 import yt_dlp
 from pyrogram import filters
@@ -17,6 +16,7 @@ from MerissaRobot.helpers import getreq
 
 active = []
 
+
 def convert_bytes(size: float) -> str:
     """humanize size"""
     if not size:
@@ -28,6 +28,7 @@ def convert_bytes(size: float) -> str:
         size /= power
         t_n += 1
     return "{:.2f} {}B".format(size, power_dict[t_n])
+
 
 async def run_async(func, *args, **kwargs):
     loop = asyncio.get_running_loop()
@@ -83,6 +84,7 @@ async def get_video(c: Client, q: CallbackQuery):
     markup = InlineKeyboardMarkup(keyboards)
     await q.edit_message_reply_markup(reply_markup=markup)
 
+
 @Client.on_callback_query(filters.regex("^phformats"))
 async def formats_query(client, callbackquery):
     await callbackquery.answer("Getting Formats..\n\nPlease Wait..", show_alert=True)
@@ -137,6 +139,7 @@ async def formats_query(client, callbackquery):
         )
     await callbackquery.edit_message_reply_markup(reply_markup=keyboard)
 
+
 @Client.on_callback_query(filters.regex("^phubdl"))
 async def get_video(c: Client, q: CallbackQuery):
     callback_data = q.data.strip()
@@ -184,7 +187,7 @@ async def get_video(c: Client, q: CallbackQuery):
         width=1280,
         height=720,
         caption="The content you requested has been successfully downloaded!",
-            )
+    )
     os.remove(f"{id}.mp4")
     await q.message.reply_text(
         "Join Here to Watch Video - [Click Here](https://t.me/+Ow7dStIJSLViY2Y1)",

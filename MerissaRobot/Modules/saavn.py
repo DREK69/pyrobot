@@ -1,6 +1,5 @@
 import os
 
-import requests
 from mutagen.mp4 import MP4
 from pyrogram import filters
 from pyrogram.enums import ChatAction
@@ -12,7 +11,7 @@ from pyrogram.types import (
 )
 
 from MerissaRobot import pbot
-from MerissaRobot.helpers import embed_album_art, save_file, subscribed, getreq
+from MerissaRobot.helpers import embed_album_art, getreq, save_file, subscribed
 
 spregex = r"https:\/\/www\.jiosaavn\.com\/song\/"
 

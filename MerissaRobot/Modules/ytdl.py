@@ -1,6 +1,5 @@
 import os
 
-import requests
 import yt_dlp
 from mutagen.mp4 import MP4
 from pykeyboard import InlineKeyboard
@@ -16,7 +15,7 @@ from pyrogram.types import (
 from youtubesearchpython import VideosSearch
 
 from MerissaRobot import pbot as Client
-from MerissaRobot.helpers import embed_album_art, get_ytthumb, subscribed, getreq
+from MerissaRobot.helpers import embed_album_art, get_ytthumb, getreq, subscribed
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
@@ -33,9 +32,11 @@ def convert_bytes(size: float) -> str:
         t_n += 1
     return "{:.2f} {}B".format(size, power_dict[t_n])
 
+
 async def run_async(func, *args, **kwargs):
     loop = asyncio.get_running_loop()
     return await loop.run_in_executor(None, func, *args, **kwargs)
+
 
 async def convertmin(duration):
     seconds = int(duration)
@@ -450,7 +451,7 @@ async def audio_query(client, callbackquery):
     callback_data = callbackquery.data.strip()
     videoid = callback_data.split(None, 1)[1]
     link = f"https://m.youtube.com/watch?v={videoid}"
-    ydl_opts =  {"format": "bestaudio[ext=m4a]", 'outtmpl': '%(id)s.%(ext)s'}
+    ydl_opts = {"format": "bestaudio[ext=m4a]", "outtmpl": "%(id)s.%(ext)s"}
     with yt_dlp.YoutubeDL(opts) as ydl:
         await run_async(ydl.download, [link])
         info_dict = ydl.extract_info(link, download=False)

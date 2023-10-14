@@ -1,23 +1,23 @@
-import os
-from pyrogram import Client, filters
+from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from MerissaRobot import pbot
 from MerissaRobot import BOT_USERNAME as botun
+from MerissaRobot import pbot
 
 TRACK_CHANNEL = "-1001900195958"
 media_group_id = 0
 
+
 # Start & Get file
-@pbot.on_message(filters.command('start') & filters.private)
+@pbot.on_message(filters.command("start") & filters.private)
 async def _startfile(bot, update):
     if len(update.command) != 2:
         return
     code = update.command[1]
-    if '-' in code:
-        msg_id = code.split('-')[-1]
+    if "-" in code:
+        msg_id = code.split("-")[-1]
         # due to new type of file_unique_id, it can contain "-" sign like "agadyruaas-puuo"
-        unique_id = '-'.join(code.split('-')[0:-1])
+        unique_id = "-".join(code.split("-")[0:-1])
 
         if not msg_id.isdigit():
             return
@@ -28,7 +28,9 @@ async def _startfile(bot, update):
             check = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
 
         if check.empty:
-            await update.reply_text('Error: [Message does not exist]\n/help for more details...')
+            await update.reply_text(
+                "Error: [Message does not exist]\n/help for more details..."
+            )
             return
         if check.video:
             unique_idx = check.video.file_unique_id
@@ -55,6 +57,7 @@ async def _startfile(bot, update):
     else:
         return
 
+
 async def __reply(update, copied):
     msg_id = copied.message_id
     if copied.video:
@@ -78,22 +81,33 @@ async def __reply(update, copied):
         return
 
     await update.reply_text(
-        'Here is Your Sharing Link:',
+        "Here is Your Sharing Link:",
         True,
-        reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton('Sharing Link',
-                                  url=f'https://t.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}')]
-        ])
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "Sharing Link",
+                        url=f"https://t.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}",
+                    )
+                ]
+            ]
+        ),
     )
-    await asyncio.sleep(0.5)  # Wait do to avoid 5 sec flood ban 
+    await asyncio.sleep(0.5)  # Wait do to avoid 5 sec flood ban
+
 
 @pbot.on_message(filters.media & filters.private & filters.media_group)
 async def _main_grop(bot, update):
     global media_group_id
-  
+
     if int(media_group_id) != int(update.media_group_id):
         media_group_id = update.media_group_id
-        copied = (await bot.copy_media_group(TRACK_CHANNEL, update.from_user.id, update.message_id))[0]
+        copied = (
+            await bot.copy_media_group(
+                TRACK_CHANNEL, update.from_user.id, update.message_id
+            )
+        )[0]
         await __reply(update, copied)
 
     else:

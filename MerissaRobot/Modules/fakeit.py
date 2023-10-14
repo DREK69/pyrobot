@@ -1,6 +1,3 @@
-import os
-
-import requests
 from faker import Faker
 from faker.providers import internet
 from telethon import events

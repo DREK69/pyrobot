@@ -1,4 +1,3 @@
-import requests
 from pyrogram import filters
 
 from MerissaRobot import pbot as app
@@ -18,9 +17,7 @@ async def carbon(client, message):
     nan = await message.reply_text("Processing...")
     try:
         data = {"code": txt, "bgcolor": "white"}
-        file = await postreq("https://api.princexd.tech/carbon", data).json()[
-            "url"
-        ]
+        file = await postreq("https://api.princexd.tech/carbon", data).json()["url"]
         await message.reply_photo(
             photo=file, caption=f"<b>Carbonimg By :</b> {client.me.mention}"
         )

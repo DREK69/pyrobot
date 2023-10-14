@@ -1,9 +1,7 @@
-import requests
 from pyrogram import filters
 from pyrogram.types import *
 
-from MerissaRobot import pbot
-from MerissaRobot import getreq
+from MerissaRobot import getreq, pbot
 
 
 @pbot.on_message(filters.command(["imdb", "tmdb"]))
