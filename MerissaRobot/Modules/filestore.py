@@ -104,7 +104,11 @@ async def __reply(update, copied):
 
 
 @pbot.on_message(
-    filters.media & filters.private & filters.media_group & filters.incoming & subscribed
+    filters.media
+    & filters.private
+    & filters.media_group
+    & filters.incoming
+    & subscribed
 )
 async def _main_grop(bot, update):
     global media_group_id
