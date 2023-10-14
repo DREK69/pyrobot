@@ -1,7 +1,8 @@
 from pyrogram import filters
 from pyrogram.types import *
 
-from MerissaRobot import getreq, pbot
+from MerissaRobot import pbot
+from MerissaRobot.helpers import getreq
 
 
 @pbot.on_message(filters.command(["imdb", "tmdb"]))
