@@ -30,7 +30,7 @@ async def postreq(url, data):
             try:
                 data = await resp.json()
             except:
-                data = resp
+                data = await resp.text()
     return data
 
 
