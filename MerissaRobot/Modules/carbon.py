@@ -44,7 +44,7 @@ async def carbon(client, message):
     nan = await message.reply_text("Processing...")
     try:
         data = {"code": txt, "title": title, "theme": "breeze", "darkMode": True}
-        file = await getpost("https://api.princexd.tech/rayso", data).json()["url"]
+        file = await postreq("https://api.princexd.tech/rayso", data).json()["url"]
         await message.reply_photo(
             photo=file, caption=f"<b>Raysoimg By :</b> {client.me.mention}"
         )
