@@ -16,7 +16,7 @@ from pyrogram.types import (
 from youtubesearchpython import VideosSearch
 
 from MerissaRobot import pbot as Client
-from MerissaRobot.helpers import embed_album_art, get_ytthumb, subscribed
+from MerissaRobot.helpers import embed_album_art, get_ytthumb, subscribed, getreq
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
@@ -49,7 +49,7 @@ async def ytregex(client, message):
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     link = message.text
     if "music" in link:
-        yt = requests.get(f"https://api.princexd.tech/ytmsearch?query={link}").json()[
+        yt = await getreq(f"https://api.princexd.tech/ytmsearch?query={link}")[
             "results"
         ]["videoDetails"]
         videoid = yt["videoId"]
@@ -75,7 +75,7 @@ async def ytregex(client, message):
         )
         await m.delete()
     else:
-        yt = requests.get(f"https://api.princexd.tech/ytinfo?link={link}").json()
+        yt = await getreq(f"https://api.princexd.tech/ytinfo?link={link}")
         videoid = yt["id"]
         title = yt["title"]
         duration = yt["duration"]
@@ -146,7 +146,7 @@ async def song(client, message):
         return await message.reply_text("Give me some text to search on Youtube")
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     query = message.text.split(None, 1)[1]
-    search = requests.get(f"https://api.princexd.tech/ytmsearch?query={query}").json()
+    search = await getreq(f"https://api.princexd.tech/ytmsearch?query={query}")
     yt = search["results"][0]
     title = yt["title"]
     dur = yt["duration"]
@@ -183,7 +183,7 @@ async def ymnext_query(client, callbackquery):
     callback = callback_data.split("|")
     query = callback[1]
     page = int(callback[2])
-    search = requests.get(f"https://api.princexd.tech/ytmsearch?query={query}").json()
+    search = await getreq(f"https://api.princexd.tech/ytmsearch?query={query}")
     yt = search["results"][page]
     title = yt["title"]
     dur = yt["duration"]
@@ -457,7 +457,7 @@ async def audio_query(client, callbackquery):
         album = info_dict["album"]
     except:
         album = title
-    artist = requests.get(f"https://api.princexd.tech/ytmsearch?query={link}").json()[
+    artist = await getreq(f"https://api.princexd.tech/ytmsearch?query={link}")[
         "results"
     ]["videoDetails"]["author"]
     thumb = await callbackquery.message.download()
@@ -553,9 +553,9 @@ async def lyrics(client, message):
         )
     title = message.text.split(None, 1)[1]
     try:
-        lyrics = requests.get(
+        lyrics = await getreq(
             f"https://api.princexd.tech/lyrics/text?query={title}"
-        ).json()["lyrics"]
+        )["lyrics"]
         await message.reply_text(lyrics)
     except:
         await message.reply_text("Lyrics Not Found")
@@ -570,7 +570,7 @@ async def lyrics_cb(bot, query):
     else:
         pass
     await query.answer("Getting lyrics...", show_alert=True)
-    lyr = requests.get(f"https://editor-choice-api.vercel.app/lyrics?query={q}").json()
+    lyr = getreq(f"https://editor-choice-api.vercel.app/lyrics?query={q}").json()
     if not lyr["error"]:
         link = lyr["url"]
         button = InlineKeyboardMarkup(
