@@ -1,74 +1,81 @@
 import asyncio
 
-from pyrogram import filters
-from pyrogram.errors import FloodWait
+from pyrogram import Client, filters
+from pyrogram.types import Message
 
-from MerissaRobot import OWNER_ID, pbot
-from MerissaRobot.Database.sql.users_sql import get_all_chats, get_all_users
+import MerissaRobot.Database.sql.users_sql as sql
+from MerissaRobot import DEV_USERS, OWNER_ID, pbot as pgram
+from MerissaRobot.Database.sql.users_sql import get_all_users
 
+@pgram.on_message(filters.command("broadcast"))
+async def broadcast_cmd(client: Client, message: Message):
+    user_id = message.from_user.id
+    texttt = message.text.split(" ")
 
-@pbot.on_message(
-    filters.command(["broadcast", "broadcastgroups", "broadcastusers"])
-    & filters.user(OWNER_ID)
-)
-async def broadcast(_, message):
-    okay = message.text.split(None, 1)
-    if message.reply_to_message:
-        x = message.reply_to_message.id
-        y = message.chat.id
-    else:
-        if len(okay) < 2:
-            return await message.reply_text(
-                "**Usage**:\n/broadcast [MESSAGE] or [Reply to a Message]"
-            )
-        query = okay[1]
-    if okay[0] == "/broadcastgroups":
-        to_group = True
-    if okay[0] == "/broadcastusers":
-        to_user = True
-    else:
-        to_group = to_user = True
-    sent_group = 0
-    sent_user = 0
-    chats = get_all_chats() or []
-    users = get_all_users()
-    broadcast = await message.reply_text("**Broadcasting Message Started...**")
-    if to_group:
-        for chat in chats:
-            try:
-                chat_id = int(chat.chat_id)
-                await pbot.forward_messages(
-                    chat_id, y, x
-                ) if message.reply_to_message else await pbot.send_message(
-                    chat_id, text=query
-                )
-                sent_group += 1
-            except FloodWait as e:
-                flood_time = int(e.x)
-                if flood_time > 200:
-                    continue
-                await asyncio.sleep(flood_time)
-            except Exception:
-                continue
-    if to_user:
-        for user in users:
-            try:
-                chat_id = int(user.user_id)
-                await pbot.forward_messages(
-                    chat_id, y, x
-                ) if message.reply_to_message else await pbot.send_message(
-                    chat_id, text=query
-                )
-            except FloodWait as e:
-                flood_time = int(e.x)
-                if flood_time > 200:
-                    continue
-                await asyncio.sleep(flood_time)
-            except Exception:
-                continue
-    try:
-        await broadcast.edit_text(
-            f"**Broadcast complete.\nGroups Count: {sent_group}\nUsers Count: {sent_user}**"
+    if user_id not in [OWNER_ID] + DEV_USERS:
+        await message.reply_text(
+            "You are not authorized to use this command. Only the owner and authorized users can use it."
         )
-    except:
-        pass
+        return
+
+    if len(texttt) < 2:
+        return await message.reply_text(
+            "<b>BROADCASTING COMMANDS</b>\n-user : broadcasting all user's DM\n-group : broadcasting all groups\n-all : broadcasting both\nEx: /broadcast-user"
+        )
+
+    if message.reply_to_message is None and not get_arg(message):
+        return await message.reply_text(
+            "<b>Please provide a message or reply to a message</b>"
+        )
+
+    tex = await message.reply_text("<code>Starting global broadcast...</code>")
+
+    usersss = 0
+    chatttt = 0
+    uerror = 0
+    cerror = 0
+    chats = sql.get_all_chats() or []
+    users = get_all_users()
+
+    if "-all" in texttt:
+        texttt.append("-user")
+        texttt.append("-group")
+
+    if "-user" in texttt:
+        for chat in users:
+            if message.reply_to_message:
+                msg = message.reply_to_message
+            else:
+                msg = message.text.split(None, 2)[2]
+            try:
+                if message.reply_to_message:
+                    aa = await msg.copy(chat.user_id)
+                else:
+                    aa = await client.send_message(chat.user_id, msg)
+
+                usersss += 1
+                await asyncio.sleep(0.3)
+            except Exception:
+                uerror += 1
+                await asyncio.sleep(0.3)
+    if "-group" in texttt:
+        for chat in chats:
+            if message.reply_to_message:
+                msg = message.reply_to_message
+            else:
+                msg = message.text.split(None, 2)[2]
+            try:
+                if message.reply_to_message:
+                    aa = await msg.copy(chat.chat_id)
+                else:
+                    aa = await client.send_message(chat.chat_id, msg)
+
+                chatttt += 1
+                await asyncio.sleep(0.3)
+            except Exception:
+                cerror += 1
+                await asyncio.sleep(0.3)
+
+    await tex.edit_text(
+        f"<b>Message Successfully Sent</b> \nTotal Users: <code>{usersss}</code> \nFailed Users: <code>{uerror}</code> \nTotal GroupChats: <code>{chatttt}</code> \nFailed GroupChats: <code>{cerror}</code>"
+        )
