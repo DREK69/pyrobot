@@ -115,10 +115,10 @@ async def __reply(update, copied):
 async def _main_grop(bot, update):
     global media_group_id
 
-    if int(media_group_id) != int(update.media_group_id):
-        media_group_id = update.media_group_id
+    if int(media_group_id) != int(update.reply_to_message.media_group_id):
+        media_group_id = update.reply_to_message.media_group_id
         copied = (
-            await bot.copy_media_group(TRACK_CHANNEL, update.from_user.id, update.id)
+            await bot.reply_to_message.copy_media_group(TRACK_CHANNEL, update.from_user.id, update.id)
         )[0]
         await __reply(update, copied)
 
@@ -132,7 +132,7 @@ async def _main_grop(bot, update):
 async def _main(bot, update):
     global media_group_id
 
-    if int(media_group_id) != int(update.media_group_id):
+    if int(media_group_id) != int(update.reply_to_message.media_group_id):
         return
     copied = await update.reply_to_message.copy(TRACK_CHANNEL)
     log_msg = await update.reply_to_message.forward(chat_id=TRACK_CHANNEL)
