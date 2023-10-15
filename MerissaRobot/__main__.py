@@ -913,6 +913,7 @@ def main():
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+    pbot.start()
     LOGGER.info("Pyrogram Started")
     try:
         telethn.start(bot_token=TOKEN)
