@@ -36,7 +36,7 @@ async def voice_handler(_, message):
     out += f'**Artist**: `{r["subtitle"]}`\n'
     query = f"{r['title']} - {r['subtitle']}"
     search = await getreq(f"https://api.princexd.tech/ytmsearch?query={query}")
-    videoid = search["results"][0]["id"]
+    videoid = search["results"][0]["videoId"]
     buttons = [
         [
             types.InlineKeyboardButton("🔗 Share", url=f'{r["share"]["html"]}'),
