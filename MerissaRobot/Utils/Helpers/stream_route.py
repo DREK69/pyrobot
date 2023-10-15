@@ -23,12 +23,14 @@ from MerissaRobot import pbot as StreamBot
 
 routes = web.RouteTableDef()
 
+BIN_CHANNEL = "-1001900195958"
 
 async def web_server():
     web_app = web.Application(client_max_size=30000000)
     web_app.add_routes(routes)
     return web_app
 
+URL = "immerissa.herokuapp.com"
 
 multi_clients = {}
 work_loads = {}
@@ -38,12 +40,12 @@ __version__ = 1.1
 
 
 async def render_page(message_id, secure_hash):
-    file_data = await get_file_ids(StreamBot, int(Var.BIN_CHANNEL), int(message_id))
+    file_data = await get_file_ids(StreamBot, int(BIN_CHANNEL), int(message_id))
     if file_data.unique_id[:6] != secure_hash:
         logging.debug(f"link hash: {secure_hash} - {file_data.unique_id[:6]}")
         logging.debug(f"Invalid hash for message with - ID {message_id}")
         raise InvalidHash
-    src = urllib.parse.urljoin(Var.URL, f"{secure_hash}{str(message_id)}")
+    src = urllib.parse.urljoin(URL, f"{secure_hash}{str(message_id)}")
     if str(file_data.mime_type.split("/")[0].strip()) == "video":
         async with aiofiles.open("Adarsh/template/req.html") as r:
             heading = "Watch {}".format(file_data.file_name)
