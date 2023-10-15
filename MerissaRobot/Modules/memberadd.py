@@ -3,7 +3,7 @@ import os
 import traceback
 from asyncio.exceptions import TimeoutError
 from datetime import datetime
-from config import *
+
 from pyrogram import filters
 from pyrogram.errors import FloodWait
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -24,6 +24,7 @@ from telethon.errors.rpcerrorlist import (
 from telethon.sync import TelegramClient
 from telethon.tl.functions.channels import InviteToChannelRequest, JoinChannelRequest
 
+from config import *
 from MerissaRobot import pbot as app
 
 if not os.path.exists("./sessions"):
@@ -460,7 +461,7 @@ async def start(lel, message):
 # ------------------------------- Buttons --------------------------------- #
 @app.on_callback_query(filters.regex("^mem"))
 async def button(app, update):
-    k = update.data.split('_')[1]
+    k = update.data.split("_")[1]
     if "tutorial" in k:
         await update.message.delete()
         await app.send_message(
