@@ -1,30 +1,23 @@
+import asyncio
 import logging
 import math
 import mimetypes
 import re
 import secrets
 import time
-import time
-import asyncio
-import logging
-import math
 import urllib.parse
-from typing import Dict, Union
+from typing import Any, Dict, Optional, Union
 
 import aiofiles
 import aiohttp
 from aiohttp import web
 from aiohttp.http_exceptions import BadStatusLine
-from typing import Any, Optional
-
-from pyrogram import Client
-from pyrogram.file_id import FileId
-from pyrogram.raw.types.messages import Messages
-from pyrogram.types import Message
 from pyrogram import Client, raw, utils
 from pyrogram.errors import AuthBytesInvalid
 from pyrogram.file_id import FileId, FileType, ThumbnailSource
+from pyrogram.raw.types.messages import Messages
 from pyrogram.session import Auth, Session
+from pyrogram.types import Message
 
 from MerissaRobot import pbot as StreamBot
 
@@ -35,6 +28,7 @@ work_loads = {}
 
 StartTime = time.time()
 __version__ = 1.1
+
 
 async def render_page(message_id, secure_hash):
     file_data = await get_file_ids(StreamBot, int(Var.BIN_CHANNEL), int(message_id))
