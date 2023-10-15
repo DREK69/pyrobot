@@ -1,6 +1,6 @@
 from asyncio.exceptions import TimeoutError
 
-from pyrogram import filters, Client
+from pyrogram import Client, filters
 from pyrogram.errors import (
     ApiIdInvalid,
     PasswordHashInvalid,
@@ -32,6 +32,7 @@ ERROR_MESSAGE = (
 
 generate_button = [[InlineKeyboardButton("Generate Session", callback_data="generate")]]
 
+
 # Callbacks
 @pbot.on_message(filters.command("genstr"))
 async def _callbacks(pbot, message):
@@ -44,15 +45,16 @@ Bot has over 100+ API ID and HASH Saved , You can use them.
 
 Press Button Below to Start Generating Session!""",
         reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton("Pyrogram", callback_data="gen_pyrogram"),
-                            InlineKeyboardButton("Telethon", callback_data="gen_telethon"),
-                        ]
-                    ]
-                ),
-            )
-    
+            [
+                [
+                    InlineKeyboardButton("Pyrogram", callback_data="gen_pyrogram"),
+                    InlineKeyboardButton("Telethon", callback_data="gen_telethon"),
+                ]
+            ]
+        ),
+    )
+
+
 @pbot.on_callback_query(filters.regex("^gen"))
 async def pyro_callbacks(pbot, callback_query):
     query = callback_query.data.split("_")[1]
@@ -64,6 +66,7 @@ async def pyro_callbacks(pbot, callback_query):
             await generate_session(pbot, callback_query, telethon=True)
     except Exception as e:
         await callback_query.message.reply(ERROR_MESSAGE.format(str(e)))
+
 
 async def generate_session(pbot, callback_query, telethon=False):
     msg = callback_query.message
@@ -98,9 +101,11 @@ async def generate_session(pbot, callback_query, telethon=False):
     phone_number_msg = await pbot.ask(
         user_id,
         "Now please send your `PHONE_NUMBER` along with the country code. \nExample : `+19876543210`",
-        reply_markup=ReplyKeyboardMarkup([[KeyboardButton("Share Contact", request_contact=True)]],
+        reply_markup=ReplyKeyboardMarkup(
+            [[KeyboardButton("Share Contact", request_contact=True)]],
             resize_keyboard=True,
-            one_time_keyboard=True)
+            one_time_keyboard=True,
+        ),
     )
     while True:
         response: Message = await callback_query.from_user.listen(timeout=60)
@@ -212,6 +217,7 @@ async def generate_session(pbot, callback_query, telethon=False):
             "telethon" if telethon else "pyrogram"
         )
     )
+
 
 async def cancelled(msg):
     if "/cancel" in msg.text:
