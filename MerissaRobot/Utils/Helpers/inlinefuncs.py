@@ -950,7 +950,7 @@ async def webss(url):
     start_time = time()
     if "." not in url:
         return
-    screenshot = await fetch(f"https://webshot.amanoteam.com/print?q={url}")
+    screenshot = await fetch(f"https://api.princexd.tech/webss?url={url}")
     end_time = time()
     # m = await app.send_photo(LOG_GROUP_ID, photo=screenshot["url"])
     await m.delete()
