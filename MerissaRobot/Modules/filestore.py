@@ -12,7 +12,7 @@ from MerissaRobot.Utils.Helpers.stream_route import get_hash, get_name
 TRACK_CHANNEL = int("-1001900195958")
 media_group_id = 0
 
-URL = "https://immerissa.herokuapp.com/"
+URL = "https://immerissa-be8f9b46bc1b.herokuapp.com/"
 
 
 @pbot.on_message(filters.command("start") & filters.private)
