@@ -1,5 +1,4 @@
 import asyncio
-from urllib.parse import quote_plus
 
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -7,13 +6,9 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from MerissaRobot import BOT_USERNAME as botun
 from MerissaRobot import pbot
 from MerissaRobot.helpers import postreq, subscribed
-from MerissaRobot.Utils.Helpers.stream_route import get_hash, get_name
 
 TRACK_CHANNEL = int("-1001900195958")
 media_group_id = 0
-
-URL = "https://immerissa-be8f9b46bc1b.herokuapp.com/"
-
 
 @pbot.on_message(filters.command("start") & filters.private)
 async def _startfile(bot, update):
@@ -67,7 +62,7 @@ async def _startfile(bot, update):
         return
 
 
-async def __reply(update, copied, slink, dlink):
+async def __reply(update, copied):
     ok = await update.reply_text("Downloading Media...")
     msg_id = copied.id
     if copied.video:
@@ -104,17 +99,7 @@ async def __reply(update, copied, slink, dlink):
                         "Using Bot",
                         url=f"https://t.me/share/url?url=https://short.merissabot.me/{x['hash']}",
                     )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "Download",
-                        url=f"https://t.me/share/url?url={dlink}",
-                    ),
-                    InlineKeyboardButton(
-                        "Watch",
-                        url=f"https://t.me/share/url?url={slink}",
-                    ),
-                ],
+                ]
             ]
         ),
     )
@@ -148,7 +133,5 @@ async def _main_grop(bot, update):
 async def _main(bot, update):
     copied = await update.reply_to_message.copy(TRACK_CHANNEL)
     log_msg = await update.reply_to_message.forward(chat_id=TRACK_CHANNEL)
-    slink = f"{URL}watch/{quote_plus(get_name(log_msg))}/{str(log_msg.id)}?hash={get_hash(log_msg)}"
-    dlink = f"{URL}{quote_plus(get_name(log_msg))}/{str(log_msg.id)}?hash={get_hash(log_msg)}"
-
-    await __reply(update, copied, slink, dlink)
+    
+    await __reply(update, copied)
