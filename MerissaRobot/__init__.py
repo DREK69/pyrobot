@@ -3,6 +3,7 @@ import os
 import sys
 import time
 from inspect import getfullargspec
+from pyromod import listen
 from logging import (
     CRITICAL,
     DEBUG,
@@ -183,3 +184,9 @@ from MerissaRobot.Handler.handlers import (
 tg.RegexHandler = CustomRegexHandler
 tg.CommandHandler = CustomCommandHandler
 tg.MessageHandler = CustomMessageHandler
+
+async def initiate_bot():
+    await pbot.start()
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(initiate_bot())
