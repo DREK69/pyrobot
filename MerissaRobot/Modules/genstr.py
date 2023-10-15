@@ -34,7 +34,7 @@ generate_button = [[InlineKeyboardButton("Generate Session", callback_data="gene
 
 
 # Callbacks
-@pbot.on_message(filters.command("genstr"))
+@pbot.on_message(filters.command(["genstr", "generate"]))
 async def _callbacks(pbot, message):
     await message.reply_text(
         """Welcome to Merissa Pyrogram and Telethon String Session Generator.
