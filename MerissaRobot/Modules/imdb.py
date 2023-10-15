@@ -14,7 +14,9 @@ async def imdb(_, message):
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    resp = await getreq(f"https://api.themoviedb.org/3/search/movie?query={query}&api_key=6f77cb8794e999fed44476c8b3303723")
+    resp = await getreq(
+        f"https://api.themoviedb.org/3/search/movie?query={query}&api_key=6f77cb8794e999fed44476c8b3303723"
+    )
     url = resp["results"][0]
     await message.reply_photo(
         photo=url["poster"],
