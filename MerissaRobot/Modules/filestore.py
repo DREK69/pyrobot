@@ -12,6 +12,7 @@ media_group_id = 0
 
 URL = "https://immerissa.herokuapp.com/"
 
+
 @pbot.on_message(filters.command("start") & filters.private)
 async def _startfile(bot, update):
     if len(update.command) != 2:
@@ -91,7 +92,7 @@ async def __reply(update, copied, slink, dlink):
         "url": f"https://telegram.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}"
     }
     x = await postreq("https://short.merissabot.me/shorten", data)
-            
+
     await ok.edit_text(
         "Here is Your Sharing Link:",
         reply_markup=InlineKeyboardMarkup(
@@ -110,8 +111,8 @@ async def __reply(update, copied, slink, dlink):
                     InlineKeyboardButton(
                         "Watch",
                         url=f"https://t.me/share/url?url={slink}",
-                    )
-                ]
+                    ),
+                ],
             ]
         ),
     )
@@ -147,5 +148,5 @@ async def _main(bot, update):
     log_msg = await update.forward(chat_id=TRACK_CHANNEL)
     slink = f"{URL}watch/{quote_plus(get_name(log_msg))}/{str(log_msg.message_id)}?hash={get_hash(log_msg)}"
     dlink = f"{URL}{quote_plus(get_name(log_msg))}/{str(log_msg.message_id)}?hash={get_hash(log_msg)}"
-        
+
     await __reply(update, copied, slink, dlink)
