@@ -843,14 +843,6 @@ def migrate_chats(update: Update, context: CallbackContext):
     LOGGER.info("Successfully migrated!")
     raise DispatcherHandlerStop
 
-
-async def start_services():
-    app = web.AppRunner(await web_server())
-    await app.setup()
-    bind_address = "0.0.0.0"
-    await web.TCPSite(app, bind_address, 8080).start()
-
-
 def main():
     if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
         try:
@@ -934,5 +926,4 @@ if __name__ == "__main__":
         )
         time.sleep(e.seconds)
         telethn.start(bot_token=TOKEN)
-    loop.run_until_complete(start_services())
     main()
