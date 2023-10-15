@@ -38,7 +38,7 @@ async def song(client, message):
     img = result["image"][2]["link"]
     id = result["id"]
     rights = result["copyright"]
-    thumbnail = save_file(img, "thumbnail.jpg")
+    thumbnail = await save_file(img, "thumbnail.jpg")
     await message.reply_photo(
         thumbnail,
         caption=f"**Title**: [{title}]({search['data'][0]['url']})\n**Duration**: {dur}\n\n**Copyright**: **{rights}**",
@@ -78,7 +78,7 @@ async def saavn(client, message):
     id = result["id"]
     rights = result["copyright"]
     page = 0
-    thumbnail = save_file(img, "thumbnail.jpg")
+    thumbnail = await save_file(img, "thumbnail.jpg")
     await message.reply_photo(
         thumbnail,
         caption=f"**Title**: [{title}]({search['data']['results'][0]['url']})\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['data']['results'])}\n\n**Copyright**: **{rights}**",
