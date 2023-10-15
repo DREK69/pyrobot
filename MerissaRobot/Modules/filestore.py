@@ -86,21 +86,26 @@ async def __reply(update, copied):
         await copied.delete()
         return
 
+    botlink = f"https://telegram.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}"
+
     data = {
-        "url": f"https://telegram.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}"
+        "url": botlink
     }
     x = await postreq("https://drive.merissabot.me/shorten", data)
 
     await ok.edit_text(
-        "Link Generated Successfully, Link Is Permanent Expired\n\nHere is Your Sharing Link:",
+        "Link Generated Successfully, Link Is Permanent and not will Expired\n\nShare Link with Your Friends:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
-                        "Share Link to Your Friends",
+                        "Bot Url",
+                        url=f"https://t.me/share/url?url={botlink}",
+                    ),                           
+                    InlineKeyboardButton(
+                        "Short Url",
                         url=f"https://t.me/share/url?url=https://drive.merissabot.me/{x['hash']}",
                     )
-                ]
             ]
         ),
     )
