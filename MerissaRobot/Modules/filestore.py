@@ -111,7 +111,7 @@ async def __reply(update, copied):
     await asyncio.sleep(0.5)  # Wait do to avoid 5 sec flood ban
 
 
-@pbot.on_message(filters.command('save') & subscribed)
+@pbot.on_message(filters.command("save") & subscribed)
 async def _main_grop(bot, update):
     global media_group_id
 
@@ -131,9 +131,9 @@ async def _main_grop(bot, update):
 @pbot.on_message(filters.command("save") & subscribed)
 async def _main(bot, update):
     global media_group_id
-    
+
     if int(media_group_id) != int(update.media_group_id):
-        return 
+        return
     copied = await update.reply_to_message.copy(TRACK_CHANNEL)
     log_msg = await update.reply_to_message.forward(chat_id=TRACK_CHANNEL)
 
