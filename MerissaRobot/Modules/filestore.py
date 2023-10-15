@@ -129,6 +129,4 @@ async def _main_grop(bot, update):
 @pbot.on_message(filters.command("save") & subscribed)
 async def _main(bot, update):
     copied = await update.reply_to_message.copy(TRACK_CHANNEL)
-    log_msg = await update.reply_to_message.forward(chat_id=TRACK_CHANNEL)
-
     await __reply(update, copied)
