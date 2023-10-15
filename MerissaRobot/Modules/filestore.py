@@ -86,7 +86,11 @@ async def __reply(update, copied):
     else:
         await copied.delete()
         return
-
+    
+    data = {
+        "url" : f"https://t.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}"
+    }
+    x = postreq("https://short.merissabot.me/shorten", data)
     await ok.edit_text(
         "Here is Your Sharing Link:",
         reply_markup=InlineKeyboardMarkup(
@@ -94,7 +98,7 @@ async def __reply(update, copied):
                 [
                     InlineKeyboardButton(
                         "Sharing Link",
-                        url=f"https://t.me/share/url?url=https://t.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}",
+                        url=f"https://t.me/share/url?url=https://short.merissabot.me/{x['hash']}",
                     )
                 ]
             ]
