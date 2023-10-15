@@ -56,10 +56,10 @@ from MerissaRobot.text import (
     PM_SUPPORT_BUTTON,
     PM_SUPPORT_TEXT,
 )
+from aiohttp import web
+from MerissaRobot.Utils.Helpers.stream_route import web_server
 
-# needed to dynamically load Modules
-# NOTE: Module order is not guaranteed, specify that in the config file!
-
+loop = asyncio.get_event_loop()
 
 def get_readable_time(seconds: int) -> str:
     count = 0
@@ -841,6 +841,11 @@ def migrate_chats(update: Update, context: CallbackContext):
     LOGGER.info("Successfully migrated!")
     raise DispatcherHandlerStop
 
+async def start_services():
+    app = web.AppRunner(await web_server())
+    await app.setup()
+    bind_address = "0.0.0.0"
+    await web.TCPSite(app, bind_address, 8080).start()
 
 def main():
     if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
@@ -925,4 +930,5 @@ if __name__ == "__main__":
         )
         time.sleep(e.seconds)
         telethn.start(bot_token=TOKEN)
+    loop.run_until_complete(start_services())
     main()
