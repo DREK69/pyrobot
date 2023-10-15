@@ -8,7 +8,6 @@ import traceback
 from sys import argv
 
 import requests
-from aiohttp import web
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import (
     BadRequest,
@@ -58,7 +57,6 @@ from MerissaRobot.text import (
     PM_SUPPORT_BUTTON,
     PM_SUPPORT_TEXT,
 )
-from MerissaRobot.Utils.Helpers.stream_route import web_server
 
 loop = asyncio.get_event_loop()
 
@@ -842,6 +840,7 @@ def migrate_chats(update: Update, context: CallbackContext):
 
     LOGGER.info("Successfully migrated!")
     raise DispatcherHandlerStop
+
 
 def main():
     if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
