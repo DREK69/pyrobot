@@ -5,12 +5,13 @@ from pyrogram.enums import ParseMode
 
 from MerissaRobot import pbot as app
 from MerissaRobot.Utils.Helpers.inlinefuncs import *
+from MerissaRobot.helpers import subscribed
 
 __MODULE__ = "Inline"
 __HELP__ = """See inline for help related to inline"""
 
 
-@app.on_inline_query()
+@app.on_inline_query(subscribed)
 async def inline_query_handler(client, query):
     try:
         text = query.query.strip().lower()
