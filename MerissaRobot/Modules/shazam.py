@@ -4,6 +4,7 @@ from pyrogram import filters, types
 from shazamio import Shazam
 
 from MerissaRobot import pbot
+from MerissaRobot.helpers import getreq
 
 shazam = Shazam()
 
