@@ -86,10 +86,8 @@ async def __reply(update, copied):
     else:
         await copied.delete()
         return
-    
-    data = {
-        "url" : f"https://t.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}"
-    }
+
+    data = {"url": f"https://t.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}"}
     x = postreq("https://short.merissabot.me/shorten", data)
     await ok.edit_text(
         "Here is Your Sharing Link:",
