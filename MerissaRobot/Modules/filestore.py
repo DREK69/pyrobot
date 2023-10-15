@@ -88,9 +88,7 @@ async def __reply(update, copied):
 
     botlink = f"https://telegram.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}"
 
-    data = {
-        "url": botlink
-    }
+    data = {"url": botlink}
     x = await postreq("https://drive.merissabot.me/shorten", data)
 
     await ok.edit_text(
@@ -101,11 +99,11 @@ async def __reply(update, copied):
                     InlineKeyboardButton(
                         "Bot Url",
                         url=f"https://t.me/share/url?url={botlink}",
-                    ),                           
+                    ),
                     InlineKeyboardButton(
                         "Short Url",
                         url=f"https://t.me/share/url?url=https://drive.merissabot.me/{x['hash']}",
-                    )
+                    ),
                 ]
             ]
         ),
