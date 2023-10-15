@@ -106,6 +106,7 @@ async def __reply(update, copied):
                         "Short Url",
                         url=f"https://t.me/share/url?url=https://drive.merissabot.me/{x['hash']}",
                     )
+                ]
             ]
         ),
     )
