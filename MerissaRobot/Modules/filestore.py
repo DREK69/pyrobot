@@ -92,7 +92,7 @@ async def __reply(update, copied):
     x = await postreq("https://drive.merissabot.me/shorten", data)
 
     await ok.edit_text(
-        "Link Generated Successfully, Link Is Permanent and not will Expired\n\nShare Link with Your Friends:",
+        "Link Generated Successfully, Link Is Permanent and will not Expired\n\nShare Link with Your Friends:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
