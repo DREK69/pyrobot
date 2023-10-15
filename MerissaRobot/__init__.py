@@ -19,10 +19,10 @@ from logging import (
 import spamwatch
 import telegram.ext as tg
 from aiohttp import ClientSession
+from pyromod import listen  # ignore
 from pyrogram import Client, errors
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 from pyrogram.types import Message
-from pyromod import listen  # ignore
 from redis import StrictRedis
 from telethon import TelegramClient
 from telethon.sessions import MemorySession, StringSession
