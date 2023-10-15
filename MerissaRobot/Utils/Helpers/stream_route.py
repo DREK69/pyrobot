@@ -24,7 +24,7 @@ from MerissaRobot import pbot as StreamBot
 routes = web.RouteTableDef()
 
 BIN_CHANNEL = "-1001900195958"
-
+MULTI_CLIENT = False
 
 async def web_server():
     web_app = web.Application(client_max_size=30000000)
@@ -189,7 +189,7 @@ class ByteStreamer:
         Generates the properties of a media file on a specific message.
         returns ths properties in a FIleId class.
         """
-        file_id = await get_file_ids(self.client, Var.BIN_CHANNEL, message_id)
+        file_id = await get_file_ids(self.client, BIN_CHANNEL, message_id)
         logging.debug(
             f"Generated file ID and Unique ID for message with ID {message_id}"
         )
@@ -480,7 +480,7 @@ async def media_streamer(request: web.Request, message_id: int, secure_hash: str
     index = min(work_loads, key=work_loads.get)
     faster_client = multi_clients[index]
 
-    if Var.MULTI_CLIENT:
+    if MULTI_CLIENT:
         logging.info(f"Client {index} is now serving {request.remote}")
 
     if faster_client in class_cache:
