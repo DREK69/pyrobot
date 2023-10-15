@@ -10,8 +10,8 @@ from MerissaRobot.helpers import postreq, subscribed
 TRACK_CHANNEL = int("-1001900195958")
 media_group_id = 0
 
+URL = "https://immerissa.herokuapp.com/"
 
-# Start & Get file
 @pbot.on_message(filters.command("start") & filters.private)
 async def _startfile(bot, update):
     if len(update.command) != 2:
@@ -64,7 +64,7 @@ async def _startfile(bot, update):
         return
 
 
-async def __reply(update, copied):
+async def __reply(update, copied, slink, dlink):
     ok = await update.reply_text("Downloading Media...")
     msg_id = copied.id
     if copied.video:
@@ -91,14 +91,25 @@ async def __reply(update, copied):
         "url": f"https://telegram.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}"
     }
     x = await postreq("https://short.merissabot.me/shorten", data)
+            
     await ok.edit_text(
         "Here is Your Sharing Link:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
-                        "Sharing Link",
+                        "Using Bot",
                         url=f"https://t.me/share/url?url=https://short.merissabot.me/{x['hash']}",
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "Download",
+                        url=f"https://t.me/share/url?url={dlink}",
+                    ),
+                    InlineKeyboardButton(
+                        "Watch",
+                        url=f"https://t.me/share/url?url={slink}",
                     )
                 ]
             ]
@@ -133,4 +144,8 @@ async def _main_grop(bot, update):
 @pbot.on_message(filters.command("save"))
 async def _main(bot, update):
     copied = await update.reply_to_message.copy(TRACK_CHANNEL)
-    await __reply(update, copied)
+    log_msg = await update.forward(chat_id=TRACK_CHANNEL)
+    slink = f"{URL}watch/{quote_plus(get_name(log_msg))}/{str(log_msg.message_id)}?hash={get_hash(log_msg)}"
+    dlink = f"{URL}{quote_plus(get_name(log_msg))}/{str(log_msg.message_id)}?hash={get_hash(log_msg)}"
+        
+    await __reply(update, copied, slink, dlink)
