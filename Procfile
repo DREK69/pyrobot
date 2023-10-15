@@ -1,1 +1,1 @@
-worker: python3 -m MerissaRobot
+web: python3 -m MerissaRobot
