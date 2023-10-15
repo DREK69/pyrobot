@@ -1,14 +1,16 @@
 # Taken from megadlbot_oss <https://github.com/eyaadh/megadlbot_oss/blob/master/mega/webserver/routes.py>
 # Thanks to Eyaadh <https://github.com/eyaadh>
 
-import re
-import time
-import math
 import logging
-import secrets
+import math
 import mimetypes
+import re
+import secrets
+import time
+
 from aiohttp import web
 from aiohttp.http_exceptions import BadStatusLine
+
 from MerissaRobot import pbot as StreamBot
 
 routes = web.RouteTableDef()
@@ -17,49 +19,64 @@ multi_clients = {}
 work_loads = {}
 
 import time
+
 StartTime = time.time()
 __version__ = 1.1
 
-import math
 import asyncio
 import logging
+import math
+import urllib.parse
 from typing import Dict, Union
-from pyrogram import Client, utils, raw
-from pyrogram.session import Session, Auth
+
+import aiofiles
+import aiohttp
+from pyrogram import Client, raw, utils
 from pyrogram.errors import AuthBytesInvalid
 from pyrogram.file_id import FileId, FileType, ThumbnailSource
-import urllib.parse
-import aiofiles
-import logging
-import aiohttp
-
+from pyrogram.session import Auth, Session
 
 
 async def render_page(message_id, secure_hash):
-    file_data=await get_file_ids(StreamBot, int(Var.BIN_CHANNEL), int(message_id))
+    file_data = await get_file_ids(StreamBot, int(Var.BIN_CHANNEL), int(message_id))
     if file_data.unique_id[:6] != secure_hash:
-        logging.debug(f'link hash: {secure_hash} - {file_data.unique_id[:6]}')
+        logging.debug(f"link hash: {secure_hash} - {file_data.unique_id[:6]}")
         logging.debug(f"Invalid hash for message with - ID {message_id}")
         raise InvalidHash
-    src = urllib.parse.urljoin(Var.URL, f'{secure_hash}{str(message_id)}')
-    if str(file_data.mime_type.split('/')[0].strip()) == 'video':
-        async with aiofiles.open('Adarsh/template/req.html') as r:
-            heading = 'Watch {}'.format(file_data.file_name)
-            tag = file_data.mime_type.split('/')[0].strip()
-            html = (await r.read()).replace('tag', tag) % (heading, file_data.file_name, src, src)
-    elif str(file_data.mime_type.split('/')[0].strip()) == 'audio':
-        async with aiofiles.open('Adarsh/template/req.html') as r:
-            heading = 'Listen {}'.format(file_data.file_name)
-            tag = file_data.mime_type.split('/')[0].strip()
-            html = (await r.read()).replace('tag', tag) % (heading, file_data.file_name, src)
+    src = urllib.parse.urljoin(Var.URL, f"{secure_hash}{str(message_id)}")
+    if str(file_data.mime_type.split("/")[0].strip()) == "video":
+        async with aiofiles.open("Adarsh/template/req.html") as r:
+            heading = "Watch {}".format(file_data.file_name)
+            tag = file_data.mime_type.split("/")[0].strip()
+            html = (await r.read()).replace("tag", tag) % (
+                heading,
+                file_data.file_name,
+                src,
+                src,
+            )
+    elif str(file_data.mime_type.split("/")[0].strip()) == "audio":
+        async with aiofiles.open("Adarsh/template/req.html") as r:
+            heading = "Listen {}".format(file_data.file_name)
+            tag = file_data.mime_type.split("/")[0].strip()
+            html = (await r.read()).replace("tag", tag) % (
+                heading,
+                file_data.file_name,
+                src,
+            )
     else:
-        async with aiofiles.open('Adarsh/template/dl.html') as r:
+        async with aiofiles.open("Adarsh/template/dl.html") as r:
             async with aiohttp.ClientSession() as s:
                 async with s.get(src) as u:
-                    heading = 'Download {}'.format(file_data.file_name)
-                    file_size = humanbytes(int(u.headers.get('Content-Length')))
-                    html = (await r.read()) % (heading, file_data.file_name, src, file_size)
+                    heading = "Download {}".format(file_data.file_name)
+                    file_size = humanbytes(int(u.headers.get("Content-Length")))
+                    html = (await r.read()) % (
+                        heading,
+                        file_data.file_name,
+                        src,
+                        file_size,
+                    )
     return html
+
 
 async def chunk_size(length):
     return 2 ** max(min(math.ceil(math.log2(length / 1024)), 10), 2) * 1024
@@ -69,23 +86,30 @@ async def offset_fix(offset, chunksize):
     offset -= offset % chunksize
     return offset
 
-from pyrogram import Client
+
 from typing import Any, Optional
-from pyrogram.types import Message
+
+from pyrogram import Client
 from pyrogram.file_id import FileId
 from pyrogram.raw.types.messages import Messages
+from pyrogram.types import Message
+
 
 async def parse_file_id(message: "Message") -> Optional[FileId]:
     media = get_media_from_message(message)
     if media:
         return FileId.decode(media.file_id)
 
+
 async def parse_file_unique_id(message: "Messages") -> Optional[str]:
     media = get_media_from_message(message)
     if media:
         return media.file_unique_id
 
-async def get_file_ids(client: Client, chat_id: int, message_id: int) -> Optional[FileId]:
+
+async def get_file_ids(
+    client: Client, chat_id: int, message_id: int
+) -> Optional[FileId]:
     message = await client.get_messages(chat_id, message_id)
     if message.empty:
         raise FIleNotFound
@@ -97,6 +121,7 @@ async def get_file_ids(client: Client, chat_id: int, message_id: int) -> Optiona
     setattr(file_id, "file_name", getattr(media, "file_name", ""))
     setattr(file_id, "unique_id", file_unique_id)
     return file_id
+
 
 def get_media_from_message(message: "Message") -> Any:
     media_types = (
@@ -119,14 +144,17 @@ def get_hash(media_msg: Message) -> str:
     media = get_media_from_message(media_msg)
     return getattr(media, "file_unique_id", "")[:6]
 
+
 def get_name(media_msg: Message) -> str:
     media = get_media_from_message(media_msg)
-    file_name=getattr(media, "file_name", "")
+    file_name = getattr(media, "file_name", "")
     return file_name if file_name else ""
+
 
 def get_media_file_size(m):
     media = get_media_from_message(m)
     return getattr(media, "file_size", 0)
+
 
 class ByteStreamer:
     def __init__(self, client: Client):
@@ -135,12 +163,12 @@ class ByteStreamer:
             client: the client that the cache is for.
             cached_file_ids: a dict of cached file IDs.
             cached_file_properties: a dict of cached file properties.
-        
+
         functions:
             generate_file_properties: returns the properties for a media of a specific message contained in Tuple.
             generate_media_session: returns the media session for the DC that contains the media file.
             yield_file: yield a file from telegram servers for streaming.
-            
+
         This is a modified version of the <https://github.com/eyaadh/megadlbot_oss/blob/master/mega/telegram/utils/custom_download.py>
         Thanks to Eyaadh <https://github.com/eyaadh>
         """
@@ -159,14 +187,16 @@ class ByteStreamer:
             await self.generate_file_properties(message_id)
             logging.debug(f"Cached file properties for message with ID {message_id}")
         return self.cached_file_ids[message_id]
-    
+
     async def generate_file_properties(self, message_id: int) -> FileId:
         """
         Generates the properties of a media file on a specific message.
         returns ths properties in a FIleId class.
         """
         file_id = await get_file_ids(self.client, Var.BIN_CHANNEL, message_id)
-        logging.debug(f"Generated file ID and Unique ID for message with ID {message_id}")
+        logging.debug(
+            f"Generated file ID and Unique ID for message with ID {message_id}"
+        )
         if not file_id:
             logging.debug(f"Message with ID {message_id} not found")
             raise FIleNotFound
@@ -230,11 +260,14 @@ class ByteStreamer:
             logging.debug(f"Using cached media session for DC {file_id.dc_id}")
         return media_session
 
-
     @staticmethod
-    async def get_location(file_id: FileId) -> Union[raw.types.InputPhotoFileLocation,
-                                                     raw.types.InputDocumentFileLocation,
-                                                     raw.types.InputPeerPhotoFileLocation,]:
+    async def get_location(
+        file_id: FileId,
+    ) -> Union[
+        raw.types.InputPhotoFileLocation,
+        raw.types.InputDocumentFileLocation,
+        raw.types.InputPeerPhotoFileLocation,
+    ]:
         """
         Returns the file location for the media file.
         """
@@ -333,7 +366,6 @@ class ByteStreamer:
             logging.debug("Finished yielding file with {current_part} parts.")
             work_loads[index] -= 1
 
-    
     async def clean_cache(self) -> None:
         """
         function to clean the cache to reduce memory usage
@@ -342,6 +374,7 @@ class ByteStreamer:
             await asyncio.sleep(self.clean_timer)
             self.cached_file_ids.clear()
             logging.debug("Cleaned the cache")
+
 
 def get_readable_time(seconds: int) -> str:
     count = 0
@@ -364,13 +397,16 @@ def get_readable_time(seconds: int) -> str:
         readable_time += time_list.pop() + ", "
     time_list.reverse()
     readable_time += ": ".join(time_list)
-    return readable_time 
+    return readable_time
+
 
 class InvalidHash(Exception):
     message = "Invalid hash"
 
+
 class FIleNotFound(Exception):
     message = "File not found"
+
 
 @routes.get("/", allow_head=True)
 async def root_route_handler(_):
@@ -402,7 +438,9 @@ async def stream_handler(request: web.Request):
         else:
             message_id = int(re.search(r"(\d+)(?:\/\S+)?", path).group(1))
             secure_hash = request.rel_url.query.get("hash")
-        return web.Response(text=await render_page(message_id, secure_hash), content_type='text/html')
+        return web.Response(
+            text=await render_page(message_id, secure_hash), content_type="text/html"
+        )
     except InvalidHash as e:
         raise web.HTTPForbidden(text=e.message)
     except FIleNotFound as e:
@@ -412,6 +450,7 @@ async def stream_handler(request: web.Request):
     except Exception as e:
         logging.critical(e.with_traceback(None))
         raise web.HTTPInternalServerError(text=str(e))
+
 
 @routes.get(r"/{path:\S+}", allow_head=True)
 async def stream_handler(request: web.Request):
@@ -435,14 +474,16 @@ async def stream_handler(request: web.Request):
         logging.critical(e.with_traceback(None))
         raise web.HTTPInternalServerError(text=str(e))
 
+
 class_cache = {}
+
 
 async def media_streamer(request: web.Request, message_id: int, secure_hash: str):
     range_header = request.headers.get("Range", 0)
-    
+
     index = min(work_loads, key=work_loads.get)
     faster_client = multi_clients[index]
-    
+
     if Var.MULTI_CLIENT:
         logging.info(f"Client {index} is now serving {request.remote}")
 
@@ -456,11 +497,11 @@ async def media_streamer(request: web.Request, message_id: int, secure_hash: str
     logging.debug("before calling get_file_properties")
     file_id = await tg_connect.get_file_properties(message_id)
     logging.debug("after calling get_file_properties")
-    
+
     if file_id.unique_id[:6] != secure_hash:
         logging.debug(f"Invalid hash for message with ID {message_id}")
         raise InvalidHash
-    
+
     file_size = file_id.file_size
 
     if range_header:
@@ -478,7 +519,13 @@ async def media_streamer(request: web.Request, message_id: int, secure_hash: str
     last_part_cut = (until_bytes % new_chunk_size) + 1
     part_count = math.ceil(req_length / new_chunk_size)
     body = tg_connect.yield_file(
-        file_id, index, offset, first_part_cut, last_part_cut, part_count, new_chunk_size
+        file_id,
+        index,
+        offset,
+        first_part_cut,
+        last_part_cut,
+        part_count,
+        new_chunk_size,
     )
 
     mime_type = file_id.mime_type
