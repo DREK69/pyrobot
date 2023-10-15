@@ -92,12 +92,12 @@ async def __reply(update, copied):
     x = await postreq("https://short.merissabot.me/shorten", data)
 
     await ok.edit_text(
-        "Here is Your Sharing Link:",
+        "Link Generated Successfully, Link Is Permanent Expired\n\nHere is Your Sharing Link:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
-                        "Using Bot",
+                        "Share Link to Your Friends",
                         url=f"https://t.me/share/url?url=https://short.merissabot.me/{x['hash']}",
                     )
                 ]
