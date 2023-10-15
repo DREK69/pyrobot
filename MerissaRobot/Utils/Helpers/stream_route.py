@@ -50,7 +50,7 @@ async def render_page(message_id, secure_hash):
         raise InvalidHash
     src = urllib.parse.urljoin(URL, f"{secure_hash}{str(message_id)}")
     if str(file_data.mime_type.split("/")[0].strip()) == "video":
-        async with aiofiles.open("Adarsh/template/req.html") as r:
+        async with aiofiles.open("MerissaRobot/Utils/Templates/req.html") as r:
             heading = "Watch {}".format(file_data.file_name)
             tag = file_data.mime_type.split("/")[0].strip()
             html = (await r.read()).replace("tag", tag) % (
@@ -60,7 +60,7 @@ async def render_page(message_id, secure_hash):
                 src,
             )
     elif str(file_data.mime_type.split("/")[0].strip()) == "audio":
-        async with aiofiles.open("Adarsh/template/req.html") as r:
+        async with aiofiles.open("MerissaRobot/Utils/Templates/req.html") as r:
             heading = "Listen {}".format(file_data.file_name)
             tag = file_data.mime_type.split("/")[0].strip()
             html = (await r.read()).replace("tag", tag) % (
@@ -69,7 +69,7 @@ async def render_page(message_id, secure_hash):
                 src,
             )
     else:
-        async with aiofiles.open("Adarsh/template/dl.html") as r:
+        async with aiofiles.open("MerissaRobot/Utils/Templates/dl.html") as r:
             async with aiohttp.ClientSession() as s:
                 async with s.get(src) as u:
                     heading = "Download {}".format(file_data.file_name)
