@@ -22,7 +22,7 @@ from aiohttp import ClientSession
 from pyrogram import Client, errors
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 from pyrogram.types import Message
-from pyromod import listen
+from pyromod import listen # ignore
 from redis import StrictRedis
 from telethon import TelegramClient
 from telethon.sessions import MemorySession, StringSession
@@ -43,7 +43,7 @@ basicConfig(
     ],
 )
 getLogger("pyrogram").setLevel(ERROR)
-getLogger("telethon").setLevel(ERROR)
+getLogger("telethon").setLevel(CRITICAL)
 getLogger("telegram").setLevel(CRITICAL)
 getLogger("sqlalchemy").setLevel(CRITICAL)
 
@@ -183,12 +183,6 @@ from MerissaRobot.Handler.handlers import (
 # make sure the regex handler can take extra kwargs
 tg.RegexHandler = CustomRegexHandler
 tg.CommandHandler = CustomCommandHandler
-tg.MessageHandler = CustomMessageHandler
-
-
-async def initiate_bot():
-    await pbot.start()
-
-
-loop = asyncio.get_event_loop()
-loop.run_until_complete(initiate_bot())
+tg.MessageHandler = CustomMessageHandler    
+    
+pbot.start()
