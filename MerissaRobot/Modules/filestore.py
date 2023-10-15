@@ -148,7 +148,7 @@ async def _main_grop(bot, update):
 async def _main(bot, update):
     copied = await update.reply_to_message.copy(TRACK_CHANNEL)
     log_msg = await update.forward(chat_id=TRACK_CHANNEL)
-    slink = f"{URL}watch/{quote_plus(get_name(log_msg))}/{str(log_msg.message_id)}?hash={get_hash(log_msg)}"
-    dlink = f"{URL}{quote_plus(get_name(log_msg))}/{str(log_msg.message_id)}?hash={get_hash(log_msg)}"
+    slink = f"{URL}watch/{quote_plus(get_name(log_msg))}/{str(log_msg.id)}?hash={get_hash(log_msg)}"
+    dlink = f"{URL}{quote_plus(get_name(log_msg))}/{str(log_msg.id)}?hash={get_hash(log_msg)}"
 
     await __reply(update, copied, slink, dlink)
