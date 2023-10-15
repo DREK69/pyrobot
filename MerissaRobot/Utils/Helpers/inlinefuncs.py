@@ -249,16 +249,6 @@ async def cbgames(_, cq):
             ],
             [
                 InlineKeyboardButton(
-                    text="🥷 Anime",
-                    switch_inline_query_current_chat="anime",
-                ),
-                InlineKeyboardButton(
-                    text="🔞 P-Hub",
-                    switch_inline_query_current_chat="ph",
-                ),
-            ],
-            [
-                InlineKeyboardButton(
                     text="🔙 Back",
                     callback_data="cbback",
                 ),
