@@ -147,7 +147,7 @@ async def _main_grop(bot, update):
 @pbot.on_message(filters.command("save"))
 async def _main(bot, update):
     copied = await update.reply_to_message.copy(TRACK_CHANNEL)
-    log_msg = await update.forward(chat_id=TRACK_CHANNEL)
+    log_msg = await update.reply_to_message.forward(chat_id=TRACK_CHANNEL)
     slink = f"{URL}watch/{quote_plus(get_name(log_msg))}/{str(log_msg.id)}?hash={get_hash(log_msg)}"
     dlink = f"{URL}{quote_plus(get_name(log_msg))}/{str(log_msg.id)}?hash={get_hash(log_msg)}"
 
