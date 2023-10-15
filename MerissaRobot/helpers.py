@@ -31,7 +31,7 @@ async def getreq(url):
 
 async def postreq(url, data):
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, data=data) as resp:
+        async with session.post(url, json=data) as resp:
             try:
                 data = await resp.json()
             except:
