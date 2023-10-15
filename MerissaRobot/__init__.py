@@ -22,7 +22,7 @@ from aiohttp import ClientSession
 from pyrogram import Client, errors
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 from pyrogram.types import Message
-from pyromod import listen # ignore
+from pyromod import listen  # ignore
 from redis import StrictRedis
 from telethon import TelegramClient
 from telethon.sessions import MemorySession, StringSession
@@ -183,6 +183,6 @@ from MerissaRobot.Handler.handlers import (
 # make sure the regex handler can take extra kwargs
 tg.RegexHandler = CustomRegexHandler
 tg.CommandHandler = CustomCommandHandler
-tg.MessageHandler = CustomMessageHandler    
-    
+tg.MessageHandler = CustomMessageHandler
+
 pbot.start()
