@@ -35,9 +35,9 @@ from MerissaRobot import (
     SUPPORT_CHAT,
     TOKEN,
     dispatcher,
+    pbot,
     telethn,
     updater,
-    pbot,
 )
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
