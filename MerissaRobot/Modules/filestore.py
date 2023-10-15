@@ -10,6 +10,7 @@ from MerissaRobot.helpers import postreq, subscribed
 TRACK_CHANNEL = int("-1001900195958")
 media_group_id = 0
 
+
 @pbot.on_message(filters.command("start") & filters.private)
 async def _startfile(bot, update):
     if len(update.command) != 2:
@@ -133,5 +134,5 @@ async def _main_grop(bot, update):
 async def _main(bot, update):
     copied = await update.reply_to_message.copy(TRACK_CHANNEL)
     log_msg = await update.reply_to_message.forward(chat_id=TRACK_CHANNEL)
-    
+
     await __reply(update, copied)
