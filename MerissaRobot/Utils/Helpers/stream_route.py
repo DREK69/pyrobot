@@ -33,7 +33,7 @@ async def web_server():
     return web_app
 
 
-URL = "immerissa.herokuapp.com"
+URL = "https://immerissa.herokuapp.com/"
 
 multi_clients = {}
 work_loads = {}
