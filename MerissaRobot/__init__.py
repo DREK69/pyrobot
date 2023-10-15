@@ -3,7 +3,6 @@ import os
 import sys
 import time
 from inspect import getfullargspec
-from pyromod import listen
 from logging import (
     CRITICAL,
     DEBUG,
@@ -23,6 +22,7 @@ from aiohttp import ClientSession
 from pyrogram import Client, errors
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 from pyrogram.types import Message
+from pyromod import listen
 from redis import StrictRedis
 from telethon import TelegramClient
 from telethon.sessions import MemorySession, StringSession
@@ -185,8 +185,10 @@ tg.RegexHandler = CustomRegexHandler
 tg.CommandHandler = CustomCommandHandler
 tg.MessageHandler = CustomMessageHandler
 
+
 async def initiate_bot():
     await pbot.start()
+
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(initiate_bot())
