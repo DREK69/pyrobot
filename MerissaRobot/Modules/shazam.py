@@ -42,8 +42,8 @@ async def voice_handler(_, message):
             types.InlineKeyboardButton("🎵 Listen", url=f'{r["url"]}'),
         ],
         [
-            types.InlineKeyboardButton("📥 Download Song", url=f'audio {videoid}'),
-        ]
+            types.InlineKeyboardButton("📥 Download Song", url=f"audio {videoid}"),
+        ],
     ]
     await ok.delete("Uploading Song Details...")
     await message.reply_photo(
