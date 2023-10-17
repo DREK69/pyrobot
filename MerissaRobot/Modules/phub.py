@@ -28,7 +28,11 @@ async def run_async(func, *args, **kwargs):
     return await loop.run_in_executor(None, func, *args, **kwargs)
 
 
-ph_regex = r"^https:\/\/(pornhub\.com|www\.pornhub\.com)"
+ph_regex = (r"^((?:https?:)?\/\/)"
+              r"?((?:www|m)\.)"
+              r"?((?:xvideos\.com|pornhub\.com"
+              r"|xhamster\.com|xnxx\.com))"
+              r"(\/)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([\w\-]+)(\S+)?$")
 
 
 @Client.on_message(filters.regex(ph_regex))
