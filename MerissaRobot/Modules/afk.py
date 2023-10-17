@@ -6,6 +6,7 @@ from pyrogram.types import Message
 from MerissaRobot import pbot
 from MerissaRobot.Database.mongo.afk_mongo import add_afk, is_afk, remove_afk
 
+
 def get_readable_time(seconds: int) -> str:
     count = 0
     ping_time = ""
@@ -29,6 +30,7 @@ def get_readable_time(seconds: int) -> str:
     ping_time += ":".join(time_list)
 
     return ping_time
+
 
 @pbot.on_message(filters.command(["afk", "afk@MerissaRobot"]) & ~filters.edited)
 async def active_afk(_, message: Message):
@@ -176,4 +178,4 @@ async def active_afk(_, message: Message):
         }
 
     await add_afk(user_id, details)
-    send = await message.reply_text(f"{message.from_user.first_name} is now afk!")
+    await message.reply_text(f"{message.from_user.first_name} is now afk!")
