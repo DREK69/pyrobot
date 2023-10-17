@@ -5,7 +5,7 @@ import string
 
 import requests
 import wget
-import youtube_dl
+import yt_dlp
 from pyrogram import filters
 from pyrogram.types import (
     CallbackQuery,
@@ -104,7 +104,7 @@ async def get_video(c: Client, q: CallbackQuery):
         active.append(user_id)
 
     opts = {}
-    with youtube_dl.YoutubeDL(opts) as ydl:
+    with yt_dlp.YoutubeDL(opts) as ydl:
         try:
             await run_async(ydl.download, [url])
         except DownloadError:
