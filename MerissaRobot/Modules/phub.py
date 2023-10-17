@@ -1,6 +1,7 @@
 import asyncio
 import os
-
+import random
+import string
 import requests
 import wget
 import youtube_dl
@@ -18,18 +19,20 @@ from MerissaRobot import pbot as Client
 active = []
 queues = []
 
+y = {}
 
 async def run_async(func, *args, **kwargs):
     loop = asyncio.get_running_loop()
     return await loop.run_in_executor(None, func, *args, **kwargs)
-
 
 ph_regex = r"^https:\/\/(pornhub\.com|www\.pornhub\.com)"
 
 
 @Client.on_message(filters.regex(ph_regex))
 async def options(c: Client, m: Message):
-    id = m.text.split("=")[1]
+    link = m.text
+    ran_hash = "".join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    y[ran_hash] = link
     await m.reply_text(
         "Tap the button to continue action!",
         reply_markup=InlineKeyboardMarkup(
@@ -37,11 +40,11 @@ async def options(c: Client, m: Message):
                 [
                     InlineKeyboardButton(
                         "📥 Download",
-                        callback_data=f"phubdl_{id}",
+                        callback_data=f"phubdl_{ran_hash}",
                     ),
                     InlineKeyboardButton(
                         "🎥 Watch Online",
-                        callback_data=f"phubstr_{id}",
+                        callback_data=f"phubstr_{ran_hash}",
                     ),
                 ],
             ],
@@ -49,13 +52,14 @@ async def options(c: Client, m: Message):
     )
 
 
-@Client.on_callback_query(filters.regex(pattern=r"phubstr"))
+@Client.on_callback_query(filters.regex("^phubstr"))
 async def get_video(c: Client, q: CallbackQuery):
     await q.answer("Please Wait Generating Streaming Link")
     callback_data = q.data.strip()
-    id = callback_data.split("_")[1]
+    ran_hash = callback_data.split("_")[1]
+    url = y.get(ran_hash)
     formats = requests.get(
-        f"https://api.princexd.tech/ytinfo?link=https://www.pornhub.com/view_video.php?viewkey={id}"
+        f"https://api.princexd.tech/ytinfo?link={link}"
     ).json()["formats"]
     keyboards = []
     col = []
@@ -74,11 +78,11 @@ async def get_video(c: Client, q: CallbackQuery):
     await q.edit_message_reply_markup(reply_markup=markup)
 
 
-@Client.on_callback_query(filters.regex(pattern=r"phubdl"))
+@Client.on_callback_query(filters.regex("^phubdl"))
 async def get_video(c: Client, q: CallbackQuery):
     callback_data = q.data.strip()
-    id = callback_data.split("_")[1]
-    url = f"https://www.pornhub.com/view_video.php?viewkey={id}"
+    ran_hash = callback_data.split("_")[1]
+    url = y.get(ran_hash)
     message = await q.message.edit(
         "Downloading Started\n\nDownloading Speed could be Slow Please wait..."
     )
