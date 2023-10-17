@@ -45,7 +45,6 @@ lyricsgenius==3.0.1
 motor
 multicolorcaptcha
 markdown2==2.4.3
-moviepy
 mutagen
 nekos.py
 nltk
