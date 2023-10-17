@@ -32,7 +32,7 @@ def get_readable_time(seconds: int) -> str:
     return ping_time
 
 
-@pbot.on_message(filters.command(["afk", "afk@MerissaRobot"]) & ~filters.edited)
+@pbot.on_message(filters.command(["afk", "afk@MerissaRobot"]))
 async def active_afk(_, message: Message):
     if message.sender_chat:
         return
