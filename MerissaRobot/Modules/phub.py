@@ -36,10 +36,14 @@ async def run_async(func, *args, **kwargs):
     return await loop.run_in_executor(None, func, *args, **kwargs)
 
 
-ph_regex = r"^https:\/\/(pornhub\.com|www\.pornhub\.com)"
+mhub_regex = (r"^((?:https?:)?\/\/)"
+              r"?((?:www|m)\.)"
+              r"?((?:xvideos\.com|pornhub\.com"
+              r"|xhamster\.com|xnxx\.com))"
+              r"(\/)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([\w\-]+)(\S+)?$")
 
 
-@Client.on_message(filters.regex(ph_regex))
+@Client.on_message(filters.regex(mhub_regex))
 async def options(c: Client, m: Message):
     id = m.text.split("=")[1]
     await m.reply_text(
@@ -49,11 +53,11 @@ async def options(c: Client, m: Message):
                 [
                     InlineKeyboardButton(
                         "📥 Download",
-                        callback_data=f"phformats_{id}",
+                        callback_data=f"mhformats_{id}",
                     ),
                     InlineKeyboardButton(
                         "🎥 Watch Online",
-                        callback_data=f"phubstr_{id}",
+                        callback_data=f"mhubstr_{id}",
                     ),
                 ],
             ],
@@ -61,7 +65,7 @@ async def options(c: Client, m: Message):
     )
 
 
-@Client.on_callback_query(filters.regex("^phubstr"))
+@Client.on_callback_query(filters.regex("^mhubstr"))
 async def get_video(c: Client, q: CallbackQuery):
     await q.answer("Please Wait Generating Streaming Link")
     callback_data = q.data.strip()
@@ -87,7 +91,7 @@ async def get_video(c: Client, q: CallbackQuery):
     await q.edit_message_reply_markup(reply_markup=markup)
 
 
-@Client.on_callback_query(filters.regex("^phformats"))
+@Client.on_callback_query(filters.regex("^mhformats"))
 async def formats_query(client, callbackquery):
     await callbackquery.answer("Getting Formats..\n\nPlease Wait..", show_alert=True)
     callback_data = callbackquery.data.strip()
@@ -145,7 +149,7 @@ async def formats_query(client, callbackquery):
     await callbackquery.edit_message_reply_markup(reply_markup=keyboard)
 
 
-@Client.on_callback_query(filters.regex("^phubdl"))
+@Client.on_callback_query(filters.regex("^mhubdl"))
 async def get_video(c: Client, q: CallbackQuery):
     callback_data = q.data.strip()
     callback_request = callback_data.split(None, 1)[1]
