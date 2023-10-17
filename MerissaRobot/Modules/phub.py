@@ -22,6 +22,16 @@ queues = []
 
 y = {}
 
+def download_progress_hook(d, message, client):
+    if d['status'] == 'downloading':
+        current = d.get("_downloaded_bytes_str") or humanbytes(int(d.get("downloaded_bytes", 1)))
+        total = d.get("_total_bytes_str") or d.get("_total_bytes_estimate_str")
+        file_name = d.get("filename")
+        eta = d.get('_eta_str', "N/A")
+        percent = d.get("_percent_str", "N/A")
+        speed = d.get("_speed_str", "N/A")
+        to_edit = f"📥 <b>Downloading!</b>\n\n<b>Name :</b> <code>{file_name}</code>\n<b>Size :</b> <code>{total}</code>\n<b>Speed :</b> <code>{speed}</code>\n<b>ETA :</b> <code>{eta}</code>\n\n<b>Percentage: </b> <code>{current}</code> from <code>{total} (__{percent}__)</code>"
+        threading.Thread(target=edit_msg, args=(client, message, to_edit)).start()
 
 async def run_async(func, *args, **kwargs):
     loop = asyncio.get_running_loop()
@@ -96,24 +106,14 @@ async def get_video(c: Client, q: CallbackQuery):
         "Downloading Started\n\nDownloading Speed could be Slow Please wait..."
     )
     user_id = q.message.from_user.id
-    if "some" in active:
+
+    if user_id in active:
         await q.message.edit("Sorry, you can only download videos at a time!")
         return
     else:
         active.append(user_id)
 
-    opts = {
-        "format": "best",
-        "addmetadata": True,
-        "key": "FFmpegMetadata",
-        "prefer_ffmpeg": True,
-        "geo_bypass": True,
-        "nocheckcertificate": True,
-        "postprocessors": [{"key": "FFmpegVideoConvertor", "preferedformat": "mp4"}],
-        "outtmpl": "%(id)s.mp4",
-        "logtostderr": False,
-        "quiet": True,
-    }
+    ydl_opts = {"progress_hooks": [lambda d: download_progress_hook(d, q.message, c)]}
     with youtube_dl.YoutubeDL(opts) as ydl:
         try:
             await run_async(ydl.download, [url])
