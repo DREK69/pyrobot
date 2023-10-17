@@ -94,9 +94,9 @@ async def chat_info_func(_, message: Message):
             return await message.reply_text("**Usage:**cinfo <chat id/username>")
 
         if len(message.command) == 1:
-            chat = message.chat.id
+            chat = int(message.chat.id)
         elif len(message.command) == 2:
-            chat = message.text.split(None, 1)[1]
+            chat = int(message.text.split(None, 1)[1])
 
         m = await message.reply_text("Processing...")
 
