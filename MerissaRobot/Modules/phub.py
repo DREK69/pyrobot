@@ -117,7 +117,7 @@ async def get_video(c: Client, q: CallbackQuery):
     else:
         active.append(user_id)
 
-    ydl_opts = {"progress_hooks": [lambda d: download_progress_hook(d, q.message, c)]}
+    opts = {"progress_hooks": [lambda d: download_progress_hook(d, q.message, c)]}
     with youtube_dl.YoutubeDL(opts) as ydl:
         try:
             await run_async(ydl.download, [url])
