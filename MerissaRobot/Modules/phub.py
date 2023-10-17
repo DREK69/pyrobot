@@ -2,13 +2,11 @@ import asyncio
 import os
 import random
 import string
-import threading
 
 import requests
 import wget
 import youtube_dl
 from pyrogram import filters
-from pyrogram.errors import FloodWait, MessageNotModified
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -23,6 +21,7 @@ active = []
 queues = []
 
 y = {}
+
 
 async def run_async(func, *args, **kwargs):
     loop = asyncio.get_running_loop()
