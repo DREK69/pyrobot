@@ -2,13 +2,13 @@ import asyncio
 import os
 import random
 import string
+import threading
 
 import requests
 import wget
 import youtube_dl
-import threading
-from pyrogram.errors import MessageNotModified, FloodWait
 from pyrogram import filters
+from pyrogram.errors import FloodWait, MessageNotModified
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
@@ -24,10 +24,11 @@ queues = []
 
 y = {}
 
+
 def humanbytes(size):
     if not size:
         return ""
-    power = 2 ** 10
+    power = 2**10
     raised_to_pow = 0
     dict_power_n = {0: "", 1: "Ki", 2: "Mi", 3: "Gi", 4: "Ti"}
     while size > power:
@@ -45,6 +46,7 @@ def edit_msg(client, message, to_edit):
         pass
     except TypeError:
         pass
+
 
 def download_progress_hook(d, message, client):
     if d["status"] == "downloading":
