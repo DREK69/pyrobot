@@ -1,9 +1,9 @@
 import asyncio
 import os
 
+import requests
 import wget
-import yt_dlp
-from pykeyboard import InlineKeyboard
+import youtube_dl
 from pyrogram import filters
 from pyrogram.types import (
     CallbackQuery,
@@ -11,24 +11,12 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     Message,
 )
+from youtube_dl.utils import DownloadError
 
 from MerissaRobot import pbot as Client
-from MerissaRobot.helpers import getreq
 
 active = []
-
-
-def convert_bytes(size: float) -> str:
-    """humanize size"""
-    if not size:
-        return ""
-    power = 1024
-    t_n = 0
-    power_dict = {0: " ", 1: "K", 2: "M", 3: "G", 4: "T"}
-    while size > power:
-        size /= power
-        t_n += 1
-    return "{:.2f} {}B".format(size, power_dict[t_n])
+queues = []
 
 
 async def run_async(func, *args, **kwargs):
@@ -36,16 +24,10 @@ async def run_async(func, *args, **kwargs):
     return await loop.run_in_executor(None, func, *args, **kwargs)
 
 
-mhub_regex = (
-    r"^((?:https?:)?\/\/)"
-    r"?((?:www|m)\.)"
-    r"?((?:xvideos\.com|pornhub\.com"
-    r"|xhamster\.com|xnxx\.com))"
-    r"(\/)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([\w\-]+)(\S+)?$"
-)
+ph_regex = r"^https:\/\/(pornhub\.com|www\.pornhub\.com)"
 
 
-@Client.on_message(filters.regex(mhub_regex))
+@Client.on_message(filters.regex(ph_regex))
 async def options(c: Client, m: Message):
     id = m.text.split("=")[1]
     await m.reply_text(
@@ -55,11 +37,11 @@ async def options(c: Client, m: Message):
                 [
                     InlineKeyboardButton(
                         "📥 Download",
-                        callback_data=f"mhformats_{id}",
+                        callback_data=f"phubdl_{id}",
                     ),
                     InlineKeyboardButton(
                         "🎥 Watch Online",
-                        callback_data=f"mhubstr_{id}",
+                        callback_data=f"phubstr_{id}",
                     ),
                 ],
             ],
@@ -67,15 +49,14 @@ async def options(c: Client, m: Message):
     )
 
 
-@Client.on_callback_query(filters.regex("^mhubstr"))
+@Client.on_callback_query(filters.regex(pattern=r"phubstr"))
 async def get_video(c: Client, q: CallbackQuery):
     await q.answer("Please Wait Generating Streaming Link")
     callback_data = q.data.strip()
     id = callback_data.split("_")[1]
-    resp = await getreq(
+    formats = requests.get(
         f"https://api.princexd.tech/ytinfo?link=https://www.pornhub.com/view_video.php?viewkey={id}"
-    )
-    formats = resp["formats"]
+    ).json()["formats"]
     keyboards = []
     col = []
     for i in formats:
@@ -93,83 +74,23 @@ async def get_video(c: Client, q: CallbackQuery):
     await q.edit_message_reply_markup(reply_markup=markup)
 
 
-@Client.on_callback_query(filters.regex("^mhformats"))
-async def formats_query(client, callbackquery):
-    await callbackquery.answer("Getting Formats..\n\nPlease Wait..", show_alert=True)
-    callback_data = callbackquery.data.strip()
-    id = callback_data.split("_")[1]
-    link = f"https://www.pornhub.com/view_video.php?viewkey={id}"
-    ytdl_opts = {"quiet": True}
-    ydl = yt_dlp.YoutubeDL(ytdl_opts)
-    with ydl:
-        formats_available = []
-        r = ydl.extract_info(link, download=False)
-        for format in r["formats"]:
-            try:
-                str(format["format"])
-            except:
-                continue
-            if not "dash" in str(format["format"]).lower():
-                try:
-                    format["format"]
-                    format["filesize"]
-                    format["format_id"]
-                    format["ext"]
-                    format["format_note"]
-                except:
-                    continue
-                formats_available.append(
-                    {
-                        "format": format["format"],
-                        "filesize": format["filesize"],
-                        "format_id": format["format_id"],
-                        "ext": format["ext"],
-                        "format_note": format["format_note"],
-                        "yturl": link,
-                    }
-                )
-    keyboard = InlineKeyboard()
-    done = [160, 133, 134, 135, 136, 137, 298, 299, 264, 304, 266]
-    for x in formats_available:
-        check = x["format"]
-        if x["filesize"] is None:
-            continue
-        if int(x["format_id"]) not in done:
-            continue
-        sz = convert_bytes(x["filesize"])
-        ap = check.split("-")[1]
-        to = f"{ap} = {sz}"
-        keyboard.row(
-            InlineKeyboardButton(
-                text=to,
-                callback_data=f"phubdl {x['format_id']}|{id}",
-            )
-        )
-    keyboard.row(
-        InlineKeyboardButton(text="🗑️ Close", callback_data="cb_close"),
-    )
-    await callbackquery.edit_message_reply_markup(reply_markup=keyboard)
-
-
-@Client.on_callback_query(filters.regex("^mhubdl"))
+@Client.on_callback_query(filters.regex(pattern=r"phubdl"))
 async def get_video(c: Client, q: CallbackQuery):
     callback_data = q.data.strip()
-    callback_request = callback_data.split(None, 1)[1]
-    format_id, id = callback_request.split("|")
+    id = callback_data.split("_")[1]
     url = f"https://www.pornhub.com/view_video.php?viewkey={id}"
     message = await q.message.edit(
         "Downloading Started\n\nDownloading Speed could be Slow Please wait..."
     )
     user_id = q.message.from_user.id
-    if user_id in active:
+    if "some" in active:
         await q.message.edit("Sorry, you can only download videos at a time!")
         return
     else:
         active.append(user_id)
 
-    formats = f"{format_id}+140"
     opts = {
-        "format": formats,
+        "format": "best",
         "addmetadata": True,
         "key": "FFmpegMetadata",
         "prefer_ffmpeg": True,
@@ -180,7 +101,7 @@ async def get_video(c: Client, q: CallbackQuery):
         "logtostderr": False,
         "quiet": True,
     }
-    with yt_dlp.YoutubeDL(opts) as ydl:
+    with youtube_dl.YoutubeDL(opts) as ydl:
         try:
             await run_async(ydl.download, [url])
         except DownloadError:
@@ -191,18 +112,24 @@ async def get_video(c: Client, q: CallbackQuery):
     msg = await message.edit(
         "Uploading Started\n\nUploading Speed could be Slow Plase wait..."
     )
-    await Client.send_video(
-        -1001708378054,
-        f"{id}.mp4",
-        thumb=thumb,
-        width=1280,
-        height=720,
-        caption="The content you requested has been successfully downloaded!",
-    )
-    os.remove(f"{id}.mp4")
+    for file in os.listdir("."):
+        if file.endswith(".mp4"):
+            await Client.send_video(
+                -1001708378054,
+                f"{file}",
+                thumb=thumb,
+                width=1280,
+                height=720,
+                caption="The content you requested has been successfully downloaded!",
+            )
+            os.remove(f"{file}")
+            break
+        else:
+            continue
     await q.message.reply_text(
         "Join Here to Watch Video - [Click Here](https://t.me/+Ow7dStIJSLViY2Y1)",
         disable_web_page_preview=True,
     )
     await msg.delete()
     active.remove(user_id)
+    os.remove(thumb)
