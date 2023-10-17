@@ -2,6 +2,7 @@ import asyncio
 import os
 import random
 import string
+
 import requests
 import wget
 import youtube_dl
@@ -21,9 +22,11 @@ queues = []
 
 y = {}
 
+
 async def run_async(func, *args, **kwargs):
     loop = asyncio.get_running_loop()
     return await loop.run_in_executor(None, func, *args, **kwargs)
+
 
 ph_regex = r"^https:\/\/(pornhub\.com|www\.pornhub\.com)"
 
@@ -57,10 +60,10 @@ async def get_video(c: Client, q: CallbackQuery):
     await q.answer("Please Wait Generating Streaming Link")
     callback_data = q.data.strip()
     ran_hash = callback_data.split("_")[1]
-    url = y.get(ran_hash)
-    formats = requests.get(
-        f"https://api.princexd.tech/ytinfo?link={link}"
-    ).json()["formats"]
+    y.get(ran_hash)
+    formats = requests.get(f"https://api.princexd.tech/ytinfo?link={link}").json()[
+        "formats"
+    ]
     keyboards = []
     col = []
     for i in formats:
