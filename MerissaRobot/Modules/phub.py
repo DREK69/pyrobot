@@ -66,7 +66,7 @@ async def get_video(c: Client, q: CallbackQuery):
     await q.answer("Please Wait Generating Streaming Link")
     callback_data = q.data.strip()
     ran_hash = callback_data.split("_")[1]
-    y.get(ran_hash)
+    link = y.get(ran_hash)
     formats = requests.get(f"https://api.princexd.tech/ytinfo?link={link}").json()[
         "formats"
     ]
