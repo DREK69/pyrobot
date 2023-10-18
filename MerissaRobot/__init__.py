@@ -41,7 +41,8 @@ basicConfig(
         StreamHandler(),
     ],
 )
-getLogger("pyrogram").setLevel(ERROR)
+getLogger("pyrogram").setLevel(INFO)
+getLogger("apscheduler").setLevel(ERROR)
 getLogger("telethon").setLevel(CRITICAL)
 getLogger("telegram").setLevel(CRITICAL)
 getLogger("sqlalchemy").setLevel(CRITICAL)
