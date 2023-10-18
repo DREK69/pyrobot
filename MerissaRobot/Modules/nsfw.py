@@ -1,25 +1,21 @@
-import os
 import html
-import nekos
-import requests
-from PIL import Image
-from telegram import ParseMode
-from MerissaRobot import dispatcher, updater
+
+from telegram import Update
+from telegram.ext import CallbackContext, CommandHandler
+from telegram.utils.helpers import mention_html
+
 import MerissaRobot.Database.sql.nsfw_sql as sql
-from MerissaRobot.Modules.log_channel import gloggable
-from telegram import Message, Chat, Update, Bot, MessageEntity
-from telegram.error import BadRequest, RetryAfter, Unauthorized
-from telegram.ext import CommandHandler, run_async, CallbackContext
-from MerissaRobot.Handler.filters import CustomFilters
+from MerissaRobot import dispatcher
 from MerissaRobot.Handler.chat_status import user_admin
-from telegram.utils.helpers import mention_html, mention_markdown, escape_markdown
+from MerissaRobot.Modules.log_channel import gloggable
+
 
 @user_admin
 @gloggable
 def add_nsfw(update: Update, context: CallbackContext):
     chat = update.effective_chat
     msg = update.effective_message
-    user = update.effective_user #Remodified by @EverythingSuckz
+    user = update.effective_user  # Remodified by @EverythingSuckz
     is_nsfw = sql.is_nsfw(chat.id)
     if not is_nsfw:
         sql.set_nsfw(chat.id)
@@ -54,6 +50,7 @@ def rem_nsfw(update: Update, context: CallbackContext):
             f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
         )
         return message
+
 
 ADD_NSFW_HANDLER = CommandHandler("addnsfw", add_nsfw, run_async=True)
 REMOVE_NSFW_HANDLER = CommandHandler("rmnsfw", rem_nsfw, run_async=True)
