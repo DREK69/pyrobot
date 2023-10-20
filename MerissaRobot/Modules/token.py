@@ -6,11 +6,17 @@ from MerissaRobot import ERROR_LOG
 from MerissaRobot import pbot as app
 from MerissaRobot.Database.mongo import leveldb
 
+from MerissaRobot.helpers import subscribe
+
 
 @app.on_message(
     filters.command("token", prefixes=["/", ".", "?", "-"]) & filters.private
 )
 async def token(client, message):
+    userid = message.from_user.id
+    sub = await subscribe(client, userid)
+    if sub == False:
+        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
     toggle = leveldb["myFirstDatabase"]["jsons"]
     user = leveldb["MerissaApi"]["user"]
     chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -48,6 +54,10 @@ async def token(client, message):
     filters.command("revoke", prefixes=["/", ".", "?", "-"]) & filters.private
 )
 async def revoke(client, message):
+    userid = message.from_user.id
+    sub = await subscribe(client, userid)
+    if sub == False:
+        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
     toggle = leveldb["myFirstDatabase"]["jsons"]
     user = leveldb["MerissaApi"]["user"]
     is_user = user.find_one({"user_id": message.from_user.id})
