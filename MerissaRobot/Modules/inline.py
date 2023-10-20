@@ -11,7 +11,7 @@ __MODULE__ = "Inline"
 __HELP__ = """See inline for help related to inline"""
 
 
-@app.on_inline_query(subscribed)
+@app.on_inline_query()
 async def inline_query_handler(client, query):
     try:
         text = query.query.strip().lower()
