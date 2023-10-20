@@ -5,10 +5,16 @@ from pyrogram import filters
 from pyrogram.types import Message
 
 from MerissaRobot import pbot
-from MerissaRobot.Database.mongo.afk_mongo import add_afk, is_afk, remove_afk, add_served_chat
+from MerissaRobot.Database.mongo.afk_mongo import (
+    add_afk,
+    add_served_chat,
+    is_afk,
+    remove_afk,
+)
 
 chat_watcher_group = 1
 welcome_group = 2
+
 
 def get_readable_time(seconds: int) -> str:
     count = 0
@@ -183,7 +189,10 @@ async def active_afk(_, message: Message):
     await add_afk(user_id, details)
     await message.reply_text(f"{message.from_user.first_name} is now afk!")
 
-@pbot.on_message(group=chat_watcher_group & ~filters.me & ~filters.bot & ~filters.via_bot)
+
+@pbot.on_message(
+    group=chat_watcher_group & ~filters.me & ~filters.bot & ~filters.via_bot
+)
 async def chat_watcher_func(_, message):
     if message.sender_chat:
         return
@@ -405,4 +414,3 @@ async def welcome(_, message: Message):
                 )
         except:
             return
-                        
