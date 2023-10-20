@@ -131,6 +131,8 @@ async def _main(bot, update):
     userid = update.from_user.id
     sub = await subscribe(bot, userid)
     if sub == False:
-        return await update.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
+        return await update.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     copied = await update.reply_to_message.copy(TRACK_CHANNEL)
     await __reply(update, copied)
