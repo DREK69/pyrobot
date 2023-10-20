@@ -12,7 +12,7 @@ from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, InputMediaVide
 from telegram import InlineKeyboardButton
 
 from MerissaRobot import FORCE_CHANNEL, pbot
-from MerissaRobot.helpers import getreq, save_file, subscribed
+from MerissaRobot.helpers import getreq, save_file, subscribe
 
 instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stories)\/([A-Za-z0-9\-_]*)"
 tiktokregex = r"^https:\/\/(www\.tiktok.com|vm\.tiktok\.com|vt\.tiktok\.com)\/?(.*)"
@@ -43,9 +43,13 @@ async def premium(client, message):
 
 
 @pbot.on_message(
-    filters.regex(instaregex) & filters.incoming & filters.private & subscribed
+    filters.regex(instaregex) & filters.incoming & filters.private
 )
-async def instadown(_, message):
+async def instadown(client, message):
+    userid = message.from_user.id
+    sub = await subscribe(client, userid)
+    if sub == False:
+        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
     link = message.text
     msg = await message.reply_text("Processing...")
     if "reel" in link:
@@ -194,8 +198,12 @@ async def instadown(_, message):
                 await msg.delete()
 
 
-@pbot.on_message(filters.regex(pinregex) & subscribed)
-async def pindown(_, message):
+@pbot.on_message(filters.regex(pinregex))
+async def pindown(client, message):
+    userid = message.from_user.id
+    sub = await subscribe(client, userid)
+    if sub == False:
+        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
     link = message.text
     m = await message.reply_text("Processing...")
     pin = getreq(f"https://api.princexd.tech/pin?link={link}")
@@ -208,9 +216,13 @@ async def pindown(_, message):
 
 
 @pbot.on_message(
-    filters.regex(fbregex) & filters.incoming & filters.private & subscribed
+    filters.regex(fbregex) & filters.incoming & filters.private
 )
-async def fbdown(_, message):
+async def fbdown(client, message):
+    userid = message.from_user.id
+    sub = await subscribe(client, userid)
+    if sub == False:
+        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
     link = message.text
     msg = await message.reply_text("Processing...")
     url = "https://facebook-reel-and-video-downloader.p.rapidapi.com/app/main.php"
@@ -226,7 +238,11 @@ async def fbdown(_, message):
 
 
 @pbot.on_message(filters.regex(tiktokregex) & filters.incoming & filters.private)
-async def tiktokdown(_, message):
+async def tiktokdown(client, message):
+    userid = message.from_user.id
+    sub = await subscribe(client, userid)
+    if sub == False:
+        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
     link = message.text
     msg = await message.reply_text("Processing...")
     url = "https://tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com/index"
@@ -257,7 +273,11 @@ async def tiktokdown(_, message):
 @pbot.on_message(
     filters.regex(snapregex) & filters.incoming & filters.private & subscribed
 )
-async def snapdown(_, message):
+async def snapdown(client, message):
+    userid = message.from_user.id
+    sub = await subscribe(client, userid)
+    if sub == False:
+        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"
     }
