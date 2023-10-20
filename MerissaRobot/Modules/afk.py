@@ -1,10 +1,8 @@
-import re
 import time
 
 from pyrogram import filters
 from pyrogram.types import Message
 
-from MerissaRobot import BOT_ID as botid
 from MerissaRobot import pbot
 from MerissaRobot.Database.mongo.afk_mongo import add_afk, is_afk, remove_afk
 
