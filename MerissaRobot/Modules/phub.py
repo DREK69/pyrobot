@@ -39,6 +39,10 @@ ph_regex = (
 
 @Client.on_message(filters.regex(ph_regex))
 async def options(c: Client, m: Message):
+    userid = m.from_user.id
+    sub = await subscribe(c, userid)
+    if sub == False:
+        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
     link = m.text
     ran_hash = "".join(random.choices(string.ascii_uppercase + string.digits, k=10))
     y[ran_hash] = link
