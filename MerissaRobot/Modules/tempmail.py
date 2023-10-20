@@ -9,7 +9,7 @@ from pyrogram.types import *
 from RandomWordGenerator import RandomWord
 
 from MerissaRobot import pbot as app
-from MerissaRobot.helpers import subscribe 
+from MerissaRobot.helpers import subscribe
 
 # ********************************************************************************
 
@@ -25,7 +25,9 @@ async def fakemailgen(_, message: Message):
     name = message.from_user.id
     sub = await subscribe(client, name)
     if sub == False:
-        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
+        return await message.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     rp = RandomWord(max_word_size=8, include_digits=True)
     email = rp.generate()
     xx = requests.get(API1).json()
@@ -58,7 +60,9 @@ async def setmailgen(_, message: Message):
     name = message.from_user.id
     sub = await subscribe(client, name)
     if sub == False:
-        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
+        return await message.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     if len(message.command) < 2:
         return await message.reply_text(
             "Give me some text to make Tempmail\n\nEx. /set Merissarobot"
