@@ -16,7 +16,7 @@ from pyrogram.types import (
 from youtubesearchpython import VideosSearch
 
 from MerissaRobot import pbot as Client
-from MerissaRobot.helpers import embed_album_art, get_ytthumb, getreq, subscribed
+from MerissaRobot.helpers import embed_album_art, get_ytthumb, getreq, subscribe
 
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
