@@ -4,7 +4,6 @@ from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from MerissaRobot import pbot
-from MerissaRobot.helpers import subscribed
 
 url_list = {}
 
@@ -51,7 +50,7 @@ async def get_movie(query):
     return movie_details
 
 
-@pbot.on_message(filters.command("moviedl") & subscribed)
+@pbot.on_message(filters.command("moviedl"))
 def find_movie(_, message):
     if len(message.command) < 2:
         return message.reply_text(
@@ -105,7 +104,7 @@ async def movie_result(Client, CallbackQuery):
     )
 
 
-@pbot.on_message(filters.command("movie") & subscribed)
+@pbot.on_message(filters.command("movie"))
 def find_streammovie(_, message):
     if len(message.command) < 2:
         return message.reply_text(
