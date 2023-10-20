@@ -2,11 +2,9 @@ import aiofiles
 import aiohttp
 import mutagen
 import requests
-from pyrogram import filters
-from pyrogram.enums import ChatMemberStatus
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 
-from MerissaRobot import DEV_USERS, FORCE_CHANNEL
+from MerissaRobot import FORCE_CHANNEL
 
 
 async def save_file(url, filename):
