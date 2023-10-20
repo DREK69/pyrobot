@@ -8,7 +8,7 @@ from pyrogram.types import (
 )
 
 from MerissaRobot import pbot as app
-from MerissaRobot.helpers import subscribe 
+from MerissaRobot.helpers import subscribe
 
 sologame = ReplyKeyboardMarkup(
     [
