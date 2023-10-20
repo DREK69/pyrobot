@@ -25,7 +25,9 @@ async def handwrite(client, message):
     userid = message.from_user.id
     sub = await subscribe(client, userid)
     if sub == False:
-        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
+        return await message.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     if message.reply_to_message and message.reply_to_message.text:
         text = message.reply_to_message.text
     elif len(message.command) > 1:
