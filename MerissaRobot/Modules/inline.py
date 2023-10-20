@@ -4,7 +4,6 @@ import traceback
 from pyrogram.enums import ParseMode
 
 from MerissaRobot import pbot as app
-from MerissaRobot.helpers import subscribed
 from MerissaRobot.Utils.Helpers.inlinefuncs import *
 
 __MODULE__ = "Inline"
