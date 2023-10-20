@@ -10,7 +10,7 @@ from requests import get
 from telegraph import upload_file as uf
 
 from MerissaRobot import pbot
-from MerissaRobot.helpers import subscribe 
+from MerissaRobot.helpers import subscribe
 
 
 def genlogo(text, image, tfont):
