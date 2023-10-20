@@ -585,16 +585,15 @@ async def google_search_func(answers, text):
         f"https://www.google.com/search?q={text}&num=20", headers=headers
     )
     soup = BeautifulSoup(search_results.text, "lxml")
-    for result in soup.find_all("div", class_="kvH3mc BToiNc UK95Uc"):
-        link = result.find("div", class_="yuRUbf").find("a").get("href")
-        title = result.find("div", class_="yuRUbf").find("h3").get_text()
+    for result in soup.select(".tF2Cxc"):
+        link = result.select_one(".yuRUbf a")["href"]
+        title = result.select_one(".DKV0Md").text
         try:
-            snippet = result.find(
-                "div", class_="VwiC3b yXK7lf MUxGbd yDYNvb lyLwlc lEBKkf"
-            ).get_text()
+            snippet = result.select_one("#rso .lyLwlc").text
         except:
             snippet = "-"
-        message_text = f"<a href='{link}'>{title}</a>\nDeskription: {snippet}"
+        message_text = f"<a href='{link}'>{html.escape(title)}</a>\n"
+        message_text += f"Deskription: {html.escape(snippet)}\n\nGoogleSearch by @{self.me.username}"
         answers.append(
             InlineQueryResultArticle(
                 title=f"{title}",
