@@ -8,6 +8,8 @@ from MerissaRobot import BOT_ID as botid
 from MerissaRobot import pbot
 from MerissaRobot.Database.mongo.afk_mongo import is_afk, remove_afk
 
+chat_watcher_group = 1
+welcome_group = 2
 
 def get_readable_time(seconds: int) -> str:
     count = 0
