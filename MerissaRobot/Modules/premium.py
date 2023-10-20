@@ -275,7 +275,7 @@ async def tiktokdown(client, message):
 
 
 @pbot.on_message(
-    filters.regex(snapregex) & filters.incoming & filters.private & subscribed
+    filters.regex(snapregex) & filters.incoming & filters.private 
 )
 async def snapdown(client, message):
     userid = message.from_user.id
