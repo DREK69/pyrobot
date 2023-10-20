@@ -10,6 +10,7 @@ from requests import get
 from telegraph import upload_file as uf
 
 from MerissaRobot import pbot
+from MerissaRobot.helpers import subscribe 
 
 
 def genlogo(text, image, tfont):
@@ -222,6 +223,12 @@ def genlogo(text, image, tfont):
 
 @pbot.on_message(filters.command("logo") & filters.private)
 async def movie(client, message):
+    userid = message.from_user.id
+    sub = await subscribe(client, userid)
+    if sub == False:
+        return await message.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     reply = message.reply_to_message
     m = await message.reply_text("Creating your logo...wait!")
     if len(message.command) < 2:
