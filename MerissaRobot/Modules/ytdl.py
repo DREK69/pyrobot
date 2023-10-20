@@ -47,14 +47,14 @@ async def convertmin(duration):
     return result
 
 
-@Client.on_message(
-    filters.regex(ytregex) & filters.incoming & filters.private 
-)
+@Client.on_message(filters.regex(ytregex) & filters.incoming & filters.private)
 async def ytregex(client, message):
     userid = message.from_user.id
     sub = await subscribe(client, userid)
     if sub == False:
-        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
+        return await message.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     link = message.text
     if "music" in link:
@@ -117,7 +117,9 @@ async def video(client, message):
     userid = message.from_user.id
     sub = await subscribe(client, userid)
     if sub == False:
-        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
+        return await message.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     if len(message.command) < 2:
         return await message.reply_text("Give me some text to search on Youtube")
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
@@ -157,7 +159,9 @@ async def song(client, message):
     userid = message.from_user.id
     sub = await subscribe(client, userid)
     if sub == False:
-        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
+        return await message.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     if len(message.command) < 2:
         return await message.reply_text("Give me some text to search on Youtube")
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
