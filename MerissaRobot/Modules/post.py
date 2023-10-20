@@ -2,7 +2,7 @@ from pyrogram import *
 from pyrogram.types import *
 
 from MerissaRobot import pbot
-from MerissaRobot.helpers import subscribe 
+from MerissaRobot.helpers import subscribe
 
 
 @pbot.on_message(filters.private & filters.reply & filters.command("post"))
@@ -10,7 +10,9 @@ async def post(bot, update):
     userid = update.from_user.id
     sub = await subscribe(bot, userid)
     if sub == False:
-        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
+        return await message.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     if (update.text == "post") or (" " not in update.text):
         return
 
