@@ -4,12 +4,9 @@ import time
 from pyrogram import filters
 from pyrogram.types import Message
 
-from MerissaRobot import pbot, BOT_ID as botid
-from MerissaRobot.Database.mongo.afk_mongo import (
-    add_afk,
-    is_afk,
-    remove_afk,
-)
+from MerissaRobot import BOT_ID as botid
+from MerissaRobot import pbot
+from MerissaRobot.Database.mongo.afk_mongo import add_afk, is_afk, remove_afk
 
 chat_watcher_group = 1
 welcome_group = 2
@@ -403,7 +400,7 @@ async def chat_watcher_func(_, message):
 
 @pbot.on_message(filters.new_chat_members, group=welcome_group)
 async def welcome(_, message: Message):
-    chat_id = message.chat.id
+    message.chat.id
     for member in message.new_chat_members:
         try:
             if member.id == botid:
