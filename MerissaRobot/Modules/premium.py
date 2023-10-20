@@ -274,9 +274,7 @@ async def tiktokdown(client, message):
     os.remove("cover.jpg")
 
 
-@pbot.on_message(
-    filters.regex(snapregex) & filters.incoming & filters.private 
-)
+@pbot.on_message(filters.regex(snapregex) & filters.incoming & filters.private)
 async def snapdown(client, message):
     userid = message.from_user.id
     sub = await subscribe(client, userid)
