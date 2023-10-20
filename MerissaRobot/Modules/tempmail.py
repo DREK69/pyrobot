@@ -21,7 +21,7 @@ API3 = "https://www.1secmail.com/api/v1/?action=readMessage&login="
 
 
 @app.on_message(filters.command("genmail"))
-async def fakemailgen(_, message: Message):
+async def fakemailgen(client, message: Message):
     name = message.from_user.id
     sub = await subscribe(client, name)
     if sub == False:
@@ -56,7 +56,7 @@ async def fakemailgen(_, message: Message):
 
 
 @app.on_message(filters.command("set"))
-async def setmailgen(_, message: Message):
+async def setmailgen(client, message: Message):
     name = message.from_user.id
     sub = await subscribe(client, name)
     if sub == False:
