@@ -4,7 +4,7 @@ from pyrogram import filters, types
 from shazamio import Shazam
 
 from MerissaRobot import pbot
-from MerissaRobot.helpers import getreq, subscribe 
+from MerissaRobot.helpers import getreq, subscribe
 
 shazam = Shazam()
 
@@ -18,7 +18,9 @@ async def voice_handler(client, message):
     userid = message.from_user.id
     sub = await subscribe(client, userid)
     if sub == False:
-        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
+        return await message.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     file_size = (
         message.reply_to_message.audio
         or message.reply_to_message.video
