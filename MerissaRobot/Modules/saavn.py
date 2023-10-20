@@ -24,14 +24,14 @@ async def convertmin(duration):
     return result
 
 
-@pbot.on_message(
-    filters.regex(spregex) & filters.incoming & filters.private
-)
+@pbot.on_message(filters.regex(spregex) & filters.incoming & filters.private)
 async def song(client, message):
     userid = message.from_user.id
     sub = await subscribe(client, userid)
     if sub == False:
-        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
+        return await message.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     link = message.text
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     search = await getreq(f"https://saavn.princexd.tech/songs?link={link}")
@@ -68,7 +68,9 @@ async def saavn(client, message):
     userid = message.from_user.id
     sub = await subscribe(client, userid)
     if sub == False:
-        return await message.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
+        return await message.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     if len(message.command) < 2:
         return await message.reply_text("Give me some text to search on saavn")
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
