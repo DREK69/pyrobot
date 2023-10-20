@@ -561,7 +561,7 @@ async def video_query(client, callbackquery):
     os.remove(download_720)
 
 
-@Client.on_message(filters.command("lyrics") & subscribed)
+@Client.on_message(filters.command("lyrics"))
 async def lyrics(client, message):
     if len(message.command) < 2:
         return await message.reply_text(
