@@ -39,25 +39,12 @@ async def postreq(url, data):
     return data
 
 
-async def is_subscribed(filter, client, update):
-    if not FORCE_CHANNEL:
-        return True
-    user_id = update.from_user.id
-    if user_id in DEV_USERS:
-        return True
+async def subscribe(client, user_id):
     try:
         member = await client.get_chat_member(chat_id=FORCE_CHANNEL, user_id=user_id)
+        return True
     except UserNotParticipant:
         return False
-
-    if not member.status in [
-        ChatMemberStatus.OWNER,
-        ChatMemberStatus.ADMINISTRATOR,
-        ChatMemberStatus.MEMBER,
-    ]:
-        return False
-    else:
-        return True
 
 
 async def get_ytthumb(videoid: str):
@@ -92,6 +79,3 @@ def embed_album_art(cover_filepath, filepath):
         picture.desc = "front cover"
         mf.add_picture(picture)
     mf.save()
-
-
-subscribed = filters.create(is_subscribed)
