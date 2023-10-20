@@ -6,7 +6,8 @@ from pyrogram.types import Message
 
 from MerissaRobot import BOT_ID as botid
 from MerissaRobot import pbot
-from MerissaRobot.Database.mongo.afk_mongo import add_afk, is_afk, remove_afk
+from MerissaRobot.Database.mongo.afk_mongo import is_afk, remove_afk
+
 
 def get_readable_time(seconds: int) -> str:
     count = 0
@@ -31,6 +32,7 @@ def get_readable_time(seconds: int) -> str:
     ping_time += ":".join(time_list)
 
     return ping_time
+
 
 @pbot.on_message(
     ~filters.me & ~filters.bot & ~filters.via_bot, group=chat_watcher_group
