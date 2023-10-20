@@ -5,7 +5,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from MerissaRobot import BOT_USERNAME as botun
 from MerissaRobot import pbot
-from MerissaRobot.helpers import postreq, subscribed
+from MerissaRobot.helpers import postreq, subscribe
 
 TRACK_CHANNEL = int("-1001900195958")
 media_group_id = 0
@@ -111,7 +111,7 @@ async def __reply(update, copied):
     await asyncio.sleep(0.5)  # Wait do to avoid 5 sec flood ban
 
 
-@pbot.on_message(filters.command("batch") & subscribed)
+@pbot.on_message(filters.command("batch"))
 async def _main_grop(bot, update):
     global media_group_id
 
@@ -126,7 +126,11 @@ async def _main_grop(bot, update):
         return
 
 
-@pbot.on_message(filters.command("save") & subscribed)
+@pbot.on_message(filters.command("save"))
 async def _main(bot, update):
+    userid = update.from_user.id
+    sub = await subscribe(bot, userid)
+    if sub == False:
+        return await update.reply_text("Please Join @MerissaxUpdates to Use Premium Features")
     copied = await update.reply_to_message.copy(TRACK_CHANNEL)
     await __reply(update, copied)
