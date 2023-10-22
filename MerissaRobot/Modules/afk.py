@@ -1,6 +1,7 @@
 import random
-from datetime import datetime
 import time
+from datetime import datetime
+
 import humanize
 from telegram import MessageEntity, ParseMode, Update
 from telegram.error import BadRequest
@@ -25,6 +26,7 @@ def delete(delmsg, timer):
         delmsg.delete()
     except:
         return
+
 
 def afk(update: Update, context: CallbackContext):
     args = update.effective_message.text.split(None, 1)
