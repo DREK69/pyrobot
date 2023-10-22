@@ -20,13 +20,6 @@ AFK_GROUP = 7
 AFK_REPLY_GROUP = 8
 
 
-def delete(delmsg, timer):
-    time.sleep(timer)
-    try:
-        delmsg.delete()
-    except:
-        return
-
 
 def afk(update: Update, context: CallbackContext):
     args = update.effective_message.text.split(None, 1)
@@ -54,11 +47,6 @@ def afk(update: Update, context: CallbackContext):
         delmsg = update.effective_message.reply_text(
             "{} is now away!{}".format(fname, notice)
         )
-
-        cleartime = get_clearcmd(chat.id, "afk")
-
-        if cleartime:
-            context.dispatcher.run_async(delete, delmsg, cleartime.time)
 
     except BadRequest:
         pass
@@ -92,11 +80,6 @@ def no_longer_afk(update: Update, context: CallbackContext):
             delmsg = update.effective_message.reply_text(
                 chosen_option.format(firstname)
             )
-
-            cleartime = get_clearcmd(chat.id, "afk")
-
-            if cleartime:
-                context.dispatcher.run_async(delete, delmsg, cleartime.time)
 
         except:
             return
@@ -172,11 +155,6 @@ def check_afk(
             res,
             parse_mode=ParseMode.MARKDOWN,
         )
-
-        cleartime = get_clearcmd(chat.id, "afk")
-
-        if cleartime:
-            context.dispatcher.run_async(delete, delmsg, cleartime.time)
 
 
 def __gdpr__(user_id):
