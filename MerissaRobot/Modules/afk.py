@@ -1,20 +1,20 @@
 import random
-import html
 from datetime import datetime
+
 import humanize
-from MerissaRobot.Database.sql.clear_cmd_sql import get_clearcmd
+from telegram import MessageEntity, ParseMode, Update
+from telegram.error import BadRequest
+from telegram.ext import CallbackContext, Filters, MessageHandler
 
 from MerissaRobot import dispatcher
+from MerissaRobot.Database.sql import afk_sql as sql
+from MerissaRobot.Database.sql.clear_cmd_sql import get_clearcmd
+from MerissaRobot.Handler.misc import delete
 from MerissaRobot.Modules.disable import (
     DisableAbleCommandHandler,
     DisableAbleMessageHandler,
 )
-from MerissaRobot.Database.sql import afk_sql as sql
 from MerissaRobot.Modules.users import get_user_id
-from MerissaRobot.Handler.misc import delete
-from telegram import MessageEntity, Update, ParseMode
-from telegram.error import BadRequest
-from telegram.ext import CallbackContext, Filters, MessageHandler, run_async
 
 AFK_GROUP = 7
 AFK_REPLY_GROUP = 8
@@ -44,7 +44,8 @@ def afk(update: Update, context: CallbackContext):
     fname = update.effective_user.first_name
     try:
         delmsg = update.effective_message.reply_text(
-            "{} is now away!{}".format(fname, notice))
+            "{} is now away!{}".format(fname, notice)
+        )
 
         cleartime = get_clearcmd(chat.id, "afk")
 
@@ -81,7 +82,8 @@ def no_longer_afk(update: Update, context: CallbackContext):
             ]
             chosen_option = random.choice(options)
             delmsg = update.effective_message.reply_text(
-                chosen_option.format(firstname))
+                chosen_option.format(firstname)
+            )
 
             cleartime = get_clearcmd(chat.id, "afk")
 
@@ -117,8 +119,7 @@ def reply_afk(update: Update, context: CallbackContext):
             if ent.type != MessageEntity.MENTION:
                 return
 
-            user_id = get_user_id(
-                message.text[ent.offset: ent.offset + ent.length])
+            user_id = get_user_id(message.text[ent.offset : ent.offset + ent.length])
             if not user_id:
                 # Should never happen, since for a user to become AFK they must have spoken. Maybe changed username?
                 return
@@ -142,7 +143,9 @@ def reply_afk(update: Update, context: CallbackContext):
         check_afk(update, context, user_id, fst_name, userc_id)
 
 
-def check_afk(update: Update, context: CallbackContext, user_id: int, fst_name: str, userc_id: int):
+def check_afk(
+    update: Update, context: CallbackContext, user_id: int, fst_name: str, userc_id: int
+):
     chat = update.effective_chat
     if sql.is_afk(user_id):
         user = sql.check_afk_status(user_id)
@@ -158,8 +161,8 @@ def check_afk(update: Update, context: CallbackContext, user_id: int, fst_name: 
             res = f"{fst_name} is *afk*.\nReason: `{user.reason}`\nLast seen: `{time} ago`"
 
         delmsg = update.effective_message.reply_text(
-        res,
-        parse_mode = ParseMode.MARKDOWN,
+            res,
+            parse_mode=ParseMode.MARKDOWN,
         )
 
         cleartime = get_clearcmd(chat.id, "afk")
@@ -176,8 +179,12 @@ AFK_HANDLER = DisableAbleCommandHandler("afk", afk, run_async=True)
 AFK_REGEX_HANDLER = DisableAbleMessageHandler(
     Filters.regex(r"^(?i)brb(.*)$"), afk, friendly="afk"
 )
-NO_AFK_HANDLER = MessageHandler(Filters.all & Filters.chat_type.groups, no_longer_afk, run_async=True)
-AFK_REPLY_HANDLER = MessageHandler(Filters.all & Filters.chat_type.groups, reply_afk, run_async=True)
+NO_AFK_HANDLER = MessageHandler(
+    Filters.all & Filters.chat_type.groups, no_longer_afk, run_async=True
+)
+AFK_REPLY_HANDLER = MessageHandler(
+    Filters.all & Filters.chat_type.groups, reply_afk, run_async=True
+)
 
 dispatcher.add_handler(AFK_HANDLER, AFK_GROUP)
 dispatcher.add_handler(AFK_REGEX_HANDLER, AFK_GROUP)
