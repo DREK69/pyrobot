@@ -46,6 +46,7 @@ getLogger("apscheduler").setLevel(ERROR)
 getLogger("telethon").setLevel(CRITICAL)
 getLogger("telegram").setLevel(CRITICAL)
 getLogger("sqlalchemy").setLevel(CRITICAL)
+getLogger("sqlalchemy").setLevel(CRITICAL)
 
 # if version < 3.6, stop bot.
 if sys.version_info[0] < 3 or sys.version_info[1] < 6:
