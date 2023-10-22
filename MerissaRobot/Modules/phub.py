@@ -16,7 +16,7 @@ from pyrogram.types import (
 from youtube_dl.utils import DownloadError
 
 from MerissaRobot import pbot as Client
-from MerissaRobot.helpers import subscribe 
+from MerissaRobot.helpers import subscribe
 
 active = []
 queues = []
