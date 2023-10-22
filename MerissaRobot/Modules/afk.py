@@ -1,5 +1,4 @@
 import random
-import time
 from datetime import datetime
 
 import humanize
@@ -9,7 +8,6 @@ from telegram.ext import CallbackContext, Filters, MessageHandler
 
 from MerissaRobot import dispatcher
 from MerissaRobot.Database.sql import afk_sql as sql
-from MerissaRobot.Database.sql.clear_cmd_sql import get_clearcmd
 from MerissaRobot.Modules.disable import (
     DisableAbleCommandHandler,
     DisableAbleMessageHandler,
@@ -20,11 +18,10 @@ AFK_GROUP = 7
 AFK_REPLY_GROUP = 8
 
 
-
 def afk(update: Update, context: CallbackContext):
     args = update.effective_message.text.split(None, 1)
     user = update.effective_user
-    chat = update.effective_chat
+    update.effective_chat
 
     if not user:  # ignore channels
         return
@@ -55,7 +52,7 @@ def afk(update: Update, context: CallbackContext):
 def no_longer_afk(update: Update, context: CallbackContext):
     user = update.effective_user
     message = update.effective_message
-    chat = update.effective_chat
+    update.effective_chat
 
     if not user:  # ignore channels
         return
@@ -137,7 +134,7 @@ def reply_afk(update: Update, context: CallbackContext):
 def check_afk(
     update: Update, context: CallbackContext, user_id: int, fst_name: str, userc_id: int
 ):
-    chat = update.effective_chat
+    update.effective_chat
     if sql.is_afk(user_id):
         user = sql.check_afk_status(user_id)
 
