@@ -1,6 +1,6 @@
 import random
 from datetime import datetime
-
+import time
 import humanize
 from telegram import MessageEntity, ParseMode, Update
 from telegram.error import BadRequest
@@ -9,7 +9,6 @@ from telegram.ext import CallbackContext, Filters, MessageHandler
 from MerissaRobot import dispatcher
 from MerissaRobot.Database.sql import afk_sql as sql
 from MerissaRobot.Database.sql.clear_cmd_sql import get_clearcmd
-from MerissaRobot.Handler.misc import delete
 from MerissaRobot.Modules.disable import (
     DisableAbleCommandHandler,
     DisableAbleMessageHandler,
@@ -19,6 +18,13 @@ from MerissaRobot.Modules.users import get_user_id
 AFK_GROUP = 7
 AFK_REPLY_GROUP = 8
 
+
+def delete(delmsg, timer):
+    time.sleep(timer)
+    try:
+        delmsg.delete()
+    except:
+        return
 
 def afk(update: Update, context: CallbackContext):
     args = update.effective_message.text.split(None, 1)
