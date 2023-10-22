@@ -67,7 +67,7 @@ async def broadcast(_, message):
                     await asyncio.sleep(flood_time)
                 except Exception:
                     continue
-    
+
         await broadcast.edit_text(
             f"**Broadcast complete.\nGroups Count: {sent_group}\nUsers Count: {sent_user}**"
         )
