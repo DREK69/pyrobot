@@ -18,17 +18,15 @@ async def imdb(_, message):
         f"https://api.themoviedb.org/3/search/movie?query={query}&api_key=6f77cb8794e999fed44476c8b3303723"
     )
     url = resp["results"][0]
+    poster = f"https://image.tmdb.org/t/p/original/{url['poster_path']}"
     await message.reply_photo(
-        photo=url["poster"],
+        photo=poster,
         caption=f"""**IMDB Movie Details :**
 
 **Title :** {url["title"]}
 **Description :** {url["overview"]}
-**Rating :** {url["rating"]}
-**Release-Date :** {url["releaseDate"]}
+**Release-Date :** {url["release_date"]}
 **Popularity :** {url["popularity"]}
-**Runtime :** {url["runtime"]}
-**Status :** {url["status"]}
 """,
         reply_markup=InlineKeyboardMarkup(
             [
@@ -41,11 +39,11 @@ async def imdb(_, message):
                 [
                     InlineKeyboardButton(
                         text="Imdb",
-                        url=url["imdbLink"],
+                        url=f"https://api.princexd.tech/stream?imdbid={url['id']}",
                     ),
                     InlineKeyboardButton(
                         text="Stream",
-                        url=f"https://api.princexd.tech/stream?imdbid={url['imdbId']}",
+                        url=f"https://api.princexd.tech/stream?imdbid={url['id']}",
                     ),
                 ],
             ],
