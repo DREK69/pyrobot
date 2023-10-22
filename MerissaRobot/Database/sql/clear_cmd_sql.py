@@ -1,6 +1,6 @@
 import threading
 
-from sqlalchemy import Column, Integer, String, UnicodeText
+from sqlalchemy import Column, BigInteger, String, UnicodeText
 
 from MerissaRobot.Database.sql import BASE, SESSION
 
@@ -9,7 +9,7 @@ class ClearCmd(BASE):
     __tablename__ = "clear_cmd"
     chat_id = Column(String(14), primary_key=True)
     cmd = Column(UnicodeText, primary_key=True, nullable=False)
-    time = Column(Integer)
+    time = Column(BigInteger)
 
     def __init__(self, chat_id, cmd, time):
         self.chat_id = chat_id
