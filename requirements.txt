@@ -36,6 +36,7 @@ gtts
 hachoir
 heroku3
 html2text
+humanize
 img2pdf
 jikanpy
 loguru
