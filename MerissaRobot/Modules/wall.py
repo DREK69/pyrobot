@@ -17,8 +17,7 @@ async def wallpaper(bot, message):
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     search = message.text.split(None, 1)[1]
     wallsearch = px.search_wallpapers(search)
-    wall = wallsearch[0]["url"]
-    wallpaper = await save_file(wall, "wall.png")
+    wallpaper = wallsearch[0]["url"]
     await message.reply_photo(
         wallpaper,
         caption="Powered by @MerissaRobot",
@@ -49,8 +48,7 @@ async def wnext_query(client, callbackquery):
     search = callback[1]
     page = int(callback[2])
     wallsearch = px.search_wallpapers(query=search)
-    wall = wallsearch[page]["url"]
-    wallpaper = await save_file(wall, "wall.png")
+    wallpaper = wallsearch[page]["url"]
     tpage = len(wallsearch) - 1
     if page == 0:
         await callbackquery.edit_message_media(
@@ -129,5 +127,6 @@ async def wnext_query(client, callbackquery):
 
 @pbot.on_callback_query(filters.regex("^wall"))
 async def wall_down(client, callbackquery):
-    await callbackquery.message.reply_document("wall.png")
-    os.remove("wall.png")
+    wall = await callbackquery.message.download()
+    await callbackquery.message.reply_document(wall)
+    os.remove(wall)
