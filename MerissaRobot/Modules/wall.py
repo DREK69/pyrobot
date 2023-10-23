@@ -58,46 +58,46 @@ async def wnext_query(client, callbackquery):
                     caption="Powered By @MerissaRobot",
                 ),
                 reply_markup=InlineKeyboardMarkup(
-                [
                     [
-                        InlineKeyboardButton(
-                            "Next Wallpaper ➡", callback_data=f"wnext|{search}|1"
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            "📥 Download",
-                            callback_data=f"wall|{search}|{page}",
-                        ),
-                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
-                    ],
-                ]
-            ),
-        )
+                        [
+                            InlineKeyboardButton(
+                                "Next Wallpaper ➡", callback_data=f"wnext|{search}|1"
+                            ),
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                "📥 Download",
+                                callback_data=f"wall|{search}|{page}",
+                            ),
+                            InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                        ],
+                    ]
+                ),
+            )
         elif page == tpage:
             await callbackquery.edit_message_media(
-            InputMediaPhoto(
-                wallpaper,
-                caption="Powered By @MerissaRobot",
-            ),
-            reply_markup=InlineKeyboardMarkup(
-                [
+                InputMediaPhoto(
+                    wallpaper,
+                    caption="Powered By @MerissaRobot",
+                ),
+                reply_markup=InlineKeyboardMarkup(
                     [
-                        InlineKeyboardButton(
-                            "⬅️ Prev Wallpaper",
-                            callback_data=f"wnext|{search}|{page-1}",
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            "📥 Download",
-                            callback_data=f"wall|{search}|{page}",
-                        ),
-                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
-                    ],
-                ]
-            ),
-        )
+                        [
+                            InlineKeyboardButton(
+                                "⬅️ Prev Wallpaper",
+                                callback_data=f"wnext|{search}|{page-1}",
+                            ),
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                "📥 Download",
+                                callback_data=f"wall|{search}|{page}",
+                            ),
+                            InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                        ],
+                    ]
+                ),
+            )
         else:
             await callbackquery.edit_message_media(
                 InputMediaPhoto(
@@ -105,74 +105,74 @@ async def wnext_query(client, callbackquery):
                     caption="Powered By @MerissaRobot",
                 ),
                 reply_markup=InlineKeyboardMarkup(
-                [
                     [
-                        InlineKeyboardButton(
-                            "⬅️", callback_data=f"wnext|{search}|{page-1}"
-                        ),
-                        InlineKeyboardButton(
-                            "➡", callback_data=f"wnext|{search}|{page+1}"
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            "📥 Download",
-                            callback_data=f"wall|{search}|{page}",
-                        ),
-                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
-                    ],
-                  ]
+                        [
+                            InlineKeyboardButton(
+                                "⬅️", callback_data=f"wnext|{search}|{page-1}"
+                            ),
+                            InlineKeyboardButton(
+                                "➡", callback_data=f"wnext|{search}|{page+1}"
+                            ),
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                "📥 Download",
+                                callback_data=f"wall|{search}|{page}",
+                            ),
+                            InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                        ],
+                    ]
                 ),
             )
     except:
         wall = await save_file(wallpaper, "wall.png")
         if page == 0:
             await callbackquery.edit_message_media(
-            InputMediaPhoto(
-                wall,
-                caption="Powered By @MerissaRobot",
-            ),
-            reply_markup=InlineKeyboardMarkup(
-                [
+                InputMediaPhoto(
+                    wall,
+                    caption="Powered By @MerissaRobot",
+                ),
+                reply_markup=InlineKeyboardMarkup(
                     [
-                        InlineKeyboardButton(
-                            "Next Wallpaper ➡", callback_data=f"wnext|{search}|1"
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            "📥 Download",
-                            callback_data=f"wall|{search}|{page}",
-                        ),
-                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
-                    ],
-                ]
-            ),
-        )
+                        [
+                            InlineKeyboardButton(
+                                "Next Wallpaper ➡", callback_data=f"wnext|{search}|1"
+                            ),
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                "📥 Download",
+                                callback_data=f"wall|{search}|{page}",
+                            ),
+                            InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                        ],
+                    ]
+                ),
+            )
         elif page == tpage:
             await callbackquery.edit_message_media(
                 InputMediaPhoto(
                     wall,
                     caption="Powered By @MerissaRobot",
                 ),
-            reply_markup=InlineKeyboardMarkup(
-                [
+                reply_markup=InlineKeyboardMarkup(
                     [
-                        InlineKeyboardButton(
-                            "⬅️ Prev Wallpaper",
-                            callback_data=f"wnext|{search}|{page-1}",
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            "📥 Download",
-                            callback_data=f"wall|{search}|{page}",
-                        ),
-                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
-                    ],
-                ]
-             ),
-          )
+                        [
+                            InlineKeyboardButton(
+                                "⬅️ Prev Wallpaper",
+                                callback_data=f"wnext|{search}|{page-1}",
+                            ),
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                "📥 Download",
+                                callback_data=f"wall|{search}|{page}",
+                            ),
+                            InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                        ],
+                    ]
+                ),
+            )
         else:
             await callbackquery.edit_message_media(
                 InputMediaPhoto(
@@ -180,25 +180,25 @@ async def wnext_query(client, callbackquery):
                     caption="Powered By @MerissaRobot",
                 ),
                 reply_markup=InlineKeyboardMarkup(
-                  [
-                     [
-                        InlineKeyboardButton(
-                            "⬅️", callback_data=f"wnext|{search}|{page-1}"
-                        ),
-                        InlineKeyboardButton(
-                            "➡", callback_data=f"wnext|{search}|{page+1}"
-                        ),
-                    ],
                     [
-                        InlineKeyboardButton(
-                            "📥 Download",
-                            callback_data=f"wall|{search}|{page}",
-                        ),
-                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
-                     ],
-                  ]
-              ),
-           )
+                        [
+                            InlineKeyboardButton(
+                                "⬅️", callback_data=f"wnext|{search}|{page-1}"
+                            ),
+                            InlineKeyboardButton(
+                                "➡", callback_data=f"wnext|{search}|{page+1}"
+                            ),
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                "📥 Download",
+                                callback_data=f"wall|{search}|{page}",
+                            ),
+                            InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                        ],
+                    ]
+                ),
+            )
         os.remove(wall)
 
 
