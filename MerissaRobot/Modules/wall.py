@@ -83,7 +83,7 @@ async def wnext_query(client, callbackquery):
                     [
                         InlineKeyboardButton(
                             "⬅️ Prev Wallpaper",
-                            callback_data=f"ymnext|{search}|{page-1}",
+                            callback_data=f"wnext|{search}|{page-1}",
                         ),
                     ],
                     [
