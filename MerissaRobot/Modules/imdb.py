@@ -49,7 +49,7 @@ async def imdb(_, message):
 
 
 @pbot.on_callback_query(filters.regex("^imnext"))
-async def ymnext_query(client, callbackquery):
+async def imnext_query(client, callbackquery):
     callback_data = callbackquery.data.strip()
     callback = callback_data.split("|")
     query = callback[1]
