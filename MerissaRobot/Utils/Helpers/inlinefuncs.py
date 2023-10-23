@@ -1,8 +1,8 @@
 import asyncio
+import html
 import os
 import socket
 from html import escape
-import html
 from re import sub as re_sub
 from time import ctime, time
 
