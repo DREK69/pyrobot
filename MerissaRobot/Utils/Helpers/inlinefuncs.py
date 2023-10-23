@@ -2,6 +2,7 @@ import asyncio
 import os
 import socket
 from html import escape
+import html
 from re import sub as re_sub
 from time import ctime, time
 
@@ -593,7 +594,7 @@ async def google_search_func(answers, text):
         except:
             snippet = "-"
         message_text = f"<a href='{link}'>{html.escape(title)}</a>\n"
-        message_text += f"Deskription: {html.escape(snippet)}\n\nGoogleSearch by @{self.me.username}"
+        message_text += f"Description: {html.escape(snippet)}"
         answers.append(
             InlineQueryResultArticle(
                 title=f"{title}",
