@@ -41,7 +41,7 @@ async def imdb(_, message):
                         text=f"Stream {url['title']}",
                         url=f"https://movie.princexd.tech/movie/{url['id']}/watch",
                     ),
-                    InlineKeyboardButton("🗑️ Close", callback_data="cb_close")
+                    InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                 ],
             ],
         ),
@@ -84,7 +84,7 @@ async def ymnext_query(client, callbackquery):
                             text=f"Stream {url['title']}",
                             url=f"https://movie.princexd.tech/movie/{url['id']}/watch",
                         ),
-                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close")
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                     ],
                 ]
             ),
@@ -113,7 +113,7 @@ async def ymnext_query(client, callbackquery):
                             text="Stream",
                             url=f"https://movie.princexd.tech/movie/{url['id']}/watch",
                         ),
-                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close")
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
                     ],
                 ]
             ),
@@ -145,8 +145,8 @@ async def ymnext_query(client, callbackquery):
                             text=f"Stream {url['title']}",
                             url=f"https://movie.princexd.tech/movie/{url['id']}/watch",
                         ),
-                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close")
-                    ],                
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                    ],
                 ]
             ),
         )
