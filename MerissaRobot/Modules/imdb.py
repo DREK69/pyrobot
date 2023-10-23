@@ -57,7 +57,7 @@ async def ymnext_query(client, callbackquery):
     resp = await getreq(
         f"https://api.themoviedb.org/3/search/movie?query={query}&api_key=6f77cb8794e999fed44476c8b3303723"
     )
-    url = search["results"][page]
+    url = resp["results"][page]
     poster = f"https://image.tmdb.org/t/p/original/{url['poster_path']}"
     tpage = len(search["results"]) - 1
     if page == 0:
