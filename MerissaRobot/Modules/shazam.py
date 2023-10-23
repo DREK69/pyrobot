@@ -30,7 +30,7 @@ async def voice_handler(client, message):
         await message.reply_text("**⚠️ Max file size has been reached.**")
         return
     ok = await message.reply_text("Downloading Media...")
-    file = await message.reply_to_message.download("merissa.mp3")
+    file = await message.reply_to_message.download()
     await ok.edit_text("Recognise your Sended media")
     r = (await recognize(file)).get("track", None)
     os.remove(file)
