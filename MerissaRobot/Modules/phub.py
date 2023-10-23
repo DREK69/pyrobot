@@ -43,7 +43,7 @@ async def options(c: Client, m: Message):
     userid = m.from_user.id
     sub = await subscribe(c, userid)
     if sub == False:
-        return await message.reply_text(
+        return await m.reply_text(
             "Please Join @MerissaxUpdates to Use Premium Features"
         )
     link = m.text
