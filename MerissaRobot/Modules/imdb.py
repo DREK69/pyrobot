@@ -38,13 +38,10 @@ async def imdb(_, message):
                 ],
                 [
                     InlineKeyboardButton(
-                        text="Imdb",
-                        url=f"https://api.princexd.tech/stream?imdbid={url['id']}",
+                        text=f"Stream {url['title']}",
+                        url=f"https://movie.princexd.tech/movie/{url['id']}/watch",
                     ),
-                    InlineKeyboardButton(
-                        text="Stream",
-                        url=f"https://api.princexd.tech/stream?imdbid={url['id']}",
-                    ),
+                    InlineKeyboardButton("🗑️ Close", callback_data="cb_close")
                 ],
             ],
         ),
@@ -57,22 +54,22 @@ async def ymnext_query(client, callbackquery):
     callback = callback_data.split("|")
     query = callback[1]
     page = int(callback[2])
-    search = await getreq(f"https://api.safone.me/tmdb?query={query}").json()
+    resp = await getreq(
+        f"https://api.themoviedb.org/3/search/movie?query={query}&api_key=6f77cb8794e999fed44476c8b3303723"
+    )
     url = search["results"][page]
+    poster = f"https://image.tmdb.org/t/p/original/{url['poster_path']}"
     tpage = len(search["results"]) - 1
     if page == 0:
         await callbackquery.edit_message_media(
             InputMediaPhoto(
-                url["poster"],
+                poster,
                 caption=f"""**IMDB Movie Details :**
 
 **Title :** {url["title"]}
 **Description :** {url["overview"]}
-**Rating :** {url["rating"]}
-**Release-Date :** {url["releaseDate"]}
+**Release-Date :** {url["release_date"]}
 **Popularity :** {url["popularity"]}
-**Runtime :** {url["runtime"]}
-**Status :** {url["status"]}
 """,
             ),
             reply_markup=InlineKeyboardMarkup(
@@ -84,16 +81,10 @@ async def ymnext_query(client, callbackquery):
                     ],
                     [
                         InlineKeyboardButton(
-                            text="Imdb",
-                            url=url["imdbLink"],
+                            text=f"Stream {url['title']}",
+                            url=f"https://movie.princexd.tech/movie/{url['id']}/watch",
                         ),
-                        InlineKeyboardButton(
-                            text="Stream",
-                            url=f"https://api.princexd.tech/stream?imdbid={url['imdbId']}",
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close")
                     ],
                 ]
             ),
@@ -101,16 +92,13 @@ async def ymnext_query(client, callbackquery):
     elif page == tpage:
         await callbackquery.edit_message_media(
             InputMediaPhoto(
-                url["poster"],
+                poster,
                 caption=f"""**IMDB Movie Details :**
 
 **Title :** {url["title"]}
 **Description :** {url["overview"]}
-**Rating :** {url["rating"]}
-**Release-Date :** {url["releaseDate"]}
+**Release-Date :** {url["release_date"]}
 **Popularity :** {url["popularity"]}
-**Runtime :** {url["runtime"]}
-**Status :** {url["status"]}
 """,
             ),
             reply_markup=InlineKeyboardMarkup(
@@ -122,16 +110,10 @@ async def ymnext_query(client, callbackquery):
                     ],
                     [
                         InlineKeyboardButton(
-                            text="Imdb",
-                            url=url["imdbLink"],
-                        ),
-                        InlineKeyboardButton(
                             text="Stream",
-                            url=f"https://api.princexd.tech/stream?imdbid={url['imdbId']}",
+                            url=f"https://movie.princexd.tech/movie/{url['id']}/watch",
                         ),
-                    ],
-                    [
-                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close")
                     ],
                 ]
             ),
@@ -139,16 +121,13 @@ async def ymnext_query(client, callbackquery):
     else:
         await callbackquery.edit_message_media(
             InputMediaPhoto(
-                url["poster"],
+                poster,
                 caption=f"""**IMDB Movie Details :**
 
 **Title :** {url["title"]}
 **Description :** {url["overview"]}
-**Rating :** {url["rating"]}
-**Release-Date :** {url["releaseDate"]}
+**Release-Date :** {url["release_date"]}
 **Popularity :** {url["popularity"]}
-**Runtime :** {url["runtime"]}
-**Status :** {url["status"]}
 """,
             ),
             reply_markup=InlineKeyboardMarkup(
@@ -163,17 +142,11 @@ async def ymnext_query(client, callbackquery):
                     ],
                     [
                         InlineKeyboardButton(
-                            text="Imdb",
-                            url=url["imdbLink"],
+                            text=f"Stream {url['title']}",
+                            url=f"https://movie.princexd.tech/movie/{url['id']}/watch",
                         ),
-                        InlineKeyboardButton(
-                            text="Stream",
-                            url=f"https://api.princexd.tech/stream?imdbid={url['imdbId']}",
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),
-                    ],
+                        InlineKeyboardButton("🗑️ Close", callback_data="cb_close")
+                    ],                
                 ]
             ),
         )
