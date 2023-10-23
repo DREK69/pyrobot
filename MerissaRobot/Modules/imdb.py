@@ -54,10 +54,10 @@ async def imnext_query(client, callbackquery):
     callback = callback_data.split("|")
     query = callback[1]
     page = int(callback[2])
-    resp = await getreq(
+    search = await getreq(
         f"https://api.themoviedb.org/3/search/movie?query={query}&api_key=6f77cb8794e999fed44476c8b3303723"
     )
-    url = resp["results"][page]
+    url = search["results"][page]
     poster = f"https://image.tmdb.org/t/p/original/{url['poster_path']}"
     tpage = len(search["results"]) - 1
     if page == 0:
