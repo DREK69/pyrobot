@@ -3,7 +3,6 @@ import os
 import random
 
 import requests
-import wget
 from bs4 import BeautifulSoup
 from pyrogram import filters
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
