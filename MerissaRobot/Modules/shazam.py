@@ -26,9 +26,6 @@ async def voice_handler(client, message):
         or message.reply_to_message.video
         or message.reply_to_message.voice
     )
-    if 30641629 < file_size.file_size:
-        await message.reply_text("**⚠️ Max file size has been reached.**")
-        return
     ok = await message.reply_text("Downloading Media...")
     file = await message.reply_to_message.download()
     await ok.edit_text("Recognise your Sended media")
