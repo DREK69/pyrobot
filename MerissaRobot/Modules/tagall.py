@@ -10,7 +10,7 @@ SPAM_CHATS = []
 @pbot.on_message(
     filters.command(["tagall", "all"]) | filters.command("@all", "") & filters.group
 )
-async def tag_all_users(celestia: Celestia, message):
+async def tag_all_users(celestia, message):
     replied = message.reply_to_message
     if len(message.command) < 2 and not replied:
         await message.reply_text(
