@@ -2,11 +2,17 @@ from pyrogram import Client, filters
 from pyrogram.types import InputMediaPhoto, Message
 
 from MerissaRobot import pbot as app
-from MerissaRobot.helpers import getreq
+from MerissaRobot.helpers import getreq, subscribe 
 
 
 @app.on_message(filters.command("google"))
-async def google(_, message):
+async def google(client, message):
+    userid = message.from_user.id
+    sub = await subscribe(client, userid)
+    if sub == False:
+        return await message.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     if len(message.command) < 2:
         return await message.reply_text(
             "Give me some query to search on google\n\nex: /google who is merissarobot?"
@@ -28,6 +34,12 @@ async def google(_, message):
 
 @app.on_message(filters.command("bingimg"))
 def bingimg_search(client: Client, message: Message):
+    userid = message.from_user.id
+    sub = await subscribe(client, userid)
+    if sub == False:
+        return await message.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     try:
         text = message.text.split(None, 1)[1]
     except IndexError:
@@ -52,6 +64,12 @@ def bingimg_search(client: Client, message: Message):
 
 @app.on_message(filters.command("googleimg"))
 def googleimg_search(client: Client, message: Message):
+    userid = message.from_user.id
+    sub = await subscribe(client, userid)
+    if sub == False:
+        return await message.reply_text(
+            "Please Join @MerissaxUpdates to Use Premium Features"
+        )
     try:
         text = message.text.split(None, 1)[1]
     except IndexError:
