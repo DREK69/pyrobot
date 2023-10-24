@@ -94,4 +94,6 @@ async def googleimg_search(client: Client, message: Message):
 
 @app.on_message(filters.command("img"))
 async def img_search(client: Client, message: Message):
-    return await message.reply_text("Command /img changed:\n\n/gimg: For Google Image Search\n/bimg: For Bing Image Search")
+    return await message.reply_text(
+        "Command /img changed:\n\n/gimg: For Google Image Search\n/bimg: For Bing Image Search"
+    )
