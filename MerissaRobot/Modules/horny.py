@@ -167,7 +167,7 @@ async def cute(_, message):
 
 @bot.on_message(filters.command("boob"))
 async def boobs(client, message):
-    pic = await getreq("https://api.princexd.tech/boobs").json()
+    pic = await getreq("https://api.princexd.tech/boobs")
     await client.send_photo(
         message.chat.id,
         pic,
@@ -187,10 +187,10 @@ async def boobs(client, message):
 
 @bot.on_message(filters.command("animepfp"))
 async def animepfp(client, message):
-    pic = await getreq("https://api.princexd.tech/animepfp").json()["url"]
+    pic = await getreq("https://api.princexd.tech/animepfp")
     await client.send_photo(
         message.chat.id,
-        pic,
+        pic["url"],
         caption="Powered By @MerissaRobot",
         reply_markup=InlineKeyboardMarkup(
             [
