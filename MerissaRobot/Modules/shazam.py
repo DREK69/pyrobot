@@ -21,11 +21,13 @@ async def voice_handler(client, message):
         return await message.reply_text(
             "Please Join @MerissaxUpdates to Use Premium Features"
         )
-    file_size = (
+    media = (
         message.reply_to_message.audio
         or message.reply_to_message.video
         or message.reply_to_message.voice
     )
+    if not media:
+        return await message.reply_text("Please Reply to Audio, Video, Voice")
     ok = await message.reply_text("Downloading Media...")
     file = await message.reply_to_message.download()
     await ok.edit_text("Recognise your Sended media")
