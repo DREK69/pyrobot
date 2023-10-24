@@ -33,7 +33,7 @@ async def google(client, message):
 
 
 @app.on_message(filters.command("bingimg"))
-def bingimg_search(client: Client, message: Message):
+async def bingimg_search(client: Client, message: Message):
     userid = message.from_user.id
     sub = await subscribe(client, userid)
     if sub == False:
@@ -63,7 +63,7 @@ def bingimg_search(client: Client, message: Message):
 
 
 @app.on_message(filters.command("googleimg"))
-def googleimg_search(client: Client, message: Message):
+async def googleimg_search(client: Client, message: Message):
     userid = message.from_user.id
     sub = await subscribe(client, userid)
     if sub == False:
@@ -90,3 +90,8 @@ def googleimg_search(client: Client, message: Message):
 
     await message.reply_media_group(media=media)
     await search_message.delete()
+
+
+@app.on_message(filters.command("img"))
+async def img_search(client: Client, message: Message):
+    return await message.reply_text("Command /img changed:\n\n/gimg: For Google Image Search\n/bimg: For Bing Image Search")
