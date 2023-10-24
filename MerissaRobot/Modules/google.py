@@ -1,27 +1,8 @@
-import glob
-import io
-import os
-import re
-import urllib
-import urllib.request
-
-import bs4
-import requests
-from bing_image_downloader import downloader
-from bs4 import BeautifulSoup
-from PIL import Image
-from pyrogram import filters
-
-import json
-
-from MerissaRobot import pbot as app
-from MerissaRobot import telethn as tbot
-from MerissaRobot.events import register
-from MerissaRobot.helpers import getreq
-
-import requests
 from pyrogram import Client, filters
 from pyrogram.types import InputMediaPhoto, Message
+
+from MerissaRobot import pbot as app
+from MerissaRobot.helpers import getreq
 
 
 @app.on_message(filters.command("google"))
@@ -48,15 +29,11 @@ async def google(_, message):
 @app.on_message(filters.command("bingimg"))
 def bingimg_search(client: Client, message: Message):
     try:
-        text = message.text.split(None, 1)[1] 
+        text = message.text.split(None, 1)[1]
     except IndexError:
-        return await message.reply_text(
-            "Provide me a query to search!"
-        ) 
+        return await message.reply_text("Provide me a query to search!")
 
-    search_message = await message.reply_text(
-        "Searching image using Bing search 🔎"
-    )  
+    search_message = await message.reply_text("Searching image using Bing search 🔎")
 
     url = "https://sugoi-api.vercel.app/bingimg?keyword=" + text
     images = await getreq(url)
@@ -76,16 +53,12 @@ def bingimg_search(client: Client, message: Message):
 @app.on_message(filters.command("googleimg"))
 def googleimg_search(client: Client, message: Message):
     try:
-        text = message.text.split(None, 1)[1]  
+        text = message.text.split(None, 1)[1]
     except IndexError:
-        return await message.reply_text(
-            "Provide me a query to search!"
-        )  
+        return await message.reply_text("Provide me a query to search!")
 
-    search_message = await message.reply_text(
-        "Searching image using Google search 🔎"
-    )
-    
+    search_message = await message.reply_text("Searching image using Google search 🔎")
+
     url = "https://sugoi-api.vercel.app/googleimg?keyword=" + text
     images = await getreq(url)
     media = []
