@@ -5,7 +5,6 @@ from pyrogram import filters
 from pyrogram.types import *
 
 from MerissaRobot import pbot as bot
-from MerissaRobot import telethn as asst
 from MerissaRobot.helpers import getreq
 
 
@@ -42,7 +41,9 @@ async def wish(_, m):
     )
 
 
-BUTTON = InlineKeyboardMarkup([[InlineKeyboardButton(text="❓ What Is This", url="https://t.me/MerissaxUpdates")]])
+BUTTON = InlineKeyboardMarkup(
+    [[InlineKeyboardButton(text="❓ What Is This", url="https://t.me/MerissaxUpdates")]]
+)
 HOT = "https://telegra.ph/file/daad931db960ea40c0fca.gif"
 SMEXY = "https://telegra.ph/file/a23e9fd851fb6bc771686.gif"
 LEZBIAN = "https://telegra.ph/file/5609b87f0bd461fc36acb.gif"
