@@ -1,16 +1,15 @@
 import os
 
-import wget
 from pyrogram import filters
 from pyrogram.types import *
 
 from MerissaRobot import pbot as bot
-
+from MerissaRobot.helpers import save_file
 
 @bot.on_message(filters.command("asupan"))
-async def animememes(_, message):
+async def asupan(_, message):
     x = await message.reply_text("Please Wait Video Uploading...")
-    res = wget.download("https://api.akuari.my.id/asupan/tiktok", "asupan.mp4")
+    res = await save_file("https://api.akuari.my.id/asupan/tiktok", "asupan.mp4")
     button = InlineKeyboardMarkup(
         [
             [
@@ -24,11 +23,11 @@ async def animememes(_, message):
 
 
 @bot.on_callback_query(filters.regex("asupan"))
-async def hmeme(_, query: CallbackQuery):
+async def asupancb(_, query: CallbackQuery):
     await query.answer(
         "Generating another Asupan Video\nPlease Wait....", show_alert=True
     )
-    res = wget.download("https://api.akuari.my.id/asupan/tiktok", "asupan.mp4")
+    res = await save_file("https://api.akuari.my.id/asupan/tiktok", "asupan.mp4")
     await query.edit_message_media(
         InputMediaVideo("asupan.mp4", caption="Powered by @MerissaRobot"),
         reply_markup=InlineKeyboardMarkup(
