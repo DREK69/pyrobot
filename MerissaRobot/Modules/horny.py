@@ -153,7 +153,7 @@ async def cute(_, message):
         user_id = message.from_user.id
         user_name = message.from_user.first_name
         mention = f"[{user_name}](tg://user?id={str(user_id)})"
-        mm = random.randint(1, 100):
+        mm = random.randint(1, 100)
         CUTE = f"**🍑** {mention} {mm}**% Cute**"
         await message.reply_video(CUTIE, caption=CUTE, reply_markup=BUTTON)
     if reply:
