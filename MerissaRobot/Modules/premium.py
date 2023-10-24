@@ -260,9 +260,9 @@ async def tiktokdown(client, message):
     video = f"{response['video'][0]}"
     music = f"{response ['music'][0]}"
     buttons = InlineKeyboardMarkup([[Keyboard(text="🎧 Audio", url=music)]])
-    wget.download(video, "tiktok.mp4")
+    await save_file(video, "tiktok.mp4")
     cover = f"{response['cover'][0]}"
-    wget.download(cover, "cover.jpg")
+    await save_file(cover, "cover.jpg")
     await msg.delete()
     await message.reply_video(
         video="tiktok.mp4",
