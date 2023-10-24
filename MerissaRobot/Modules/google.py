@@ -32,7 +32,7 @@ async def google(client, message):
     )
 
 
-@app.on_message(filters.command("bingimg"))
+@app.on_message(filters.command("bimg"))
 async def bingimg_search(client: Client, message: Message):
     userid = message.from_user.id
     sub = await subscribe(client, userid)
@@ -45,7 +45,7 @@ async def bingimg_search(client: Client, message: Message):
     except IndexError:
         return await message.reply_text("Provide me a query to search!")
 
-    search_message = await message.reply_text("Searching image using Bing search 🔎")
+    search_message = await message.reply_text("Searching image in Bing search 🔎")
 
     url = "https://sugoi-api.vercel.app/bingimg?keyword=" + text
     images = await getreq(url)
@@ -62,7 +62,7 @@ async def bingimg_search(client: Client, message: Message):
     await search_message.delete()
 
 
-@app.on_message(filters.command("googleimg"))
+@app.on_message(filters.command("gimg"))
 async def googleimg_search(client: Client, message: Message):
     userid = message.from_user.id
     sub = await subscribe(client, userid)
@@ -75,7 +75,7 @@ async def googleimg_search(client: Client, message: Message):
     except IndexError:
         return await message.reply_text("Provide me a query to search!")
 
-    search_message = await message.reply_text("Searching image using Google search 🔎")
+    search_message = await message.reply_text("Searching image in Google search 🔎")
 
     url = "https://sugoi-api.vercel.app/googleimg?keyword=" + text
     images = await getreq(url)
