@@ -7,10 +7,8 @@ from MerissaRobot import pbot
 SPAM_CHATS = []
 
 
-@pbot.on_message(
-    filters.command(["tagall", "all"]) | filters.command("@all", "") & filters.group
-)
-async def tag_all_users(celestia, message):
+@pbot.on_message(filters.command(["tagall", "all"]) & filters.group)
+async def tag_all_users(celestia: pbot, message):
     replied = message.reply_to_message
     if len(message.command) < 2 and not replied:
         await message.reply_text(
