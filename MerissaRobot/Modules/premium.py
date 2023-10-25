@@ -309,7 +309,8 @@ async def autoapprove(client, message: ChatJoinRequest):
     await client.approve_chat_join_request(chat_id=chat.id, user_id=user.id)
     link = await client.export_chat_invite_link(int(chat.id))
     await client.send_message(
-        chat_id=user.id, text=f"Hello {user.mention}\nWelcome To [{chat.title}]({link})\n\nYou are Auto Approved in Channel By @MerissaRobot"
+        chat_id=user.id,
+        text=f"Hello {user.mention}\nWelcome To [{chat.title}]({link})\n\nYou are Auto Approved in Channel By @MerissaRobot",
     )
 
 
