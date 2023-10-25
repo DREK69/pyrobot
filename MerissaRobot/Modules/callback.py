@@ -113,12 +113,7 @@ To do that, follow this easy steps:
 ▫️ Go to your Channel
 ▫️ Add @MerissaRobot as Administrator and Gives all admin permission to MerissaRobot except Anonymous admin.
 
-Done, Auto Approve is Works Now in Your Channels.""",
-            reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Help Menu", callback_data="help_back")]]
-            ),
-            parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=False,
+Done, Auto Approve is Works Now in Your Channels."""
         )
     elif query.data == "cb_setup":
         query.message.edit_text(
