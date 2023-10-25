@@ -1,132 +1,24 @@
-from functools import wraps
-from threading import RLock
 from time import perf_counter
-
+from functools import wraps
 from cachetools import TTLCache
-from telegram import Chat, ChatMember, ParseMode, Update
-from telegram.ext import CallbackContext
-from telethon.tl.types import ChannelParticipantsAdmins
-
+from threading import RLock
 from MerissaRobot import (
     DEL_CMDS,
-    DEMONS,
     DEV_USERS,
     DRAGONS,
     SUPPORT_CHAT,
+    DEMONS,
     TIGERS,
     WOLVES,
     dispatcher,
 )
-from MerissaRobot.Handler import IMMUNE_USERS, telethn
+
+from telegram import Chat, ChatMember, ParseMode, Update
+from telegram.ext import CallbackContext
 
 # stores admemes in memory for 10 min.
 ADMIN_CACHE = TTLCache(maxsize=512, ttl=60 * 10, timer=perf_counter)
 THREAD_LOCK = RLock()
-
-
-async def user_is_ban_protected(user_id: int, message):
-    status = False
-    if message.is_private or user_id in (IMMUNE_USERS):
-        return True
-
-    async for user in telethn.iter_participants(
-        message.chat_id, filter=ChannelParticipantsAdmins
-    ):
-        if user_id == user.id:
-            status = True
-            break
-    return status
-
-
-async def user_is_admin(user_id: int, message):
-    status = False
-    if message.is_private:
-        return True
-
-    async for user in telethn.iter_participants(
-        message.chat_id, filter=ChannelParticipantsAdmins
-    ):
-        if user_id == user.id or user_id in DRAGONS:
-            status = True
-            break
-    return status
-
-
-async def is_user_admin(user_id: int, chat_id):
-    status = False
-    async for user in telethn.iter_participants(
-        chat_id, filter=ChannelParticipantsAdmins
-    ):
-        if user_id == user.id or user_id in DRAGONS:
-            status = True
-            break
-    return status
-
-
-async def fallen_is_admin(chat_id: int):
-    status = False
-    fallen = await telethn.get_me()
-    async for user in telethn.iter_participants(
-        chat_id, filter=ChannelParticipantsAdmins
-    ):
-        if fallen.id == user.id:
-            status = True
-            break
-    return status
-
-
-async def is_user_in_chat(chat_id: int, user_id: int):
-    status = False
-    async for user in telethn.iter_participants(chat_id):
-        if user_id == user.id:
-            status = True
-            break
-    return status
-
-
-async def can_change_info(message):
-    status = False
-    if message.chat.admin_rights:
-        status = message.chat.admin_rights.change_info
-    return status
-
-
-async def can_ban_users(message):
-    status = False
-    if message.chat.admin_rights:
-        status = message.chat.admin_rights.ban_users
-    return status
-
-
-async def can_pin_messages(message):
-    status = False
-    if message.chat.admin_rights:
-        status = message.chat.admin_rights.pin_messages
-    return status
-
-
-async def can_invite_users(message):
-    status = False
-    if message.chat.admin_rights:
-        status = message.chat.admin_rights.invite_users
-    return status
-
-
-async def can_add_admins(message):
-    status = False
-    if message.chat.admin_rights:
-        status = message.chat.admin_rights.add_admins
-    return status
-
-
-async def can_delete_messages(message):
-    if message.is_private:
-        return True
-    elif message.chat.admin_rights:
-        status = message.chat.admin_rights.delete_messages
-        return status
-    else:
-        return False
 
 
 def is_whitelist_plus(chat: Chat, user_id: int, member: ChatMember = None) -> bool:
@@ -208,7 +100,7 @@ def is_user_in_chat(chat: Chat, user_id: int) -> bool:
 def dev_plus(func):
     @wraps(func)
     def is_dev_plus_func(update: Update, context: CallbackContext, *args, **kwargs):
-        context.bot
+        bot = context.bot
         user = update.effective_user
 
         if user.id in DEV_USERS:
@@ -232,7 +124,7 @@ def dev_plus(func):
 def sudo_plus(func):
     @wraps(func)
     def is_sudo_plus_func(update: Update, context: CallbackContext, *args, **kwargs):
-        context.bot
+        bot = context.bot
         user = update.effective_user
         chat = update.effective_chat
 
@@ -256,7 +148,7 @@ def sudo_plus(func):
 def support_plus(func):
     @wraps(func)
     def is_support_plus_func(update: Update, context: CallbackContext, *args, **kwargs):
-        context.bot
+        bot = context.bot
         user = update.effective_user
         chat = update.effective_chat
 
@@ -279,7 +171,7 @@ def whitelist_plus(func):
         *args,
         **kwargs,
     ):
-        context.bot
+        bot = context.bot
         user = update.effective_user
         chat = update.effective_chat
 
@@ -295,7 +187,7 @@ def whitelist_plus(func):
 def user_admin(func):
     @wraps(func)
     def is_admin(update: Update, context: CallbackContext, *args, **kwargs):
-        context.bot
+        bot = context.bot
         user = update.effective_user
         chat = update.effective_chat
 
@@ -324,7 +216,7 @@ def user_admin_no_reply(func):
         *args,
         **kwargs,
     ):
-        context.bot
+        bot = context.bot
         user = update.effective_user
         chat = update.effective_chat
 
@@ -344,7 +236,7 @@ def user_admin_no_reply(func):
 def user_not_admin(func):
     @wraps(func)
     def is_not_admin(update: Update, context: CallbackContext, *args, **kwargs):
-        context.bot
+        bot = context.bot
         user = update.effective_user
         chat = update.effective_chat
 
@@ -413,8 +305,7 @@ def can_pin(func):
 
         if chat.get_member(bot.id).can_pin_messages:
             return func(update, context, *args, **kwargs)
-        else:
-            update.effective_message.reply_text(cant_pin, parse_mode=ParseMode.HTML)
+        update.effective_message.reply_text(cant_pin, parse_mode=ParseMode.HTML)
 
     return pin_rights
 
@@ -468,7 +359,7 @@ def can_restrict(func):
 def user_can_ban(func):
     @wraps(func)
     def user_is_banhammer(update: Update, context: CallbackContext, *args, **kwargs):
-        context.bot
+        bot = context.bot
         user = update.effective_user.id
         member = update.effective_chat.get_member(user)
         if (
@@ -511,88 +402,7 @@ def connection_status(func):
     return connected_status
 
 
-async def user_is_ban_protected(user_id: int, message):
-    status = False
-    if message.is_private or user_id in (IMMUNE_USERS):
-        return True
-
-    async for user in telethn.iter_participants(
-        message.chat_id,
-        filter=ChannelParticipantsAdmins,
-    ):
-        if user_id == user.id:
-            status = True
-            break
-    return status
-
-
-async def saitama_is_admin(chat_id: int):
-    status = False
-    saitama = await telethn.get_me()
-    async for user in telethn.iter_participants(
-        chat_id,
-        filter=ChannelParticipantsAdmins,
-    ):
-        if saitama.id == user.id:
-            status = True
-            break
-    return status
-
-
-async def is_user_in_chat(chat_id: int, user_id: int):
-    status = False
-    async for user in telethn.iter_participants(chat_id):
-        if user_id == user.id:
-            status = True
-            break
-    return status
-
-
-async def can_change_info(message):
-    status = False
-    if message.chat.admin_rights:
-        status = message.chat.admin_rights.change_info
-    return status
-
-
-async def can_ban_users(message):
-    status = False
-    if message.chat.admin_rights:
-        status = message.chat.admin_rights.ban_users
-    return status
-
-
-async def can_pin_messages(message):
-    status = False
-    if message.chat.admin_rights:
-        status = message.chat.admin_rights.pin_messages
-    return status
-
-
-async def can_invite_users(message):
-    status = False
-    if message.chat.admin_rights:
-        status = message.chat.admin_rights.invite_users
-    return status
-
-
-async def can_add_admins(message):
-    status = False
-    if message.chat.admin_rights:
-        status = message.chat.admin_rights.add_admins
-    return status
-
-
-async def can_delete_messages(message):
-    if message.is_private:
-        return True
-    if message.chat.admin_rights:
-        status = message.chat.admin_rights.delete_messages
-        return status
-    return False
-
-
 # Workaround for circular import with connection.py
-from MerissaRobot.Modules import connection
+from EmikoRobot.modules import connection
 
 connected = connection.connected
