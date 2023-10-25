@@ -17,21 +17,6 @@ __mod_name__ = "Paste​"
 pattern = re.compile(r"^text/|json$|yaml$|xml$|toml$|x-sh$|x-shellscript$")
 
 
-async def isPreviewUp(preview: str) -> bool:
-    for _ in range(7):
-        try:
-            async with session.head(preview, timeout=2) as resp:
-                status = resp.status
-                size = resp.content_length
-        except asyncio.exceptions.TimeoutError:
-            return False
-        if status == 404 or (status == 200 and size == 0):
-            await asyncio.sleep(0.4)
-        else:
-            return True if status == 200 else False
-    return False
-
-
 @app.on_message(filters.command("paste"))
 @capture_err
 async def paste_func(_, message):
@@ -51,14 +36,4 @@ async def paste_func(_, message):
             content = await f.read()
         os.remove(doc)
     link = await paste(content)
-    preview = link + "/preview.png"
-    button = InlineKeyboard(row_width=1)
-    button.add(InlineKeyboardButton(text="Paste Link", url=link))
-
-    if await isPreviewUp(preview):
-        try:
-            await message.reply_photo(photo=preview, quote=False, reply_markup=button)
-            return await m.delete()
-        except Exception:
-            pass
     return await m.edit(link)
