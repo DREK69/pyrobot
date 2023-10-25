@@ -8,9 +8,8 @@ from MerissaRobot import pbot as app
 from MerissaRobot.Utils.Services.sections import section
 
 
-async def get_user_info(user, already=False):
-    if not already:
-        user = await app.get_users(user)
+async def get_user_info(user):
+    user = await app.get_users(user)
     if not user.first_name:
         return ["Deleted account", None]
     user_id = user.id
@@ -32,9 +31,8 @@ async def get_user_info(user, already=False):
     return [caption, photo_id]
 
 
-async def get_chat_info(chat, already=False):
-    if not already:
-        chat = await app.get_chat(chat)
+async def get_chat_info(chat):
+    chat = await app.get_chat(chat)
     chat_id = chat.id
     username = chat.username
     title = chat.title
@@ -96,7 +94,7 @@ async def chat_info_func(_, message: Message):
         if len(message.command) == 1:
             chat = int(message.chat.id)
         elif len(message.command) == 2:
-            chat = int(message.text.split(None, 1)[1])
+            chat = message.text.split(None, 1)[1]
 
         m = await message.reply_text("Processing...")
 
