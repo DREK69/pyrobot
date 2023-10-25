@@ -324,7 +324,7 @@ async def autoapprove(client, message: ChatJoinRequest):
     )
 
 
-@pbot.on_callback_query(filters.regex("^howtoapp"))
+@pbot.on_callback_query(filters.regex("^howtoaap"))
 async def howtoaap_cb(bot, query):
     return await query.answer(
         "Just add MerissaRobot in Your Channel as Administrator and Done ✅",
