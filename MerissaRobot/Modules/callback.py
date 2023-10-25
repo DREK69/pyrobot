@@ -103,17 +103,31 @@ If You Need More Help Click on Below Button""",
             disable_web_page_preview=False,
         )
         query.message.delete()
+    elif query.data == "cb_aap":
+        query.message.edit_text(
+            text="""Auto Approve Merissa Bot is Works only for Channel
+            
+Now for let me work correctly, you need to make me Admin of your Group!
+
+To do that, follow this easy steps: 
+▫️ Go to your Channel
+▫️ Add @MerissaRobot as Administrator and Gives all admin permission to MerissaRobot except Anonymous admin.
+
+Done, Auto Approve is Works Now in Your Channels.""",
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("Help Menu", callback_data="help_back")]]
+            ),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=False,
+        )
     elif query.data == "cb_setup":
         query.message.edit_text(
             text="""──「 Help of Setup Assistant 」──
             
-1.) first, add me to your group.
-
-2.) then promote me as admin and give all permissions except anonymous admin.
-   
-3.) add @MerissaxPlugin to your group.
-            
-4.) turn on the video chat first before start to play music.
+▫️ First, Add me to your group.
+▫️ Then promote me as admin and give all permissions except anonymous admin.
+▫️ Add @MerissaAssistant to your group.            
+▫️ Turn on the video chat first before start to play music.
              
 Lets Enjoy The Merissa Music And Join Support Group @MerissaxSupport""",
             reply_markup=InlineKeyboardMarkup(
