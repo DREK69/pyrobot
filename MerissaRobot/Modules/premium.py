@@ -316,9 +316,10 @@ async def autoapprove(client, message: ChatJoinRequest):
         ],
         [Keyboard(text="How to add in your Channel", callback_data="howtoaap")],
     ]
-    await client.send_message(
+    await client.send_photo(
         chat_id=user.id,
-        text=f"Hello {user.mention}\nWelcome To [{chat.title}]({link})\n\nYou are Auto Approved in Channel By @MerissaRobot",
+        photo="https://te.legra.ph/file/90b1aa10cf8b77d5b781b.jpg",
+        caption=f"Hello {user.mention}\nWelcome To [{chat.title}]({link})\n\nYou are Auto Approved in Channel By @MerissaRobot",
         reply_markup=InlineKeyboardMarkup(button),
     )
 
