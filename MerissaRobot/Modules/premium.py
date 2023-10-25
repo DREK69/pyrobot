@@ -302,16 +302,14 @@ async def snapdown(client, message):
         )
 
 
-TEXT = "Hello {mention}\nWelcome To {title}\n\nYou are Auto Approved in Channel By @MerissaRobot"
-
-
 @pbot.on_chat_join_request((filters.channel))
 async def autoapprove(client, message: ChatJoinRequest):
     chat = message.chat
     user = message.from_user
     await client.approve_chat_join_request(chat_id=chat.id, user_id=user.id)
+    link = await client.export_chat_invite_link(int(chat.id))
     await client.send_message(
-        chat_id=user.id, text=TEXT.format(mention=user.mention, title=chat.title)
+        chat_id=user.id, text=f"Hello {user.mention}\nWelcome To [{chat.title}]({link})\n\nYou are Auto Approved in Channel By @MerissaRobot"
     )
 
 
