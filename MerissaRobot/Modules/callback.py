@@ -103,18 +103,6 @@ If You Need More Help Click on Below Button""",
             disable_web_page_preview=False,
         )
         query.message.delete()
-    elif query.data == "cb_aap":
-        query.message.edit_text(
-            text="""Auto Approve Merissa Bot is Works only for Channel
-            
-Now for let me work correctly, you need to make me Admin of your Group!
-
-To do that, follow this easy steps: 
-▫️ Go to your Channel
-▫️ Add @MerissaRobot as Administrator and Gives all admin permission to MerissaRobot except Anonymous admin.
-
-Done, Auto Approve is Works Now in Your Channels."""
-        )
     elif query.data == "cb_setup":
         query.message.edit_text(
             text="""──「 Help of Setup Assistant 」──
