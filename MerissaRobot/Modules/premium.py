@@ -309,8 +309,8 @@ async def autoapprove(client, message: ChatJoinRequest):
     await client.approve_chat_join_request(chat_id=chat.id, user_id=user.id)
     getchat = await client.get_chat(chat.id)
     link = getchat.invite_link
-    button = [[InlineKeyboardButton("Click To Get Channel", url=link)]]
-    await client.send_text(
+    button = [[InlineKeyboardButton(text=chat.title, url=link)]]
+    await client.send_message(
         chat_id=user.id,
         text=f"Hello {user.mention}\nWelcome To [{chat.title}]({link})\n\nYou are Auto Approved in Channel By @MerissaRobot",
         reply_markup=InlineKeyboardMarkup(button),
