@@ -1,13 +1,9 @@
-import asyncio
 import os
 import re
 
 import aiofiles
-from pykeyboard import InlineKeyboard
 from pyrogram import filters
-from pyrogram.types import InlineKeyboardButton
 
-from MerissaRobot import aiohttpsession as session
 from MerissaRobot import pbot as app
 from MerissaRobot.Utils.Helpers.errors import capture_err
 from MerissaRobot.Utils.Helpers.pastebin import paste
