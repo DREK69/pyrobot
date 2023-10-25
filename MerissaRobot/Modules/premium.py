@@ -314,7 +314,7 @@ async def autoapprove(client, message: ChatJoinRequest):
             Keyboard(text=chat.title, url=link),
             Keyboard(text="Support", url="https://t.me/MerissaxSupport"),
         ],
-        [Keyboard(text="How to add in your Channel", callback_data="cb_app")],
+        [Keyboard(text="How to add in your Channel", callback_data="howtoaap")],
     ]
     await client.send_message(
         chat_id=user.id,
@@ -322,6 +322,11 @@ async def autoapprove(client, message: ChatJoinRequest):
         reply_markup=InlineKeyboardMarkup(button),
     )
 
+
+@pbot.on_callback_query(filters.regex("^howtoapp"))
+async def howtoaap_cb(bot, query):
+    return await query.answer("Just add MerissaRobot in Your Channel as Administrator and Done ✅", show_alert=True)
+   
 
 __help__ = """
 @MerissaRobot Share Anything Download Anything
