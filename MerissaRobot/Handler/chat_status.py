@@ -404,6 +404,6 @@ def connection_status(func):
 
 
 # Workaround for circular import with connection.py
-from EmikoRobot.modules import connection
+from MerissaRobot.Modules import connection
 
 connected = connection.connected
