@@ -6,8 +6,9 @@ import requests
 from bs4 import BeautifulSoup
 from pyrogram import filters
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
+from pyrogram.types import ChatJoinRequest
 from pyrogram.types import InlineKeyboardButton as Keyboard
-from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, InputMediaVideo, ChatJoinRequest
+from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, InputMediaVideo
 from telegram import InlineKeyboardButton
 
 from MerissaRobot import FORCE_CHANNEL, pbot
@@ -300,14 +301,18 @@ async def snapdown(client, message):
             text="No Public Stories for past 24Hrs\n\n❌ OR INVALID USERNAME", quote=True
         )
 
+
 TEXT = "Hello {mention}\nWelcome To {title}\n\nYou are Auto Approved in Channel By @MerissaRobot"
+
 
 @pbot.on_chat_join_request((filters.channel))
 async def autoapprove(client, message: ChatJoinRequest):
-    chat=message.chat 
-    user=message.from_user 
+    chat = message.chat
+    user = message.from_user
     await client.approve_chat_join_request(chat_id=chat.id, user_id=user.id)
-    await client.send_message(chat_id=user.id, text=TEXT.format(mention=user.mention, title=chat.title))
+    await client.send_message(
+        chat_id=user.id, text=TEXT.format(mention=user.mention, title=chat.title)
+    )
 
 
 __help__ = """
