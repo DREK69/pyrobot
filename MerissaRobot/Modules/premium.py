@@ -313,7 +313,7 @@ async def autoapprove(client, message: ChatJoinRequest):
     await client.send_text(
         chat_id=user.id,
         text=f"Hello {user.mention}\nWelcome To [{chat.title}]({link})\n\nYou are Auto Approved in Channel By @MerissaRobot",
-        reply_markup=InlineKeyboardMarkup(button)
+        reply_markup=InlineKeyboardMarkup(button),
     )
 
 
