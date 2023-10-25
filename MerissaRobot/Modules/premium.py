@@ -300,7 +300,7 @@ async def snapdown(client, message):
             text="No Public Stories for past 24Hrs\n\n❌ OR INVALID USERNAME", quote=True
         )
 
-TEXT = "Hello {mention}\nWelcome To {title}\n\nYou are Auto Approved in Channel By @MerissaRobot")
+TEXT = "Hello {mention}\nWelcome To {title}\n\nYou are Auto Approved in Channel By @MerissaRobot"
 
 @pbot.on_chat_join_request((filters.channel))
 async def autoapprove(client, message: ChatJoinRequest):
