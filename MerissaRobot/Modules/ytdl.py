@@ -5,7 +5,7 @@ import yt_dlp
 from mutagen.mp4 import MP4
 from pykeyboard import InlineKeyboard
 from pyrogram import Client, filters
-from pyrogram.enums import ChatAction, ParseMode.HTML
+from pyrogram.enums import ChatAction, ParseMode
 from pyrogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -626,8 +626,8 @@ async def lyrics_cb(bot, query):
                 ]
             ]
         )
-        await query.message.edit_reply_markup(reply_markup=None)
-        await query.message.reply_text(link, disable_web_page_preview=False, parse_mode=ParseMode.HTML)
+        await query.message.edit_reply_markup(button)
+        await query.message.reply_text(f"Click on Instant[ ]({link})View For Lyrics", disable_web_page_preview=False, parse_mode=ParseMode.MARKDOWN)
     else:
         button = InlineKeyboardMarkup(
             [
