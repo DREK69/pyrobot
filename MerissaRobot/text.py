@@ -75,7 +75,7 @@ PM_ABOUT_BUTTON = InlineKeyboardMarkup(
         [
             InlineKeyboardButton(
                 text="Website 🔗",
-                url="https://merissarobot.tk",
+                url="https://merissabot.me",
             ),
         ],
         [
