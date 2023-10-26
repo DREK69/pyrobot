@@ -627,7 +627,11 @@ async def lyrics_cb(bot, query):
             ]
         )
         await query.message.edit_reply_markup(button)
-        await query.message.reply_text(f"Click on Instant[ ]({link})View For Lyrics", disable_web_page_preview=False, parse_mode=ParseMode.MARKDOWN)
+        await query.message.reply_text(
+            f"Click on Instant[ ]({link})View For Lyrics",
+            disable_web_page_preview=False,
+            parse_mode=ParseMode.MARKDOWN,
+        )
     else:
         button = InlineKeyboardMarkup(
             [
