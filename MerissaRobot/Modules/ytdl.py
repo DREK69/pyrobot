@@ -461,8 +461,16 @@ async def formats_query(client, callbackquery):
 @Client.on_callback_query(filters.regex("^audio"))
 async def audio_query(client, callbackquery):
     chatid = callbackquery.message.chat.id
-    m = await callbackquery.edit_message_text(
-        "Downloading Started\n\nDownload Speed could be slow. Please hold on.."
+    await query.edit_message_reply_markup(
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Downloading...", callback_data="_DOWNLOADING"
+                    )
+                ]
+            ]
+        )
     )
     callback_data = callbackquery.data.strip()
     videoid = callback_data.split(None, 1)[1]
@@ -499,10 +507,17 @@ async def audio_query(client, callbackquery):
         [[InlineKeyboardButton(text="🎵 Lyrics", callback_data="lyrics")]]
     )
     try:
-        await m.edit(
-            "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
+        await query.edit_message_reply_markup(
+        reply_markup = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Uploading...", callback_data="_UPLOADING"
+                    )
+                 ]
+              ]
+          )
         )
-
         await client.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
         await callbackquery.edit_message_media(media=med, reply_markup=button)
     except Exception as error:
@@ -514,8 +529,16 @@ async def audio_query(client, callbackquery):
 @Client.on_callback_query(filters.regex("^video"))
 async def video_query(client, callbackquery):
     chatid = callbackquery.message.chat.id
-    m = await callbackquery.edit_message_text(
-        "Downloading Started\n\nDownload Speed could be slow. Please hold on.."
+    await query.edit_message_reply_markup(
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Downloading...", callback_data="_DOWNLOADING"
+                    )
+                ]
+            ]
+        )
     )
     callback_data = callbackquery.data.strip()
     callback_request = callback_data.split(None, 1)[1]
@@ -550,8 +573,16 @@ async def video_query(client, callbackquery):
         supports_streaming=True,
     )
     try:
-        await m.edit(
-            "Uploading Started\n\nUpload Speed could be slow. Please hold on.."
+        await query.edit_message_reply_markup(
+            reply_markup = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Uploading...", callback_data="_UPLOADING"
+                    )
+                 ]
+              ]
+          )
         )
         await client.send_chat_action(chatid, ChatAction.UPLOAD_VIDEO)
         await callbackquery.edit_message_media(media=med)
