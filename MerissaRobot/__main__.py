@@ -879,6 +879,9 @@ async def init():
     try:
         await pbot.start()
     except FloodWait as e:
+        LOGGER.info(
+            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
+        )
         time.sleep(e.value)
 
 
@@ -891,7 +894,7 @@ if __name__ == "__main__":
         LOGGER.info("Telethon Started")
     except FloodWaitError as e:
         LOGGER.info(
-            f"[FloodWaitError] Have to wait {e.seconds} seconds due to FloodWait."
+            f"[Telethon: FloodWaitError] Have to wait {e.seconds} seconds due to FloodWait."
         )
         time.sleep(e.seconds)
         telethn.start(bot_token=TOKEN)
