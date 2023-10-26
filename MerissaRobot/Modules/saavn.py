@@ -241,15 +241,9 @@ async def callback_query(client, query):
         [[InlineKeyboardButton(text="🎵 Lyrics", callback_data="lyrics")]]
     )
     await query.edit_message_reply_markup(
-        reply_markup = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        text="Uploading...", callback_data="_UPLOADING"
-                    )
-                 ]
-              ]
-          )
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton(text="Uploading...", callback_data="_UPLOADING")]]
+        )
     )
     await pbot.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
     await query.edit_message_media(media=med, reply_markup=button)
