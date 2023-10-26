@@ -176,7 +176,7 @@ async def song(client, message):
     thumbnail = thumb_url.replace("60-", "500-")
     await message.reply_photo(
         thumbnail,
-        caption=f"**Title**: [{title}]({link})\n**Duration**: {dur}\n**Track** = 1 out of {len(search['result'])}\n\n**Click Below Button to Download**:",
+        caption=f"**Title**: [{title}]({link})\n**Duration**: {dur}\n**Track** = 1 out of {len(search['results'])}\n\n**Click Below Button to Download**:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
