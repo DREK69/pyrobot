@@ -626,7 +626,7 @@ async def lyrics_cb(bot, query):
                 ]
             ]
         )
-        await query.message.edit_message_caption(
+        await query.edit_message_caption(
             caption=f"Click on Instant[ ]({link})View Lyrics (Mobile Support Only)",
             reply_markup=button,
             parse_mode=ParseMode.MARKDOWN,
@@ -641,4 +641,4 @@ async def lyrics_cb(bot, query):
                 ]
             ]
         )
-        await query.message.edit_reply_markup(button)
+        await query.edit_message_reply_markup(button)
