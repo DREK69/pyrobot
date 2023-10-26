@@ -151,11 +151,12 @@ dispatcher = updater.dispatcher
 aiohttpsession = ClientSession()
 
 pbot = Client(
-    ":memory:",
+    "MerissaRobot",
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=TOKEN,
     workers=min(32, os.cpu_count() + 4),
+    plugins=dict(root="MerissaRobot.Modules"),
 )
 
 BOT_ID = dispatcher.bot.id
