@@ -461,7 +461,7 @@ async def formats_query(client, callbackquery):
 @Client.on_callback_query(filters.regex("^audio"))
 async def audio_query(client, callbackquery):
     chatid = callbackquery.message.chat.id
-    await query.edit_message_reply_markup(
+    await callbackquery.edit_message_reply_markup(
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -507,7 +507,7 @@ async def audio_query(client, callbackquery):
         [[InlineKeyboardButton(text="🎵 Lyrics", callback_data="lyrics")]]
     )
     try:
-        await query.edit_message_reply_markup(
+        await callbackquery.edit_message_reply_markup(
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
@@ -529,7 +529,7 @@ async def audio_query(client, callbackquery):
 @Client.on_callback_query(filters.regex("^video"))
 async def video_query(client, callbackquery):
     chatid = callbackquery.message.chat.id
-    await query.edit_message_reply_markup(
+    await callbackquery.edit_message_reply_markup(
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -573,7 +573,7 @@ async def video_query(client, callbackquery):
         supports_streaming=True,
     )
     try:
-        await query.edit_message_reply_markup(
+        await callbackquery.edit_message_reply_markup(
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
