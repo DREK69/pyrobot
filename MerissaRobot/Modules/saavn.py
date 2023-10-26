@@ -200,8 +200,16 @@ async def callback_query(client, CallbackQuery):
 @pbot.on_callback_query(filters.regex(pattern=r"svdown"))
 async def callback_query(client, query):
     chatid = query.message.chat.id
-    m = await query.edit_message_text(
-        "Downloading Started\n\nDownload Speed could be slow. Please hold on.."
+    await query.edit_message_reply_markup(
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Downloading...", callback_data="_DOWNLOADING"
+                    )
+                ]
+            ]
+        )
     )
     callback_data = query.data.strip()
     id = callback_data.split(None, 1)[1]
@@ -232,7 +240,17 @@ async def callback_query(client, query):
     button = InlineKeyboardMarkup(
         [[InlineKeyboardButton(text="🎵 Lyrics", callback_data="lyrics")]]
     )
-    await m.edit("Uploading Started\n\nUpload Speed could be slow. Please hold on..")
+    await query.edit_message_reply_markup(
+        reply_markup = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="Uploading...", callback_data="_UPLOADING"
+                    )
+                 ]
+              ]
+          )
+    )
     await pbot.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
     await query.edit_message_media(media=med, reply_markup=button)
     os.remove(file)
