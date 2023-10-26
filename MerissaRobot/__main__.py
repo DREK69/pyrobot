@@ -880,7 +880,7 @@ async def init():
         await pbot.start()
     except FloodWait as e:
         flood_time = int(e.x)
-    await asyncio.sleep(flood_time)
+        await asyncio.sleep(flood_time)
 
 
 if __name__ == "__main__":
