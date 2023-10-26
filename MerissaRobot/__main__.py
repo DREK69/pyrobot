@@ -883,6 +883,7 @@ async def init():
             f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
         )
         time.sleep(e.value)
+        await pbot.start()
 
 
 if __name__ == "__main__":
