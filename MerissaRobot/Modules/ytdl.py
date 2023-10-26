@@ -133,7 +133,7 @@ async def video(client, message):
     thumbnail = await get_ytthumb(videoid)
     await message.reply_photo(
         thumbnail,
-        caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = 1 out of {len(search['result'])}\n\n**Select Your Track from Below and Download It**:",
+        caption=f"**Title**: [{title}]({link})\n**Duration**: {dur}\n**Results** = 1 out of {len(search['result'])}\n\n**Select Your Track from Below and Download It**:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -176,7 +176,7 @@ async def song(client, message):
     thumbnail = thumb_url.replace("60-", "500-")
     await message.reply_photo(
         thumbnail,
-        caption=f"**Title**: [{title}]({link})\n**Duration**: {dur}\n\n**Click Below Button to Download**:",
+        caption=f"**Title**: [{title}]({link})\n**Duration**: {dur}\n**Track** = 1 out of {len(search['result'])}\n\n**Click Below Button to Download**:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -216,7 +216,7 @@ async def ymnext_query(client, callbackquery):
         await callbackquery.edit_message_media(
             InputMediaPhoto(
                 thumbnail,
-                caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['results'])}\n\n**Select your track from Below and Download It**:",
+                caption=f"**Title**: [{title}]({link})\n**Duration**: {dur}\n**Results** = {page+1} out of {len(search['results'])}\n\n**Select your track from Below and Download It**:",
             ),
             reply_markup=InlineKeyboardMarkup(
                 [
@@ -239,7 +239,7 @@ async def ymnext_query(client, callbackquery):
         await callbackquery.edit_message_media(
             InputMediaPhoto(
                 thumbnail,
-                caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['results'])}\n\n**Select your track from Below and Download It**:",
+                caption=f"**Title**: [{title}]({link})\n**Duration**: {dur}\n**Results** = {page+1} out of {len(search['results'])}\n\n**Select your track from Below and Download It**:",
             ),
             reply_markup=InlineKeyboardMarkup(
                 [
@@ -262,7 +262,7 @@ async def ymnext_query(client, callbackquery):
         await callbackquery.edit_message_media(
             InputMediaPhoto(
                 thumbnail,
-                caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['results'])}\n\n**Select your track from Below and Download It**:",
+                caption=f"**Title**: [{title}]({link})\n**Duration**: {dur}\n**Results** = {page+1} out of {len(search['results'])}\n\n**Select your track from Below and Download It**:",
             ),
             reply_markup=InlineKeyboardMarkup(
                 [
@@ -304,7 +304,7 @@ async def ytnext_query(client, callbackquery):
         await callbackquery.edit_message_media(
             InputMediaPhoto(
                 thumbnail,
-                caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['result'])}\n\n**Select your track from Below and Download It**:",
+                caption=f"**Title**: [{title}]({link})\n**Duration**: {dur}\n**Results** = {page+1} out of {len(search['result'])}\n\n**Select your track from Below and Download It**:",
             ),
             reply_markup=InlineKeyboardMarkup(
                 [
@@ -327,7 +327,7 @@ async def ytnext_query(client, callbackquery):
         await callbackquery.edit_message_media(
             InputMediaPhoto(
                 thumbnail,
-                caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['result'])}\n\n**Select your track from Below and Download It**:",
+                caption=f"**Title**: [{title}]({link})\n**Duration**: {dur}\n**Results** = {page+1} out of {len(search['result'])}\n\n**Select your track from Below and Download It**:",
             ),
             reply_markup=InlineKeyboardMarkup(
                 [
@@ -350,7 +350,7 @@ async def ytnext_query(client, callbackquery):
         await callbackquery.edit_message_media(
             InputMediaPhoto(
                 thumbnail,
-                caption=f"**Title**: {title}\n**Duration**: {dur}\n**Track** = {page+1} out of {len(search['result'])}\n\n**Select your track from Below and Download It**:",
+                caption=f"**Title**: [{title}]({link})\n**Duration**: {dur}\n**Results** = {page+1} out of {len(search['result'])}\n\n**Select your track from Below and Download It**:",
             ),
             reply_markup=InlineKeyboardMarkup(
                 [
