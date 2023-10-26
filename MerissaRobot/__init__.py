@@ -155,7 +155,6 @@ pbot = Client(
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=TOKEN,
-    plugins=dict(root="MerissaRobot.Modules"),
 )
 
 BOT_ID = dispatcher.bot.id
