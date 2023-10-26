@@ -65,8 +65,7 @@ pykeyboard
 pymongo==3.12.1
 pynewtonmath
 pyrate-limiter==2.10.0
-pyrogram
-pyromod==1.5
+pyrogram==2.0.106
 pySmartDL
 pyTelegramBotAPI==4.8.0
 python-barcode==0.14.0
