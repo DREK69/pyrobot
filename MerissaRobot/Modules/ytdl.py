@@ -508,15 +508,15 @@ async def audio_query(client, callbackquery):
     )
     try:
         await query.edit_message_reply_markup(
-        reply_markup = InlineKeyboardMarkup(
-            [
+            reply_markup=InlineKeyboardMarkup(
                 [
-                    InlineKeyboardButton(
-                        text="Uploading...", callback_data="_UPLOADING"
-                    )
-                 ]
-              ]
-          )
+                    [
+                        InlineKeyboardButton(
+                            text="Uploading...", callback_data="_UPLOADING"
+                        )
+                    ]
+                ]
+            )
         )
         await client.send_chat_action(chatid, ChatAction.UPLOAD_AUDIO)
         await callbackquery.edit_message_media(media=med, reply_markup=button)
@@ -574,15 +574,15 @@ async def video_query(client, callbackquery):
     )
     try:
         await query.edit_message_reply_markup(
-            reply_markup = InlineKeyboardMarkup(
-            [
+            reply_markup=InlineKeyboardMarkup(
                 [
-                    InlineKeyboardButton(
-                        text="Uploading...", callback_data="_UPLOADING"
-                    )
-                 ]
-              ]
-          )
+                    [
+                        InlineKeyboardButton(
+                            text="Uploading...", callback_data="_UPLOADING"
+                        )
+                    ]
+                ]
+            )
         )
         await client.send_chat_action(chatid, ChatAction.UPLOAD_VIDEO)
         await callbackquery.edit_message_media(media=med)
