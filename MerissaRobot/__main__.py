@@ -873,10 +873,13 @@ def main():
 
     updater.idle()
 
+async def init():
+    await pbot.start()
+
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    pbot.start()
+    loop.run_until_complete(init())
     LOGGER.info("Pyrogram Started")
     try:
         telethn.start(bot_token=TOKEN)
