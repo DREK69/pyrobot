@@ -21,6 +21,7 @@ from pyrogram.types import (
 )
 from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded
 from pytgcalls.types import AudioPiped, HighQualityAudio, Update
+from telegram import InlineKeyboardButton as IKB
 from youtube_search import YoutubeSearch
 
 from MerissaRobot import (
@@ -743,8 +744,8 @@ __mod_name__ = "Music-Bot 🎧"
 
 __helpbtns__ = [
     [
-        InlineKeyboardButton("Setup MusicBot", callback_data="cb_setup"),
-        InlineKeyboardButton("Commands", callback_data="cb_vcmd"),
+        IKB("Setup MusicBot", callback_data="cb_setup"),
+        IKB("Commands", callback_data="cb_vcmd"),
     ],
-    [InlineKeyboardButton("🔙 Back", callback_data="help_back")],
+    [IKB("🔙 Back", callback_data="help_back")],
 ]
