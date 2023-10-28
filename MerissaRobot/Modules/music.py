@@ -153,7 +153,7 @@ class FFmpegReturnCodeError(Exception):
     pass
 
 
-ydl_opts = {"format": "bestaudio[ext=m4a]", "outtmpl": "%(id)s.%(ext)s"}
+ydl_opts = {"format": "bestaudio[ext=m4a]", "outtmpl": "downloads/%(id)s.%(ext)s"}
 
 
 async def ytaudio(videoid):
