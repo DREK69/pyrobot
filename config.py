@@ -29,7 +29,7 @@ OWNER_USERNAME = os.environ.get("OWNER_USERNAME", "NoobxCoder")
 FORCE_CHANNEL = int(os.environ.get("FORCE_CHANNEL", "-1001703270696"))
 DB_URL = os.environ.get(
     "DATABASE_URL",
-    "postgres://mnhstyfd:BaX8RTpU-k0NDDh9_Ljya0LrUryyL3Ru@heffalump.db.elephantsql.com/mnhstyfd",
+    "postgres://mnhstyfd:mORyS4I7ojT-I96WBPmDqWLBAtJvkwaM@heffalump.db.elephantsql.com/mnhstyfd",
 )
 DB_URI = DB_URL.replace("postgres://", "postgresql://", 1)
 REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", "")
