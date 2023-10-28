@@ -13,7 +13,7 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     Message,
 )
-from youtube_dl.utils import DownloadError
+from yt_dlp.utils import DownloadError
 
 from MerissaRobot import pbot as Client
 from MerissaRobot.helpers import subscribe
