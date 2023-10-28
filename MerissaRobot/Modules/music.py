@@ -157,11 +157,13 @@ ydl_opts = {"format": "bestaudio[ext=m4a]", "outtmpl": "%(id)s.%(ext)s"}
 
 
 async def ytaudio(videoid):
+    file = os.path.join("downloads", f"{videoid}.m4a")
+    if os.path.exists(file):
+        return file
     loop = asyncio.get_running_loop()
     link = f"https://m.youtube.com/watch?v={videoid}"
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         await loop.run_in_executor(None, ydl.download, [link])
-    file = f"{videoid}.m4a"
     return file
 
 
