@@ -8,7 +8,6 @@ import traceback
 from sys import argv
 
 import requests
-from pyrogram.errors.exceptions.flood_420 import FloodWait
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import BadRequest, Unauthorized
 from telegram.ext import (
@@ -29,7 +28,7 @@ from MerissaRobot import (
     SUPPORT_CHAT,
     TOKEN,
     dispatcher,
-    pbot,
+    pyrostart,
     telethn,
     updater,
 )
@@ -182,8 +181,8 @@ def start(update: Update, context: CallbackContext):
                         ]
                     ),
                 )
-            elif args[0].startswith("ytdl_"):
-                videoid = args[0].split("ytdl_")[1]
+            elif args[0].startswith("info_"):
+                videoid = args[0].split("info_")[1]
                 link = f"https://m.youtube.com/watch?v={videoid}"
                 yt = requests.get(
                     f"https://api.princexd.tech/ytinfo?link={link}"
@@ -875,20 +874,9 @@ def main():
     updater.idle()
 
 
-async def init():
-    try:
-        await pbot.start()
-    except FloodWait as e:
-        LOGGER.info(
-            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
-        )
-        time.sleep(e.value)
-        await pbot.start()
-
-
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    loop.run_until_complete(init())
+    loop.run_until_complete(pyrostart())
     LOGGER.info("Pyrogram Started")
     try:
         telethn.start(bot_token=TOKEN)

@@ -6,13 +6,9 @@ from MerissaRobot.helpers import subscribe
 
 
 @pbot.on_message(filters.private & filters.reply & filters.command("post"))
+@subscribe
 async def post(bot, update):
-    userid = update.from_user.id
-    sub = await subscribe(bot, userid)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
+    update.from_user.id
     if (update.text == "post") or (" " not in update.text):
         return
 
@@ -47,6 +43,7 @@ async def post(bot, update):
 
 
 @pbot.on_message(filters.private & filters.reply & filters.command(["edit"]), group=2)
+@subscribe
 async def edit(bot, update):
     if update.text == "/edit":
         return

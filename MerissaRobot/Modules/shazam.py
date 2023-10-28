@@ -14,13 +14,9 @@ async def recognize(path):
 
 
 @pbot.on_message(filters.command("shazam"))
+@subscribe
 async def voice_handler(client, message):
-    userid = message.from_user.id
-    sub = await subscribe(client, userid)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
+    message.from_user.id
     media = (
         message.reply_to_message.audio
         or message.reply_to_message.video

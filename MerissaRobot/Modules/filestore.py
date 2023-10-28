@@ -131,12 +131,8 @@ async def _main_grop(bot, update):
 
 
 @pbot.on_message(filters.command("save"))
+@subscribe
 async def _main(bot, update):
-    userid = update.from_user.id
-    sub = await subscribe(bot, userid)
-    if sub == False:
-        return await update.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
+    update.from_user.id
     copied = await update.reply_to_message.copy(TRACK_CHANNEL)
     await __reply(update, copied)

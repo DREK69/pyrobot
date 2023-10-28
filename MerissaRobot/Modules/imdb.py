@@ -2,10 +2,11 @@ from pyrogram import filters
 from pyrogram.types import *
 
 from MerissaRobot import pbot
-from MerissaRobot.helpers import getreq
+from MerissaRobot.helpers import getreq, subscribe
 
 
 @pbot.on_message(filters.command(["imdb", "tmdb"]))
+@subscribe
 async def imdb(_, message):
     if len(message.command) < 2:
         return await message.reply_text("Give me some Movie Name\n\nEx. /imdb Kgf")

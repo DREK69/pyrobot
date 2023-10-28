@@ -1,18 +1,12 @@
-FROM debian:11
-FROM python:3.8.5-slim-buster
+FROM python:3.10-buster
 
-WORKDIR /MerissaRobot/
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ffmpeg \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get -y install git
-RUN python3 -m pip install -U pip
-RUN python3 -m pip install --upgrade pip
-RUN apt-get install -y wget python3-pip curl bash neofetch ffmpeg software-properties-common
+COPY . /app/
+WORKDIR /app/
+RUN pip3 install --no-cache-dir -U -r requirements.txt
 
-COPY requirements.txt .
-
-RUN pip3 install wheel
-RUN pip3 install -U -r requirements.txt
-
-COPY . .
-CMD ["python3", "-m", "MerissaRobot"]
+CMD ["python3", "-m", "MerissaRobot"] 

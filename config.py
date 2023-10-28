@@ -1,6 +1,7 @@
 import os
+from os import getenv
 
-TOKEN = os.environ.get("TOKEN", "5294959338:AAGYVu5Iv8n4HmBnMLMtT5YhAwHoXZAa6Tg")
+TOKEN = os.environ.get("TOKEN", "6717726202:AAHJdDXg4Sju1CCD3U96rmy63j9NsWd1Jss")
 INFOPIC = bool(os.environ.get("INFOPIC", True))
 BOT_USERNAME = os.environ.get("BOT_USERNAME", "MerissaRobot")
 EVENT_LOGS = os.environ.get("EVENT_LOGS", "-1001325865052")
@@ -11,9 +12,9 @@ CERT_PATH = os.environ.get("CERT_PATH")
 API_ID = os.environ.get("API_ID", "8673250")
 ERROR_LOG = os.environ.get("ERROR_LOG", "-1001446814207")
 API_HASH = os.environ.get("API_HASH", "bab0eb3130eb4930cc40112635b2dc4d")
-STRING_SESSION = os.environ.get(
+STRING_SESSION = getenv(
     "STRING_SESSION",
-    "AQCEV-IAmFHMtn8om-l9L5qtmTWQInIsAg2Z3n1Wz2n6h2nRBcKpYtNxtH_-w0Pb6_6fY92CUTDSK7oXuaH9spOb34IwLetJ0zKNjVVpx1aKMJCSzdAfTNsxDkoBQ_ZObXTBTdypgCpjjQ0mH9fkbBYeYsAR6lJSBH_Ws87VygAADGqWRKAUhQ6FOH-IFvnpoUu5tr22fW5uytbL0gugpV81bCnoeeEqBPGP017NI1jFuBHNCIwjn7oBol-2cr61Z-Tx0ACm3cEmGrNWu2pTnMlUui2ddAa_Tq4ZOw3enxiWfL4wy3Ib71EaVVjhQ_YffJ4e57iDAkwbw8qJAJNE2ywAp4c9ygAAAAE46AF6AA",
+    "AQDUFcUAZZxSsmtX6P7sxUnDEs7QCJcweVshxwpnIqfqyMFiXeiob9bu_ZihJwMHLIo-W_d1Dnn-W2nbzD25YbmOf5NmWCzK0l9y4nZvchp6GIEjuPF6Nznvof-ggWdcnzu9Ksi9VCZcsdlmd9Zc0WcXdNF70eJ1QQYQ0tPrTolxeI_l0bvplo4I3Ps1CtPMfbt6ld3XLI4Mcgw3kHlcDdPpC_PiYuI_aAtNYSOShRuO_-N1fBnl4AJnWqeRxYwuBydKSsepwKGhAhLFzXoYfcOrBjaCPtQ0Qsxt6rOMUGMvrhx_lmQdqUldwkMXq5K7LZwpIt2OHwisu0Fpq6LwuNfZsWWzpAAAAAE46AF6AA",
 )
 MERISSA_TOKEN = os.environ.get("MERISSA_TOKEN", "nZWMiKdkDvSJMmSm")
 OWNER_ID = int(os.environ.get("OWNER_ID", "2030709195"))
@@ -24,11 +25,11 @@ DEV_USERS = set(int(x) for x in os.environ.get("DEV_USERS", "2030709195").split(
 WOLVES = set(int(x) for x in os.environ.get("WOLVES", "").split())
 TIGERS = set(int(x) for x in os.environ.get("TIGERS", "").split())
 JOIN_LOGGER = os.environ.get("JOIN_LOGGER", "-1001325865052")
-FORCE_CHANNEL = int(os.environ.get("FORCE_CHANNEL", "-1001703270696"))
 OWNER_USERNAME = os.environ.get("OWNER_USERNAME", "NoobxCoder")
+FORCE_CHANNEL = int(os.environ.get("FORCE_CHANNEL", "-1001703270696"))
 DB_URL = os.environ.get(
     "DATABASE_URL",
-    "postgres://mnhstyfd:mORyS4I7ojT-I96WBPmDqWLBAtJvkwaM@heffalump.db.elephantsql.com/mnhstyfd",
+    "postgres://mnhstyfd:BaX8RTpU-k0NDDh9_Ljya0LrUryyL3Ru@heffalump.db.elephantsql.com/mnhstyfd",
 )
 DB_URI = DB_URL.replace("postgres://", "postgresql://", 1)
 REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", "")
@@ -51,9 +52,10 @@ STRICT_GMUTE = bool(os.environ.get("STRICT_GMUTE", True))
 TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TEMP_DOWNLOAD_DIRECTORY", "./")
 OPENWEATHERMAP_ID = os.environ.get("OPENWEATHERMAP_ID", "")
 VIRUS_API_KEY = os.environ.get("VIRUS_API_KEY", "")
-NO_LOAD = os.environ.get("NO_LOAD", "").split()
+NO_LOAD = os.environ.get("NO_LOAD", "translation").split()
 DEL_CMDS = bool(os.environ.get("DEL_CMDS", False))
-WORKERS = int(os.environ.get("WORKERS", 8))
+STRICT_GBAN = bool(os.environ.get("STRICT_GBAN", False))
+WORKERS = int(os.environ.get("WORKERS", 1))
 BAN_STICKER = os.environ.get("BAN_STICKER", "CAADAgADOwADPPEcAXkko5EB3YGYAg")
 ALLOW_EXCL = os.environ.get("ALLOW_EXCL", False)
 BOT_API_URL = os.environ.get("BOT_API_URL", "https://api.telegram.org/bot")
@@ -76,5 +78,7 @@ LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY", "")
 CF_API_KEY = os.environ.get("CF_API_KEY", None)
 WELCOME_DELAY_KICK_SEC = os.environ.get("WELCOME_DELAY_KICL_SEC", "")
 BOT_ID = int(os.environ.get("BOT_ID", "5294959338"))
+ARQ_API_URL = os.environ.get("ARQ_API_URL", "https://arq.hamker.in")
+ARQ_API_KEY = os.environ.get("ARQ_API_KEY", "IXJDNK-GURMUL-HPGZYX-TPJKKT-ARQ")
 BACKUP_PASS = os.environ.get("BACKUP_PASS", None)
 ALLOW_CHATS = os.environ.get("ALLOW_CHATS", True)

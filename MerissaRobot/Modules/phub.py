@@ -39,13 +39,9 @@ ph_regex = (
 
 
 @Client.on_message(filters.regex(ph_regex))
+@subscribe
 async def options(c: Client, m: Message):
-    userid = m.from_user.id
-    sub = await subscribe(c, userid)
-    if sub == False:
-        return await m.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
+    m.from_user.id
     link = m.text
     ran_hash = "".join(random.choices(string.ascii_uppercase + string.digits, k=10))
     y[ran_hash] = link
@@ -116,7 +112,7 @@ async def get_video(c: Client, q: CallbackQuery):
             await run_async(ydl.download, [url])
         except DownloadError:
             await q.message.edit("Sorry, an error occurred")
-            return
+            return active.remove(user_id)
     thumb = "phthumb.jpg"
     wget.download("https://te.legra.ph/file/d4e99ab7e69d796bdb124.png", thumb)
     msg = await message.edit(

@@ -6,13 +6,9 @@ from MerissaRobot.helpers import getreq, subscribe
 
 
 @app.on_message(filters.command("google"))
+@subscribe
 async def google(client, message):
-    userid = message.from_user.id
-    sub = await subscribe(client, userid)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
+    message.from_user.id
     if len(message.command) < 2:
         return await message.reply_text(
             "Give me some query to search on google\n\nex: /google who is merissarobot?"
@@ -33,13 +29,9 @@ async def google(client, message):
 
 
 @app.on_message(filters.command("bimg"))
+@subscribe
 async def bingimg_search(client: Client, message: Message):
-    userid = message.from_user.id
-    sub = await subscribe(client, userid)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
+    message.from_user.id
     try:
         text = message.text.split(None, 1)[1]
     except IndexError:
@@ -63,13 +55,9 @@ async def bingimg_search(client: Client, message: Message):
 
 
 @app.on_message(filters.command("gimg"))
+@subscribe
 async def googleimg_search(client: Client, message: Message):
-    userid = message.from_user.id
-    sub = await subscribe(client, userid)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
+    message.from_user.id
     try:
         text = message.text.split(None, 1)[1]
     except IndexError:

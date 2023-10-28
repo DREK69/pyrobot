@@ -4,6 +4,7 @@ from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from MerissaRobot import pbot
+from MerissaRobot.helpers import subscribe
 
 url_list = {}
 
@@ -26,7 +27,7 @@ def search_movies(query):
     return movies_list
 
 
-async def get_movie(query):
+def get_movie(query):
     movie_details = {}
     if "https" in query:
         movie_page_link = BeautifulSoup(requests.get(query).text, "html.parser")
@@ -51,12 +52,13 @@ async def get_movie(query):
 
 
 @pbot.on_message(filters.command("moviedl"))
-def find_movie(_, message):
+@subscribe
+async def find_movie(_, message):
     if len(message.command) < 2:
-        return message.reply_text(
+        return await message.reply_text(
             "Give some Movie/Series name to Find it on my Database\n\nEx. /moviedl pathaan"
         )
-    search_results = message.reply_text("Processing...")
+    m = await message.reply_text("Processing...")
     query = message.text.split(None, 1)[1]
     movies_list = search_movies(query)
     if movies_list:
@@ -67,11 +69,9 @@ def find_movie(_, message):
             )
             keyboards.append([keyboard])
         reply_markup = InlineKeyboardMarkup(keyboards)
-        search_results.edit_text(
-            f"Search Results For {query}...", reply_markup=reply_markup
-        )
+        await m.edit_text(f"Search Results For {query}...", reply_markup=reply_markup)
     else:
-        search_results.edit_text(
+        await m.edit_text(
             "Sorry 🙏, No Result Found!\nCheck If You Have Misspelled The Movie Name."
         )
 
@@ -84,7 +84,7 @@ async def movie_result(Client, CallbackQuery):
         text="Please Wait Movie/Series Details Fetching From MKVCinemas",
         reply_markup=None,
     )
-    s = await get_movie(id)
+    s = get_movie(id)
     link = ""
     links = s["links"]
     for i in links:
@@ -105,12 +105,13 @@ async def movie_result(Client, CallbackQuery):
 
 
 @pbot.on_message(filters.command("movie"))
-def find_streammovie(_, message):
+@subscribe
+async def find_streammovie(_, message):
     if len(message.command) < 2:
-        return message.reply_text(
+        return await message.reply_text(
             "Give some Movie/Series name to Find it on my Database\n\nEx. /moviedl pathaan"
         )
-    search_results = message.reply_text("Processing...")
+    search_results = await message.reply_text("Processing...")
     query = message.text.split(None, 1)[1]
     movies_list = requests.get(f"https://yasirapi.eu.org/lk21?q={query}").json()[
         "result"
@@ -127,11 +128,11 @@ def find_streammovie(_, message):
         button = InlineKeyboardMarkup(
             [[InlineKeyboardButton(f"{query}", url=response)]]
         )
-        search_results.edit_text(
+        await search_results.edit_text(
             text="Your Movie Downloading/Streaming Link", reply_markup=button
         )
     else:
-        search_results.edit_text(
+        await search_results.edit_text(
             "Sorry 🙏, No Result Found!\nCheck If You Have Misspelled The Movie Name."
         )
 
@@ -176,12 +177,13 @@ def get_anime(query):
 
 
 @pbot.on_message(filters.command("animedl"))
-def find_anime(_, message):
+@subscribe
+async def find_anime(_, message):
     if len(message.command) < 2:
-        return message.reply_text(
+        return await message.reply_text(
             "Give some Movie/Series name to Find it on my Database\n\nEx. /animedl naruto"
         )
-    search_results = message.reply_text("Processing...")
+    search_results = await message.reply_text("Processing...")
     query = message.text.split(None, 1)[1]
     movies_list = search_anime(query)
     if movies_list:
@@ -192,11 +194,11 @@ def find_anime(_, message):
             )
             keyboards.append([keyboard])
         reply_markup = InlineKeyboardMarkup(keyboards)
-        search_results.edit_text(
+        await search_results.edit_text(
             f"Search Results For {query}...", reply_markup=reply_markup
         )
     else:
-        search_results.edit_text(
+        await search_results.edit_text(
             "Sorry 🙏, No Result Found!\nCheck If You Have Misspelled The Movie Name."
         )
 

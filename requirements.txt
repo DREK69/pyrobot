@@ -27,8 +27,6 @@ fontTools
 future
 fuzzysearch
 geopy
-git+https://github.com/python-telegram-bot/ptbcontrib.git
-git+https://github.com/yt-dlp/yt-dlp
 googletrans==4.0.0rc1
 google-trans-new
 gpytranslate
@@ -68,6 +66,7 @@ pyrate-limiter==2.10.0
 pyrogram>=2.0.93
 pySmartDL
 pyTelegramBotAPI==4.8.0
+py-tgcalls==1.0.0rc4
 python-barcode==0.14.0
 python-dotenv==0.*
 python-telegram-bot==13.12
@@ -97,7 +96,7 @@ ujson
 webcolors
 wget
 wikipedia
-youtube_dl
 youtube_search
 youtube_search_python==1.4.9
+yt-dlp
 zalgo-text

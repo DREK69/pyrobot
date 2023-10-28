@@ -43,13 +43,9 @@ async def premium(client, message):
 
 
 @pbot.on_message(filters.regex(instaregex) & filters.incoming & filters.private)
+@subscribe
 async def instadown(client, message):
-    userid = message.from_user.id
-    sub = await subscribe(client, userid)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
+    message.from_user.id
     link = message.text
     msg = await message.reply_text("Processing...")
     if "reel" in link:
@@ -199,13 +195,9 @@ async def instadown(client, message):
 
 
 @pbot.on_message(filters.regex(pinregex))
+@subscribe
 async def pindown(client, message):
-    userid = message.from_user.id
-    sub = await subscribe(client, userid)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
+    message.from_user.id
     link = message.text
     m = await message.reply_text("Processing...")
     pin = getreq(f"https://api.princexd.tech/pin?link={link}")
@@ -218,13 +210,9 @@ async def pindown(client, message):
 
 
 @pbot.on_message(filters.regex(fbregex) & filters.incoming & filters.private)
+@subscribe
 async def fbdown(client, message):
-    userid = message.from_user.id
-    sub = await subscribe(client, userid)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
+    message.from_user.id
     link = message.text
     msg = await message.reply_text("Processing...")
     url = "https://facebook-reel-and-video-downloader.p.rapidapi.com/app/main.php"
@@ -240,13 +228,9 @@ async def fbdown(client, message):
 
 
 @pbot.on_message(filters.regex(tiktokregex) & filters.incoming & filters.private)
+@subscribe
 async def tiktokdown(client, message):
-    userid = message.from_user.id
-    sub = await subscribe(client, userid)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
+    message.from_user.id
     link = message.text
     msg = await message.reply_text("Processing...")
     url = "https://tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com/index"
@@ -275,13 +259,9 @@ async def tiktokdown(client, message):
 
 
 @pbot.on_message(filters.regex(snapregex) & filters.incoming & filters.private)
+@subscribe
 async def snapdown(client, message):
-    userid = message.from_user.id
-    sub = await subscribe(client, userid)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
+    message.from_user.id
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"
     }

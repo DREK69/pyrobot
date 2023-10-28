@@ -37,12 +37,21 @@ async def postreq(url, data):
     return data
 
 
-async def subscribe(client, user_id):
-    try:
-        member = await client.get_chat_member(chat_id=FORCE_CHANNEL, user_id=user_id)
-        return True
-    except UserNotParticipant:
-        return False
+def subscribe(func):
+    async def non_subscribe(client, message):
+        user_id = message.from_user.id
+        try:
+            member = await client.get_chat_member(
+                chat_id=FORCE_CHANNEL, user_id=user_id
+            )
+            return await func(client, message)
+        except UserNotParticipant:
+            return await message.reply_photo(
+                photo="https://te.legra.ph/file/2b3a7af1d01513c032739.jpg",
+                caption="Join our Telegram Update Channel @MerissaxUpdates to Get Premium for free in MerissaRobot",
+            )
+
+    return non_subscribe
 
 
 async def get_ytthumb(videoid: str):
