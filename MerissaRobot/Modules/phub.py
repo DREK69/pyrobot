@@ -106,32 +106,30 @@ async def get_video(c: Client, q: CallbackQuery):
     else:
         active.append(user_id)
 
-    opts = {}
+    opts = {'outtmpl': '%(id)s.%(ext)s'}
     with yt_dlp.YoutubeDL(opts) as ydl:
         try:
             await run_async(ydl.download, [url])
+            info_dict = ydl.extract_info(url, download=False)
         except DownloadError:
             await q.message.edit("Sorry, an error occurred")
             return active.remove(user_id)
+    id = info_dict["id"]
+    file = f"{id}.mp4"
     thumb = "phthumb.jpg"
     wget.download("https://te.legra.ph/file/d4e99ab7e69d796bdb124.png", thumb)
     msg = await message.edit(
         "Uploading Started\n\nUploading Speed could be Slow Plase wait..."
     )
-    for file in os.listdir("."):
-        if file.endswith(".mp4"):
-            await Client.send_video(
-                -1001708378054,
-                f"{file}",
-                thumb=thumb,
-                width=1280,
-                height=720,
-                caption="The content you requested has been successfully downloaded!",
-            )
-            os.remove(f"{file}")
-            break
-        else:
-            continue
+    await Client.send_video(
+            -1001708378054,
+            file,
+            thumb=thumb,
+            width=1280,
+            height=720,
+            caption="The content you requested has been successfully downloaded!",
+        )
+    os.remove(file)
     await q.message.reply_text(
         "Join Here to Watch Video - [Click Here](https://t.me/+Ow7dStIJSLViY2Y1)",
         disable_web_page_preview=True,
