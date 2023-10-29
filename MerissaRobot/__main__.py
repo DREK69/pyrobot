@@ -876,7 +876,6 @@ def main():
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    loop.run_until_complete(pyrostart())
     LOGGER.info("Pyrogram Started")
     try:
         telethn.start(bot_token=TOKEN)
