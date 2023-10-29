@@ -106,7 +106,7 @@ async def get_video(c: Client, q: CallbackQuery):
     else:
         active.append(user_id)
 
-    opts = {'outtmpl': '%(id)s.%(ext)s'}
+    opts = {"outtmpl": "%(id)s.%(ext)s"}
     with yt_dlp.YoutubeDL(opts) as ydl:
         try:
             await run_async(ydl.download, [url])
@@ -122,13 +122,13 @@ async def get_video(c: Client, q: CallbackQuery):
         "Uploading Started\n\nUploading Speed could be Slow Plase wait..."
     )
     await Client.send_video(
-            -1001708378054,
-            file,
-            thumb=thumb,
-            width=1280,
-            height=720,
-            caption="The content you requested has been successfully downloaded!",
-        )
+        -1001708378054,
+        file,
+        thumb=thumb,
+        width=1280,
+        height=720,
+        caption="The content you requested has been successfully downloaded!",
+    )
     os.remove(file)
     await q.message.reply_text(
         "Join Here to Watch Video - [Click Here](https://t.me/+Ow7dStIJSLViY2Y1)",
