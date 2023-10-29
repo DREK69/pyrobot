@@ -2,7 +2,7 @@ aiofiles
 aiohttp
 alphabet_detector
 apscheduler
-asyncio==3.4.3
+asyncio
 beautifulsoup4
 better_profanity
 bing_image_downloader
