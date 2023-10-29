@@ -180,7 +180,7 @@ ASS_MENTION = "https://t.me/merissaassistant"
 
 async def pyrostart():
     try:
-        pbot.start()
+        await pbot.start()
         await user.start()
         await pbot.send_message(-1001446814207, "Bot Started")
         await user.send_message(-1001446814207, "Assistant Started")
