@@ -28,7 +28,6 @@ from MerissaRobot import (
     SUPPORT_CHAT,
     TOKEN,
     dispatcher,
-    pyrostart,
     telethn,
     updater,
 )
