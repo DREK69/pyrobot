@@ -20,7 +20,7 @@ from telegram.ext import (
 from telegram.ext.dispatcher import DispatcherHandlerStop
 from telegram.utils.helpers import escape_markdown
 from telethon.errors.rpcerrorlist import FloodWaitError
-
+from pyrogram.errors.exceptions.flood_420 import FloodWait
 import MerissaRobot.Database.sql.users_sql as sql
 from MerissaRobot import (
     LOGGER,
@@ -872,9 +872,29 @@ def main():
 
     updater.idle()
 
+async def pyrostart():
+    try:
+        await pbot.start()
+        await user.start()
+        await pbot.send_message(-1001446814207, "Bot Started")
+        await user.send_message(-1001446814207, "Assistant Started")
+        await pytgcalls.start()
+    except FloodWait as e:
+        LOGGER.info(
+            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
+        )
+        time.sleep(e.value)
+        await pbot.start()
+        await user.start()
+        await pbot.send_message(-1001446814207, "Bot Started")
+        await user.send_message(-1001446814207, "Assistant Started")
+        await pytgcalls.start()
+        
+
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+    loop.run_until_complete(pyrostart())
     LOGGER.info("Pyrogram Started")
     try:
         telethn.start(bot_token=TOKEN)
