@@ -37,7 +37,7 @@ from MerissaRobot import (
     pytgcalls,
     user,
 )
-from MerissaRobot.helpers import get_ytthumb, subscribe
+from MerissaRobot.helpers import get_ytthumb
 
 DURATION_LIMIT = int("90")
 
