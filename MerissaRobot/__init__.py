@@ -143,15 +143,6 @@ if sys.version_info[0] < 3 or sys.version_info[1] < 6:
     except ValueError:
         raise Exception("Your blacklisted chats list does not contain valid integers.")
 
-DEV_USERS.add(OWNER_ID)
-
-sw = None
-
-updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
-telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
-dispatcher = updater.dispatcher
-aiohttpsession = ClientSession()
-
 pbot = Client(
     "MerissaRobot",
     api_id=API_ID,
@@ -162,13 +153,25 @@ pbot = Client(
     sleep_threshold=60,
     in_memory=True,
 )
+
+DEV_USERS.add(OWNER_ID)
+
+sw = None
+
+updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
+telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
+dispatcher = updater.dispatcher
+aiohttpsession = ClientSession()
+
 user = Client(
     "MerissaMusic",
     api_id=API_ID,
     api_hash=API_HASH,
     session_string=str(STRING_SESSION),
 )
+
 pytgcalls = PyTgCalls(user)
+
 BOT_ID = dispatcher.bot.id
 BOT_USERNAME = dispatcher.bot.username
 BOT_NAME = dispatcher.bot.first_name
