@@ -21,13 +21,9 @@ API3 = "https://www.1secmail.com/api/v1/?action=readMessage&login="
 
 
 @app.on_message(filters.command("genmail"))
+@subscribe
 async def fakemailgen(client, message: Message):
     name = message.from_user.id
-    sub = await subscribe(client, name)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
     rp = RandomWord(max_word_size=8, include_digits=True)
     email = rp.generate()
     xx = requests.get(API1).json()
@@ -56,13 +52,9 @@ async def fakemailgen(client, message: Message):
 
 
 @app.on_message(filters.command("set"))
+@subscribe
 async def setmailgen(client, message: Message):
     name = message.from_user.id
-    sub = await subscribe(client, name)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
     if len(message.command) < 2:
         return await message.reply_text(
             "Give me some text to make Tempmail\n\nEx. /set Merissarobot"
