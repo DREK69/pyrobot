@@ -21,7 +21,6 @@ import telegram.ext as tg
 from aiohttp import ClientSession
 from pyrogram import Client, errors
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
-from pyrogram.errors.exceptions.flood_420 import FloodWait
 from pyrogram.types import Message
 from pyromod import listen  # ignore
 from pytgcalls import PyTgCalls
@@ -182,25 +181,6 @@ ASS_USERNAME = "MerissaAssistant"
 ASS_MENTION = "https://t.me/merissaassistant"
 
 
-async def pyrostart():
-    try:
-        await pbot.start()
-        await user.start()
-        await pbot.send_message(-1001446814207, "Bot Started")
-        await user.send_message(-1001446814207, "Assistant Started")
-        await pytgcalls.start()
-    except FloodWait as e:
-        LOGGER.info(
-            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
-        )
-        time.sleep(e.value)
-        await pbot.start()
-        await user.start()
-        await pbot.send_message(-1001446814207, "Bot Started")
-        await user.send_message(-1001446814207, "Assistant Started")
-        await pytgcalls.start()
-
-
 async def eor(msg: Message, **kwargs):
     func = msg.edit_text if msg.from_user.is_self else msg.reply
     spec = getfullargspec(func.__wrapped__).args
@@ -224,5 +204,3 @@ from MerissaRobot.Handler.handlers import (
 tg.RegexHandler = CustomRegexHandler
 tg.CommandHandler = CustomCommandHandler
 tg.MessageHandler = CustomMessageHandler
-
-asyncio.get_event_loop().run_until_complete(pyrostart())
