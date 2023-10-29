@@ -209,7 +209,6 @@ async def stream_off(chat_id: int):
     & ~filters.forwarded
     & ~filters.via_bot
 )
-@subscribe
 async def play(_, message: Message):
     merissa = await message.reply_text("Processing Please Wait...")
     try:
