@@ -157,6 +157,7 @@ pbot = Client(
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=TOKEN,
+    plugins=dict(root="MerissaRobot.Modules")
     workers=min(32, os.cpu_count() + 4),
     sleep_threshold=60,
     in_memory=True,
