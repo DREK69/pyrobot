@@ -19,6 +19,7 @@ from logging import (
 import spamwatch
 import telegram.ext as tg
 from aiohttp import ClientSession
+from pyromod import listen # ignore
 from pyrogram import Client, errors
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 from pyrogram.errors.exceptions.flood_420 import FloodWait
@@ -220,3 +221,5 @@ from MerissaRobot.Handler.handlers import (
 tg.RegexHandler = CustomRegexHandler
 tg.CommandHandler = CustomCommandHandler
 tg.MessageHandler = CustomMessageHandler
+
+asyncio.get_event_loop().run_until_complete(pyrostart())
