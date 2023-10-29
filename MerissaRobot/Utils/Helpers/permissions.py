@@ -8,6 +8,7 @@ from MerissaRobot import pbot as app
 
 SUDO = DRAGONS, DEV_USERS, WOLVES, DEMONS, TIGERS
 
+
 async def member_permissions(chat_id: int, user_id: int):
     perms = []
     member = await app.get_chat_member(chat_id, user_id)
@@ -30,6 +31,7 @@ async def member_permissions(chat_id: int, user_id: int):
     if member.can_manage_voice_chats:
         perms.append("can_manage_voice_chats")
     return perms
+
 
 async def authorised(func, subFunc2, client, message, *args, **kwargs):
     chatID = message.chat.id
