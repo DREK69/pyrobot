@@ -135,7 +135,6 @@ def chatbot(update: Update, context: CallbackContext):
         bot.send_chat_action(chat_id, action="typing")
         url = f"https://merissachatbot.vercel.app/chatbot/Merissa/Prince/message={message.text}"
         results = requests.get(url).json()
-        sleep(0.5)
         message.reply_text(results["reply"])
 
 
@@ -178,7 +177,6 @@ CHATBOT_HANDLER = MessageHandler(
     Filters.text
     & (~Filters.regex(r"^#[^\s]+") & ~Filters.regex(r"^!") & ~Filters.regex(r"^\/")),
     chatbot,
-    run_async=True,
 )
 LIST_ALL_CHATS_HANDLER = CommandHandler(
     "allchats", list_all_chats, filters=CustomFilters.dev_filter
