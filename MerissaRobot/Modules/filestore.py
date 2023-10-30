@@ -59,32 +59,30 @@ async def _startfile(bot, update):
             await check.copy(update.from_user.id)
             await ok.delete()
     elif "batch_" in code:
+        send_msg = await update.reply_text("Uploading Media...")
         cmd, chat_id, message = code.split("_")
         string = await bot.get_messages(TRACK_CHANNEL, int(message))
         message_ids = string.text.split("-")
         for msg_id in message_ids:
             msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
             if msg.empty:
-                owner = await bot.get_users(int(OWNER_ID))
                 return await update.reply_text(
-                    f"🥴 Sᴏʀʀʏ ʙʀᴏ ʏᴏᴜʀ ғɪʟᴇ ᴡᴀs ᴅᴇʟᴇᴛᴇᴅ ʙʏ ғɪʟᴇ ᴏᴡɴᴇʀ ᴏʀ ʙᴏᴛ ᴏᴡɴᴇʀ\n\nFᴏʀ ᴍᴏʀᴇ ʜᴇʟᴘ ᴄᴏɴᴛᴀᴄᴛ ᴍʏ ᴏᴡɴᴇʀ👉 {owner.mention(style='md')}"
+                    "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner"
                 )
 
             await msg.copy(update.from_user.id)
-            await asyncio.sleep(1)
-
-        return
+        return await asyncio.sleep(1)
+        
         chat_id, msg_id = code.split("_")
         msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
 
         if msg.empty:
             return await send_msg.edit(
-                f"🥴 Sᴏʀʀʏ ʙʀᴏ ʏᴏᴜʀ ғɪʟᴇ ᴡᴀs ᴅᴇʟᴇᴛᴇᴅ ʙʏ ғɪʟᴇ ᴏᴡɴᴇʀ ᴏʀ ʙᴏᴛ ᴏᴡɴᴇʀ\n\nFᴏʀ ᴍᴏʀᴇ ʜᴇʟᴘ ᴄᴏɴᴛᴀᴄᴛ ᴍʏ ᴏᴡɴᴇʀ 👉 {owner.mention(style='md')}"
+                "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner."
             )
-
         caption = f"{msg.caption.markdown}\n\n\n" if msg.caption else ""
-        await send_msg.delete()
         await msg.copy(update.from_user.id, caption=caption)
+        await send_msg.delete()
     else:
         return
 
@@ -166,7 +164,7 @@ async def batch(c, m):
         if i == 1:
             media = await c.ask(
                 chat_id=m.from_user.id,
-                text="Sᴇɴᴅ ᴍᴇ sᴏᴍᴇ ғɪʟᴇs ᴏʀ ᴠɪᴅᴇᴏs ᴏʀ ᴘʜᴏᴛᴏs ᴏʀ ᴛᴇxᴛ ᴏʀ ᴀᴜᴅɪᴏ. Iғ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴄᴀɴᴄᴇʟ ᴛʜᴇ ᴘʀᴏᴄᴇss sᴇɴᴅ /cancel",
+                text="Send me some files or ᴠideo or photo or text or audio. if you want to cancel the process send /cancel",
             )
             if media.text == "/cancel":
                 return await m.reply_text("Cᴀɴᴄᴇʟʟᴇᴅ Sᴜᴄᴄᴇssғᴜʟʟʏ ✌")
@@ -175,24 +173,24 @@ async def batch(c, m):
             try:
                 await media.delete()
                 reply_markup = InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("Dᴏɴᴇ ✅", callback_data="fsdn")]]
+                    [[InlineKeyboardButton("Done ✅", callback_data="fsdn")]]
                 )
                 media = await c.ask(
                     chat_id=m.from_user.id,
-                    text="Oᴋ 😉. Nᴏᴡ sᴇɴᴅ ᴍᴇ sᴏᴍᴇ ᴍᴏʀᴇ ғɪʟᴇs Oʀ ᴘʀᴇss ᴅᴏɴᴇ ᴛᴏ ɢᴇᴛ sʜᴀʀᴇᴀʙʟᴇ ʟɪɴᴋ. Iғ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴄᴀɴᴄᴇʟ ᴛʜᴇ ᴘʀᴏᴄᴇss sᴇɴᴅ/cancel",
+                    text="Ok. Now send me some more files or press done to get sharable link. If you want to cancel the process send /cancel",
                     reply_markup=reply_markup,
                 )
                 if media.text == "/cancel":
-                    return await m.reply_text("Cᴀɴᴄᴇʟʟᴇᴅ Sᴜᴄᴄᴇssғᴜʟʟʏ ✌")
+                    return await m.reply_text("Cancelled Successfully ✌")
                 files.append(media)
             except ListenerCanceled:
                 pass
             except Exception as e:
                 print(e)
-                await m.reply_text(text="Sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ. Tʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ.")
+                await m.reply_text(text="Something went wrong report here @MerissaxSupport.")
         i += 1
 
-    message = await m.reply_text("Gᴇɴᴇʀᴀᴛɪɴɢ sʜᴀʀᴇᴀʙʟᴇ ʟɪɴᴋ 🔗")
+    message = await m.reply_text("Generating Shareable link🔗")
     string = ""
     for file in files:
         copy_message = await file.copy(TRACK_CHANNEL)
@@ -203,8 +201,26 @@ async def batch(c, m):
     send = await c.send_message(TRACK_CHANNEL, string_base64)
     base64_string = f"batch_{m.chat.id}_{send.id}"
     url = f"https://t.me/MerissaRobot?start={base64_string}"
-
-    await message.edit(text=url)
+    data = {"url": url}
+    x = await postreq("https://drive.merissabot.me/shorten", data)
+    
+    await ok.edit_text(
+        "Link Generated Successfully, Link Is Permanent and will not Expired\n\nShare Link with Your Friends:",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "Bot Url",
+                        url=f"https://t.me/share/url?url={url}",
+                    ),
+                    InlineKeyboardButton(
+                        "Short Url",
+                        url=f"https://t.me/share/url?url=https://drive.merissabot.me/{x['hash']}",
+                    ),
+                ]
+            ]
+        ),
+    )
 
 
 @pbot.on_callback_query(filters.regex("^fsdn"))
