@@ -106,7 +106,7 @@ async def generate_session(callback_query, telethon=False):
         if await cancelled(api_id_msg):
             return
         api_hash = api_hash_msg.text
-    phone_number_msg = await msg.chat.ask(
+    phone_number_msg = await msg.reply(
         "Now please send your `PHONE_NUMBER` along with the country code. \nExample : `+19876543210`",
         reply_markup=ReplyKeyboardMarkup(
             [[KeyboardButton("Share Contact", request_contact=True)]],
