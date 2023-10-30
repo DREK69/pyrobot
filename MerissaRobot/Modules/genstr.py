@@ -83,7 +83,6 @@ async def generate_session(callback_query, telethon=False):
             "Telethon" if telethon else "Pyrogram"
         )
     )
-    msg.chat.id
     api_id_msg = await msg.chat.ask(
         "Please send your `API_ID` or /skip this Step", filters=filters.text
     )
