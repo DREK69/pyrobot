@@ -83,7 +83,7 @@ async def _startfile(bot, update):
 
         caption = f"{msg.caption.markdown}\n\n\n" if msg.caption else ""
         await send_msg.delete()
-        await msg.copy(m.from_user.id, caption=caption)
+        await msg.copy(update.from_user.id, caption=caption)
     else:
         return
 
