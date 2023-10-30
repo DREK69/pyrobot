@@ -92,10 +92,10 @@ async def gen_keyboard(mails, email, domain):
     for mail in mails:
         id = mail["id"]
         data.append(
-            InlineKeyboardButton(f"{mail['subject']}", f"mail |{email}|{domain}|{id}")
+            InlineKeyboardButton(f"{mail['subject']}", f"mail {email}|{domain}|{id}")
         )
         num += 1
-    data.append(InlineKeyboardButton("🔁 Refresh", f"mailbox |{email}|{domain}"))
+    data.append(InlineKeyboardButton("🔁 Refresh", f"mailbox {email}|{domain}"))
     i_kbd.add(*data)
     return i_kbd
 
@@ -107,7 +107,7 @@ async def gen_keyboard(mails, email, domain):
 async def mail_box(_, query: CallbackQuery):
     Data = query.data
     callback_request = Data.split(None, 1)[1]
-    m, email, domain = callback_request.split("|")
+    email, domain = callback_request.split("|")
     mails = requests.get(f"{API2}{email}&domain={domain}").json()
     if mails == []:
         await query.answer("🤷‍♂️ No Mails found!")
@@ -134,7 +134,7 @@ async def mail_box(_, query: CallbackQuery):
 async def mail_box(_, query: CallbackQuery):
     Data = query.data
     callback_request = Data.split(None, 1)[1]
-    m, email, domain, id = callback_request.split("|")
+    email, domain, id = callback_request.split("|")
     mail = requests.get(f"{API3}{email}&domain={domain}&id={id}").json()
     froms = mail["from"]
     subject = mail["subject"]
