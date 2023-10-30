@@ -1,5 +1,5 @@
-from pyrogram import Client
 from pyromod import listen  # ignore
+from pyrogram import Client
 from pytgcalls import PyTgCalls
 
 from config import *
