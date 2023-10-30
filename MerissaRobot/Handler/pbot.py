@@ -1,7 +1,8 @@
 from pyrogram import Client
-from config import *
-from pytgcalls import PyTgCalls
 from pyromod import listen  # ignore
+from pytgcalls import PyTgCalls
+
+from config import *
 
 pbot = Client(
     "MerissaRobot",
