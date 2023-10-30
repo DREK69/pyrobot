@@ -59,14 +59,14 @@ async def pyro_callbacks(_, callback_query):
     await callback_query.answer()
     try:
         if query == "pyrogram":
-            await generate_session(_, callback_query)
+            await generate_session(callback_query)
         else:
-            await generate_session(_, callback_query, telethon=True)
+            await generate_session(callback_query, telethon=True)
     except Exception as e:
         await callback_query.message.reply(ERROR_MESSAGE.format(str(e)))
 
 
-async def generate_session(_, callback_query, telethon=False):
+async def generate_session(callback_query, telethon=False):
     msg = callback_query.message
     await msg.reply(
         "Starting {} Session Generation...".format(
