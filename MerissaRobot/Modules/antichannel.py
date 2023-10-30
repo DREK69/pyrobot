@@ -3,11 +3,15 @@ import asyncio
 from pyrogram import filters
 from pyrogram.types import Message
 
-from MerissaRobot import eor
 from MerissaRobot import pbot as app
 from MerissaRobot.Utils.Helpers.errors import capture_err
 
 active_channel = []
+
+async def eor(msg: Message, **kwargs):
+    func = msg.edit_text if msg.from_user.is_self else msg.reply
+    spec = getfullargspec(func.__wrapped__).args
+    return await func(**{k: v for k, v in kwargs.items() if k in spec})
 
 
 async def channel_toggle(db, message: Message):
