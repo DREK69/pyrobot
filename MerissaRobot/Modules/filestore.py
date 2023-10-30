@@ -192,7 +192,7 @@ async def batch(c, m):
                 )
         i += 1
 
-    await m.reply_text("Generating Shareable link🔗")
+    ok = await m.reply_text("Generating Shareable link 🔗")
     string = ""
     for file in files:
         copy_message = await file.copy(TRACK_CHANNEL)
