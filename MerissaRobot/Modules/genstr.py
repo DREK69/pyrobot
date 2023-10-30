@@ -160,7 +160,7 @@ async def generate_session(callback_query, telethon=False):
             reply_markup=InlineKeyboardMarkup(Data.generate_button),
         )
         return
-    phone_code = add_spaces(int(phone_code_msg.text))
+    phone_code = str(add_spaces(int(phone_code_msg.text)))
     try:
         if telethon:
             await client.sign_in(phone_number, phone_code, password=None)
