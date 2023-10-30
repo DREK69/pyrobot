@@ -20,6 +20,7 @@ from telethon.errors import (
 from telethon.sessions import StringSession
 
 from MerissaRobot import pbot
+from MerissaRobot.helpers import subscribe 
 
 ERROR_MESSAGE = (
     "Oops! An exception occurred! \n\n**Error** : {} "
@@ -39,6 +40,7 @@ def add_spaces(n):
 
 # Callbacks
 @pbot.on_message(filters.command(["genstr", "generate"]))
+@subscribe
 async def _callbacks(_, message):
     await message.reply_text(
         """Welcome to Merissa Pyrogram and Telethon String Session Generator.
