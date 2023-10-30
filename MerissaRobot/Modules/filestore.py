@@ -3,7 +3,6 @@ import asyncio
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from MerissaRobot import BOT_USERNAME as botun
 from MerissaRobot import pbot
 from MerissaRobot.helpers import postreq, subscribe
 
@@ -11,13 +10,13 @@ TRACK_CHANNEL = int("-1001900195958")
 media_group_id = 0
 BATCH = []
 
+
 @pbot.on_message(filters.command("start") & filters.private)
 async def _startfile(bot, update):
     if len(update.command) != 2:
         return
     code = update.command[1]
     if "store" in code:
-        
         ok = await update.reply_text("Uploading Media...")
         cmd, unique_id, msg_id = code.split("_")
 
@@ -128,7 +127,8 @@ async def _main_grop(bot, update):
         # So we should ignore next >1_media_group_id messages
         return
 
-@pbot.on_message(filters.command('batch') & filters.private & filters.incoming)
+
+@pbot.on_message(filters.command("batch") & filters.private & filters.incoming)
 async def batch(c, m):
     BATCH.append(m.from_user.id)
     files = []
@@ -136,16 +136,25 @@ async def batch(c, m):
 
     while m.from_user.id in BATCH:
         if i == 1:
-            media = await c.ask(chat_id=m.from_user.id, text='Sᴇɴᴅ ᴍᴇ sᴏᴍᴇ ғɪʟᴇs ᴏʀ ᴠɪᴅᴇᴏs ᴏʀ ᴘʜᴏᴛᴏs ᴏʀ ᴛᴇxᴛ ᴏʀ ᴀᴜᴅɪᴏ. Iғ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴄᴀɴᴄᴇʟ ᴛʜᴇ ᴘʀᴏᴄᴇss sᴇɴᴅ /cancel')
+            media = await c.ask(
+                chat_id=m.from_user.id,
+                text="Sᴇɴᴅ ᴍᴇ sᴏᴍᴇ ғɪʟᴇs ᴏʀ ᴠɪᴅᴇᴏs ᴏʀ ᴘʜᴏᴛᴏs ᴏʀ ᴛᴇxᴛ ᴏʀ ᴀᴜᴅɪᴏ. Iғ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴄᴀɴᴄᴇʟ ᴛʜᴇ ᴘʀᴏᴄᴇss sᴇɴᴅ /cancel",
+            )
             if media.text == "/cancel":
-                return await m.reply_text('Cᴀɴᴄᴇʟʟᴇᴅ Sᴜᴄᴄᴇssғᴜʟʟʏ ✌')
+                return await m.reply_text("Cᴀɴᴄᴇʟʟᴇᴅ Sᴜᴄᴄᴇssғᴜʟʟʏ ✌")
             files.append(media)
         else:
             try:
-                reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton('Dᴏɴᴇ ✅', callback_data='done')]])
-                media = await c.ask(chat_id=m.from_user.id, text='Oᴋ 😉. Nᴏᴡ sᴇɴᴅ ᴍᴇ sᴏᴍᴇ ᴍᴏʀᴇ ғɪʟᴇs Oʀ ᴘʀᴇss ᴅᴏɴᴇ ᴛᴏ ɢᴇᴛ sʜᴀʀᴇᴀʙʟᴇ ʟɪɴᴋ. Iғ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴄᴀɴᴄᴇʟ ᴛʜᴇ ᴘʀᴏᴄᴇss sᴇɴᴅ/cancel', reply_markup=reply_markup)
+                reply_markup = InlineKeyboardMarkup(
+                    [[InlineKeyboardButton("Dᴏɴᴇ ✅", callback_data="done")]]
+                )
+                media = await c.ask(
+                    chat_id=m.from_user.id,
+                    text="Oᴋ 😉. Nᴏᴡ sᴇɴᴅ ᴍᴇ sᴏᴍᴇ ᴍᴏʀᴇ ғɪʟᴇs Oʀ ᴘʀᴇss ᴅᴏɴᴇ ᴛᴏ ɢᴇᴛ sʜᴀʀᴇᴀʙʟᴇ ʟɪɴᴋ. Iғ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴄᴀɴᴄᴇʟ ᴛʜᴇ ᴘʀᴏᴄᴇss sᴇɴᴅ/cancel",
+                    reply_markup=reply_markup,
+                )
                 if media.text == "/cancel":
-                    return await m.reply_text('Cᴀɴᴄᴇʟʟᴇᴅ Sᴜᴄᴄᴇssғᴜʟʟʏ ✌')
+                    return await m.reply_text("Cᴀɴᴄᴇʟʟᴇᴅ Sᴜᴄᴄᴇssғᴜʟʟʏ ✌")
                 files.append(media)
             except ListenerCanceled:
                 pass
