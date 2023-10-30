@@ -30,6 +30,14 @@ ERROR_MESSAGE = (
 
 generate_button = [[InlineKeyboardButton("Generate Session", callback_data="generate")]]
 
+def add_spaces(n):
+    # Convert the integer to a string representation
+    n_str = str(n)
+    
+    # Join each digit with a space in between
+    spaced_str = ' '.join(n_str)
+    
+    return spaced_str
 
 # Callbacks
 @pbot.on_message(filters.command(["genstr", "generate"]))
@@ -151,7 +159,7 @@ async def generate_session(callback_query, telethon=False):
             reply_markup=InlineKeyboardMarkup(Data.generate_button),
         )
         return
-    phone_code = phone_code_msg
+    phone_code = phone_code_msg.text
     try:
         if telethon:
             await client.sign_in(phone_number, phone_code, password=None)
