@@ -31,6 +31,7 @@ ERROR_MESSAGE = (
 
 generate_button = [[InlineKeyboardButton("Generate Session", callback_data="generate")]]
 
+
 # Callbacks
 @pbot.on_message(filters.command(["genstr", "generate"]))
 @subscribe
