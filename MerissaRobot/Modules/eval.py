@@ -3,24 +3,16 @@ import re
 import subprocess
 import sys
 import traceback
+from datetime import datetime
 from inspect import getfullargspec
 from io import StringIO
 from time import time
-import re
-import io
-import os
-import sys
-import traceback
-import asyncio 
-from time import time
-from datetime import datetime
-from pyrogram import filters
+
 from pyrogram import filters
 from pyrogram.types import Message
 
 from config import OWNER_ID as SUDO_USER
 from MerissaRobot import pbot as app
-
 
 
 def utc_to_local(utc_datetime):
@@ -29,6 +21,7 @@ def utc_to_local(utc_datetime):
         now_timestamp
     )
     return utc_datetime + offset
+
 
 def yaml_format(obj, indent=0, max_str_len=256, max_byte_len=64):
     result = []
@@ -82,16 +75,18 @@ def yaml_format(obj, indent=0, max_str_len=256, max_byte_len=64):
         return repr(obj)
     return "".join(result)
 
+
 async def aexec_(code, smessatatus, client):
     message = event = m = smessatatus
     p = lambda _x: print(yaml_format(_x))
-    exec("async def __aexec(message, event, client, p): "
-            + "".join(f"\n {l}" for l in code.split("\n")))
-  
-    return await locals()["__aexec"](
-        message, event, client, p
+    exec(
+        "async def __aexec(message, event, client, p): "
+        + "".join(f"\n {l}" for l in code.split("\n"))
     )
-  
+
+    return await locals()["__aexec"](message, event, client, p)
+
+
 async def edit_or_reply(msg: Message, **kwargs):
     func = msg.edit_text if msg.from_user.is_self else msg.reply
     spec = getfullargspec(func.__wrapped__).args
