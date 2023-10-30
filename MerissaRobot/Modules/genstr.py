@@ -19,6 +19,7 @@ from telethon.errors import (
     PhoneNumberInvalidError,
     SessionPasswordNeededError,
 )
+from pyromod.listen.listen import ListenerTimeout
 from telethon.sessions import StringSession
 
 from MerissaRobot import pbot
@@ -76,7 +77,7 @@ async def generate_session(pbot, callback_query, telethon=False):
         )
     )
     user_id = msg.chat.id
-    api_id_msg = await pbot.ask(
+    api_id_msg = await msg.chat.ask(
         user_id, "Please send your `API_ID` or /skip this Step", filters=filters.text
     )
     if api_id_msg.text == "/skip":
@@ -92,23 +93,22 @@ async def generate_session(pbot, callback_query, telethon=False):
                 reply_markup=InlineKeyboardMarkup(generate_button),
             )
             return
-        api_hash_msg = await pbot.ask(
+        api_hash_msg = await msg.chat.ask(
             user_id, "Please send your `API_HASH`", filters=filters.text
         )
         if await cancelled(api_id_msg):
             return
         api_hash = api_hash_msg.text
-    phone_number_msg = await pbot.ask(
+    phone_number_msg = await msg.chat.ask(
         user_id,
         "Now please send your `PHONE_NUMBER` along with the country code. \nExample : `+19876543210`",
         reply_markup=ReplyKeyboardMarkup(
             [[KeyboardButton("Share Contact", request_contact=True)]],
             resize_keyboard=True,
-            one_time_keyboard=True,
         ),
     )
     while True:
-        response: Message = await callback_query.from_user.listen(timeout=60)
+        response: Message = await callback_query.from_user.listen(timeout=300)
         if response.contact:
             phone_number = response.contact.phone_number
             break
@@ -142,15 +142,15 @@ async def generate_session(pbot, callback_query, telethon=False):
         )
         return
     try:
-        phone_code_msg = await pbot.ask(
+        phone_code_msg = await msg.chat.ask(
             user_id,
             "Please check for an OTP in official telegram account. If you got it, send OTP here after reading the below format. \nIf OTP is `12345`, **please send it as** `1 2 3 4 5`.",
             filters=filters.text,
-            timeout=600,
+            timeout=300,
         )
         if await cancelled(api_id_msg):
             return
-    except TimeoutError:
+    except ListenerTimeout:
         await msg.reply(
             "Time limit reached of 10 minutes. Please start generating session again.",
             reply_markup=InlineKeyboardMarkup(Data.generate_button),
@@ -176,13 +176,13 @@ async def generate_session(pbot, callback_query, telethon=False):
         return
     except (SessionPasswordNeeded, SessionPasswordNeededError):
         try:
-            two_step_msg = await pbot.ask(
+            two_step_msg = await msg.chat.ask(
                 user_id,
                 "Your account has enabled two-step verification. Please provide the password.",
                 filters=filters.text,
                 timeout=300,
             )
-        except TimeoutError:
+        except ListenerTimeout:
             await msg.reply(
                 "Time limit reached of 5 minutes. Please start generating session again.",
                 reply_markup=InlineKeyboardMarkup(generate_button),
