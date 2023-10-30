@@ -19,7 +19,7 @@ from logging import (
 import spamwatch
 import telegram.ext as tg
 from aiohttp import ClientSession
-from MerissRobot.Handler.pbot import *
+from MerissaRobot.Handler.pbot import *
 from pyrogram import Client, errors
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 from pyrogram.types import Message
