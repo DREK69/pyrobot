@@ -875,30 +875,24 @@ def main():
         telethn.run_until_disconnected()
 
     updater.idle()
+    
 
 
-async def pyrostart():
+if __name__ == "__main__":
+    LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
     try:
-        await pbot.start()
-        await user.start()
-        await pbot.send_message(-1001446814207, "Bot Started")
-        await user.send_message(-1001446814207, "Assistant Started")
-        await pytgcalls.start()
+        pbot.start()
+        user.start()
     except FloodWait as e:
         LOGGER.info(
             f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
         )
         time.sleep(e.value)
-        await pbot.start()
-        await user.start()
-        await pbot.send_message(-1001446814207, "Bot Started")
-        await user.send_message(-1001446814207, "Assistant Started")
-        await pytgcalls.start()
-
-
-if __name__ == "__main__":
-    LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    loop.run_until_complete(pyrostart())
+        pbot.start()
+        user.start()
+    pbot.send_message(-1001446814207, "Bot Started")
+    user.send_message(-1001446814207, "Assistant Started")
+    pytgcalls.start()
     LOGGER.info("Pyrogram Started")
     try:
         telethn.start(bot_token=TOKEN)
