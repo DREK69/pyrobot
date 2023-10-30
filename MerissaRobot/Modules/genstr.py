@@ -30,14 +30,16 @@ ERROR_MESSAGE = (
 
 generate_button = [[InlineKeyboardButton("Generate Session", callback_data="generate")]]
 
+
 def add_spaces(n):
     # Convert the integer to a string representation
     n_str = str(n)
-    
+
     # Join each digit with a space in between
-    spaced_str = ' '.join(n_str)
-    
+    spaced_str = " ".join(n_str)
+
     return spaced_str
+
 
 # Callbacks
 @pbot.on_message(filters.command(["genstr", "generate"]))
