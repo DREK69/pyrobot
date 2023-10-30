@@ -57,6 +57,29 @@ async def _startfile(bot, update):
         except Exception:
             await check.copy(update.from_user.id)
             await ok.delete()
+    elif "batch_" in code:
+        cmd, chat_id, message = code.split('_')
+        string = await bot.get_messages(TRACK_CHANNEL, int(message))
+        message_ids = string.text.split('-')
+        for msg_id in message_ids:
+            msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
+            if msg.empty:
+                owner = await bot.get_users(int(OWNER_ID))
+                return await update.reply_text(f"🥴 Sᴏʀʀʏ ʙʀᴏ ʏᴏᴜʀ ғɪʟᴇ ᴡᴀs ᴅᴇʟᴇᴛᴇᴅ ʙʏ ғɪʟᴇ ᴏᴡɴᴇʀ ᴏʀ ʙᴏᴛ ᴏᴡɴᴇʀ\n\nFᴏʀ ᴍᴏʀᴇ ʜᴇʟᴘ ᴄᴏɴᴛᴀᴄᴛ ᴍʏ ᴏᴡɴᴇʀ👉 {owner.mention(style='md')}")
+
+            await msg.copy(update.from_user.id)
+            await asyncio.sleep(1)
+            
+        return
+        chat_id, msg_id = code.split('_')
+        msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
+
+        if msg.empty:
+            return await send_msg.edit(f"🥴 Sᴏʀʀʏ ʙʀᴏ ʏᴏᴜʀ ғɪʟᴇ ᴡᴀs ᴅᴇʟᴇᴛᴇᴅ ʙʏ ғɪʟᴇ ᴏᴡɴᴇʀ ᴏʀ ʙᴏᴛ ᴏᴡɴᴇʀ\n\nFᴏʀ ᴍᴏʀᴇ ʜᴇʟᴘ ᴄᴏɴᴛᴀᴄᴛ ᴍʏ ᴏᴡɴᴇʀ 👉 {owner.mention(style='md')}")
+        
+        caption = f"{msg.caption.markdown}\n\n\n" if msg.caption else ""
+        await send_msg.delete()
+        await msg.copy(m.from_user.id, caption=caption)    
     else:
         return
 
