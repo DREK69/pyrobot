@@ -9,18 +9,17 @@ from MerissaRobot.helpers import postreq, subscribe
 
 TRACK_CHANNEL = int("-1001900195958")
 media_group_id = 0
-
+BATCH = []
 
 @pbot.on_message(filters.command("start") & filters.private)
 async def _startfile(bot, update):
     if len(update.command) != 2:
         return
     code = update.command[1]
-    if "-" in code:
+    if "store" in code:
+        
         ok = await update.reply_text("Uploading Media...")
-        msg_id = code.split("-")[-1]
-        # due to new type of file_unique_id, it can contain "-" sign like "agadyruaas-puuo"
-        unique_id = "-".join(code.split("-")[0:-1])
+        cmd, unique_id, msg_id = code.split("_")
 
         if not msg_id.isdigit():
             return
@@ -86,7 +85,7 @@ async def __reply(update, copied):
         await copied.delete()
         return
 
-    botlink = f"https://telegram.me/{botun}?start={unique_idx.lower()}-{str(msg_id)}"
+    botlink = f"https://telegram.me/MerissaRobot?start=store_{unique_idx.lower()}_{str(msg_id)}"
 
     data = {"url": botlink}
     x = await postreq("https://drive.merissabot.me/shorten", data)
@@ -128,6 +127,46 @@ async def _main_grop(bot, update):
         # This handler catch EVERY message with [update.media_group_id] param
         # So we should ignore next >1_media_group_id messages
         return
+
+@pbot.on_message(filters.command('batch') & filters.private & filters.incoming)
+async def batch(c, m):
+    BATCH.append(m.from_user.id)
+    files = []
+    i = 1
+
+    while m.from_user.id in BATCH:
+        if i == 1:
+            media = await c.ask(chat_id=m.from_user.id, text='Sᴇɴᴅ ᴍᴇ sᴏᴍᴇ ғɪʟᴇs ᴏʀ ᴠɪᴅᴇᴏs ᴏʀ ᴘʜᴏᴛᴏs ᴏʀ ᴛᴇxᴛ ᴏʀ ᴀᴜᴅɪᴏ. Iғ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴄᴀɴᴄᴇʟ ᴛʜᴇ ᴘʀᴏᴄᴇss sᴇɴᴅ /cancel')
+            if media.text == "/cancel":
+                return await m.reply_text('Cᴀɴᴄᴇʟʟᴇᴅ Sᴜᴄᴄᴇssғᴜʟʟʏ ✌')
+            files.append(media)
+        else:
+            try:
+                reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton('Dᴏɴᴇ ✅', callback_data='done')]])
+                media = await c.ask(chat_id=m.from_user.id, text='Oᴋ 😉. Nᴏᴡ sᴇɴᴅ ᴍᴇ sᴏᴍᴇ ᴍᴏʀᴇ ғɪʟᴇs Oʀ ᴘʀᴇss ᴅᴏɴᴇ ᴛᴏ ɢᴇᴛ sʜᴀʀᴇᴀʙʟᴇ ʟɪɴᴋ. Iғ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴄᴀɴᴄᴇʟ ᴛʜᴇ ᴘʀᴏᴄᴇss sᴇɴᴅ/cancel', reply_markup=reply_markup)
+                if media.text == "/cancel":
+                    return await m.reply_text('Cᴀɴᴄᴇʟʟᴇᴅ Sᴜᴄᴄᴇssғᴜʟʟʏ ✌')
+                files.append(media)
+            except ListenerCanceled:
+                pass
+            except Exception as e:
+                print(e)
+                await m.reply_text(text="Sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ. Tʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ.")
+        i += 1
+
+    message = await m.reply_text("Gᴇɴᴇʀᴀᴛɪɴɢ sʜᴀʀᴇᴀʙʟᴇ ʟɪɴᴋ 🔗")
+    string = ""
+    for file in files:
+        copy_message = await file.copy(TRACK_CHANNEL)
+        string += f"{copy_message.message.id}-"
+        await asyncio.sleep(1)
+
+    string_base64 = string[:-1]
+    send = await c.send_message(TRACK_CHANNEL, string_base64)
+    base64_string = f"batch_{m.chat.id}_{send.message.id}"
+    url = f"https://t.me/MerissaRobot?start={base64_string}"
+
+    await message.edit(text=url)
 
 
 @pbot.on_message(filters.command("save"))
