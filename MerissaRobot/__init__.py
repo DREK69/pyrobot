@@ -22,7 +22,6 @@ from aiohttp import ClientSession
 from pyrogram import Client, errors
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 from pyrogram.types import Message
-from pyromod import listen  # ignore
 from pytgcalls import PyTgCalls
 from telethon import TelegramClient
 from telethon.sessions import MemorySession, StringSession
