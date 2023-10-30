@@ -232,9 +232,8 @@ async def done_cb(c, m):
     await m.message.delete()
 
 
-@pbot.on_message(filters.command("save"))
+@pbot.on_message(filters.command("store"))
 @subscribe
 async def _main(bot, update):
-    update.from_user.id
     copied = await update.reply_to_message.copy(TRACK_CHANNEL)
     await __reply(update, copied)
