@@ -76,7 +76,7 @@ async def generate_session(pbot, callback_query, telethon=False):
     )
     user_id = msg.chat.id
     api_id_msg = await msg.chat.ask(
-        user_id, "Please send your `API_ID` or /skip this Step", filters=filters.text
+        "Please send your `API_ID` or /skip this Step", filters=filters.text
     )
     if api_id_msg.text == "/skip":
         api_id = "6415310"
@@ -92,13 +92,13 @@ async def generate_session(pbot, callback_query, telethon=False):
             )
             return
         api_hash_msg = await msg.chat.ask(
-            user_id, "Please send your `API_HASH`", filters=filters.text
+            "Please send your `API_HASH`", filters=filters.text
         )
         if await cancelled(api_id_msg):
             return
         api_hash = api_hash_msg.text
     phone_number_msg = await msg.chat.ask(
-        user_id,
+        
         "Now please send your `PHONE_NUMBER` along with the country code. \nExample : `+19876543210`",
         reply_markup=ReplyKeyboardMarkup(
             [[KeyboardButton("Share Contact", request_contact=True)]],
@@ -141,7 +141,7 @@ async def generate_session(pbot, callback_query, telethon=False):
         return
     try:
         phone_code_msg = await msg.chat.ask(
-            user_id,
+            
             "Please check for an OTP in official telegram account. If you got it, send OTP here after reading the below format. \nIf OTP is `12345`, **please send it as** `1 2 3 4 5`.",
             filters=filters.text,
             timeout=300,
@@ -175,7 +175,7 @@ async def generate_session(pbot, callback_query, telethon=False):
     except (SessionPasswordNeeded, SessionPasswordNeededError):
         try:
             two_step_msg = await msg.chat.ask(
-                user_id,
+                
                 "Your account has enabled two-step verification. Please provide the password.",
                 filters=filters.text,
                 timeout=300,
