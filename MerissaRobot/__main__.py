@@ -875,7 +875,6 @@ def main():
         telethn.run_until_disconnected()
 
     updater.idle()
-    
 
 
 if __name__ == "__main__":
