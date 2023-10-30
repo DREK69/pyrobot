@@ -6,7 +6,15 @@ import traceback
 from inspect import getfullargspec
 from io import StringIO
 from time import time
-
+import re
+import io
+import os
+import sys
+import traceback
+import asyncio 
+from time import time
+from datetime import datetime
+from pyrogram import filters
 from pyrogram import filters
 from pyrogram.types import Message
 
@@ -14,14 +22,76 @@ from config import OWNER_ID as SUDO_USER
 from MerissaRobot import pbot as app
 
 
-async def aexec(code, client, message):
-    exec(
-        "async def __aexec(client, message): "
-        + "".join(f"\n {a}" for a in code.split("\n"))
+
+def utc_to_local(utc_datetime):
+    now_timestamp = time.time()
+    offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(
+        now_timestamp
     )
-    return await locals()["__aexec"](client, message)
+    return utc_datetime + offset
 
+def yaml_format(obj, indent=0, max_str_len=256, max_byte_len=64):
+    result = []
 
+    if isinstance(obj, dict):
+        if not obj:
+            return "dict:"
+        items = obj.items()
+        has_items = len(items) > 1
+        has_multiple_items = len(items) > 2
+        result.append(obj.get("_", "dict") + (":" if has_items else ""))
+        if has_multiple_items:
+            result.append("\n")
+            indent += 2
+        for k, v in items:
+            if k == "_" or v is None:
+                continue
+            formatted = yaml_format(v, indent)
+            if not formatted.strip():
+                continue
+            result.append(" " * (indent if has_multiple_items else 1))
+            result.append(f"{k}:")
+            if not formatted[0].isspace():
+                result.append(" ")
+            result.append(f"{formatted}")
+            result.append("\n")
+        if has_items:
+            result.pop()
+        if has_multiple_items:
+            indent -= 2
+    elif isinstance(obj, str):
+        result = repr(obj[:max_str_len])
+        if len(obj) > max_str_len:
+            result += "…"
+        return result
+    elif isinstance(obj, bytes):
+        if all(0x20 <= c < 0x7F for c in obj):
+            return repr(obj)
+        return "<…>" if len(obj) > max_byte_len else " ".join(f"{b:02X}" for b in obj)
+    elif isinstance(obj, datetime):
+        return utc_to_local(obj).strftime("%Y-%m-%d %H:%M:%S")
+    elif hasattr(obj, "__iter__"):
+        result.append("\n")
+        indent += 2
+        for x in obj:
+            result.append(f"{' ' * indent}- {yaml_format(x, indent + 2)}")
+            result.append("\n")
+        result.pop()
+        indent -= 2
+    else:
+        return repr(obj)
+    return "".join(result)
+
+async def aexec_(code, smessatatus, client):
+    message = event = m = smessatatus
+    p = lambda _x: print(yaml_format(_x))
+    exec("async def __aexec(message, event, client, p): "
+            + "".join(f"\n {l}" for l in code.split("\n")))
+  
+    return await locals()["__aexec"](
+        message, event, client, p
+    )
+  
 async def edit_or_reply(msg: Message, **kwargs):
     func = msg.edit_text if msg.from_user.is_self else msg.reply
     spec = getfullargspec(func.__wrapped__).args
@@ -48,7 +118,7 @@ async def executor(client, message):
     redirected_error = sys.stderr = StringIO()
     stdout, stderr, exc = None, None, None
     try:
-        await aexec(cmd, client, message)
+        await aexec_(cmd, message, client)
     except Exception:
         exc = traceback.format_exc()
     stdout = redirected_output.getvalue()
