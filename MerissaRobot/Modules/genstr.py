@@ -102,7 +102,7 @@ async def generate_session(callback_query, telethon=False):
             return
         api_hash = api_hash_msg.text
     phone_number_msg = await msg.reply(
-        "Now please send your `PHONE_NUMBER` along with the country code. \nExample : `+19876543210`",
+        "Now please send your `PHONE_NUMBER` along with the country code or click on Share Contact Button. \nExample : `+19876543210`",
         reply_markup=ReplyKeyboardMarkup(
             [[KeyboardButton("Share Contact", request_contact=True)]],
             resize_keyboard=True,
@@ -114,7 +114,7 @@ async def generate_session(callback_query, telethon=False):
             phone_number = response.contact.phone_number
             break
         elif "+" in response.text:
-            respose.text
+            phone_number = response.text
             break
         elif response.text == "/cancel":
             await callback_query.message.reply(
