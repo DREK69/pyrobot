@@ -83,8 +83,8 @@ async def generate_session(callback_query, telethon=False):
         "Please send your `API_ID` or /skip this Step", filters=filters.text
     )
     if api_id_msg.text == "/skip":
-        api_id = "6415310"
-        api_hash = "60fe28e5adddbd456871ceeb1cad07e7"
+        api_id = "13899205"
+        api_hash = "0c91d3cc4ec8d7b9ac2acbb10f3d88ee"
     else:
         try:
             api_id = int(api_id_msg.text)
