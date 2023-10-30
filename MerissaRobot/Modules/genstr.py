@@ -22,7 +22,6 @@ from telethon.sessions import StringSession
 
 from MerissaRobot import pbot
 
-
 ERROR_MESSAGE = (
     "Oops! An exception occurred! \n\n**Error** : {} "
     "\n\nPlease visit @MerissaxSupport if this message doesn't contain any "
