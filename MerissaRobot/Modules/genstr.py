@@ -114,7 +114,7 @@ async def generate_session(callback_query, telethon=False):
             phone_number = response.contact.phone_number
             break
         elif "+" in response.text:
-            phone_name = respose.text
+            respose.text
             break
         elif response.text == "/cancel":
             await callback_query.message.reply(
