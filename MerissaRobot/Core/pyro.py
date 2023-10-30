@@ -1,4 +1,4 @@
-import pyromod  # ignore
+from pyromod import listen # ignore
 from pyrogram import Client
 from pytgcalls import PyTgCalls
 
