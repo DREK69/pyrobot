@@ -48,7 +48,7 @@ def subscribe(func):
         except UserNotParticipant:
             return await message.reply_photo(
                 photo="https://te.legra.ph/file/2b3a7af1d01513c032739.jpg",
-                caption="Join our Telegram Update Channel @MerissaxUpdates to Get Premium for free in MerissaRobot",
+                caption="Join our Telegram Update Channel @MerissaxUpdates to get this Premium Feature for Free or @PrincexDonatebot Pay here for Merissa Premium",
             )
 
     return non_subscribe
