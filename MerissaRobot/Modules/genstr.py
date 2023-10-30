@@ -22,6 +22,7 @@ from telethon.sessions import StringSession
 
 from MerissaRobot import pbot
 
+
 ERROR_MESSAGE = (
     "Oops! An exception occurred! \n\n**Error** : {} "
     "\n\nPlease visit @MerissaxSupport if this message doesn't contain any "
@@ -140,7 +141,7 @@ async def generate_session(pbot, callback_query, telethon=False):
         return
     try:
         phone_code_msg = await msg.chat.ask(
-            "Please check for an OTP in official telegram account. If you got it, send OTP here after reading the below format. \nIf OTP is `12345`, **please send it as** `1 2 3 4 5`.",
+            "Please check for an OTP in official telegram account. If you got it, send OTP here after reading the below format. \nIf OTP is `12345`, **Please send as it is `12345`.",
             filters=filters.text,
             timeout=300,
         )
@@ -152,7 +153,7 @@ async def generate_session(pbot, callback_query, telethon=False):
             reply_markup=InlineKeyboardMarkup(Data.generate_button),
         )
         return
-    phone_code = phone_code_msg.text.replace(" ", "")
+    phone_code = phone_code_msg
     try:
         if telethon:
             await client.sign_in(phone_number, phone_code, password=None)
