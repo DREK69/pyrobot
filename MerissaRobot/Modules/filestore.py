@@ -195,12 +195,12 @@ async def batch(c, m):
     string = ""
     for file in files:
         copy_message = await file.copy(TRACK_CHANNEL)
-        string += f"{copy_message.message.id}-"
+        string += f"{copy_message.id}-"
         await asyncio.sleep(1)
 
     string_base64 = string[:-1]
     send = await c.send_message(TRACK_CHANNEL, string_base64)
-    base64_string = f"batch_{m.chat.id}_{send.message.id}"
+    base64_string = f"batch_{m.chat.id}_{send.id}"
     url = f"https://t.me/MerissaRobot?start={base64_string}"
 
     await message.edit(text=url)
