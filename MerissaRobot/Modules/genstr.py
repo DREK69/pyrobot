@@ -20,7 +20,7 @@ from telethon.errors import (
 from telethon.sessions import StringSession
 
 from MerissaRobot import pbot
-from MerissaRobot.helpers import subscribe 
+from MerissaRobot.helpers import subscribe
 
 ERROR_MESSAGE = (
     "Oops! An exception occurred! \n\n**Error** : {} "
