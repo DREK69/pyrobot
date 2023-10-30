@@ -8,7 +8,6 @@ from pyrogram.errors import (
     SessionPasswordNeeded,
 )
 from pyrogram.types import *
-from pyromod.listen.listen import ListenerTimeout
 from telethon import TelegramClient
 from telethon.errors import (
     ApiIdInvalidError,
