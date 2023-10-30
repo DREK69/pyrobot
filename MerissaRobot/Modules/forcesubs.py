@@ -129,7 +129,9 @@ async def config(client, message):
             input_str = input_str.replace("@", "")
             if input_str.lower() in ("off", "no", "disable"):
                 sql.disapprove(chat_id)
-                await message.reply_text("❌ **Force Subscribe is Disabled Successfully.**")
+                await message.reply_text(
+                    "❌ **Force Subscribe is Disabled Successfully.**"
+                )
             elif input_str.lower() in ("clear"):
                 sent_message = await message.reply_text(
                     "**Unmuting all members who are muted by me...**"
@@ -141,7 +143,9 @@ async def config(client, message):
                         if chat_member.restricted_by.id == (client.get_me()).id:
                             await client.unban_chat_member(chat_id, chat_member.user.id)
                             await time.sleep(1)
-                    await sent_message.edit("✅ **UnMuted all members who are muted by me.**")
+                    await sent_message.edit(
+                        "✅ **UnMuted all members who are muted by me.**"
+                    )
                 except ChatAdminRequired:
                     await sent_message.edit(
                         "❗ **I am not an admin in this chat.**\n__I can't unmute members because i am not an admin in this chat make me admin with ban user permission.__"
@@ -170,7 +174,9 @@ async def config(client, message):
                     disable_web_page_preview=True,
                 )
             else:
-                await message.reply_text("❌ **Force Subscribe is disabled in this chat.**")
+                await message.reply_text(
+                    "❌ **Force Subscribe is disabled in this chat.**"
+                )
     else:
         await message.reply_text(
             "❗ **Group Creator Required**\n__You have to be the group creator to do that.__"
