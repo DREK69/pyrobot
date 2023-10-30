@@ -32,12 +32,8 @@ generate_button = [[InlineKeyboardButton("Generate Session", callback_data="gene
 
 
 def add_spaces(n):
-    # Convert the integer to a string representation
     n_str = str(n)
-
-    # Join each digit with a space in between
     spaced_str = " ".join(n_str)
-
     return spaced_str
 
 
@@ -123,7 +119,7 @@ async def generate_session(callback_query, telethon=False):
             )
             return
         await response.reply("invalid message type. Please try again.", quote=True)
-    await msg.reply("Sending OTP...", reply_markup=ReplyKeyboardRemove())
+    x = await msg.reply("Sending OTP...", reply_markup=ReplyKeyboardRemove())
     if telethon:
         client = TelegramClient(StringSession(), api_id, api_hash)
     else:
@@ -147,6 +143,7 @@ async def generate_session(callback_query, telethon=False):
         )
         return
     try:
+        await x.delete()
         phone_code_msg = await msg.chat.ask(
             "Please check for an OTP in official telegram account. If you got it, send OTP here after reading the below format. \nIf OTP is `12345`, **Please send as it is `12345`.",
             filters=filters.text,
@@ -160,8 +157,7 @@ async def generate_session(callback_query, telethon=False):
             reply_markup=InlineKeyboardMarkup(Data.generate_button),
         )
         return
-    phone_code_text = add_spaces(phone_code_msg.text)
-    phone_code = phone_code_text.replace(" ", "")
+    phone_code = add_spaces(int(phone_code_msg.text))
     try:
         if telethon:
             await client.sign_in(phone_number, phone_code, password=None)
