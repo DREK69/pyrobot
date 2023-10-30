@@ -44,11 +44,10 @@ basicConfig(
         StreamHandler(),
     ],
 )
-getLogger("pyrogram").setLevel(INFO)
+getLogger("pyrogram").setLevel(ERROR)
 getLogger("apscheduler").setLevel(ERROR)
 getLogger("telethon").setLevel(CRITICAL)
 getLogger("telegram").setLevel(CRITICAL)
-getLogger("sqlalchemy").setLevel(CRITICAL)
 getLogger("sqlalchemy").setLevel(CRITICAL)
 
 # if version < 3.6, stop bot.
