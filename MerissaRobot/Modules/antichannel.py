@@ -2,6 +2,7 @@ import asyncio
 
 from pyrogram import filters
 from pyrogram.types import Message
+from inspect import getfullargspec
 
 from MerissaRobot import pbot as app
 from MerissaRobot.Utils.Helpers.errors import capture_err
