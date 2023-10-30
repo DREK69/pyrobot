@@ -34,7 +34,7 @@ generate_button = [[InlineKeyboardButton("Generate Session", callback_data="gene
 
 # Callbacks
 @pbot.on_message(filters.command(["genstr", "generate"]))
-async def _callbacks(pbot, message):
+async def _callbacks(_, message):
     await message.reply_text(
         """Welcome to Merissa Pyrogram and Telethon String Session Generator.
 
@@ -55,19 +55,19 @@ Press Button Below to Start Generating Session!""",
 
 
 @pbot.on_callback_query(filters.regex("^gen"))
-async def pyro_callbacks(pbot, callback_query):
+async def pyro_callbacks(_, callback_query):
     query = callback_query.data.split("_")[1]
     await callback_query.answer()
     try:
         if query == "pyrogram":
-            await generate_session(pbot, callback_query)
+            await generate_session(_, callback_query)
         else:
-            await generate_session(pbot, callback_query, telethon=True)
+            await generate_session(_, callback_query, telethon=True)
     except Exception as e:
         await callback_query.message.reply(ERROR_MESSAGE.format(str(e)))
 
 
-async def generate_session(pbot, callback_query, telethon=False):
+async def generate_session(_, callback_query, telethon=False):
     msg = callback_query.message
     await msg.reply(
         "Starting {} Session Generation...".format(
@@ -146,7 +146,7 @@ async def generate_session(pbot, callback_query, telethon=False):
         )
         if await cancelled(api_id_msg):
             return
-    except ListenerTimeout:
+    except TimeoutError:
         await msg.reply(
             "Time limit reached of 10 minutes. Please start generating session again.",
             reply_markup=InlineKeyboardMarkup(Data.generate_button),
@@ -177,7 +177,7 @@ async def generate_session(pbot, callback_query, telethon=False):
                 filters=filters.text,
                 timeout=300,
             )
-        except ListenerTimeout:
+        except TimeoutError:
             await msg.reply(
                 "Time limit reached of 5 minutes. Please start generating session again.",
                 reply_markup=InlineKeyboardMarkup(generate_button),
