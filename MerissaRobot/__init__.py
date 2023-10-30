@@ -28,7 +28,7 @@ from telethon import TelegramClient
 from telethon.sessions import MemorySession, StringSession
 
 from config import *
-from MerissaRobot.Core.pbot import *
+from MerissaRobot.Core.pyro import *
 
 StartTime = time.time()
 
