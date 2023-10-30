@@ -1,6 +1,6 @@
 from pyrogram import Client
 from pytgcalls import PyTgCalls
-
+import pyromod # ignore
 from config import *
 
 pbot = Client(
