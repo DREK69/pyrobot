@@ -173,6 +173,7 @@ async def batch(c, m):
             files.append(media)
         else:
             try:
+                await media.delete()
                 reply_markup = InlineKeyboardMarkup(
                     [[InlineKeyboardButton("Dᴏɴᴇ ✅", callback_data="fsdn")]]
                 )
