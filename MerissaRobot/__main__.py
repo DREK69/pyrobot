@@ -877,22 +877,27 @@ def main():
     updater.idle()
 
 
-if __name__ == "__main__":
-    LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+async def startpyro():
     try:
-        pbot.start()
-        user.start()
+        await pbot.start()
+        LOGGER.info("Pyrogram Started")
     except FloodWait as e:
         LOGGER.info(
             f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
         )
         time.sleep(e.value)
-        pbot.start()
-        user.start()
-    pbot.send_message(-1001446814207, "Bot Started")
-    user.send_message(-1001446814207, "Assistant Started")
-    pytgcalls.start()
-    LOGGER.info("Pyrogram Started")
+        await pbot.start()
+    await user.start()
+    LOGGER.info("Userbot Started")
+    await pbot.send_message(-1001446814207, "Bot Started")
+    await user.send_message(-1001446814207, "Assistant Started")
+    await pytgcalls.start()
+    LOGGER.info("Pytgcalls Started")
+
+
+if __name__ == "__main__":
+    LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+    loop.run_until_complete(startpyro())
     try:
         telethn.start(bot_token=TOKEN)
         LOGGER.info("Telethon Started")
