@@ -72,7 +72,7 @@ async def _startfile(bot, update):
 
             await msg.copy(update.from_user.id)
         return await asyncio.sleep(1)
-        
+
         chat_id, msg_id = code.split("_")
         msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
 
@@ -187,10 +187,12 @@ async def batch(c, m):
                 pass
             except Exception as e:
                 print(e)
-                await m.reply_text(text="Something went wrong report here @MerissaxSupport.")
+                await m.reply_text(
+                    text="Something went wrong report here @MerissaxSupport."
+                )
         i += 1
 
-    message = await m.reply_text("Generating Shareable link🔗")
+    await m.reply_text("Generating Shareable link🔗")
     string = ""
     for file in files:
         copy_message = await file.copy(TRACK_CHANNEL)
@@ -203,7 +205,7 @@ async def batch(c, m):
     url = f"https://t.me/MerissaRobot?start={base64_string}"
     data = {"url": url}
     x = await postreq("https://drive.merissabot.me/shorten", data)
-    
+
     await ok.edit_text(
         "Link Generated Successfully, Link Is Permanent and will not Expired\n\nShare Link with Your Friends:",
         reply_markup=InlineKeyboardMarkup(
