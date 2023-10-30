@@ -27,6 +27,8 @@ from pytgcalls import PyTgCalls
 from telethon import TelegramClient
 from telethon.sessions import MemorySession, StringSession
 
+from MerissRobot.Handler.pbot import *
+
 from config import *
 
 StartTime = time.time()
@@ -142,17 +144,6 @@ if sys.version_info[0] < 3 or sys.version_info[1] < 6:
     except ValueError:
         raise Exception("Your blacklisted chats list does not contain valid integers.")
 
-pbot = Client(
-    "MerissaRobot",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    bot_token=TOKEN,
-    plugins=dict(root="MerissaRobot.Modules"),
-    workers=min(32, os.cpu_count() + 4),
-    sleep_threshold=60,
-    in_memory=True,
-)
-
 DEV_USERS.add(OWNER_ID)
 
 sw = None
@@ -161,15 +152,6 @@ updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
 telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
 dispatcher = updater.dispatcher
 aiohttpsession = ClientSession()
-
-user = Client(
-    "MerissaMusic",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    session_string=str(STRING_SESSION),
-)
-
-pytgcalls = PyTgCalls(user)
 
 BOT_ID = dispatcher.bot.id
 BOT_USERNAME = dispatcher.bot.username
