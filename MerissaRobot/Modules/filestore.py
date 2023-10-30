@@ -173,7 +173,7 @@ async def batch(c, m):
         else:
             try:
                 reply_markup = InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("Dᴏɴᴇ ✅", callback_data="done")]]
+                    [[InlineKeyboardButton("Dᴏɴᴇ ✅", callback_data="fsdn")]]
                 )
                 media = await c.ask(
                     chat_id=m.from_user.id,
@@ -204,6 +204,11 @@ async def batch(c, m):
 
     await message.edit(text=url)
 
+@pbot.on_callback_query(filters.regex('^fsdn'))
+async def done_cb(c, m):
+    BATCH.remove(m.from_user.id)
+    c.cancel_listener(m.from_user.id)
+    await m.message.delete()
 
 @pbot.on_message(filters.command("save"))
 @subscribe
