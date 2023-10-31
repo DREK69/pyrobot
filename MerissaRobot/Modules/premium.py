@@ -310,7 +310,7 @@ async def howtoaap_cb(bot, query):
     )
 
 
-@pbot.on_message(filters.command("verify") & filters.group)
+@pbot.on_message(filters.command("verify"))
 async def verifylink(bot, update):
     if len(update.command) < 2:
         return await update.reply_text(
