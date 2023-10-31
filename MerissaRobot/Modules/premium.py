@@ -334,7 +334,7 @@ async def verify(bot, update):
 @pbot.on_message(filters.command("verify") & filters.group)
 async def verifylink(bot, message):
     chat = message.chat
-    link = "https://t.me/MerissaRobot"
+    link = f"https://t.me/MerissaRobot?start=verify_{chat.id}"
     button = [
         [
             Keyboard(text="Verify", url=link),
