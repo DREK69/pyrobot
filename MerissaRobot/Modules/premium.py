@@ -363,7 +363,7 @@ async def howtoaap_cb(bot, query):
         "Verifying You are Human 🗣️",
         show_alert=True,
     )
-    chat_id = query.message.split(None, 1)[1]
+    chat_id = query.data.split(None, 1)[1]
     link = await bot.create_chat_invite_link(chat_id, member_limit=1)
     button = [
         [
