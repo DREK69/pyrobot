@@ -347,7 +347,7 @@ async def verifylink(bot, update):
     link = f"https://t.me/MerissaRobot?start=verify_{chat.id}"
     button = [
         [
-            Keyboard(text="Verify", url=link),
+            Keyboard(text="VERIFY", url=link),
         ],
     ]
     await pbot.send_message(
@@ -367,7 +367,7 @@ async def howtoaap_cb(bot, query):
     link = await bot.create_chat_invite_link(chat_id, member_limit=1)
     button = [
         [
-            Keyboard(text="Verify", url=link),
+            Keyboard(text="Join Link", url=link),
         ],
     ]
     await query.edit_message_text(
