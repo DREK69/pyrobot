@@ -4,7 +4,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from MerissaRobot import pbot
 
 
-@pbot.on_message(filters.command("verifygroup") & filters.group)
+@pbot.on_message(filters.command("verify") & filters.group)
 async def verifylink(bot, update):
     chat = update.chat
     uid = update.from_user.id
