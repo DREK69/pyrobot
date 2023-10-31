@@ -10,7 +10,8 @@ from time import time
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from MerissaRobot import pbot as app, OWNER_ID
+from MerissaRobot import OWNER_ID
+from MerissaRobot import pbot as app
 
 
 async def aexec(code, client, message):
@@ -208,4 +209,3 @@ async def shellrunner(_, message: Message):
     else:
         await edit_or_reply(message, text="<b>OUTPUT :</b>\n<code>None</code>")
     await message.stop_propagation()
-    
