@@ -3,88 +3,22 @@ import re
 import subprocess
 import sys
 import traceback
-from datetime import datetime
 from inspect import getfullargspec
 from io import StringIO
 from time import time
 
 from pyrogram import filters
-from pyrogram.types import Message
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from config import OWNER_ID as SUDO_USER
-from MerissaRobot import pbot as app
-
-
-def utc_to_local(utc_datetime):
-    now_timestamp = time.time()
-    offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(
-        now_timestamp
-    )
-    return utc_datetime + offset
+from MerissaRobot import pbot as app, OWNER_ID
 
 
-def yaml_format(obj, indent=0, max_str_len=256, max_byte_len=64):
-    result = []
-
-    if isinstance(obj, dict):
-        if not obj:
-            return "dict:"
-        items = obj.items()
-        has_items = len(items) > 1
-        has_multiple_items = len(items) > 2
-        result.append(obj.get("_", "dict") + (":" if has_items else ""))
-        if has_multiple_items:
-            result.append("\n")
-            indent += 2
-        for k, v in items:
-            if k == "_" or v is None:
-                continue
-            formatted = yaml_format(v, indent)
-            if not formatted.strip():
-                continue
-            result.append(" " * (indent if has_multiple_items else 1))
-            result.append(f"{k}:")
-            if not formatted[0].isspace():
-                result.append(" ")
-            result.append(f"{formatted}")
-            result.append("\n")
-        if has_items:
-            result.pop()
-        if has_multiple_items:
-            indent -= 2
-    elif isinstance(obj, str):
-        result = repr(obj[:max_str_len])
-        if len(obj) > max_str_len:
-            result += "…"
-        return result
-    elif isinstance(obj, bytes):
-        if all(0x20 <= c < 0x7F for c in obj):
-            return repr(obj)
-        return "<…>" if len(obj) > max_byte_len else " ".join(f"{b:02X}" for b in obj)
-    elif isinstance(obj, datetime):
-        return utc_to_local(obj).strftime("%Y-%m-%d %H:%M:%S")
-    elif hasattr(obj, "__iter__"):
-        result.append("\n")
-        indent += 2
-        for x in obj:
-            result.append(f"{' ' * indent}- {yaml_format(x, indent + 2)}")
-            result.append("\n")
-        result.pop()
-        indent -= 2
-    else:
-        return repr(obj)
-    return "".join(result)
-
-
-async def aexec_(code, smessatatus, client):
-    message = event = m = smessatatus
-    p = lambda _x: print(yaml_format(_x))
+async def aexec(code, client, message):
     exec(
-        "async def __aexec(message, event, client, p): "
-        + "".join(f"\n {l}" for l in code.split("\n"))
+        "async def __aexec(client, message): "
+        + "".join(f"\n {a}" for a in code.split("\n"))
     )
-
-    return await locals()["__aexec"](message, event, client, p)
+    return await locals()["__aexec"](client, message)
 
 
 async def edit_or_reply(msg: Message, **kwargs):
@@ -93,69 +27,131 @@ async def edit_or_reply(msg: Message, **kwargs):
     await func(**{k: v for k, v in kwargs.items() if k in spec})
 
 
-@app.on_message(
+@app.on_edited_message(
     filters.command("eval")
-    & filters.user(SUDO_USER)
+    & filters.user(OWNER_ID)
     & ~filters.forwarded
     & ~filters.via_bot
 )
-async def executor(client, message):
+@app.on_message(
+    filters.command("eval")
+    & filters.user(OWNER_ID)
+    & ~filters.forwarded
+    & ~filters.via_bot
+)
+async def executor(client: app, message: Message):
     if len(message.command) < 2:
-        return await edit_or_reply(message, text="**ᴡʜᴀᴛ ʏᴏᴜ ᴡᴀɴɴᴀ ᴇxᴇᴄᴜᴛᴇ ʙᴀʙʏ ?**")
+        return await edit_or_reply(message, text="<b>ᴡʜᴀᴛ ʏᴏᴜ ᴡᴀɴɴᴀ ᴇxᴇᴄᴜᴛᴇ ʙᴀʙʏ ?</b>")
     try:
         cmd = message.text.split(" ", maxsplit=1)[1]
     except IndexError:
         return await message.delete()
-    time()
+    t1 = time()
     old_stderr = sys.stderr
     old_stdout = sys.stdout
     redirected_output = sys.stdout = StringIO()
     redirected_error = sys.stderr = StringIO()
     stdout, stderr, exc = None, None, None
     try:
-        await aexec_(cmd, message, client)
+        await aexec(cmd, client, message)
     except Exception:
         exc = traceback.format_exc()
     stdout = redirected_output.getvalue()
     stderr = redirected_error.getvalue()
     sys.stdout = old_stdout
     sys.stderr = old_stderr
-    evaluation = ""
+    evaluation = "\n"
     if exc:
-        evaluation = exc
+        evaluation += exc
     elif stderr:
-        evaluation = stderr
+        evaluation += stderr
     elif stdout:
-        evaluation = stdout
+        evaluation += stdout
     else:
-        evaluation = "Success"
-    final_output = f"**OUTPUT**:\n```{evaluation}```"
+        evaluation += "Success"
+    final_output = f"<b>⥤ ʀᴇsᴜʟᴛ :</b>\n<pre language='python'>{evaluation}</pre>"
     if len(final_output) > 4096:
         filename = "output.txt"
         with open(filename, "w+", encoding="utf8") as out_file:
-            out_file.write(str(evaluation.strip()))
-        time()
+            out_file.write(str(evaluation))
+        t2 = time()
+        keyboard = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="⏳",
+                        callback_data=f"runtime {t2-t1} Seconds",
+                    )
+                ]
+            ]
+        )
         await message.reply_document(
             document=filename,
-            caption=f"**INPUT:**\n`{cmd[0:980]}`\n\n**OUTPUT:**\n`ᴀᴛᴛᴀᴄʜᴇᴅ ᴅᴏᴄᴜᴍᴇɴᴛ`",
+            caption=f"<b>⥤ ᴇᴠᴀʟ :</b>\n<code>{cmd[0:980]}</code>\n\n<b>⥤ ʀᴇsᴜʟᴛ :</b>\nAttached Document",
             quote=False,
+            reply_markup=keyboard,
         )
         await message.delete()
         os.remove(filename)
     else:
-        time()
-        await edit_or_reply(message, text=final_output)
+        t2 = time()
+        keyboard = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="⏳",
+                        callback_data=f"runtime {round(t2-t1, 3)} Seconds",
+                    ),
+                    InlineKeyboardButton(
+                        text="🗑",
+                        callback_data=f"forceclose abc|{message.from_user.id}",
+                    ),
+                ]
+            ]
+        )
+        await edit_or_reply(message, text=final_output, reply_markup=keyboard)
 
 
-@app.on_message(
+@app.on_callback_query(filters.regex(r"runtime"))
+async def runtime_func_cq(_, cq):
+    runtime = cq.data.split(None, 1)[1]
+    await cq.answer(runtime, show_alert=True)
+
+
+@app.on_callback_query(filters.regex("forceclose"))
+async def forceclose_command(_, CallbackQuery):
+    callback_data = CallbackQuery.data.strip()
+    callback_request = callback_data.split(None, 1)[1]
+    query, user_id = callback_request.split("|")
+    if CallbackQuery.from_user.id != int(user_id):
+        try:
+            return await CallbackQuery.answer(
+                "» ɪᴛ'ʟʟ ʙᴇ ʙᴇᴛᴛᴇʀ ɪғ ʏᴏᴜ sᴛᴀʏ ɪɴ ʏᴏᴜʀ ʟɪᴍɪᴛs ʙᴀʙʏ.", show_alert=True
+            )
+        except:
+            return
+    await CallbackQuery.message.delete()
+    try:
+        await CallbackQuery.answer()
+    except:
+        return
+
+
+@app.on_edited_message(
     filters.command("sh")
-    & filters.user(SUDO_USER)
+    & filters.user(OWNER_ID)
     & ~filters.forwarded
     & ~filters.via_bot
 )
-async def shellrunner(client, message):
+@app.on_message(
+    filters.command("sh")
+    & filters.user(OWNER_ID)
+    & ~filters.forwarded
+    & ~filters.via_bot
+)
+async def shellrunner(_, message: Message):
     if len(message.command) < 2:
-        return await edit_or_reply(message, text="**ᴇxᴀᴍᴩʟᴇ :**\n/sh git pull")
+        return await edit_or_reply(message, text="<b>ᴇxᴀᴍᴩʟᴇ :</b>\n/sh git pull")
     text = message.text.split(None, 1)[1]
     if "\n" in text:
         code = text.split("\n")
@@ -169,9 +165,8 @@ async def shellrunner(client, message):
                     stderr=subprocess.PIPE,
                 )
             except Exception as err:
-                print(err)
-                await edit_or_reply(message, text=f"**ERROR:**\n```{err}```")
-            output += f"**{code}**\n"
+                await edit_or_reply(message, text=f"<b>ERROR :</b>\n<pre>{err}</pre>")
+            output += f"<b>{code}</b>\n"
             output += process.stdout.read()[:-1].decode("utf-8")
             output += "\n"
     else:
@@ -193,7 +188,7 @@ async def shellrunner(client, message):
                 tb=exc_tb,
             )
             return await edit_or_reply(
-                message, text=f"**ERROR:**\n```{''.join(errors)}```"
+                message, text=f"<b>ERROR :</b>\n<pre>{''.join(errors)}</pre>"
             )
         output = process.stdout.read()[:-1].decode("utf-8")
     if str(output) == "\n":
@@ -202,13 +197,14 @@ async def shellrunner(client, message):
         if len(output) > 4096:
             with open("output.txt", "w+") as file:
                 file.write(output)
-            await client.send_document(
+            await app.send_document(
                 message.chat.id,
                 "output.txt",
-                reply_to_message_id=message.message_id,
-                caption="`Output`",
+                reply_to_message_id=message.id,
+                caption="<code>Output</code>",
             )
             return os.remove("output.txt")
-        await edit_or_reply(message, text=f"**OUTPUT:**\n```{output}```")
+        await edit_or_reply(message, text=f"<b>OUTPUT :</b>\n<pre>{output}</pre>")
     else:
-        await edit_or_reply(message, text="**OUTPUT: **\n`No output`")
+        await edit_or_reply(message, text="<b>OUTPUT :</b>\n<code>None</code>")
+    await message.stop_propagation()
