@@ -343,7 +343,7 @@ async def howtoaap_cb(bot, query):
         show_alert=True,
     )
     chat_id = query.data.split(None, 1)[1]
-    link = await bot.create_chat_invite_link(chat_id, member_limit=1)
+    link = await bot.create_chat_invite_link(int(chat_id), member_limit=1)
     button = [
         [
             Keyboard(text="Join Link", url=link),
