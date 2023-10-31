@@ -10,8 +10,7 @@ from time import time
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
-from MerissaRobot import OWNER_ID
-from MerissaRobot import pbot as app
+from MerissaRobot import pbot as app, OWNER_ID
 
 
 async def aexec(code, client, message):
@@ -70,7 +69,7 @@ async def executor(client: app, message: Message):
         evaluation += stdout
     else:
         evaluation += "Success"
-    final_output = f"<b>⥤ ʀᴇsᴜʟᴛ :</b>\n<pre language='python'>{evaluation}</pre>"
+    final_output = f"<b>Result :</b>\n<pre language='python'>{evaluation}</pre>"
     if len(final_output) > 4096:
         filename = "output.txt"
         with open(filename, "w+", encoding="utf8") as out_file:
@@ -88,7 +87,7 @@ async def executor(client: app, message: Message):
         )
         await message.reply_document(
             document=filename,
-            caption=f"<b>⥤ ᴇᴠᴀʟ :</b>\n<code>{cmd[0:980]}</code>\n\n<b>⥤ ʀᴇsᴜʟᴛ :</b>\nAttached Document",
+            caption=f"<b>Eval :</b>\n<code>{cmd[0:980]}</code>\n\n<b>Result :</b>\nAttached Document",
             quote=False,
             reply_markup=keyboard,
         )
@@ -209,3 +208,4 @@ async def shellrunner(_, message: Message):
     else:
         await edit_or_reply(message, text="<b>OUTPUT :</b>\n<code>None</code>")
     await message.stop_propagation()
+    
