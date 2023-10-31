@@ -308,7 +308,7 @@ async def howtoaap_cb(bot, query):
         "Just add MerissaRobot in Your Channel as Administrator and Done ✅",
         show_alert=True,
     )
-    
+
 
 @pbot.on_message(filters.command("verify") & filters.group)
 async def verifylink(bot, update):
