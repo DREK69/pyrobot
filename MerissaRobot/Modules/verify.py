@@ -12,7 +12,7 @@ async def verifylink(bot, update):
         try:
             channel_id = (await app.get_chat(int(chat.id))).linked_chat.id
         except Exception:
-            print(Exception)
+            print(str(Exception))
             return await update.reply_text(
                 "You didn't have connected Channel so try /verify channelid"
             )
