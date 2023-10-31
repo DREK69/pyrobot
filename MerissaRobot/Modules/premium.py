@@ -313,10 +313,10 @@ async def howtoaap_cb(bot, query):
 @pbot.on_message(filters.command("verify") & filters.group)
 async def verifylink(bot, update):
     chat = update.chat
-    channel_id = int(update.text.split()[1])
+    channel_id = update.text.split(None, 1)[1]
     try:
         user = await bot.get_chat_member(
-            chat_id=channel_id, user_id=update.from_user.id
+            chat_id=int(channel_id), user_id=update.from_user.id
         )
         if user.can_post_messages != True:
             await update.reply_text(text="You can't do that")
@@ -330,7 +330,7 @@ async def verifylink(bot, update):
         ],
     ]
     await bot.send_message(
-        channel_id,
+        int(channel_id),
         text=f"{chat.title} is being protected by @MerissaRobot\n\nClick below to verify you're human",
         reply_markup=InlineKeyboardMarkup(button),
     )
