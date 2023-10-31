@@ -321,9 +321,7 @@ async def verifylink(bot, update):
     await update.reply_text("Processing")
     channel_id = int(update.text.split(None, 1)[1])
     try:
-        user = await pbot.get_chat_member(
-            chat_id=int(channel_id), user_id=uid
-        )
+        user = await pbot.get_chat_member(chat_id=int(channel_id), user_id=uid)
         if user.privileges.can_post_messages != True:
             await update.reply_text(text="You can't do that")
             return
