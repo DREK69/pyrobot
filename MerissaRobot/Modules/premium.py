@@ -330,6 +330,7 @@ async def verify(bot, update):
             reply_markup=InlineKeyboardMarkup(button),
         )
 
+
 @pbot.on_message(filters.command("verify") & filters.group)
 async def verifylink(bot, message):
     chat = message.chat
@@ -339,7 +340,10 @@ async def verifylink(bot, message):
             Keyboard(text="Verify", url=link),
         ],
     ]
-    await message.reply_text(f"{chat.title} is being protected by @MerissaRobot\n\nClick below to verify you're human", reply_markup=InlineKeyboardMarkup(button))
+    await message.reply_text(
+        f"{chat.title} is being protected by @MerissaRobot\n\nClick below to verify you're human",
+        reply_markup=InlineKeyboardMarkup(button),
+    )
 
 
 @pbot.on_callback_query(filters.regex("^verify"))
