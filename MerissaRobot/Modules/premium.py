@@ -336,7 +336,9 @@ async def verifylink(bot, message):
     chat = message.chat
     channel_id = int(update.text.split()[1])
     try:
-        user = await bot.get_chat_member(chat_id=channel_id, user_id=message.from_user.id)
+        user = await bot.get_chat_member(
+            chat_id=channel_id, user_id=message.from_user.id
+        )
         if user.can_post_messages != True:
             await update.reply_text(text="You can't do that")
             return
