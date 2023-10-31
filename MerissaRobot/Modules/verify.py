@@ -4,16 +4,18 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from MerissaRobot import pbot
 
 
-@pbot.on_message(filters.command("verify"))
+@pbot.on_message(filters.command("verifygroup") & filters.group)
 async def verifylink(bot, update):
-    if len(update.command) < 2:
-        return await update.reply_text(
-            "Give me Channel id\n\nEx. /verify -100123456789"
-        )
     chat = update.chat
     uid = update.from_user.id
+    if len(update.command) < 2:
+        try:
+            channel_id = (await app.get_chat(chat.id)).linked_chat.id
+        except:
+            return await update.reply_text("You didn't have connected Channel so try /verify channelid")
+    else:
+        channel_id = int(update.text.split(None, 1)[1])
     m = await update.reply("Processing")
-    channel_id = int(update.text.split(None, 1)[1])
     try:
         user = await pbot.get_chat_member(chat_id=int(channel_id), user_id=uid)
         if user.privileges.can_post_messages != True:
