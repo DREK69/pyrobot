@@ -310,9 +310,10 @@ async def howtoaap_cb(bot, query):
     )
 
 
-@pbot.on_message(filters.command("verify") & filters.group)
+@pbot.on_message(filters.command("genvlink") & filters.group)
 async def verifylink(bot, update):
     chat = update.chat
+    await update.reply_text("Processing")
     channel_id = update.text.split(None, 1)[1]
     try:
         user = await bot.get_chat_member(
