@@ -311,7 +311,7 @@ async def howtoaap_cb(bot, query):
 
 
 @pbot.on_message(filters.command("start") & filters.private)
-async def _startfile(bot, update):
+async def verify(bot, update):
     user = update.from_user
     if len(update.command) != 2:
         return
@@ -329,6 +329,17 @@ async def _startfile(bot, update):
             caption=f"Hello {user.mention}\n\nClick 'VERIFY' Button to Verify you're human.",
             reply_markup=InlineKeyboardMarkup(button),
         )
+
+@pbot.on_message(filters.command("verify") & filters.group)
+async def verifylink(bot, message):
+    chat = message.chat
+    link = "https://t.me/MerissaRobot"
+    button = [
+        [
+            Keyboard(text="Verify", url=link),
+        ],
+    ]
+    await message.reply_text(f"{chat.title} is being protected by @MerissaRobot\n\nClick below to verify you're human", reply_markup=InlineKeyboardMarkup(button))
 
 
 @pbot.on_callback_query(filters.regex("^verify"))
