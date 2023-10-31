@@ -58,6 +58,7 @@ async def _startfile(bot, update):
         except Exception:
             await check.copy(update.from_user.id)
             await ok.delete()
+            
     elif "batch_" in code:
         send_msg = await update.reply_text("Uploading Media...")
         cmd, chat_id, message = code.split("_")
@@ -83,6 +84,20 @@ async def _startfile(bot, update):
         caption = f"{msg.caption.markdown}\n\n\n" if msg.caption else ""
         await msg.copy(update.from_user.id, caption=caption)
         await send_msg.delete()
+        
+    elif "verify" in code:
+        chat_id = code.split("_")[1]
+        button = [
+            [
+                InlineKeyboardButton(text="VERIFY", callback_data=f"verify {chat_id}"),
+            ],
+        ]
+        await update.reply_photo(
+            photo="https://te.legra.ph/file/90b1aa10cf8b77d5b781b.jpg",
+            caption=f"Hello Dear,\n\nClick 'VERIFY' Button to Verify you're human.",
+            reply_markup=InlineKeyboardMarkup(button),
+        )
+        
     else:
         return
 
