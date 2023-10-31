@@ -308,28 +308,7 @@ async def howtoaap_cb(bot, query):
         "Just add MerissaRobot in Your Channel as Administrator and Done ✅",
         show_alert=True,
     )
-
-
-@pbot.on_message(filters.command("start") & filters.private)
-async def verify(bot, update):
-    user = update.from_user
-    if len(update.command) != 2:
-        return
-    code = update.command[1]
-    if "verify" in code:
-        chat_id = code.split("_")[1]
-        button = [
-            [
-                Keyboard(text="Verify", callback_data=f"verify {chat_id}"),
-            ],
-        ]
-        await bot.send_photo(
-            chat_id=user.id,
-            photo="https://te.legra.ph/file/90b1aa10cf8b77d5b781b.jpg",
-            caption=f"Hello {user.mention}\n\nClick 'VERIFY' Button to Verify you're human.",
-            reply_markup=InlineKeyboardMarkup(button),
-        )
-
+    
 
 @pbot.on_message(filters.command("verify") & filters.group)
 async def verifylink(bot, update):
