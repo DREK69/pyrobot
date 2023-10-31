@@ -1,7 +1,7 @@
 from pyrogram import filters
 from pyrogram.types import Message
 
-from MerissaRobot import app
+from MerissaRobot import pbot as app
 from MerissaRobot.Database.mongo.imposter_db import (
     add_userdata,
     check_imposter,
