@@ -318,7 +318,7 @@ async def verifylink(bot, update):
         )
     chat = update.chat
     uid = update.from_user.id
-    await update.reply_text("Processing")
+    m = await update.reply("Processing")
     channel_id = int(update.text.split(None, 1)[1])
     try:
         user = await pbot.get_chat_member(chat_id=int(channel_id), user_id=uid)
@@ -338,6 +338,7 @@ async def verifylink(bot, update):
         text=f"{chat.title} is being protected by @MerissaRobot\n\nClick below to verify you're human",
         reply_markup=InlineKeyboardMarkup(button),
     )
+    await m.edit("Done ✅")
 
 
 @pbot.on_callback_query(filters.regex("^verify"))
