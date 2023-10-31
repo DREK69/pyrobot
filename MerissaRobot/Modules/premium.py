@@ -334,14 +334,23 @@ async def verify(bot, update):
 @pbot.on_message(filters.command("verify") & filters.group)
 async def verifylink(bot, message):
     chat = message.chat
+    channel_id = int(update.text.split()[1])
+    try:
+        user = await bot.get_chat_member(chat_id=channel_id, user_id=message.from_user.id)
+        if user.can_post_messages != True:
+            await update.reply_text(text="You can't do that")
+            return
+    except Exception:
+        return
     link = f"https://t.me/MerissaRobot?start=verify_{chat.id}"
     button = [
         [
             Keyboard(text="Verify", url=link),
         ],
     ]
-    await message.reply_text(
-        f"{chat.title} is being protected by @MerissaRobot\n\nClick below to verify you're human",
+    await pbot.send_message(
+        channel_id,
+        text=f"{chat.title} is being protected by @MerissaRobot\n\nClick below to verify you're human",
         reply_markup=InlineKeyboardMarkup(button),
     )
 
