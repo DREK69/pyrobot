@@ -1,7 +1,7 @@
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from MerissaRobot import pbot
+from MerissaRobot import pbot, LOGGER
 
 
 @pbot.on_message(filters.command("verify") & filters.group)
