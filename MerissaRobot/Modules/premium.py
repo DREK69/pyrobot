@@ -286,7 +286,7 @@ async def snapdown(client, message):
 async def autoapprove(client, message: ChatJoinRequest):
     chat = message.chat
     user = message.from_user
-    getchat = await client.get_chat(chat.id)
+    await client.get_chat(chat.id)
     link = await client.create_chat_invite_link(chat.id, member_limit=1)
     button = [
         [
