@@ -11,7 +11,7 @@ from pyrogram.types import InlineKeyboardButton as Keyboard
 from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, InputMediaVideo
 from telegram import InlineKeyboardButton
 
-from MerissaRobot import FORCE_CHANNEL, pbot
+from MerissaRobot import FORCE_CHANNEL, pbot, LOGGER
 from MerissaRobot.helpers import getreq, save_file, subscribe
 
 instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stories)\/([A-Za-z0-9\-_]*)"
@@ -322,8 +322,8 @@ async def verifylink(bot, update):
         if user.can_post_messages != True:
             await update.reply_text(text="You can't do that")
             return
-    except Exception:
-        return
+    except Exception as e:
+        return LOGGER.critical(e)
     link = f"https://t.me/MerissaRobot?start=verify_{chat.id}"
     button = [
         [
