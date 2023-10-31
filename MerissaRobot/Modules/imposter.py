@@ -1,16 +1,17 @@
 from pyrogram import filters
 from pyrogram.types import Message
 
+from MerissaRobot import app
 from MerissaRobot.Database.mongo.imposter_db import (
     add_userdata,
-    usr_data,
-    get_userdata,
     check_imposter,
-    impo_on,
+    get_userdata,
     impo_off,
+    impo_on,
+    usr_data,
 )
-from MerissaRobot import app
 from MerissaRobot.helpers import user_admin
+
 
 @app.on_message(filters.group & ~filters.bot & ~filters.via_bot, group=1)
 async def chk_usr(_, message: Message):
@@ -23,7 +24,9 @@ async def chk_usr(_, message: Message):
             message.from_user.first_name,
             message.from_user.last_name,
         )
-    usernamebefore, first_name, lastname_before = await get_userdata(message.from_user.id)
+    usernamebefore, first_name, lastname_before = await get_userdata(
+        message.from_user.id
+    )
     msg = ""
     if (
         usernamebefore != message.from_user.username
@@ -50,7 +53,9 @@ async def chk_usr(_, message: Message):
 ▪️FROM: {bef}
 ▪️TO: {aft}
 ➖➖➖➖➖➖➖➖➖➖➖➖\n
-""".format(bef=usernamebefore, aft=usernameafter)
+""".format(
+            bef=usernamebefore, aft=usernameafter
+        )
         await add_userdata(
             message.from_user.id,
             message.from_user.username,
@@ -92,10 +97,14 @@ async def chk_usr(_, message: Message):
             message.from_user.last_name,
         )
     if msg != "":
-        await message.reply_photo("https://graph.org//file/a5f944533dcaccfaf2567.jpg", caption=msg)
+        await message.reply_photo(
+            "https://graph.org//file/a5f944533dcaccfaf2567.jpg", caption=msg
+        )
 
 
-@app.on_message(filters.group & filters.command("imposter") & ~filters.bot & ~filters.via_bot)
+@app.on_message(
+    filters.group & filters.command("imposter") & ~filters.bot & ~filters.via_bot
+)
 @user_admin
 async def set_mataa(_, message: Message):
     if len(message.command) == 1:
@@ -106,13 +115,17 @@ async def set_mataa(_, message: Message):
             await message.reply("Imposter Mode Is Already Enabled")
         else:
             await impo_on(message.chat.id)
-            await message.reply(f"Successfully Enabled Imposter Mode For {message.chat.title}")
+            await message.reply(
+                f"Successfully Enabled Imposter Mode For {message.chat.title}"
+            )
     elif message.command[1] == "off":
         cekset = await impo_off(message.chat.id)
         if not cekset:
             await message.reply("Imposter Mode Is Already Disabled")
         else:
             await impo_off(message.chat.id)
-            await message.reply(f"Successfully Enabled Imposter Mode For {message.chat.title}")
+            await message.reply(
+                f"Successfully Enabled Imposter Mode For {message.chat.title}"
+            )
     else:
         await message.reply("Check help Section For Getting Help")
