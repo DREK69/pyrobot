@@ -312,8 +312,8 @@ async def howtoaap_cb(bot, query):
 
 @pbot.on_message(filters.command("verify") & filters.group)
 async def verifylink(bot, update):
-    if len(message.command) < 2:
-        return await message.reply_text(
+    if len(update.command) < 2:
+        return await update.reply_text(
             "Give me Channel id\n\nEx. /verify -100123456789"
         )
     chat = update.chat
