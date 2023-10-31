@@ -286,9 +286,8 @@ async def snapdown(client, message):
 async def autoapprove(client, message: ChatJoinRequest):
     chat = message.chat
     user = message.from_user
-    await client.approve_chat_join_request(chat_id=chat.id, user_id=user.id)
     getchat = await client.get_chat(chat.id)
-    link = getchat.invite_link
+    link = await client.create_chat_invite_link(chat.id, member_limit=1)
     button = [
         [
             Keyboard(text=chat.title, url=link),
@@ -299,7 +298,7 @@ async def autoapprove(client, message: ChatJoinRequest):
     await client.send_photo(
         chat_id=user.id,
         photo="https://te.legra.ph/file/90b1aa10cf8b77d5b781b.jpg",
-        caption=f"Hello {user.mention}\nWelcome To [{chat.title}]({link})\n\nYou are Auto Approved in Channel By @MerissaRobot",
+        caption=f"Hello {user.mention}\nWelcome from [{chat.title}]({link})\n\nYou are Join Channel Using Below Link By @MerissaRobot",
         reply_markup=InlineKeyboardMarkup(button),
     )
 
