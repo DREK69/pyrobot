@@ -332,12 +332,12 @@ async def verify(bot, update):
 
 
 @pbot.on_message(filters.command("verify") & filters.group)
-async def verifylink(bot, message):
-    chat = message.chat
+async def verifylink(bot, update):
+    chat = update.chat
     channel_id = int(update.text.split()[1])
     try:
         user = await bot.get_chat_member(
-            chat_id=channel_id, user_id=message.from_user.id
+            chat_id=channel_id, user_id=update.from_user.id
         )
         if user.can_post_messages != True:
             await update.reply_text(text="You can't do that")
