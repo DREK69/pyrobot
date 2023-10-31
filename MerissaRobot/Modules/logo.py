@@ -220,6 +220,7 @@ def genlogo(text, image, tfont):
     imglink = "https://te.legra.ph" + x
     return imglink, randBg, randFont
 
+
 @pbot.on_message(filters.command("ocr") & filters.private)
 @subscribe
 async def movie(client, message):
@@ -233,10 +234,12 @@ async def movie(client, message):
         x = uf(download_location)[0]
         imglink = "https://te.legra.ph" + x
         os.remove(download_location)
-        ocr = await getreq(f"https://script.google.com/macros/s/AKfycbwURISN0wjazeJTMHTPAtxkrZTWTpsWIef5kxqVGoXqnrzdLdIQIfLO7jsR5OQ5GO16/exec?url={imglink}")
-        text = ocr['text']
+        ocr = await getreq(
+            f"https://script.google.com/macros/s/AKfycbwURISN0wjazeJTMHTPAtxkrZTWTpsWIef5kxqVGoXqnrzdLdIQIfLO7jsR5OQ5GO16/exec?url={imglink}"
+        )
+        text = ocr["text"]
         await m.edit_text(text)
-    else: 
+    else:
         await message.reply_text("please reply to image for ocr")
 
 
