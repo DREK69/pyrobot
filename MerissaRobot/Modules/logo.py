@@ -6,11 +6,10 @@ import requests
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 from pyrogram import filters
 from pyrogram.types import *
-from requests import get
 from telegraph import upload_file as uf
 
 from MerissaRobot import pbot
-from MerissaRobot.helpers import subscribe
+from MerissaRobot.helpers import subscribe, getreq
 
 
 def genlogo(text, image, tfont):
@@ -318,7 +317,7 @@ async def phlogo(_, message):
         )
     text = message.text.split(None, 1)[1]
     logo = await message.reply_text("Creating your logo...wait!")
-    url = get(f"https://api.princexd.tech/phlogo?text={text}").json()["url"]
+    url = await getreq(f"https://api.princexd.tech/phlogo?text={text}")
     button = InlineKeyboardMarkup(
         [
             [
@@ -327,7 +326,7 @@ async def phlogo(_, message):
         ]
     )
     m = await message.reply_photo(
-        photo=url,
+        photo=url["url"],
         caption="Powered by @MerissaRobot",
         reply_markup=button,
     )
@@ -421,9 +420,9 @@ async def hmeme(_, query: CallbackQuery):
     await query.answer("Generating Your Logo Please Wait....", show_alert=True)
     callback_data = query.data.strip()
     name = callback_data.split("_")[1]
-    url = get(f"https://api.princexd.tech/anime-logo?text={name}").json()["url"]
+    url = await getreq(f"https://api.princexd.tech/anime-logo?text={name}")
     await query.edit_message_media(
-        InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
+        InputMediaPhoto(url["url"], caption="Powered by @MerissaRobot"),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -443,11 +442,11 @@ async def hmeme(_, query: CallbackQuery):
     callback_data = query.data.strip()
     name = callback_data.split("_")[1]
     ranlink = random.choice(link)
-    url = get(
+    url = await getreq(
         f"https://api.akuari.my.id/ephoto/scraper-1?text={name}&link={ranlink}"
-    ).json()["respon"]
+    )
     await query.edit_message_media(
-        InputMediaPhoto(url, caption="Powered by @MerissaRobot"),
+        InputMediaPhoto(url["respon"], caption="Powered by @MerissaRobot"),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -484,9 +483,9 @@ async def movie(_, message):
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
     ranlink = random.choice(link)
-    url = get(
+    url = await getreq(
         f"https://api.akuari.my.id/ephoto/scraper-1?text={name}&link={ranlink}"
-    ).json()["respon"]
+    )
     button = InlineKeyboardMarkup(
         [
             [
@@ -495,7 +494,7 @@ async def movie(_, message):
         ]
     )
     await message.reply_photo(
-        photo=url,
+        photo=url["respon"],
         caption="Powered by @MerissaRobot",
         reply_markup=button,
     )
@@ -514,7 +513,7 @@ async def movie(_, message):
         if len(message.command) < 3
         else message.text.split(None, 1)[1].replace(" ", "%20")
     )
-    url = get(f"https://api.princexd.tech/anime-logo?text={name}").json()["url"]
+    url = await getreq(f"https://api.princexd.tech/anime-logo?text={name}")
     button = InlineKeyboardMarkup(
         [
             [
@@ -523,7 +522,7 @@ async def movie(_, message):
         ]
     )
     await message.reply_photo(
-        photo=url,
+        photo=url["url"],
         caption="Powered by @MerissaRobot",
         reply_markup=button,
     )
