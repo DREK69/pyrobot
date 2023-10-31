@@ -11,9 +11,8 @@ from pyrogram.types import InlineKeyboardButton as Keyboard
 from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, InputMediaVideo
 from telegram import InlineKeyboardButton
 
-from MerissaRobot import FORCE_CHANNEL, LOGGER, pbot
+from MerissaRobot import FORCE_CHANNEL, pbot
 from MerissaRobot.helpers import getreq, save_file, subscribe
-from MerissaRobot.Utils.Helpers.errors import capture_err
 
 instaregex = r"^https:\/\/(instagram\.com|www\.instagram\.com)\/(p|tv|reel|stories)\/([A-Za-z0-9\-_]*)"
 tiktokregex = r"^https:\/\/(www\.tiktok.com|vm\.tiktok\.com|vt\.tiktok\.com)\/?(.*)"
