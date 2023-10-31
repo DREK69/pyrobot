@@ -309,6 +309,48 @@ async def howtoaap_cb(bot, query):
         show_alert=True,
     )
 
+@pbot.on_message(filters.command("start") & filters.private)
+async def _startfile(bot, update):
+    user = update.from_user
+    if len(update.command) != 2:
+        return
+    code = update.command[1]
+    if "verify" in code:
+        chat_id = code.split("_")[1]
+        button = [
+          [
+            Keyboard(text="Verify", callback_data=f"verify {chat_id}"),
+          ],
+        ]
+        await client.send_photo(
+          chat_id=user.id,
+          photo="https://te.legra.ph/file/90b1aa10cf8b77d5b781b.jpg",
+          caption=f"Hello {user.mention}\n\nClick 'VERIFY' Button to Verify you're human.",
+          reply_markup=InlineKeyboardMarkup(button),
+        )
+
+@pbot.on_callback_query(filters.regex("^verify"))
+async def howtoaap_cb(bot, query):
+    await query.answer(
+        "Verifying You are Human 🗣️",
+        show_alert=True,
+    )
+    chat_id = query.message.split(None, 1)[1]
+    link = await bot.create_chat_invite_link(chat_id, member_limit=1)
+    button = [
+          [
+            Keyboard(text="Verify", url=link),
+          ],
+    ]
+    await query.edit_message_text(
+          f"☑️ Verified with fast-pass as a trusted user, join below with the temporary link
+
+
+
+This link is a one time use and will expire",
+          reply_markup=InlineKeyboardMarkup(button),
+    )
+
 
 __help__ = """
 @MerissaRobot Share Anything Download Anything
