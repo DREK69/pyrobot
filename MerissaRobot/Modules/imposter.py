@@ -10,7 +10,7 @@ from MerissaRobot.Database.mongo.imposter_db import (
     impo_on,
     usr_data,
 )
-from MerissaRobot.helpers import user_admin
+from MerissaRobot.Utils.Helpers.permissions import adminsOnly
 
 
 @app.on_message(filters.group & ~filters.bot & ~filters.via_bot, group=1)
@@ -105,7 +105,7 @@ async def chk_usr(_, message: Message):
 @app.on_message(
     filters.group & filters.command("imposter") & ~filters.bot & ~filters.via_bot
 )
-@user_admin
+@adminsOnly("can_delete_messages")
 async def set_mataa(_, message: Message):
     if len(message.command) == 1:
         return await message.reply("Check help Section For Getting Help")
