@@ -350,7 +350,7 @@ async def howtoaap_cb(bot, query):
         ],
     ]
     await query.edit_message_caption(
-        f"☑️ Verified with fast-pass as a trusted user, join below with the temporary link\n\nThis link is a one time use and will expire",
+        f"☑️ Verified with fast-pass as a trusted user, join below with the temporary link\n\n{link}\n\nThis link is a one time use and will expire",
         reply_markup=InlineKeyboardMarkup(button),
     )
 
