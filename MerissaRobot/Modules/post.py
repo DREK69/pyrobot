@@ -17,7 +17,7 @@ async def post(bot, update):
 
     try:
         user = await bot.get_chat_member(chat_id=chat_id, user_id=update.from_user.id)
-        if user.can_post_messages != True:
+        if user.privileges.can_post_messages != True:
             await update.reply_text(text="You can't do that")
             return
     except Exception:
@@ -62,7 +62,7 @@ async def edit(bot, update):
 
     try:
         user = await bot.get_chat_member(chat_id=chat_id, user_id=update.from_user.id)
-        if user.can_be_edited != True:
+        if user.privileges.can_be_edited != True:
             await update.reply_text(
                 text="You can't do that, User needed can_be_edited permission."
             )
