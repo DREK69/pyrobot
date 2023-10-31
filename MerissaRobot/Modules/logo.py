@@ -223,7 +223,7 @@ def genlogo(text, image, tfont):
 @pbot.on_message(filters.command("ocr") & filters.private)
 @subscribe
 async def movie(client, message):
-    reply = message.reply_to_message
+    reply = message.reply_to_message.photo
     if reply:
         m = await message.reply_text("Please wait...")
         download_location = await client.download_media(
@@ -245,8 +245,7 @@ async def movie(client, message):
 @pbot.on_message(filters.command("logo") & filters.private)
 @subscribe
 async def movie(client, message):
-    message.from_user.id
-    reply = message.reply_to_message
+    reply = message.reply_to_message.photo
     m = await message.reply_text("Creating your logo...wait!")
     if len(message.command) < 2:
         return await message.reply_text(
