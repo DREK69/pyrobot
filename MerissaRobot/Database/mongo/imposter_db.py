@@ -1,4 +1,4 @@
-from MerissaRobot.Database import db
+from MerissaRobot.Database.mongo import db
 
 impdb = db["imposter"]
 
