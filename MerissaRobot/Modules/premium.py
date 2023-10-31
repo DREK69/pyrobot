@@ -312,12 +312,17 @@ async def howtoaap_cb(bot, query):
 
 @pbot.on_message(filters.command("verify") & filters.group)
 async def verifylink(bot, update):
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "Give me Channel id\n\nEx. /verify -100123456789"
+        )
     chat = update.chat
+    uid = update.from_user.id
     await update.reply_text("Processing")
-    channel_id = update.text.split(None, 1)[1]
+    channel_id = int(update.text.split(None, 1)[1])
     try:
         user = await pbot.get_chat_member(
-            chat_id=int(channel_id), user_id=update.from_user.id
+            chat_id=int(channel_id), user_id=uid
         )
         if user.privileges.can_post_messages != True:
             await update.reply_text(text="You can't do that")
