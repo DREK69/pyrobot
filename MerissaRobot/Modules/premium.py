@@ -10,6 +10,7 @@ from pyrogram.types import ChatJoinRequest
 from pyrogram.types import InlineKeyboardButton as Keyboard
 from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, InputMediaVideo
 from telegram import InlineKeyboardButton
+from MerissaRobot.Utils.Helpers.errors import capture_err
 
 from MerissaRobot import FORCE_CHANNEL, LOGGER, pbot
 from MerissaRobot.helpers import getreq, save_file, subscribe
@@ -311,6 +312,7 @@ async def howtoaap_cb(bot, query):
 
 
 @pbot.on_message(filters.command("verify"))
+@capture_err
 async def verifylink(bot, update):
     if len(update.command) < 2:
         return await update.reply_text(
