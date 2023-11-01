@@ -6,6 +6,7 @@ from pyrogram.types import *
 from MerissaRobot import pbot as app
 from MerissaRobot.helpers import postreq
 
+
 @app.on_message(filters.command("readqr", COMMAND_HANDLER))
 async def readqr(c, m):
     if not m.reply_to_message:
