@@ -54,8 +54,6 @@ pbot = Client(
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=TOKEN,
-    sleep_threshold=60,
-    in_memory=True,
 )
 
 user = Client(
