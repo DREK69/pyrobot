@@ -7,7 +7,7 @@ from MerissaRobot import pbot as app
 from MerissaRobot.helpers import postreq
 
 
-@app.on_message(filters.command("readqr", COMMAND_HANDLER))
+@app.on_message(filters.command("readqr"))
 async def readqr(c, m):
     if not m.reply_to_message:
         return await m.reply("Please reply photo that contain valid QR Code.")
@@ -26,7 +26,7 @@ async def readqr(c, m):
     )
 
 
-@app.on_message(filters.command("createqr", COMMAND_HANDLER))
+@app.on_message(filters.command("createqr"))
 async def makeqr(c, m):
     if m.reply_to_message and m.reply_to_message.text:
         teks = m.reply_to_message.text
