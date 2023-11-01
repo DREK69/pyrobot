@@ -56,13 +56,9 @@ delete = ReplyKeyboardRemove()
 
 
 @app.on_message(filters.command("games") & filters.private)
+@subscribe
 async def gamescmd(client, message: Message):
     chat = message.from_user.id
-    sub = await subscribe(client, chat)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
     await app.send_photo(
         chat_id=chat,
         photo="https://te.legra.ph/file/98a2330097ec25a078b95.jpg",
