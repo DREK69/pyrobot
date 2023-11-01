@@ -4,6 +4,7 @@ from pyrogram import filters
 
 from MerissaRobot import pbot
 
+
 @pbot.on_message(filters.command("fakegen"))
 async def fakeit(_, message):
     fake = Faker()
