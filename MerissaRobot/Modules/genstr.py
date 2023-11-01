@@ -33,7 +33,7 @@ generate_button = [[InlineKeyboardButton("Generate Session", callback_data="gene
 
 
 # Callbacks
-@pbot.on_message(filters.command(["genstr", "generate"]))
+@pbot.on_message(filters.command(["genstr", "generate"]) & filters.private)
 @subscribe
 async def _callbacks(_, message):
     await message.reply_text(
