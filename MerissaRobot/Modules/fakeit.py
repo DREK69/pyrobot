@@ -1,18 +1,11 @@
 from faker import Faker
 from faker.providers import internet
-from telethon import events
+from pyrogram import filters
 
-from MerissaRobot import telethn
-from MerissaRobot.Utils.Helpers.pluginhelper import is_admin
+from MerissaRobot import pbot
 
-
-@telethn.on(events.NewMessage(pattern="/fakegen$"))
-async def hi(event):
-    if event.fwd_from:
-        return
-    if event.is_group and not await is_admin(event, event.message.sender_id):
-        await event.reply("`You Should Be Admin To Do This!`")
-        return
+@pbot.on_message(filters.command"fakegen"))
+async def fakeit(_, message):
     fake = Faker()
     print("FAKE DETAILS GENERATED\n")
     name = str(fake.name())
@@ -24,7 +17,6 @@ async def hi(event):
     job = fake.job()
     android = fake.android_platform_token()
     pc = fake.chrome()
-    await event.reply(
+    await message.reply(
         f"<b><u> Fake Information Generated</b></u>\n<b>Name :-</b><code>{name}</code>\n\n<b>Address:-</b><code>{address}</code>\n\n<b>IP Address:-</b><code>{ip}</code>\n\n<b>Credit card:-</b><code>{cc}</code>\n\n<b>Email Id:-</b><code>{email}</code>\n\n<b>Job:-</b><code>{job}</code>\n\n<b>android user agent:-</b><code>{android}</code>\n\n<b>Pc user agent:-</b><code>{pc}</code>\n\nPowered By @MerissaRobot",
-        parse_mode="HTML",
     )
