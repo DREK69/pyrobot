@@ -103,7 +103,7 @@ async def gen_keyboard(mails, email, domain):
 # ********************************************************************************
 
 
-@app.on_callback_query(filters.regex(pattern=r"mailbox"))
+@app.on_callback_query(filters.regex("^mailbox"))
 async def mail_box(_, query: CallbackQuery):
     Data = query.data
     callback_request = Data.split(None, 1)[1]
@@ -130,7 +130,7 @@ async def mail_box(_, query: CallbackQuery):
 # ********************************************************************************
 
 
-@app.on_callback_query(filters.regex(pattern=r"mail"))
+@app.on_callback_query(filters.regex("^mail"))
 async def mail_box(_, query: CallbackQuery):
     Data = query.data
     callback_request = Data.split(None, 1)[1]
