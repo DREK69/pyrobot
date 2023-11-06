@@ -6,7 +6,7 @@ from MerissaRobot import pbot as app
 @app.on_message(filters.command("donate"))
 async def makeqr(c, m):
     amount = await m.chat.ask(
-        "Please Enter amount you want to Donate", filters=filters.text
+        "💲 Enter the amount of donation\n\nMinimun amount ₹10!", filters=filters.text
     )
     if int(amount.text) < 10:
         return await m.reply_text("Min. Donation amount is 10rs")
