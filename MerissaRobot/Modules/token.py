@@ -13,6 +13,7 @@ from MerissaRobot.helpers import subscribe
 )
 @subscribe
 async def token(client, message):
+    m = await mesage.reply_text("Processing")
     toggle = leveldb["myFirstDatabase"]["jsons"]
     user = leveldb["MerissaApi"]["user"]
     chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -32,7 +33,7 @@ async def token(client, message):
     if not is_user:
         toggle.insert_one({"ID": word, "data": word})
         user.insert_one({"user_id": message.from_user.id, "API": word})
-        await message.reply_text(
+        await m.edit_text(
             f"Your Merissa Token: `{word}` Do not give this token to anmerissa else!\nKnow More - @MerissaChatbotApi"
         )
         await app.send_message(
