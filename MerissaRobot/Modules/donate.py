@@ -11,7 +11,9 @@ async def makeqr(c, m):
     )
     if int(amount.text) < 10:
         return await m.reply_text("Min. Donation amount is 10rs")
-    data = {"text": f"upi://pay?pa=prajapatiprince3011@paytm&pn=PrajapatiPrince&cu=INR&am={amount.text}"}
+    data = {
+        "text": f"upi://pay?pa=prajapatiprince3011@paytm&pn=PrajapatiPrince&cu=INR&am={amount.text}"
+    }
     url = await postreq(f"https://api.princexd.tech/qrcode", data)
     await m.reply_photo(
         url["url"], caption=f"<b>Thanks For Your donation</b>", quote=True
