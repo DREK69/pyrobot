@@ -20,12 +20,10 @@ async def makeqr(c, m):
         ]
     )
     x = f"Merissa UPI Payment - SCAN & PAY 📃 \n\nAmount: ₹{amount.text}\nMethod: UPI\n\nInstructions: Click below 'Pay' button to pay payment, after paying just comeback and click on 'done' button!"
-    await m.reply_text(
-        x, reply_markup=button
-    )
+    await m.reply_text(x, reply_markup=button)
+
 
 @app.on_callback_query(filters.regex("^donated"))
 async def donate_cb(bot, query):
     await query.message.delete()
     return await query.message.reply_text("Thank You For Donating Us")
-    
