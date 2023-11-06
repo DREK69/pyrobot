@@ -10,7 +10,7 @@ async def makeqr(c, m):
     )
     if int(amount.text) < 10:
         return await m.reply_text("Min. Donation amount is 10rs")
-    url = f"https://pay.princexd.tech/prajapatiprince@apl/{amount.text}"
+    url = f"https://pay.princexd.tech/prajapatiprince3011@paytm/{amount.text}"
     button = InlineKeyboardMarkup(
         [
             [
