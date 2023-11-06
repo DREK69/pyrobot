@@ -56,7 +56,7 @@ async def get_link_group(client, message):
 
     r_message = message.reply_to_message
     if r_message:
-        r_message.text
+        page_content = r_message.text
         if r_message.media:
             if page_content != "":
                 title_of_page = page_content
