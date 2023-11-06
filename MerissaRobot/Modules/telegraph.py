@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 
 from PIL import Image
-from telegraph import Telegraph, exceptions, upload_file
+from telegraph import Telegraph, upload_file
 
 from MerissaRobot import pbot
 
@@ -12,32 +12,43 @@ r = telegraph.create_account(short_name="MerissaRobot")
 auth_url = r["auth_url"]
 
 
-@pbot.on_message(filters.command('tgm'))
+@pbot.on_message(filters.command("tgm"))
 async def get_link_group(client, message):
     try:
         text = await message.reply("Processing...")
+
         async def progress(current, total):
             await text.edit_text(f"📥 Downloading media... {current * 100 / total:.1f}%")
+
         try:
             location = f"./media/group/"
-            local_path = await message.reply_to_message.download(location, progress=progress)
+            local_path = await message.reply_to_message.download(
+                location, progress=progress
+            )
             await text.edit_text("📤 Uploading to Telegraph...")
-            upload_path = upload_file(local_path) 
-            await text.edit_text(f"**🌐 | Telegraph Link**:\n\n<code>https://telegra.ph{upload_path[0]}</code>")     
-            os.remove(local_path) 
+            upload_path = upload_file(local_path)
+            await text.edit_text(
+                f"**🌐 | Telegraph Link**:\n\n<code>https://telegra.ph{upload_path[0]}</code>"
+            )
+            os.remove(local_path)
         except Exception as e:
-            await text.edit_text(f"**❌ | File upload failed**\n\n<i>**Reason**: {e}</i>")
-            os.remove(local_path) 
-            return         
+            await text.edit_text(
+                f"**❌ | File upload failed**\n\n<i>**Reason**: {e}</i>"
+            )
+            os.remove(local_path)
+            return
     except Exception:
-        pass 
+        pass
 
-@pbot.on_message(filters.command('tgt'))
+
+@pbot.on_message(filters.command("tgt"))
 async def get_link_group(client, message):
     optional_title = message.text.split(None, 1)[1]
     m = await message.reply_text("Processing")
+
     async def progress(current, total):
         await m.edit_text(f"📥 Downloading media... {current * 100 / total:.1f}%")
+
     title_of_page = message.from_user.first_name
     if optional_title:
         title_of_page = optional_title
@@ -46,7 +57,9 @@ async def get_link_group(client, message):
         if page_content != "":
             title_of_page = page_content
         location = f"./media/group/"
-        downloaded_file_name = await message.reply_to_message.download(location, progress=progress)
+        downloaded_file_name = await message.reply_to_message.download(
+            location, progress=progress
+        )
         m_list = None
         with open(downloaded_file_name, "rb") as fd:
             m_list = fd.readlines()
@@ -58,9 +71,10 @@ async def get_link_group(client, message):
         end = datetime.now()
         ms = (end - start).seconds
         await m.edit_text(
-        "Pasted to https://te.legra.ph/{} in {} seconds.".format(
+            "Pasted to https://te.legra.ph/{} in {} seconds.".format(
                 response["path"], ms
-            ))
+            )
+        )
     else:
         await message.reply("Reply to a message to get a permanent telegra.ph link.")
 
