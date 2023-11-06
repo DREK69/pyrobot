@@ -37,7 +37,7 @@ async def broadcast(_, message):
         if to_group:
             for chat in chats:
                 try:
-                    chat_id = int(chat.id)
+                    chat_id = int(chat.chat_id)
                     await pbot.forward_messages(
                         chat_id, y, x
                     ) if message.reply_to_message else await pbot.send_message(
@@ -54,7 +54,7 @@ async def broadcast(_, message):
         if to_user:
             for user in users:
                 try:
-                    chat_id = int(user.id)
+                    chat_id = int(user.user_id)
                     await pbot.forward_messages(
                         chat_id, y, x
                     ) if message.reply_to_message else await pbot.send_message(
