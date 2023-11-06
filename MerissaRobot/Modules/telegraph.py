@@ -74,7 +74,7 @@ async def get_link_group(client, message):
         page_content = page_content.replace("\n", "<br>")
         response = telegraph.create_page(title_of_page, html_content=page_content)
         await m.edit_text(
-            f"Pasted to https://te.legra.ph/{response["path"]}"
+            f"Pasted to https://te.legra.ph/{response['path']}"
         )
     else:
         await message.reply("Reply to a message to get a permanent telegra.ph link.")
