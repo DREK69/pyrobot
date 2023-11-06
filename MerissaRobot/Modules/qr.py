@@ -1,10 +1,9 @@
 import os
 
 from pyrogram import filters
-from pyrogram.types import *
 
 from MerissaRobot import pbot as app
-from MerissaRobot.helpers import postreq, getreq
+from MerissaRobot.helpers import getreq, postreq
 
 
 @app.on_message(filters.command("readqr"))
