@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 
 from PIL import Image
+from pyrogram import filters
 from telegraph import Telegraph, upload_file
 
 from MerissaRobot import pbot
