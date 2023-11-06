@@ -1,5 +1,5 @@
 from pyrogram import filters
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton 
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from MerissaRobot import pbot as app
 
