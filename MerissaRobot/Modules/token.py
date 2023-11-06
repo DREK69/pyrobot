@@ -11,13 +11,8 @@ from MerissaRobot.helpers import subscribe
 @app.on_message(
     filters.command("token", prefixes=["/", ".", "?", "-"]) & filters.private
 )
+@subscribe
 async def token(client, message):
-    userid = message.from_user.id
-    sub = await subscribe(client, userid)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
     toggle = leveldb["myFirstDatabase"]["jsons"]
     user = leveldb["MerissaApi"]["user"]
     chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -54,13 +49,8 @@ async def token(client, message):
 @app.on_message(
     filters.command("revoke", prefixes=["/", ".", "?", "-"]) & filters.private
 )
+@subscribe
 async def revoke(client, message):
-    userid = message.from_user.id
-    sub = await subscribe(client, userid)
-    if sub == False:
-        return await message.reply_text(
-            "Please Join @MerissaxUpdates to Use Premium Features"
-        )
     toggle = leveldb["myFirstDatabase"]["jsons"]
     user = leveldb["MerissaApi"]["user"]
     is_user = user.find_one({"user_id": message.from_user.id})
