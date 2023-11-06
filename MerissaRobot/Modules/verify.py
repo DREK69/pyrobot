@@ -10,7 +10,7 @@ async def verifylink(bot, update):
     uid = update.from_user.id
     if len(update.command) < 2:
         try:
-            channel_id = (await app.get_chat(int(chat.id))).linked_chat.id
+            channel_id = (await bot.get_chat(int(chat.id))).linked_chat.id
         except Exception:
             print(str(Exception))
             return await update.reply_text(
