@@ -53,20 +53,24 @@ async def get_link_group(client, message):
     title_of_page = message.from_user.first_name
     if optional_title:
         title_of_page = optional_title
-    page_content = message.reply_to_message
-    if r_message.media:
-        if page_content != "":
-            title_of_page = page_content
-        location = f"./media/group/"
-        downloaded_file_name = await message.reply_to_message.download(
-            location, progress=progress
-        )
-        m_list = None
-        with open(downloaded_file_name, "rb") as fd:
-            m_list = fd.readlines()
-            for m in m_list:
-                page_content += m.decode("UTF-8") + "\n"
-            os.remove(downloaded_file_name)
+        
+    r_message = message.reply_to_message
+    if r_message:     
+        post_content = r_message.text
+        if r_message.media:
+            if page_content != "":
+                title_of_page = page_content
+            location = f"./media/group/"
+            downloaded_file_name = await message.reply_to_message.download(
+                location, progress=progress
+            )
+            m_list = None
+            with open(downloaded_file_name, "rb") as fd:
+                m_list = fd.readlines()
+                for m in m_list:
+                    page_content += m.decode("UTF-8") + "\n"
+                os.remove(downloaded_file_name)
+        
         page_content = page_content.replace("\n", "<br>")
         response = telegraph.create_page(title_of_page, html_content=page_content)
         end = datetime.now()
