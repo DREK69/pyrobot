@@ -1,9 +1,8 @@
-import os
-
 from pyrogram import filters
 
 from MerissaRobot import pbot as app
-from MerissaRobot.helpers import getreq, postreq
+from MerissaRobot.helpers import getreq
+
 
 @app.on_message(filters.command("donate"))
 async def makeqr(c, m):
