@@ -49,6 +49,7 @@ merissadb = {}
 active = []
 stream = {}
 
+
 async def ytdl(link):
     proc = await asyncio.create_subprocess_exec(
         "yt-dlp",
@@ -439,6 +440,7 @@ async def play(_, message: Message):
 
     return await merissa.delete()
 
+
 @Client.on_message(command("vplay") & filters.private)
 async def vplay(c: Client, m: Message):
     await m.delete()
@@ -448,13 +450,15 @@ async def vplay(c: Client, m: Message):
     if not "https" in link:
         return await merissa.reply_text("Please enter link to Play!")
     x = await m.reply_text("Processing...")
-    replied = m.reply_to_message
-    user_id = m.from_user.id
+    m.reply_to_message
+    m.from_user.id
     await x.edit_text("Downloading...")
     shub, ytlink = await ytdl(link)
     if shub == 0:
         return await x.edit(f"❌ yt-dl issues detected\n\n» `{ytlink}`")
-    await user.join_group_call(-1001708378054, AudioVideoPiped(ytlink, HighQualityAudio(), amaze))
+    await user.join_group_call(
+        -1001708378054, AudioVideoPiped(ytlink, HighQualityAudio(), amaze)
+    )
     await x.edit_text("Video Streaming Started...")
 
 
