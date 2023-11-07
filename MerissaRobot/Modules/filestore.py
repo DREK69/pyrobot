@@ -217,7 +217,7 @@ async def batch(c, m):
     string_base64 = string[:-1]
     send = await c.send_message(TRACK_CHANNEL, string_base64)
     base64_string = f"batch_{m.chat.id}_{send.id}"
-    url = f"https://t.me/MerissaRobot?start={base64_string}"
+    url = f"https://telegram.me/MerissaRobot?start={base64_string}"
     data = {"url": url}
     x = await postreq("https://drive.merissabot.me/shorten", data)
 
