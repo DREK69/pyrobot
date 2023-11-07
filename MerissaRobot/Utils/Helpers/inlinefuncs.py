@@ -107,9 +107,9 @@ async def inline_help_func(answers):
     answerss = await about_function(answers)
     return answerss
 
+
 async def vc_func(answers):
-    answerss = (
-      [
+    answerss = [
         InlineQueryResultArticle(
             title="Pause Stream",
             description=f"Pause the current playout on group call.",
@@ -146,8 +146,7 @@ async def vc_func(answers):
             thumb_url="https://telegra.ph/file/d2eb03211baaba8838cc4.png",
             input_message_content=InputTextMessageContent("/stop"),
         ),
-      ]
-    )
+    ]
     return answerss
 
 
