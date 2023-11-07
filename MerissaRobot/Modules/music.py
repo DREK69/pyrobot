@@ -442,9 +442,9 @@ async def play(_, message: Message):
 
 
 @pbot.on_message(filters.command("vplay") & filters.private)
-async def vplay(c: Client, m: Message):
+async def vplay(c, m):
     await m.delete()
-    if len(message.command) < 2:
+    if len(m.command) < 2:
         return await m.reply_text("Please enter link to Play!")
     link = m.text.split(None, 1)[1]
     if not "https" in link:
