@@ -58,16 +58,25 @@ pbot = Client(
     sleep_threshold=60,
     in_memory=True,
 )
-
 user = Client(
     "MerissaMusic",
     api_id=API_ID,
     api_hash=API_HASH,
     session_string=str(STRING_SESSION),
 )
-
 pytgcalls = PyTgCalls(user)
-
+updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
+telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
+dispatcher = updater.dispatcher
+aiohttpsession = ClientSession()
+BOT_ID = dispatcher.bot.id
+BOT_USERNAME = dispatcher.bot.username
+BOT_NAME = dispatcher.bot.first_name
+BOT_MENTION = ""
+ASS_ID = ""
+ASS_NAME = ""
+ASS_USERNAME = ""
+ASS_MENTION = ""
 
 async def startpyro():
     global BOT_ID, BOT_NAME, BOT_USERNAME, BOT_MENTION
@@ -98,24 +107,8 @@ async def startpyro():
     await pytgcalls.start()
     LOGGER.info("Pytgcalls Started")
 
-
 DEV_USERS.add(OWNER_ID)
-
 sw = None
-
-updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
-telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
-dispatcher = updater.dispatcher
-aiohttpsession = ClientSession()
-
-BOT_ID = dispatcher.bot.id
-BOT_USERNAME = dispatcher.bot.username
-BOT_NAME = dispatcher.bot.first_name
-BOT_MENTION = ""
-ASS_ID = ""
-ASS_NAME = ""
-ASS_USERNAME = ""
-ASS_MENTION = ""
 
 DRAGONS = list(DRAGONS) + list(DEV_USERS)
 DEV_USERS = list(DEV_USERS)
