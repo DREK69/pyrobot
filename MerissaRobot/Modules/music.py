@@ -421,6 +421,25 @@ async def play(_, message: Message):
 
     return await merissa.delete()
 
+@app.on_message(filters.command(["clearcache", "rmdownloads"]) & filters.user(OWNER_ID))
+async def clear_misc(_, message: Message):
+    try:
+        await message.delete()
+    except:
+        pass
+    downloads = os.path.realpath("downloads")
+    down_dir = os.listdir(downloads)
+    pth = os.path.realpath(".")
+    os_dir = os.listdir(pth)
+
+    if down_dir:
+        for file in down_dir:
+            os.remove(os.path.join(downloads, file))
+    if os_dir:
+        for lel in os.listdir(pth):
+            os.system("rm -rf *.webm *.jpg *.png")
+    await message.reply_text("All temp file Cleaned.")
+
 
 @pbot.on_callback_query(filters.regex(pattern=r"^(resume_cb|pause_cb|skip_cb|end_cb)$"))
 @admin_check_cb
