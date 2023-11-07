@@ -7,7 +7,6 @@ import time
 import traceback
 from sys import argv
 
-import requests
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import BadRequest, Unauthorized
 from telegram.ext import (
