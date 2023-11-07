@@ -65,6 +65,35 @@ user = Client(
 
 pytgcalls = PyTgCalls(user)
 
+async def startpyro():
+    global BOT_ID, BOT_NAME, BOT_USERNAME, BOT_MENTION
+    global ASS_ID, ASS_NAME, ASS_USERNAME, ASS_MENTION
+    try:
+        await pbot.start()
+        LOGGER.info("Pyrogram Started")
+    except FloodWait as e:
+        LOGGER.info(
+            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
+        )
+        time.sleep(e.value)
+        await pbot.start()
+    getme = await pbot.get_me()
+    BOT_ID = getme.id
+    BOT_NAME = getme.first_name
+    BOT_USERNAME = getme.username
+    BOT_MENTION = getme.mention
+    await user.start()
+    getme2 = await user.get_me()
+    ASS_ID = getme2.id
+    ASS_NAME = getme2.first_name + " " + (getme2.last_name or "")
+    ASS_USERNAME = getme2.username
+    ASS_MENTION = getme2.mention
+    LOGGER.info("Userbot Started")
+    await pbot.send_message(-1001446814207, "Bot Started")
+    await user.send_message(-1001446814207, "Assistant Started")
+    await pytgcalls.start()
+    LOGGER.info("Pytgcalls Started")
+
 DEV_USERS.add(OWNER_ID)
 
 sw = None
@@ -77,11 +106,11 @@ aiohttpsession = ClientSession()
 BOT_ID = dispatcher.bot.id
 BOT_USERNAME = dispatcher.bot.username
 BOT_NAME = dispatcher.bot.first_name
-BOT_MENTION = "https://t.me/MerissaRobot"
-ASS_ID = "5249696122"
-ASS_NAME = "Merissa Assistant"
-ASS_USERNAME = "MerissaAssistant"
-ASS_MENTION = "https://t.me/merissaassistant"
+BOT_MENTION = ""
+ASS_ID = ""
+ASS_NAME = ""
+ASS_USERNAME = ""
+ASS_MENTION = ""
 
 DRAGONS = list(DRAGONS) + list(DEV_USERS)
 DEV_USERS = list(DEV_USERS)
