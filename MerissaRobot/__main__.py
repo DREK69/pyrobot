@@ -8,7 +8,6 @@ import traceback
 from sys import argv
 
 import requests
-from pyrogram.errors.exceptions.flood_420 import FloodWait
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import BadRequest, Unauthorized
 from telegram.ext import (
@@ -29,12 +28,9 @@ from MerissaRobot import (
     SUPPORT_CHAT,
     TOKEN,
     dispatcher,
-    pbot,
-    pytgcalls,
+    startpyro,
     telethn,
     updater,
-    user,
-    startpyro,
 )
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
