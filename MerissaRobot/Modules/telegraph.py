@@ -15,7 +15,7 @@ auth_url = r["auth_url"]
 @pbot.on_message(filters.command("tgm"))
 async def get_link_group(client, message):
     try:
-        text = await message.reply("Processing...")
+        text = await message.reply_text("Processing...")
 
         async def progress(current, total):
             await text.edit_text(f"📥 Downloading media... {current * 100 / total:.1f}%")
@@ -44,7 +44,7 @@ async def get_link_group(client, message):
 @pbot.on_message(filters.command("tgt"))
 async def get_link_group(client, message):
     optional_title = message.text.split(None, 1)[1]
-    m = await message.reply_text("Processing")
+    m = await message.reply_text("Processing...")
 
     async def progress(current, total):
         await m.edit_text(f"📥 Downloading media... {current * 100 / total:.1f}%")
