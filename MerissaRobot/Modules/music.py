@@ -19,6 +19,8 @@ from pyrogram.types import (
     Message,
     Voice,
 )
+from MerissaRobot.Utils.Helpers.permissions import adminsOnly
+
 from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded
 from pytgcalls.types import AudioPiped, HighQualityAudio, Update
 from telegram import InlineKeyboardButton as IKB
@@ -602,7 +604,7 @@ async def admin_cbs(_, query: CallbackQuery):
 
 
 @pbot.on_message(filters.command(["pause"]) & filters.group)
-@admin_check
+@adminsOnly("can_manage_video_chats")
 async def pause_str(_, message: Message):
     try:
         await message.delete()
@@ -621,7 +623,7 @@ async def pause_str(_, message: Message):
 
 
 @pbot.on_message(filters.command(["stop", "end"]) & filters.group)
-@admin_check
+@adminsOnly("can_manage_video_chats")
 async def stop_str(_, message: Message):
     try:
         await message.delete()
@@ -640,7 +642,7 @@ async def stop_str(_, message: Message):
 
 
 @pbot.on_message(filters.command(["resume"]) & filters.group)
-@admin_check
+@adminsOnly("can_manage_video_chats")
 async def res_str(_, message: Message):
     try:
         await message.delete()
@@ -658,7 +660,7 @@ async def res_str(_, message: Message):
 
 
 @pbot.on_message(filters.command(["skip", "next"]) & filters.group)
-@admin_check
+@adminsOnly("can_manage_video_chats")
 async def skip_str(_, message: Message):
     try:
         await message.delete()
