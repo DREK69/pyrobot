@@ -13,7 +13,7 @@ from MerissaRobot.helpers import subscribe
 )
 @subscribe
 async def token(client, message):
-    m = await mesage.reply_text("Processing")
+    m = await message.reply_text("Processing")
     toggle = leveldb["myFirstDatabase"]["jsons"]
     user = leveldb["MerissaApi"]["user"]
     chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
