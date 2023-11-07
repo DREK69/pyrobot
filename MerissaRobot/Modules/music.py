@@ -20,7 +20,13 @@ from pyrogram.types import (
     Voice,
 )
 from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded
-from pytgcalls.types import AudioPiped, HighQualityAudio, HighQualityVideo, Update, AudioVideoPiped
+from pytgcalls.types import (
+    AudioPiped,
+    AudioVideoPiped,
+    HighQualityAudio,
+    HighQualityVideo,
+    Update,
+)
 from telegram import InlineKeyboardButton as IKB
 from youtube_search import YoutubeSearch
 
