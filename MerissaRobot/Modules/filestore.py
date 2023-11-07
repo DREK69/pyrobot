@@ -18,7 +18,7 @@ async def _startfile(bot, update):
         return
     code = update.command[1]
     if "info" in code:
-        m = await message.reply_text("🔎 Fetching Info!")
+        m = await update.reply_text("🔎 Fetching Info!")
         videoid = code.split("_")[1]
         query = f"https://www.youtube.com/watch?v={videoid}"
         results = VideosSearch(query, limit=1)
@@ -56,8 +56,7 @@ async def _startfile(bot, update):
             ]
         )
         await m.delete()
-        await app.send_photo(
-            message.chat.id,
+        await update.reply_photo(
             photo=thumbnail,
             caption=searched_text,
             reply_markup=key,
