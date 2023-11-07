@@ -615,10 +615,6 @@ async def lyrics_cb(bot, query):
             ]
         )
         await query.edit_message_reply_markup(button)
-        await query.message.reply_text(
-            f"Click on Instant[ ]({link})View For Lyrics. (This Feature support only on Mobile. Ignore This Message if you are PC User)",
-            parse_mode=ParseMode.MARKDOWN,
-        )
     else:
         button = InlineKeyboardMarkup(
             [
