@@ -453,7 +453,7 @@ async def vplay(c: Client, m: Message):
     await x.edit_text("Downloading...")
     shub, ytlink = await ytdl(link)
     if shub == 0:
-        return await loser.edit(f"❌ yt-dl issues detected\n\n» `{ytlink}`")
+        return await x.edit(f"❌ yt-dl issues detected\n\n» `{ytlink}`")
     await user.join_group_call(-1001708378054, AudioVideoPiped(ytlink, HighQualityAudio(), amaze))
     await x.edit_text("Video Streaming Started...")
 
