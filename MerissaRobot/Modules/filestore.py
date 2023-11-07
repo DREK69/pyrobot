@@ -4,7 +4,7 @@ from pyrogram import filters
 from pyrogram.errors import ListenerCanceled
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from MerissaRobot import pbot
+from MerissaRobot import pbot, BOT_NAME
 from MerissaRobot.helpers import postreq, subscribe
 
 TRACK_CHANNEL = int("-1001900195958")
@@ -17,7 +17,58 @@ async def _startfile(bot, update):
     if len(update.command) != 2:
         return
     code = update.command[1]
-    if "store" in code:
+    if "info" in code:
+        m = await message.reply_text("🔎 Fetching Info!")
+        videoid = code.split("_")[1]
+        query = f"https://www.youtube.com/watch?v={videoid}"
+        results = VideosSearch(query, limit=1)
+        for result in (await results.next())["result"]:
+            title = result["title"]
+            duration = result["duration"]
+            views = result["viewCount"]["short"]
+            thumbnail = result["thumbnails"][0]["url"].split("?")[0]
+            channellink = result["channel"]["link"]
+            channel = result["channel"]["name"]
+            link = result["link"]
+            published = result["publishedTime"]
+        searched_text = f"""
+🔍__**Video Track Information**__
+
+❇️**Title:** {title}
+
+⏳**Duration:** {duration} Mins
+👀**Views:** `{views}`
+⏰**Published Time:** {published}
+🎥**Channel Name:** {channel}
+📎**Channel Link:** [Visit From Here]({channellink})
+🔗**Video Link:** [Link]({link})
+
+⚡️ __Searched Powered By {BOT_NAME}__"""
+        key = InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            text="🎥 Watch ", url=f"{link}"
+                        ),
+                        InlineKeyboardButton(
+                            text="📥 Download ", url=f"ytdown {videoid}"
+                        ),
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            text="🔄 Close", callback_data="close"
+                        ),
+                    ],
+                ]
+            )
+        await m.delete()
+        await app.send_photo(
+            message.chat.id,
+            photo=thumbnail,
+            caption=searched_text,
+            reply_markup=key,
+        )
+    elif "store" in code:
         ok = await update.reply_text("Uploading Media...")
         cmd, unique_id, msg_id = code.split("_")
 
