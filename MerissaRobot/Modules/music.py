@@ -601,7 +601,7 @@ async def admin_cbs(_, query: CallbackQuery):
             )
 
 
-@app.on_message(filters.command(["pause"]) & filters.group)
+@pbot.on_message(filters.command(["pause"]) & filters.group)
 @admin_check
 async def pause_str(_, message: Message):
     try:
@@ -620,7 +620,7 @@ async def pause_str(_, message: Message):
     )
 
 
-@app.on_message(filters.command(["stop", "end"]) & filters.group)
+@pbot.on_message(filters.command(["stop", "end"]) & filters.group)
 @admin_check
 async def stop_str(_, message: Message):
     try:
@@ -639,7 +639,7 @@ async def stop_str(_, message: Message):
     )
 
 
-@app.on_message(filters.command(["resume"]) & filters.group)
+@pbot.on_message(filters.command(["resume"]) & filters.group)
 @admin_check
 async def res_str(_, message: Message):
     try:
@@ -657,7 +657,7 @@ async def res_str(_, message: Message):
     )
 
 
-@app.on_message(filters.command(["skip", "next"]) & filters.group)
+@pbot.on_message(filters.command(["skip", "next"]) & filters.group)
 @admin_check
 async def skip_str(_, message: Message):
     try:
