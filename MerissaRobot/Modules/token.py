@@ -42,7 +42,7 @@ async def token(client, message):
         )
     else:
         MerissaAPI = is_user["API"]
-        await message.reply_text(
+        await m.edit_text(
             f"Your Merissa Token: `{MerissaAPI}` Do not give this token to anmerissa else!\n Join @MerissaxSupport"
         )
 
