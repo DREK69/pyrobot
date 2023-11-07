@@ -35,10 +35,10 @@ async def chk_usr(_, message: Message):
     ):
         msg += f"""
 🔹 Imposter Detected 👀:
-➖➖➖➖➖➖➖➖➖➖➖➖
+➖➖➖➖➖➖➖➖➖➖
 ▪️User: {message.from_user.mention}
 ▪️Id: {message.from_user.id}
-➖➖➖➖➖➖➖➖➖➖➖➖\n
+➖➖➖➖➖➖➖➖➖➖\n
 """
     if usernamebefore != message.from_user.username:
         usernamebefore = f"@{usernamebefore}" if usernamebefore else "NO USERNAME"
@@ -49,10 +49,10 @@ async def chk_usr(_, message: Message):
         )
         msg += """
 🔹Changed Username:
-➖➖➖➖➖➖➖➖➖➖➖➖
+➖➖➖➖➖➖➖➖➖➖
 ▪️FROM: {bef}
 ▪️TO: {aft}
-➖➖➖➖➖➖➖➖➖➖➖➖\n
+➖➖➖➖➖➖➖➖➖➖\n
 """.format(
             bef=usernamebefore, aft=usernameafter
         )
@@ -65,10 +65,10 @@ async def chk_usr(_, message: Message):
     if first_name != message.from_user.first_name:
         msg += """
 🔹Changed First Name:
-➖➖➖➖➖➖➖➖➖➖➖➖
+➖➖➖➖➖➖➖➖➖➖
 ▪️From: {bef}
 ▪️To: {aft}
-➖➖➖➖➖➖➖➖➖➖➖➖\n
+➖➖➖➖➖➖➖➖➖➖\n
 """.format(
             bef=first_name, aft=message.from_user.first_name
         )
@@ -83,10 +83,10 @@ async def chk_usr(_, message: Message):
         lastname_after = message.from_user.last_name or "NO LAST NAME"
         msg += """
 🔹Changed Last Name:
-➖➖➖➖➖➖➖➖➖➖➖➖
+➖➖➖➖➖➖➖➖➖➖
 ▪️From: {bef}
 ▪️To: {aft}
-➖➖➖➖➖➖➖➖➖➖➖➖\n
+➖➖➖➖➖➖➖➖➖➖\n
 """.format(
             bef=lastname_before, aft=lastname_after
         )
