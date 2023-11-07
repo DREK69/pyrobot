@@ -600,6 +600,7 @@ async def admin_cbs(_, query: CallbackQuery):
                 ),
             )
 
+
 @app.on_message(filters.command(["pause"]) & filters.group)
 @admin_check
 async def pause_str(_, message: Message):
@@ -609,9 +610,7 @@ async def pause_str(_, message: Message):
         pass
 
     if not await is_streaming(message.chat.id):
-        return await message.reply_text(
-            "Did you remember that you resume the stream?"
-        )
+        return await message.reply_text("Did you remember that you resume the stream?")
 
     await pytgcalls.pause_stream(message.chat.id)
     await stream_off(message.chat.id)
@@ -619,6 +618,7 @@ async def pause_str(_, message: Message):
         text=f"**Stream Paused**\n\nBy: {message.from_user.mention}",
         reply_markup=close_key,
     )
+
 
 @app.on_message(filters.command(["stop", "end"]) & filters.group)
 @admin_check
@@ -638,6 +638,7 @@ async def stop_str(_, message: Message):
         reply_markup=close_key,
     )
 
+
 @app.on_message(filters.command(["resume"]) & filters.group)
 @admin_check
 async def res_str(_, message: Message):
@@ -654,6 +655,7 @@ async def res_str(_, message: Message):
         text=f"**Stream Resumed**\n\nBy : {message.from_user.mention}",
         reply_markup=close_key,
     )
+
 
 @app.on_message(filters.command(["skip", "next"]) & filters.group)
 @admin_check
@@ -674,8 +676,8 @@ async def skip_str(_, message: Message):
         except:
             return
     else:
-        title = get[0]["title"]
-        duration = get[0]["duration"]
+        get[0]["title"]
+        get[0]["duration"]
         file_path = get[0]["file_path"]
         videoid = get[0]["videoid"]
         req_by = get[0]["req"]
@@ -702,6 +704,7 @@ async def skip_str(_, message: Message):
             caption=f"📡 Streaming Started\n\n👤Requested By:{req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
             reply_markup=buttons,
         )
+
 
 @pbot.on_message(filters.command("activevc"))
 async def activevc(_, message: Message):
