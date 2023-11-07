@@ -423,7 +423,9 @@ async def play(_, message: Message):
     return await merissa.delete()
 
 
-@pbot.on_message(filters.command(["clearcache", "rmdownloads"]) & filters.user(OWNER_ID))
+@pbot.on_message(
+    filters.command(["clearcache", "rmdownloads"]) & filters.user(OWNER_ID)
+)
 async def clear_misc(_, message: Message):
     try:
         await message.delete()
