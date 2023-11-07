@@ -2,16 +2,26 @@ import os
 import textwrap
 
 import cv2
+from inspect import getfullargspec
+
 from PIL import Image, ImageDraw, ImageFont
 from pyrogram import filters
 from pyrogram.types import Message
 
-from MerissaRobot import eor as edit_or_reply
 from MerissaRobot import pbot
 
+async def edit_or_reply(msg: Message, **kwargs):
+    func = (
+        (msg.edit_text if msg.from_user.is_self else msg.reply)
+        if msg.from_user
+        else msg.reply
+    )
+    spec = getfullargspec(func.__wrapped__).args
+    return await func(**{k: v for k, v in kwargs.items() if k in spec})
+    
 
 @pbot.on_message(filters.command("tiny"))
-async def tinying(client: pbot, message: Message):
+async def tiny(client: pbot, message: Message):
     reply = message.reply_to_message
     if not (reply and (reply.media)):
         return await edit_or_reply(message, text="**Please Reply to Sticker**")
