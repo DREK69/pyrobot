@@ -5,7 +5,7 @@ from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler
 from telethon import events
 
-from MerissaRobot import dispatcher, telethn
+from MerissaRobot import dispatcher
 from MerissaRobot.Handler.chat_status import dev_plus
 
 DEBUG_MODE = False
@@ -28,23 +28,6 @@ def debug(update: Update, context: CallbackContext):
             message.reply_text("Debug mode is currently on.")
         else:
             message.reply_text("Debug mode is currently off.")
-
-
-@telethn.on(events.NewMessage(pattern="[/!].*"))
-async def i_do_nothing_yes(event):
-    global DEBUG_MODE
-    if DEBUG_MODE:
-        if os.path.exists("updates.txt"):
-            with open("updates.txt", "r") as f:
-                text = f.read()
-            with open("updates.txt", "w+") as f:
-                f.write(text + f"\n-{event.from_id} ({event.chat_id}) : {event.text}")
-        else:
-            with open("updates.txt", "w+") as f:
-                f.write(
-                    f"- {event.from_id} ({event.chat_id}) : {event.text} | {datetime.datetime.now()}",
-                )
-
 
 support_chat = os.getenv("SUPPORT_CHAT")
 
