@@ -441,14 +441,14 @@ async def play(_, message: Message):
     return await merissa.delete()
 
 
-@Client.on_message(command("vplay") & filters.private)
+@pbot.on_message(filters.command("vplay") & filters.private)
 async def vplay(c: Client, m: Message):
     await m.delete()
     if len(message.command) < 2:
-        return await merissa.reply_text("Please enter link to Play!")
-    link = message.text.split(None, 1)[1]
+        return await m.reply_text("Please enter link to Play!")
+    link = m.text.split(None, 1)[1]
     if not "https" in link:
-        return await merissa.reply_text("Please enter link to Play!")
+        return await m.reply_text("Please enter link to Play!")
     x = await m.reply_text("Processing...")
     await x.edit_text("Downloading...")
     shub, ytlink = await ytdl(link)
