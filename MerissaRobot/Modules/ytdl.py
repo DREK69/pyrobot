@@ -5,7 +5,7 @@ import yt_dlp
 from mutagen.mp4 import MP4
 from pykeyboard import InlineKeyboard
 from pyrogram import Client, filters
-from pyrogram.enums import ChatAction, ParseMode
+from pyrogram.enums import ChatAction
 from pyrogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
