@@ -617,7 +617,6 @@ async def pause_str(_, message: Message):
     await stream_off(message.chat.id)
     return await message.reply_text(
         text=f"**Stream Paused**\n\nBy: {message.from_user.mention}",
-        reply_markup=close_key,
     )
 
 
@@ -636,7 +635,6 @@ async def stop_str(_, message: Message):
 
     return await message.reply_text(
         text=f"**Stream Ended/Stopped**\n\nBy : {message.from_user.mention}",
-        reply_markup=close_key,
     )
 
 
@@ -654,7 +652,6 @@ async def res_str(_, message: Message):
     await pytgcalls.resume_stream(message.chat.id)
     return await message.reply_text(
         text=f"**Stream Resumed**\n\nBy : {message.from_user.mention}",
-        reply_markup=close_key,
     )
 
 
@@ -672,7 +669,6 @@ async def skip_str(_, message: Message):
             await pytgcalls.leave_group_call(message.chat.id)
             await message.reply_text(
                 text=f"**Stream Skipped**\n\nBy : {message.from_user.mention}\n\n**No more Queue Track in** {message.chat.title}, **Leaving Voicechat.**",
-                reply_markup=close_key,
             )
         except:
             return
@@ -697,14 +693,28 @@ async def skip_str(_, message: Message):
 
         await message.reply_text(
             text=f"**Skipped Stream**\n\nBy : {message.from_user.mention}",
-            reply_markup=close_key,
         )
         img = await gen_thumb(videoid, user_id)
         return await message.reply_photo(
             photo=img,
             caption=f"📡 Streaming Started\n\n👤Requested By:{req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
-            reply_markup=buttons,
-        )
+            reply_markup=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                text="Stream Skipped", callback_data="_StreaMing"
+                            ),
+                        ],
+                        [
+                            InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
+                            InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
+                            InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
+                            InlineKeyboardButton(text="⏹", callback_data="end_cb"),
+                        ],
+                    ]
+                ),
+            )
+
 
 
 @pbot.on_message(filters.command("activevc"))
