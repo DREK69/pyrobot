@@ -149,7 +149,7 @@ async def inline_query_handler(client, query):
             tex = text.split(None, 1)[1].strip()
             answerss = await spotify_func(answers, tex)
             await client.answer_inline_query(query.id, results=answerss)
-            
+
         elif text.split()[0] == "vc":
             answerss = await vc_func(answers)
             await client.answer_inline_query(query.id, results=answerss)
