@@ -4,7 +4,7 @@ from pyrogram import filters
 from pyrogram.errors import ListenerCanceled
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from MerissaRobot import pbot, BOT_NAME
+from MerissaRobot import BOT_NAME, pbot
 from MerissaRobot.helpers import postreq, subscribe
 
 TRACK_CHANNEL = int("-1001900195958")
@@ -45,22 +45,16 @@ async def _startfile(bot, update):
 
 ⚡️ __Searched Powered By {BOT_NAME}__"""
         key = InlineKeyboardMarkup(
+            [
                 [
-                    [
-                        InlineKeyboardButton(
-                            text="🎥 Watch ", url=f"{link}"
-                        ),
-                        InlineKeyboardButton(
-                            text="📥 Download ", url=f"ytdown {videoid}"
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            text="🔄 Close", callback_data="close"
-                        ),
-                    ],
-                ]
-            )
+                    InlineKeyboardButton(text="🎥 Watch ", url=f"{link}"),
+                    InlineKeyboardButton(text="📥 Download ", url=f"ytdown {videoid}"),
+                ],
+                [
+                    InlineKeyboardButton(text="🔄 Close", callback_data="close"),
+                ],
+            ]
+        )
         await m.delete()
         await app.send_photo(
             message.chat.id,
