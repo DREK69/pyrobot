@@ -699,22 +699,21 @@ async def skip_str(_, message: Message):
             photo=img,
             caption=f"📡 Streaming Started\n\n👤Requested By:{req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
             reply_markup=InlineKeyboardMarkup(
+                [
                     [
-                        [
-                            InlineKeyboardButton(
-                                text="Stream Skipped", callback_data="_StreaMing"
-                            ),
-                        ],
-                        [
-                            InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
-                            InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
-                            InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
-                            InlineKeyboardButton(text="⏹", callback_data="end_cb"),
-                        ],
-                    ]
-                ),
-            )
-
+                        InlineKeyboardButton(
+                            text="Stream Skipped", callback_data="_StreaMing"
+                        ),
+                    ],
+                    [
+                        InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
+                        InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
+                        InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
+                        InlineKeyboardButton(text="⏹", callback_data="end_cb"),
+                    ],
+                ]
+            ),
+        )
 
 
 @pbot.on_message(filters.command("activevc"))
