@@ -20,7 +20,7 @@ from pyrogram.types import (
     Voice,
 )
 from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded
-from pytgcalls.types import AudioPiped, HighQualityAudio, Update
+from pytgcalls.types import AudioPiped, HighQualityAudio, Update, HighQualityVideo
 from telegram import InlineKeyboardButton as IKB
 from youtube_search import YoutubeSearch
 
@@ -450,14 +450,12 @@ async def vplay(c: Client, m: Message):
     if not "https" in link:
         return await merissa.reply_text("Please enter link to Play!")
     x = await m.reply_text("Processing...")
-    m.reply_to_message
-    m.from_user.id
     await x.edit_text("Downloading...")
     shub, ytlink = await ytdl(link)
     if shub == 0:
         return await x.edit(f"❌ yt-dl issues detected\n\n» `{ytlink}`")
     await user.join_group_call(
-        -1001708378054, AudioVideoPiped(ytlink, HighQualityAudio(), amaze)
+        -1001708378054, AudioVideoPiped(ytlink, HighQualityAudio(), HighQualityVideo())
     )
     await x.edit_text("Video Streaming Started...")
 
