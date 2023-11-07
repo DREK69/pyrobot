@@ -1,14 +1,14 @@
 import os
 import textwrap
-
-import cv2
 from inspect import getfullargspec
 
+import cv2
 from PIL import Image, ImageDraw, ImageFont
 from pyrogram import filters
 from pyrogram.types import Message
 
 from MerissaRobot import pbot
+
 
 async def edit_or_reply(msg: Message, **kwargs):
     func = (
@@ -18,7 +18,7 @@ async def edit_or_reply(msg: Message, **kwargs):
     )
     spec = getfullargspec(func.__wrapped__).args
     return await func(**{k: v for k, v in kwargs.items() if k in spec})
-    
+
 
 @pbot.on_message(filters.command("tiny"))
 async def tiny(client: pbot, message: Message):
