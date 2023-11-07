@@ -215,7 +215,7 @@ async def play(_, message: Message):
     merissa = await message.reply_text("Processing Please Wait...")
     try:
         try:
-            get = await pbot.get_chat_member(message.chat.id, int(ASS_ID))
+            get = await pbot.get_chat_member(message.chat.id, ASS_ID)
         except ChatAdminRequired:
             return await merissa.edit_text(
                 f"I don't have permissions to invite users via link for inviting {BOT_NAME} Assistant to {message.chat.title}."
@@ -741,7 +741,7 @@ async def unban_ass(_, CallbackQuery):
     umm = (await pbot.get_chat_member(int(chat_id), BOT_ID)).privileges
     if umm.can_restrict_members:
         try:
-            await pbot.unban_chat_member(int(chat_id), int(ASS_ID))
+            await pbot.unban_chat_member(int(chat_id), ASS_ID)
         except:
             return await CallbackQuery.answer(
                 "Failed to unban Assistant",
