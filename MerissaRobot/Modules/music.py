@@ -551,12 +551,7 @@ async def admin_cbs(_, query: CallbackQuery):
     elif data == "end_cb":
         try:
             await _clear_(query.message.chat.id)
-            await pytgcalls.leave_group_call(query.message.chat.id)
-            await user.send_message(
-                query.message.chat.id,
-                "<b>•Music PlayBack Ended\n•Assistant Leaving This Group\n•Thanks For Using This Bot•</b>",
-            )
-            return await user.leave_chat(query.message.chat.id)
+            return await pytgcalls.leave_group_call(query.message.chat.id)
         except:
             pass
         await query.edit_message_reply_markup(
@@ -578,7 +573,7 @@ async def admin_cbs(_, query: CallbackQuery):
             try:
                 await _clear_(query.message.chat.id)
                 await pytgcalls.leave_group_call(query.message.chat.id)
-                await query.edit_message_reply_markup(
+                return await query.edit_message_reply_markup(
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
@@ -589,11 +584,6 @@ async def admin_cbs(_, query: CallbackQuery):
                         ]
                     ),
                 )
-                await user.send_message(
-                    query.message.chat.id,
-                    "<b>• Music PlayBack Ended\n• Assistant Leaving This Group\n• Thanks For Using This Bot•</b>",
-                )
-                return await user.leave_chat(query.message.chat.id)
             except:
                 return
         else:
@@ -614,13 +604,8 @@ async def admin_cbs(_, query: CallbackQuery):
             except Exception as ex:
                 LOGGER.error(ex)
                 await _clear_(query.message.chat.id)
-                await pytgcalls.leave_group_call(query.message.chat.id)
-                await user.send_message(
-                    query.message.chat.id,
-                    "<b>• Music PlayBack Ended\n• Assistant Leaving This Group\n• Thanks For Using This Bot•</b>",
-                )
-                return await user.leave_chat(query.message.chat.id)
-
+                return await pytgcalls.leave_group_call(query.message.chat.id)
+                
             return await query.edit_message_media(
                 InputMediaPhoto(
                     thumb,
@@ -850,12 +835,7 @@ async def on_stream_end(pytgcalls, update: Update):
     if not get:
         try:
             await _clear_(chat_id)
-            await pytgcalls.leave_group_call(chat_id)
-            await user.send_message(
-                chat_id,
-                "<b>•Music PlayBack Ended\n•Assistant Leaving This Group\n•Thanks For Using This Bot•</b>",
-            )
-            return await user.leave_chat(chat_id)
+            return await pytgcalls.leave_group_call(chat_id)
         except:
             return
     else:
@@ -880,13 +860,8 @@ async def on_stream_end(pytgcalls, update: Update):
             )
         except:
             await _clear_(chat_id)
-            await pytgcalls.leave_group_call(chat_id)
-            await user.send_message(
-                chat_id,
-                "<b>• Music PlayBack Ended\n• Assistant Leaving This Group\n• Thanks For Using This Bot•</b>",
-            )
-            return await user.leave_chat(chat_id)
-
+            return await pytgcalls.leave_group_call(chat_id)
+            
         await process.delete()
         await pbot.send_photo(
             chat_id=chat_id,
