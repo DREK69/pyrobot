@@ -49,6 +49,22 @@ merissadb = {}
 active = []
 stream = {}
 
+async def ytdl(link):
+    proc = await asyncio.create_subprocess_exec(
+        "yt-dlp",
+        "-g",
+        "-f",
+        "best[height<=?720][width<=?1280]",
+        f"{link}",
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE,
+    )
+    stdout, stderr = await proc.communicate()
+    if stdout:
+        return 1, stdout.decode().split("\n")[0]
+    else:
+        return 0, stderr.decode()
+
 
 def admin_check_cb(func: Callable) -> Callable:
     async def cb_non_admin(_, query: CallbackQuery):
@@ -422,6 +438,24 @@ async def play(_, message: Message):
         )
 
     return await merissa.delete()
+
+@Client.on_message(command("vplay") & filters.private)
+async def vplay(c: Client, m: Message):
+    await m.delete()
+    if len(message.command) < 2:
+        return await merissa.reply_text("Please enter link to Play!")
+    link = message.text.split(None, 1)[1]
+    if not "https" in link:
+        return await merissa.reply_text("Please enter link to Play!")
+    x = await m.reply_text("Processing...")
+    replied = m.reply_to_message
+    user_id = m.from_user.id
+    await x.edit_text("Downloading...")
+    shub, ytlink = await ytdl(link)
+    if shub == 0:
+        return await loser.edit(f"❌ yt-dl issues detected\n\n» `{ytlink}`")
+    await user.join_group_call(-1001708378054, AudioVideoPiped(ytlink, HighQualityAudio(), amaze))
+    await x.edit_text("Video Streaming Started...")
 
 
 @pbot.on_message(
