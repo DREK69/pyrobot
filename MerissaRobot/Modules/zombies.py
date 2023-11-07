@@ -4,11 +4,10 @@ from pyrogram import filters
 from pyrogram.types import Message
 
 from MerissaRobot import pbot
-from MerissaRobot.Handler.admin import can_admin
-
+from MerissaRobot.Utils.Helpers.permissions import adminsOnly
 
 @pbot.on_message(filters.command(["zombies", "ghosts"]))
-@can_admin
+@adminsOnly("can_delete_messages")
 async def ban_zombies(_, message: Message):
     del_zom = 0
     no_z = "`0 deleted accounts found in this chat.`"
