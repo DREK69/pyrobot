@@ -1,9 +1,7 @@
-import datetime
 import os
 
 from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler
-from telethon import events
 
 from MerissaRobot import dispatcher
 from MerissaRobot.Handler.chat_status import dev_plus
@@ -28,6 +26,7 @@ def debug(update: Update, context: CallbackContext):
             message.reply_text("Debug mode is currently on.")
         else:
             message.reply_text("Debug mode is currently off.")
+
 
 support_chat = os.getenv("SUPPORT_CHAT")
 
