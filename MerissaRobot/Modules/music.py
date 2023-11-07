@@ -605,7 +605,7 @@ async def admin_cbs(_, query: CallbackQuery):
                 LOGGER.error(ex)
                 await _clear_(query.message.chat.id)
                 return await pytgcalls.leave_group_call(query.message.chat.id)
-                
+
             return await query.edit_message_media(
                 InputMediaPhoto(
                     thumb,
@@ -861,7 +861,7 @@ async def on_stream_end(pytgcalls, update: Update):
         except:
             await _clear_(chat_id)
             return await pytgcalls.leave_group_call(chat_id)
-            
+
         await process.delete()
         await pbot.send_photo(
             chat_id=chat_id,
