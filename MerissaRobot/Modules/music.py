@@ -19,8 +19,6 @@ from pyrogram.types import (
     Message,
     Voice,
 )
-from MerissaRobot.Utils.Helpers.permissions import adminsOnly
-
 from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded
 from pytgcalls.types import AudioPiped, HighQualityAudio, Update
 from telegram import InlineKeyboardButton as IKB
@@ -41,6 +39,7 @@ from MerissaRobot import (
     user,
 )
 from MerissaRobot.helpers import get_ytthumb
+from MerissaRobot.Utils.Helpers.permissions import adminsOnly
 
 DURATION_LIMIT = int("90")
 
