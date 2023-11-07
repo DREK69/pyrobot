@@ -34,6 +34,7 @@ from MerissaRobot import (
     telethn,
     updater,
     user,
+    startpyro,
 )
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
@@ -862,24 +863,6 @@ def main():
         telethn.run_until_disconnected()
 
     updater.idle()
-
-
-async def startpyro():
-    try:
-        await pbot.start()
-        LOGGER.info("Pyrogram Started")
-    except FloodWait as e:
-        LOGGER.info(
-            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
-        )
-        time.sleep(e.value)
-        await pbot.start()
-    await user.start()
-    LOGGER.info("Userbot Started")
-    await pbot.send_message(-1001446814207, "Bot Started")
-    await user.send_message(-1001446814207, "Assistant Started")
-    await pytgcalls.start()
-    LOGGER.info("Pytgcalls Started")
 
 
 if __name__ == "__main__":
