@@ -30,6 +30,7 @@ from MerissaRobot import (
     ASS_NAME,
     ASS_USERNAME,
     BOT_ID,
+    OWNER_ID
     BOT_NAME,
     BOT_USERNAME,
     LOGGER,
