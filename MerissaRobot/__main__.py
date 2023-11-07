@@ -181,41 +181,6 @@ def start(update: Update, context: CallbackContext):
                         ]
                     ),
                 )
-            elif args[0].startswith("info_"):
-                videoid = args[0].split("info_")[1]
-                link = f"https://m.youtube.com/watch?v={videoid}"
-                yt = requests.get(
-                    f"https://api.princexd.tech/ytinfo?link={link}"
-                ).json()
-                videoid = yt["id"]
-                thumbnail = requests.get(
-                    f"https://api.princexd.tech/ytthumb?videoid={videoid}"
-                ).json()["url"]
-                title = yt["title"]
-                duration = yt["duration"]
-                dur = convertmin(duration)
-                update.effective_message.reply_photo(
-                    thumbnail,
-                    caption=f"Title: {title}\nDuration: {dur}\n\nSelect Your Preferred Format from Below:",
-                    reply_markup=InlineKeyboardMarkup(
-                        [
-                            [
-                                InlineKeyboardButton(
-                                    "🔊 Audio",
-                                    callback_data=f"audio {videoid}",
-                                ),
-                                InlineKeyboardButton(
-                                    "🎥 Video", callback_data=f"formats {videoid}"
-                                ),
-                            ],
-                            [
-                                InlineKeyboardButton(
-                                    "🗑️ Close", callback_data="cb_close"
-                                ),
-                            ],
-                        ]
-                    ),
-                )
             elif args[0].lower().startswith("stngs_"):
                 match = re.match("stngs_(.*)", args[0].lower())
                 chat = dispatcher.bot.getChat(match.group(1))
