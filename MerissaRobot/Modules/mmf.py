@@ -1,101 +1,104 @@
 import os
 import textwrap
 
+import cv2
 from PIL import Image, ImageDraw, ImageFont
+from pyrogram import filters
+from pyrogram.types import Message
 
-from MerissaRobot import telethn as bot
-from MerissaRobot.events import register
+from MerissaRobot import eor as edit_or_reply
+from MerissaRobot import pbot
 
 
-async def get_reply_image(v):
-    if not v.reply_to:
-        return None
-    r = await v.get_reply_message()
-    if not r.media:
-        return None
-    if isinstance(r.media, telethon.tl.types.MessageMediaDocument):
-        if r.media.document.mime_type.split("/")[0] == "image":
-            return r
+@pbot.on_message(filters.command("tiny"))
+async def tinying(client: pbot, message: Message):
+    reply = message.reply_to_message
+    if not (reply and (reply.media)):
+        return await edit_or_reply(message, text="**Please Reply to Sticker**")
+    Man = await edit_or_reply(message, text="`Processing . . .`")
+    ik = await client.download_media(reply)
+    im1 = Image.open("MerissaRobot/Utils/Resources/ken.png")
+    if ik.endswith(".tgs"):
+        await client.download_media(reply, "man.tgs")
+        await bash("lottie_convert.py man.tgs json.json")
+        json = open("json.json", "r")
+        jsn = json.read()
+        jsn = jsn.replace("512", "2000")
+        ("json.json", "w").write(jsn)
+        await bash("lottie_convert.py json.json man.tgs")
+        file = "man.tgs"
+        os.remove("json.json")
+    elif ik.endswith((".gif", ".mp4")):
+        iik = cv2.VideoCapture(ik)
+        busy = iik.read()
+        cv2.imwrite("i.png", busy)
+        fil = "i.png"
+        im = Image.open(fil)
+        z, d = im.size
+        if z == d:
+            xxx, yyy = 200, 200
         else:
-            return None
-    elif isinstance(r.media, telethon.tl.types.MessageMediaPhoto):
-        return r
+            t = z + d
+            a = z / t
+            b = d / t
+            aa = (a * 100) - 50
+            bb = (b * 100) - 50
+            xxx = 200 + 5 * aa
+            yyy = 200 + 5 * bb
+        k = im.resize((int(xxx), int(yyy)))
+        k.save("k.png", format="PNG", optimize=True)
+        im2 = Image.open("k.png")
+        back_im = im1.copy()
+        back_im.paste(im2, (150, 0))
+        back_im.save("o.webp", "WEBP", quality=95)
+        file = "o.webp"
+        os.remove(fil)
+        os.remove("k.png")
     else:
-        return None
+        im = Image.open(ik)
+        z, d = im.size
+        if z == d:
+            xxx, yyy = 200, 200
+        else:
+            t = z + d
+            a = z / t
+            b = d / t
+            aa = (a * 100) - 50
+            bb = (b * 100) - 50
+            xxx = 200 + 5 * aa
+            yyy = 200 + 5 * bb
+        k = im.resize((int(xxx), int(yyy)))
+        k.save("k.png", format="PNG", optimize=True)
+        im2 = Image.open("k.png")
+        back_im = im1.copy()
+        back_im.paste(im2, (150, 0))
+        back_im.save("o.webp", "WEBP", quality=95)
+        file = "o.webp"
+        os.remove("k.png")
+    await message.reply_sticker(file)
+    await Man.delete()
+    os.remove(file)
+    os.remove(ik)
 
 
-@register(pattern="^/mmf ?(.*)")
-async def handler(event):
-    if event.fwd_from:
+@pbot.on_message(filters.command(["mmf", "memify"]))
+async def memify(client: pbot, message: Message):
+    if not message.reply_to_message.id:
+        await edit_or_reply(message, text="**Please Reply to message!**")
         return
-    if not event.reply_to_msg_id:
-        await event.reply(
-            "`Provide Some Text To Draw! And Reply To Image/Stickers EXAMPLE: /mmf text`"
-        )
-        return
-    reply_message = await event.get_reply_message()
+    reply_message = message.reply_to_message
     if not reply_message.media:
-        await event.reply("```Reply to a image/sticker.```")
+        await edit_or_reply(message, text="**Please Reply to Media/Sticker!**")
         return
-    file = await bot.download_media(reply_message)
-    msg = await event.reply("```Memifying this image! (」ﾟﾛﾟ)｣ ```")
-    text = str(event.pattern_match.group(1)).strip()
+    file = await client.download_media(reply_message)
+    Man = await edit_or_reply(message, text="`Processing . . .`")
+    text = message.text.split(None, 1)[1]
     if len(text) < 1:
-        return await msg.edit("You might want to try `/mmf text`")
+        return await msg.edit(f"try: `/mmf text`")
     meme = await drawText(file, text)
-    await bot.send_file(event.chat_id, file=meme, force_document=False)
-    await msg.delete()
+    await message.reply_sticker(meme)
+    await Man.delete()
     os.remove(meme)
-
-
-def resize_image(image, size):
-    return image.resize(size, Image.ANTIALIAS)
-
-
-@register(pattern="(stoi|itos)")
-async def _stoi(e):
-    cmd = e.text.split(" ")[0][1:]
-    i = await get_reply_image(e)
-    if not i:
-        return await e.reply("Reply to an image/sticker")
-    image = await i.download_media()
-    IMAGE = Image.open(image)
-    if cmd == "stoi":
-        filename = "".join(image.split(".")[:1]) + ".png"
-    elif cmd == "itos":
-        IMAGE = resize_image(IMAGE, (512, 512))
-        filename = "".join(image.split(".")[:1]) + ".webp"
-    IMAGE.save(filename)
-    await e.reply(file=filename)
-    os.remove(filename)
-    os.remove(image)
-
-
-@register(pattern="resize")
-async def _resize(e):
-    try:
-        size = e.text.split(" ")[1]
-        size = size.split("x")
-        size = (int(size[0]), int(size[1]))
-    except (TypeError, IndexError):
-        return await e.reply("Usage: `resize <width>x<height>`")
-    i = await get_reply_image(e)
-    if (size[0] * size[1]) > 8294400:
-        return await e.reply("Max resolution supported is 3840x2160.")
-    if not i:
-        return await e.reply("Reply to an image/sticker")
-    image = await i.download_media()
-    IMAGE = Image.open(image)
-    IMAGE = resize_image(IMAGE, size)
-    filename = "resized_" + image
-    IMAGE.save(filename)
-    await e.reply(file=filename)
-    os.remove(filename)
-    os.remove(image)
-
-
-# Taken from https://github.com/UsergeTeam/Userge-Plugins/blob/master/plugins/memify.py#L64
-# Maybe replyed to suit the needs of this module
 
 
 async def drawText(image_path, text):
