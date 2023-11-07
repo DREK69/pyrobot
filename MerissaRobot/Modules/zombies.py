@@ -6,6 +6,7 @@ from pyrogram.types import Message
 from MerissaRobot import pbot
 from MerissaRobot.Utils.Helpers.permissions import adminsOnly
 
+
 @pbot.on_message(filters.command(["zombies", "ghosts"]))
 @adminsOnly("can_delete_messages")
 async def ban_zombies(_, message: Message):
