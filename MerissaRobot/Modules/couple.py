@@ -31,7 +31,7 @@ def dt_tom():
 today = str(dt()[0])
 tomorrow = str(dt_tom())
 
-COUPLE_IMG = "https://te.legra.ph/file/1258ebc1fb8fa0fcbc70b.jpg"
+COUPLE_IMG = "https://te.legra.ph/file/e2f2ab20bafe8064b6d1d.jpg"
 
 
 @pbot.on_message(filters.command(["couple", "couples"]))
