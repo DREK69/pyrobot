@@ -600,6 +600,108 @@ async def admin_cbs(_, query: CallbackQuery):
                 ),
             )
 
+@app.on_message(filters.command(["pause"]) & filters.group)
+@admin_check
+async def pause_str(_, message: Message):
+    try:
+        await message.delete()
+    except:
+        pass
+
+    if not await is_streaming(message.chat.id):
+        return await message.reply_text(
+            "Did you remember that you resume the stream?"
+        )
+
+    await pytgcalls.pause_stream(message.chat.id)
+    await stream_off(message.chat.id)
+    return await message.reply_text(
+        text=f"**Stream Paused**\n\nBy: {message.from_user.mention}",
+        reply_markup=close_key,
+    )
+
+@app.on_message(filters.command(["stop", "end"]) & filters.group)
+@admin_check
+async def stop_str(_, message: Message):
+    try:
+        await message.delete()
+    except:
+        pass
+    try:
+        await _clear_(message.chat.id)
+        await pytgcalls.leave_group_call(message.chat.id)
+    except:
+        pass
+
+    return await message.reply_text(
+        text=f"**Stream Ended/Stopped**\n\nBy : {message.from_user.mention}",
+        reply_markup=close_key,
+    )
+
+@app.on_message(filters.command(["resume"]) & filters.group)
+@admin_check
+async def res_str(_, message: Message):
+    try:
+        await message.delete()
+    except:
+        pass
+
+    if await is_streaming(message.chat.id):
+        return await message.reply_text("Did you know you resume the stream?")
+    await stream_on(message.chat.id)
+    await pytgcalls.resume_stream(message.chat.id)
+    return await message.reply_text(
+        text=f"**Stream Resumed**\n\nBy : {message.from_user.mention}",
+        reply_markup=close_key,
+    )
+
+@app.on_message(filters.command(["skip", "next"]) & filters.group)
+@admin_check
+async def skip_str(_, message: Message):
+    try:
+        await message.delete()
+    except:
+        pass
+    get = fallendb.get(message.chat.id)
+    if not get:
+        try:
+            await _clear_(message.chat.id)
+            await pytgcalls.leave_group_call(message.chat.id)
+            await message.reply_text(
+                text=f"**Stream Skipped**\n\nBy : {message.from_user.mention}\n\n**No more Queue Track in** {message.chat.title}, **Leaving Voicechat.**",
+                reply_markup=close_key,
+            )
+        except:
+            return
+    else:
+        title = get[0]["title"]
+        duration = get[0]["duration"]
+        file_path = get[0]["file_path"]
+        videoid = get[0]["videoid"]
+        req_by = get[0]["req"]
+        user_id = get[0]["user_id"]
+        get.pop(0)
+
+        stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+        try:
+            await pytgcalls.change_stream(
+                message.chat.id,
+                stream,
+            )
+        except:
+            await _clear_(message.chat.id)
+            return await pytgcalls.leave_group_call(message.chat.id)
+
+        await message.reply_text(
+            text=f"**Skipped Stream**\n\nBy : {message.from_user.mention}",
+            reply_markup=close_key,
+        )
+        img = await gen_thumb(videoid, user_id)
+        return await message.reply_photo(
+            photo=img,
+            caption=f"📡 Streaming Started\n\n👤Requested By:{req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
+            reply_markup=buttons,
+        )
 
 @pbot.on_message(filters.command("activevc"))
 async def activevc(_, message: Message):
