@@ -1,7 +1,7 @@
 import os
 from os import getenv
 
-TOKEN = os.environ.get("TOKEN", "5294959338:AAHeFxFimLS8mRqAsEhzGNmxdBA-kJCwFzs")
+TOKEN = os.environ.get("TOKEN", "5294959338:AAEBv6octIEMyur600xd30oldHUiQWJiKsM")
 INFOPIC = bool(os.environ.get("INFOPIC", True))
 BOT_USERNAME = os.environ.get("BOT_USERNAME", "MerissaRobot")
 EVENT_LOGS = os.environ.get("EVENT_LOGS", "-1001325865052")
