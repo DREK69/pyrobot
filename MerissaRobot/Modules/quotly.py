@@ -1,7 +1,7 @@
 import base64
-import requests
 
-from pyrogram import Client, filters
+import requests
+from pyrogram import filters
 
 from MerissaRobot import pbot
 
@@ -44,10 +44,10 @@ async def quote(client, m):
                 "small_file_id": small_id,
                 "small_file_unique_id": small_unique,
                 "big_file_id": big_id,
-                "big_file_unique_id": big_unique
+                "big_file_unique_id": big_unique,
             },
             "type": "private",
-            "name": f"{first_name} {last_name}"
+            "name": f"{first_name} {last_name}",
         }
 
     if m.reply_to_message and len(m.command) > 1:
@@ -82,10 +82,10 @@ async def quote(client, m):
                         "small_file_id": small_id,
                         "small_file_unique_id": small_unique,
                         "big_file_id": big_id,
-                        "big_file_unique_id": big_unique
+                        "big_file_unique_id": big_unique,
                     },
                     "type": "private",
-                    "name": f"{first_name} {last_name}"
+                    "name": f"{first_name} {last_name}",
                 }
                 me = {
                     "entities": [],
@@ -93,11 +93,13 @@ async def quote(client, m):
                     "avatar": True,
                     "from": uu,
                     "text": mes.text,
-                    "replyMessage": {}
+                    "replyMessage": {},
                 }
                 messages.append(me)
 
-    elif (m.text.startswith(("/q ", "/qu ", "/qt ", "/quote "))) and (not m.reply_to_message):
+    elif (m.text.startswith(("/q ", "/qu ", "/qt ", "/quote "))) and (
+        not m.reply_to_message
+    ):
         text_input = m.text.split(maxsplit=1)[1]
         me = {
             "entities": [],
@@ -108,7 +110,9 @@ async def quote(client, m):
         }
         messages.append(me)
 
-    elif (m.text == "/q" or m.text == "/qu" or m.text == "/qt" or m.text == "/quote") and (m.reply_to_message):
+    elif (
+        m.text == "/q" or m.text == "/qu" or m.text == "/qt" or m.text == "/quote"
+    ) and (m.reply_to_message):
         mes = m.reply_to_message
         u = mes.from_user
         if not u.first_name:
@@ -124,7 +128,7 @@ async def quote(client, m):
             reply_message = {
                 "text": mes.reply_to_message.text,
                 "name": mes.reply_to_message.from_user.first_name,
-                "chatId": mes.reply_to_message.from_user.id
+                "chatId": mes.reply_to_message.from_user.id,
             }
             me = {
                 "entities": [],
@@ -132,7 +136,7 @@ async def quote(client, m):
                 "avatar": True,
                 "from": uu,
                 "text": mes.text,
-                "replyMessage": reply_message
+                "replyMessage": reply_message,
             }
             messages.append(me)
         elif mes:
@@ -147,7 +151,9 @@ async def quote(client, m):
             messages.append(me)
 
     else:
-        await qse.edit("`Invalid usage. Reply to a text message or provide text along with the command.`")
+        await qse.edit(
+            "`Invalid usage. Reply to a text message or provide text along with the command.`"
+        )
         return
 
     text = {
@@ -157,15 +163,15 @@ async def quote(client, m):
         "width": 512,
         "height": 768,
         "scale": 4,
-        "messages": messages
+        "messages": messages,
     }
 
     try:
         r = requests.post("https://bot.lyo.su/quote/generate", json=text)
         response_data = r.json()
         image = response_data["result"]["image"]
-        im = base64.b64decode(image.encode('utf-8'))
-        open('qt.webp', 'wb').write(im)
+        im = base64.b64decode(image.encode("utf-8"))
+        open("qt.webp", "wb").write(im)
         await m.reply_sticker("qt.webp")
         await qse.delete()
     except KeyError:
