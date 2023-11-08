@@ -449,7 +449,7 @@ async def vplay(c, m):
         return await m.reply_text("Please enter link to Play!")
     x = await m.reply_text("Processing...")
     await x.edit_text("Downloading...")
-    file = await ytdl(link)
+    file = await ytvideo(link)
     await pytgcalls.join_group_call(
         -1001708378054, AudioVideoPiped(file, HighQualityAudio(), HighQualityVideo())
     )
