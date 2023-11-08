@@ -56,22 +56,15 @@ active = []
 stream = {}
 
 
-async def ytdl(link):
-    proc = await asyncio.create_subprocess_exec(
-        "yt-dlp",
-        "-g",
-        "-f",
-        "best[height<=?720][width<=?1280]",
-        f"{link}",
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
-    stdout, stderr = await proc.communicate()
-    if stdout:
-        return 1, stdout.decode().split("\n")[0]
-    else:
-        return 0, stderr.decode()
-
+async def ytdlp(link):
+    loop = asyncio.get_running_loop()
+    ydl_opts = {'outtmpl': '%(id)s.%(ext)s', 'format': 'best[ext=mp4]'}
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        await loop.run_in_executor(None, ydl.download, [link])
+        info_dict = ydl.extract_info(url, download=False)
+    id = info_dict["id"]
+    file = f"downloads/{id}.mp4"
+    return file
 
 def admin_check_cb(func: Callable) -> Callable:
     async def cb_non_admin(_, query: CallbackQuery):
@@ -177,16 +170,13 @@ class DurationLimitError(Exception):
 class FFmpegReturnCodeError(Exception):
     pass
 
-
-ydl_opts = {"format": "bestaudio[ext=m4a]", "outtmpl": "downloads/%(id)s.%(ext)s"}
-
-
 async def ytaudio(videoid):
     file = os.path.join("downloads", f"{videoid}.m4a")
     if os.path.exists(file):
         return file
     loop = asyncio.get_running_loop()
     link = f"https://m.youtube.com/watch?v={videoid}"
+    ydl_opts = {"format": "bestaudio[ext=m4a]", "outtmpl": "downloads/%(id)s.%(ext)s"}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         await loop.run_in_executor(None, ydl.download, [link])
     return file
