@@ -4,6 +4,8 @@ from pyrogram import filters
 from pyrogram.errors import ListenerCanceled
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+from youtubesearchpython.__future__ import VideosSearch
+
 from MerissaRobot import BOT_NAME, pbot
 from MerissaRobot.helpers import postreq, subscribe
 
