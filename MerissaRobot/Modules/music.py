@@ -178,7 +178,7 @@ async def ytvideo(link):
     ydl_opts = {"outtmpl": "%(id)s.%(ext)s", "format": "best[ext=mp4]"}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         await loop.run_in_executor(None, ydl.download, [link])
-        info_dict = ydl.extract_info(url, download=False)
+        info_dict = ydl.extract_info(link, download=False)
     id = info_dict["id"]
     file = f"downloads/{id}.mp4"
     return file
