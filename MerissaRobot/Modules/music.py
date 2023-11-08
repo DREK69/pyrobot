@@ -58,13 +58,14 @@ stream = {}
 
 async def ytdlp(link):
     loop = asyncio.get_running_loop()
-    ydl_opts = {'outtmpl': '%(id)s.%(ext)s', 'format': 'best[ext=mp4]'}
+    ydl_opts = {"outtmpl": "%(id)s.%(ext)s", "format": "best[ext=mp4]"}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         await loop.run_in_executor(None, ydl.download, [link])
         info_dict = ydl.extract_info(url, download=False)
     id = info_dict["id"]
     file = f"downloads/{id}.mp4"
     return file
+
 
 def admin_check_cb(func: Callable) -> Callable:
     async def cb_non_admin(_, query: CallbackQuery):
@@ -169,6 +170,7 @@ class DurationLimitError(Exception):
 
 class FFmpegReturnCodeError(Exception):
     pass
+
 
 async def ytaudio(videoid):
     file = os.path.join("downloads", f"{videoid}.m4a")
