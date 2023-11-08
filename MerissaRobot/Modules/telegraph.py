@@ -3,7 +3,6 @@ from telegraph import Telegraph, exceptions, upload_file
 
 from MerissaRobot import pbot
 from pyrogram import Client, filters
-from main.helper_func.plugin_helpers import convert_to_image
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 telegraph = Telegraph()
