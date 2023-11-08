@@ -55,6 +55,7 @@ merissadb = {}
 active = []
 stream = {}
 
+
 def admin_check_cb(func: Callable) -> Callable:
     async def cb_non_admin(_, query: CallbackQuery):
         if not await is_active_chat(query.message.chat.id):
@@ -171,6 +172,7 @@ async def ytaudio(videoid):
         await loop.run_in_executor(None, ydl.download, [link])
     return file
 
+
 async def ytvideo(link):
     loop = asyncio.get_running_loop()
     ydl_opts = {"outtmpl": "%(id)s.%(ext)s", "format": "best[ext=mp4]"}
@@ -180,6 +182,7 @@ async def ytvideo(link):
     id = info_dict["id"]
     file = f"downloads/{id}.mp4"
     return file
+
 
 async def is_active_chat(chat_id: int) -> bool:
     if chat_id not in active:
