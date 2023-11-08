@@ -175,7 +175,7 @@ async def ytaudio(videoid):
 
 async def ytvideo(link):
     loop = asyncio.get_running_loop()
-    ydl_opts = {"outtmpl": "%(id)s.%(ext)s", "format": "best[ext=mp4]"}
+    ydl_opts = {"outtmpl": "downloads/%(id)s.%(ext)s", "format": "best[ext=mp4]"}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         await loop.run_in_executor(None, ydl.download, [link])
         info_dict = ydl.extract_info(link, download=False)
