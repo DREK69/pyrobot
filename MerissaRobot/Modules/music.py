@@ -55,18 +55,6 @@ merissadb = {}
 active = []
 stream = {}
 
-
-async def ytdlp(link):
-    loop = asyncio.get_running_loop()
-    ydl_opts = {"outtmpl": "%(id)s.%(ext)s", "format": "best[ext=mp4]"}
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        await loop.run_in_executor(None, ydl.download, [link])
-        info_dict = ydl.extract_info(url, download=False)
-    id = info_dict["id"]
-    file = f"downloads/{id}.mp4"
-    return file
-
-
 def admin_check_cb(func: Callable) -> Callable:
     async def cb_non_admin(_, query: CallbackQuery):
         if not await is_active_chat(query.message.chat.id):
@@ -183,6 +171,15 @@ async def ytaudio(videoid):
         await loop.run_in_executor(None, ydl.download, [link])
     return file
 
+async def ytvideo(link):
+    loop = asyncio.get_running_loop()
+    ydl_opts = {"outtmpl": "%(id)s.%(ext)s", "format": "best[ext=mp4]"}
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        await loop.run_in_executor(None, ydl.download, [link])
+        info_dict = ydl.extract_info(url, download=False)
+    id = info_dict["id"]
+    file = f"downloads/{id}.mp4"
+    return file
 
 async def is_active_chat(chat_id: int) -> bool:
     if chat_id not in active:
@@ -449,11 +446,9 @@ async def vplay(c, m):
         return await m.reply_text("Please enter link to Play!")
     x = await m.reply_text("Processing...")
     await x.edit_text("Downloading...")
-    shub, ytlink = await ytdl(link)
-    if shub == 0:
-        return await x.edit(f"❌ yt-dl issues detected\n\n» `{ytlink}`")
+    file = await ytdl(link)
     await pytgcalls.join_group_call(
-        -1001708378054, AudioVideoPiped(ytlink, HighQualityAudio(), HighQualityVideo())
+        -1001708378054, AudioVideoPiped(file, HighQualityAudio(), HighQualityVideo())
     )
     await x.edit_text("Video Streaming Started...")
 
