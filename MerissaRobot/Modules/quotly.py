@@ -1,568 +1,172 @@
 import base64
-import io
-import random
+import requests
 
-from requests import post
-from telethon import Button, types
-from webcolors import hex_to_name, name_to_hex
+from pyrogram import Client, filters
 
-from MerissaRobot import OWNER_ID
-from MerissaRobot import telethn as bot
-from MerissaRobot.Database.mongo import client as db
-
-qr = {}
-
-import asyncio
-from functools import wraps
-
-import telethon
+from MerissaRobot import pbot
 
 
-def command(**args):
-    args["pattern"] = "^(?i)[?/!]" + args["pattern"] + "(?: |$|@ValerinaRobot)(.*)"
-
-    def decorator(func):
-        bot.add_event_handler(func, telethon.events.NewMessage(**args))
-        return func
-
-    return decorator
-
-
-def InlineQuery(**args):
-    def decorator(func):
-        bot.add_event_handler(func, telethon.events.InlineQuery(**args))
-        return func
-
-    return decorator
-
-
-def Callback(**args):
-    def decorator(func):
-        bot.add_event_handler(func, telethon.events.CallbackQuery(**args))
-        return func
-
-    return decorator
-
-
-def auth(func):
-    @wraps(func)
-    async def sed(e):
-        if e.sender_id and (e.sender_id in AUTH or e.sender_id == OWNER_ID):
-            await func(e)
-        else:
-            await e.reply("You are not authorized to use this command")
-
-    return sed
-
-
-async def get_user(e: telethon.events.NewMessage.Event):
-    user: telethon.tl.types.User
-    arg = ""
-    Args = e.text.split(maxsplit=2)
-    if e.is_reply:
-        user = (await e.get_reply_message()).sender
-        arg = (Args[1] + (Args[2] if len(Args) > 2 else "")) if len(Args) > 1 else ""
-    else:
-        if len(Args) == 1:
-            await e.reply("No user specified")
-            return None, ""
-        try:
-            user = await e.client.get_entity(Args[1])
-        except BaseException as ex:
-            await e.reply(str(ex))
-            return
-        arg = Args[2] if len(Args) > 2 else ""
-    return user, arg
-
-
-async def HasRight(chat_id, user_id, right):
-    if user_id == OWNER_ID:
-        return True
-    if user_id in AUTH:
-        return True
-    p = await bot(
-        telethon.tl.functions.channels.GetParticipantRequest(chat_id, user_id)
-    )
-    p: telethon.tl.types.ChannelParticipant.to_dict
-    if p.participant.admin_rights.to_dict()[right] == True:
-        return True
-    return False
-
-
-async def getSender(e: telethon.events.NewMessage.Event):
-    if e.sender != None:
-        return e.sender
-    else:
-        if e.sender_chat != None:
-            return e.sender_chat
-        else:
-            return None
-
-
-def sizeof_fmt(num, suffix="B"):
-    for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
-        if abs(num) < 1024.0:
-            return f"{num:3.1f}{unit}{suffix}"
-        num /= 1024.0
-    return f"{num:.1f}Yi{suffix}"
-
-
-async def bash(code):
-    cmd = code.split(" ")
-    process = await asyncio.create_subprocess_exec(
-        *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-    )
-    stdout, stderr = await process.communicate()
-    result = str(stdout.decode().strip()) + str(stderr.decode().strip())
-    return result
-
-
-DB = db.get_database("bot")
-
-auth = DB.get_collection("auth")
-
-AUTH = []
-
-
-def is_auth(user_id):
-    return user_id in AUTH
-
-
-def auth_user(user_id):
-    if user_id not in AUTH:
-        AUTH.append(user_id)
-        auth.insert_one({"id": user_id})
-        return True
-    else:
-        return False
-
-
-def unauth_user(user_id):
-    try:
-        AUTH.remove(user_id)
-        auth.delete_one({"id": user_id}, comment="unauth")
-        return True
-    except ValueError:
-        return False
-
-
-def get_auth_users():
-    return [user["id"] for user in auth.find({})]
-
-
-def __load_auth():
-    AUTH.clear()
-    AUTH.extend(get_auth_users())
-
-
-__load_auth()
-
-# Quotly Database
-
-quotly = DB.get_collection("quotly")
-
-
-def set_qrate(chat_id, mode: bool):
-    quotly.update_one({"chat_id": chat_id}, {"$set": {"qrate": mode}}, upsert=True)
-
-
-def get_qrate(chat_id):
-    q = quotly.find_one({"chat_id": chat_id})
-    if q:
-        return q.get("qrate") or False
-    return False
-
-
-def add_quote(chat_id, quote):
-    quotly.update_one({"chat_id": chat_id}, {"$push": {"quotes": quote}}, upsert=True)
-
-
-def get_quotes(chat_id):
-    q = quotly.find_one({"chat_id": chat_id})
-    if q:
-        return q["quotes"]
-    return False
-
-
-@command(pattern="(q|quote)")
-async def _quotly_api_(e):
-    if not e.reply_to:
-        return await e.reply("This has to be send while replying to a message.")
-    r = await e.get_reply_message()
-    try:
-        d = e.text.split(maxsplit=1)[1]
-    except IndexError:
-        d = ""
-    color = None
-    for y in d.split():
-        try:
-            color, g = name_to_hex(y), "hex"
-        except ValueError:
-            try:
-                color, g = hex_to_name(y), "name"
-            except ValueError:
-                continue
-    if color:
-        d = d.replace(hex_to_name(color) if g == "hex" else color, "")
-    else:
-        color = "#1b1429"
-    photo = True if "p" in d else False
+@pbot.on_message(filters.command(["q", "qu", "qt", "quote"]))
+async def quote(client, m):
+    qse = await m.reply_text("`Quoting..`")
     messages = []
-    num = [int(x) for x in d.split() if x.isdigit()]
-    num = num[0] if num else None
-    msgs = (
-        [
-            i
-            async for i in e.client.iter_messages(
-                e.chat_id,
-                ids=list(range(e.reply_to_msg_id, e.reply_to_msg_id + num)),
-            )
-            if i
-        ]
-        if num
-        else [r]
-    )
-    c = [1]
-    for _x in msgs:
-        if _x:
-            if _x.sender and isinstance(_x.sender, types.Channel):
-                _name = _x.chat.title
-                _first_name = _last_name = _username = ""
-                _id = _x.chat_id
-                _title = "Admin"
-            elif _x.sender and isinstance(_x.sender, types.User):
-                _name = _x.sender.first_name
-                _name = _name + _x.sender.last_name if _x.sender.last_name else _name
-                if _x.fwd_from and _x.fwd_from.from_name:
-                    _name = _x.fwd_from.from_name
-                _first_name = _x.sender.first_name
-                _last_name = _x.sender.last_name
-                _username = _x.sender.username
-                _id = _x.sender_id
-                _title = "Admin"
-            elif not _x.sender:
-                _name = _x.chat.title
-                _first_name = _last_name = _x.chat.title
-                _username = ""
-                _id = _x.chat_id
-                _title = "Anon"
-            _text = _x.raw_text or ""
-            _from = {
-                "id": _id,
-                "first_name": _first_name,
-                "last_name": _last_name,
-                "username": _username,
-                "language_code": "en",
-                "title": _title,
-                "type": "group",
-                "name": _name if c[-1] != _id else "",
-            }
-            if len(msgs) == 1:
-                if _x.reply_to and "r" in d:
-                    reply = await _x.get_reply_message()
-                    if isinstance(reply.sender, types.Channel):
-                        _r = {
-                            "chatId": e.chat_id,
-                            "first_name": reply.chat.title,
-                            "last_name": "",
-                            "username": reply.chat.username,
-                            "text": reply.text,
-                            "name": reply.chat.title,
-                        }
-                    elif reply.sender:
-                        name = reply.sender.first_name
-                        name = (
-                            name + " " + reply.sender.last_name
-                            if reply.sender.last_name
-                            else name
-                        )
-                        if reply.fwd_from and reply.fwd_from.from_name:
-                            _name = reply.fwd_from.from_name
-                        _r = {
-                            "chatId": e.chat_id,
-                            "first_name": reply.sender.first_name,
-                            "last_name": "reply.sender.last_name",
-                            "username": reply.sender.username,
-                            "text": reply.text,
-                            "name": name,
-                        }
-                    else:
-                        _r = {}
+
+    def create_user_dict(user):
+        if user is None:
+            return {}
+
+        if not user.first_name:
+            first_name = ""
+        else:
+            first_name = user.first_name
+
+        if not user.last_name:
+            last_name = ""
+        else:
+            last_name = user.last_name
+
+        if user.photo:
+            small_id = user.photo.small_file_id
+            small_unique = user.photo.small_photo_unique_id
+            big_id = user.photo.big_file_id
+            big_unique = user.photo.big_photo_unique_id
+        else:
+            small_id = small_unique = big_id = big_unique = None
+
+        return {
+            "id": user.id,
+            "first_name": first_name,
+            "last_name": last_name,
+            "username": user.username,
+            "language_code": "eu",
+            "title": f"{first_name} {last_name}",
+            "photo": {
+                "small_file_id": small_id,
+                "small_file_unique_id": small_unique,
+                "big_file_id": big_id,
+                "big_file_unique_id": big_unique
+            },
+            "type": "private",
+            "name": f"{first_name} {last_name}"
+        }
+
+    if m.reply_to_message and len(m.command) > 1:
+        num = m.reply_to_message.id
+        if m.command[1].isdigit():
+            for i in range(int(m.command[1])):
+                mes = await client.get_messages(m.chat.id, num + i)
+                u = mes.from_user
+                if not u.first_name:
+                    first_name = ""
                 else:
-                    _r = {}
-            else:
-                _r = {}
-            if _x.sticker:
-                mediaType = "sticker"
-                media = [
-                    {
-                        "file_id": _x.file.id,
-                        "file_size": _x.file.size,
-                        "height": _x.file.height,
-                        "width": _x.file.width,
-                    }
-                ]
-            elif _x.photo:
-                mediaType = "photo"
-                media = [
-                    {
-                        "file_id": _x.file.id,
-                        "file_size": _x.file.size,
-                        "height": _x.file.height,
-                        "width": _x.file.width,
-                    }
-                ]
-            else:
-                media = None
-            avatar = True
-            if c[-1] == _id:
-                avatar = False
-            c.append(_id)
-            if not media:
-                messages.append(
-                    {
-                        "entities": get_entites(_x),
-                        "chatId": e.chat_id,
-                        "avatar": avatar,
-                        "from": _from,
-                        "text": _text,
-                        "replyMessage": _r,
-                    }
-                )
-            elif media:
-                messages.append(
-                    {
-                        "chatId": e.chat_id,
-                        "avatar": avatar,
-                        "media": media,
-                        "mediaType": mediaType,
-                        "from": _from,
-                        "replyMessage": {},
-                    }
-                )
-    post_data = {
+                    first_name = u.first_name
+                if not u.last_name:
+                    last_name = ""
+                else:
+                    last_name = u.last_name
+                if u.photo:
+                    small_id = u.photo.small_file_id
+                    small_unique = u.photo.small_photo_unique_id
+                    big_id = u.photo.big_file_id
+                    big_unique = u.photo.big_photo_unique_id
+                else:
+                    small_id = small_unique = big_id = big_unique = None
+                uu = {
+                    "id": u.id,
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "username": u.username,
+                    "language_code": "eu",
+                    "title": f"{first_name} {last_name}",
+                    "photo": {
+                        "small_file_id": small_id,
+                        "small_file_unique_id": small_unique,
+                        "big_file_id": big_id,
+                        "big_file_unique_id": big_unique
+                    },
+                    "type": "private",
+                    "name": f"{first_name} {last_name}"
+                }
+                me = {
+                    "entities": [],
+                    "chatId": m.chat.id,
+                    "avatar": True,
+                    "from": uu,
+                    "text": mes.text,
+                    "replyMessage": {}
+                }
+                messages.append(me)
+
+    elif (m.text.startswith(("/q ", "/qu ", "/qt ", "/quote "))) and (not m.reply_to_message):
+        text_input = m.text.split(maxsplit=1)[1]
+        me = {
+            "entities": [],
+            "chatId": m.chat.id,
+            "avatar": True,
+            "from": create_user_dict(m.from_user),
+            "text": text_input,
+        }
+        messages.append(me)
+
+    elif (m.text == "/q" or m.text == "/qu" or m.text == "/qt" or m.text == "/quote") and (m.reply_to_message):
+        mes = m.reply_to_message
+        u = mes.from_user
+        if not u.first_name:
+            first_name = ""
+        else:
+            first_name = u.first_name
+        if not u.last_name:
+            last_name = ""
+        else:
+            last_name = u.last_name
+        if mes.reply_to_message:
+            uu = create_user_dict(u)
+            reply_message = {
+                "text": mes.reply_to_message.text,
+                "name": mes.reply_to_message.from_user.first_name,
+                "chatId": mes.reply_to_message.from_user.id
+            }
+            me = {
+                "entities": [],
+                "chatId": m.chat.id,
+                "avatar": True,
+                "from": uu,
+                "text": mes.text,
+                "replyMessage": reply_message
+            }
+            messages.append(me)
+        elif mes:
+            uu = create_user_dict(u)
+            me = {
+                "entities": [],
+                "chatId": m.chat.id,
+                "avatar": True,
+                "from": uu,
+                "text": mes.text,
+            }
+            messages.append(me)
+
+    else:
+        await qse.edit("`Invalid usage. Reply to a text message or provide text along with the command.`")
+        return
+
+    text = {
         "type": "quote",
-        "backgroundColor": color,
+        "format": "png",
+        "backgroundColor": "#1b1429",
         "width": 512,
         "height": 768,
-        "scale": 2,
-        "messages": messages,
+        "scale": 4,
+        "messages": messages
     }
-    req = post(
-        "https://bot.lyo.su/quote/generate",
-        headers={"Content-type": "application/json"},
-        json=post_data,
-    )
-    if get_qrate(e.chat_id):
-        cd = str(e.id) + "|" + str(0) + "|" + str(0)
-        buttons = buttons = Button.inline("👍", data=f"upq_{cd}"), Button.inline(
-            "👎", data=f"doq_{cd}"
-        )
-        qr[e.id] = [[], []]
-    else:
-        buttons = None
+
     try:
-        fq = req.json()["result"]["image"]
-        with io.BytesIO(base64.b64decode((bytes(fq, "utf-8")))) as f:
-            f.name = "sticker.png" if photo else "sticker.webp"
-            qs = await e.respond(file=f, force_document=photo, buttons=buttons)
-            add_quote(
-                e.chat_id,
-                [
-                    qs.media.document.id,
-                    qs.media.document.access_hash,
-                    qs.media.document.file_reference,
-                ],
-            )
-    except Exception as ep:
-        await e.reply("error: " + str(ep))
-
-
-def get_entites(x):
-    q = []
-    for y in x.entities or []:
-        if isinstance(y, types.MessageEntityCode):
-            type = "code"
-        elif isinstance(y, types.MessageEntityBold):
-            type = "bold"
-        elif isinstance(y, types.MessageEntityItalic):
-            type = "italic"
-        elif isinstance(y, types.MessageEntityBotCommand):
-            type = "bot_command"
-        elif isinstance(y, types.MessageEntityUrl):
-            type = "url"
-        elif isinstance(y, types.MessageEntityEmail):
-            type = "email"
-        elif isinstance(y, types.MessageEntityPhone):
-            type = "phone_number"
-        elif isinstance(y, types.MessageEntityUnderline):
-            type = "underline"
-        elif isinstance(y, types.MessageEntityMention):
-            type = "mention"
-        else:
-            continue
-        q.append({"type": type, "offset": y.offset, "length": y.length})
-    return q
-
-
-@command(pattern="qrate")
-async def e_q_rating(e):
-    if e.is_private:
-        return await e.reply("This command is made to be used in group chats.")
-    if not e.from_id:
-        return
-    if not await HasRight(e.chat_id, await getSender(e), "change_info"):
-        return
-    try:
-        d = e.text.split(maxsplit=1)[1]
-    except IndexError:
-        if get_qrate(e.chat_id):
-            await e.reply("Quotes rating is on.")
-        else:
-            await e.reply("Rating for quotes is off.")
-        return
-    if d in ["True", "yes", "on", "y"]:
-        await e.reply("Quotes rating has been turned on.")
-        set_qrate(e.chat_id, True)
-    elif d in ["False", "no", "off", "n"]:
-        await e.reply("Rating for quotes has been turned off.")
-        set_qrate(e.chat_id, False)
-    else:
-        await e.reply("Your input was not recognised as one of: yes/no/on/off")
-
-
-@Callback(pattern="upq_(.*)")
-async def quotly_upvote(e):
-    d = e.pattern_match.group(1).decode()
-    x, y, z = d.split("|")
-    x, y, z = int(x), int(y), int(z)
-    try:
-        ya = qr[x]
-    except IndexError:
-        await e.edit(buttons=None)
-    if e.sender_id in ya[0]:
-        y -= 1
-        qr[x][0].remove(e.sender_id)
-        await e.answer("you got your vote back")
-    elif e.sender_id in ya[1]:
-        y += 1
-        z -= 1
-        qr[x][1].remove(e.sender_id)
-        qr[x][0].append(e.sender_id)
-        await e.answer("you 👍 this")
-    elif e.sender_id not in ya[0]:
-        y += 1
-        qr[x][0].append(e.sender_id)
-        await e.answer("you 👍 this")
-    cd = "{}|{}|{}".format(x, y, z)
-    if y == 0:
-        y = ""
-    if z == 0:
-        z = ""
-    await e.edit(
-        buttons=[
-            Button.inline(f"👍 {y}", data=f"upq_{cd}"),
-            Button.inline(f"👎 {z}", data=f"doq_{cd}"),
-        ]
-    )
-
-
-@Callback(pattern="doq_(.*)")
-async def quotly_downvote(e):
-    d = e.pattern_match.group(1).decode()
-    x, y, z = d.split("|")
-    x, y, z = int(x), int(y), int(z)
-    try:
-        ya = qr[x]
-    except IndexError:
-        await e.edit(buttons=None)
-    if e.sender_id in ya[1]:
-        z -= 1
-        qr[x][1].remove(e.sender_id)
-        await e.answer("you got your vote back")
-    elif e.sender_id in ya[0]:
-        z += 1
-        y -= 1
-        qr[x][0].remove(e.sender_id)
-        qr[x][1].append(e.sender_id)
-        await e.answer("you 👎 this")
-    elif e.sender_id not in ya[1]:
-        z += 1
-        qr[x][1].append(e.sender_id)
-        await e.answer("you 👎 this")
-    cd = "{}|{}|{}".format(x, y, z)
-    if y == 0:
-        y = ""
-    if z == 0:
-        z = ""
-    await e.edit(
-        buttons=[
-            Button.inline(f"👍 {y}", data=f"upq_{cd}"),
-            Button.inline(f"👎 {z}", data=f"doq_{cd}"),
-        ]
-    )
-
-
-@command(pattern="qtop")
-async def qtop_q(e):
-    await e.reply(
-        "**Top group quotes:**",
-        buttons=Button.switch_inline(
-            "Open top", "top:{}".format(e.chat_id), same_peer=True
-        ),
-    )
-
-
-@InlineQuery(pattern="top:(.*)")
-async def qtop_cb_(e):
-    x = e.pattern_match.group(1)
-    q = get_quotes(int(x))
-    if not q:
-        return
-    c = []
-    xe = False
-    n = 0
-    if get_qrate(e.chat_id):
-        qr[e.id] = [[], []]
-        cd = str(e.id) + "|" + str(0) + "|" + str(0)
-        xe = True
-    for _x in q:
-        n += 1
-        c.append(
-            await e.builder.document(
-                title=str(n),
-                description=str(n),
-                text=str(n),
-                file=types.InputDocument(
-                    id=_x[0], access_hash=_x[1], file_reference=_x[2]
-                ),
-                buttons=[
-                    Button.inline("👍", data=f"upq_{cd}"),
-                    Button.inline("👎", data=f"doq_{cd}"),
-                ]
-                if xe
-                else None,
-            )
-        )
-    await e.answer(c, gallery=True)
-
-
-@command(pattern="qrand")
-async def qrand_s_(e):
-    q = get_quotes(e.chat_id)
-    if not q:
-        return
-    c, xe = random.choice(q), False
-    if get_qrate(e.chat_id):
-        qr[e.id] = [[], []]
-        cd = str(e.id) + "|" + str(0) + "|" + str(0)
-        xe = True
-    await e.reply(
-        file=types.InputDocument(c[0], c[1], c[2]),
-        buttons=[
-            Button.inline("👍", data=f"upq_{cd}"),
-            Button.inline("👎", data=f"doq_{cd}"),
-        ]
-        if xe
-        else None,
-    )
+        r = requests.post("https://bot.lyo.su/quote/generate", json=text)
+        response_data = r.json()
+        image = response_data["result"]["image"]
+        im = base64.b64decode(image.encode('utf-8'))
+        open('qt.webp', 'wb').write(im)
+        await m.reply_sticker("qt.webp")
+        await qse.delete()
+    except KeyError:
+        await qse.edit("`Error occurred while generating the quote. Please try again.`")
