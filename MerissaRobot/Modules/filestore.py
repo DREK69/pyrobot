@@ -49,7 +49,9 @@ async def _startfile(bot, update):
             [
                 [
                     InlineKeyboardButton(text="🎥 Watch ", url=f"{link}"),
-                    InlineKeyboardButton(text="📥 Download ", callback_data=f"ytdown {videoid}"),
+                    InlineKeyboardButton(
+                        text="📥 Download ", callback_data=f"ytdown {videoid}"
+                    ),
                 ],
                 [
                     InlineKeyboardButton(text="🔄 Close", callback_data="close"),
