@@ -816,25 +816,10 @@ def main():
     updater.start_polling(timeout=15, read_latency=4, drop_pending_updates=True)
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
-
-    if len(argv) not in (1, 3, 4):
-        telethn.disconnect()
-    else:
-        telethn.run_until_disconnected()
-
     updater.idle()
 
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
     loop.run_until_complete(startpyro())
-    try:
-        telethn.start(bot_token=TOKEN)
-        LOGGER.info("Telethon Started")
-    except FloodWaitError as e:
-        LOGGER.info(
-            f"[Telethon: FloodWaitError] Have to wait {e.seconds} seconds due to FloodWait."
-        )
-        time.sleep(e.seconds)
-        telethn.start(bot_token=TOKEN)
     main()
