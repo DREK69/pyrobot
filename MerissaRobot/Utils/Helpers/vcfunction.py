@@ -4,7 +4,7 @@ from typing import Union
 
 import yt_dlp
 from pyrogram.enums import MessageEntityType
-from pyrogram.types import Audio, Message
+from pyrogram.types import Audio, Message, Voice
 
 DURATION_LIMIT = int("90")
 
