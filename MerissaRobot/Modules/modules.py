@@ -4,7 +4,8 @@ import importlib
 from telegram import ParseMode, Update
 from telegram.ext import CallbackContext, CommandHandler
 
-from MerissaRobot import dispatcher, telethn
+from MerissaRobot import dispatcher
+
 from MerissaRobot.__main__ import (
     CHAT_SETTINGS,
     DATA_EXPORT,
@@ -48,12 +49,8 @@ def load(update: Update, context: CallbackContext):
             if not isinstance(handler, tuple):
                 dispatcher.add_handler(handler)
             else:
-                if isinstance(handler[0], collections.Callable):
-                    callback, telethon_event = handler
-                    telethn.add_event_handler(callback, telethon_event)
-                else:
-                    handler_name, priority = handler
-                    dispatcher.add_handler(handler_name, priority)
+                handler_name, priority = handler
+                dispatcher.add_handler(handler_name, priority)
     else:
         IMPORTED.pop(imported_module.__mod_name__.lower())
         load_messasge.edit_text("The module cannot be loaded.")
@@ -121,12 +118,8 @@ def unload(update: Update, context: CallbackContext):
             if not isinstance(handler, tuple):
                 dispatcher.remove_handler(handler)
             else:
-                if isinstance(handler[0], collections.Callable):
-                    callback, telethon_event = handler
-                    telethn.remove_event_handler(callback, telethon_event)
-                else:
-                    handler_name, priority = handler
-                    dispatcher.remove_handler(handler_name, priority)
+                handler_name, priority = handler
+                dispatcher.remove_handler(handler_name, priority)
     else:
         unload_messasge.edit_text("The module cannot be unloaded.")
         return
