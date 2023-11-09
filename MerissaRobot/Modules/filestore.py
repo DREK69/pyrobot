@@ -18,9 +18,9 @@ async def _startfile(bot, update):
     if len(update.command) != 2:
         return
     code = update.command[1]
-    if "info" in code:
+    if "info_" in code:
         m = await update.reply_text("🔎 Fetching Info!")
-        videoid = code.split("_")[1]
+        videoid = code.split("info_")[1]
         query = f"https://www.youtube.com/watch?v={videoid}"
         results = VideosSearch(query, limit=1)
         for result in (await results.next())["result"]:
@@ -64,7 +64,7 @@ async def _startfile(bot, update):
             caption=searched_text,
             reply_markup=key,
         )
-    elif "store" in code:
+    elif "store_" in code:
         ok = await update.reply_text("Uploading Media...")
         cmd, unique_id, msg_id = code.split("_")
 
@@ -132,7 +132,7 @@ async def _startfile(bot, update):
         await msg.copy(update.from_user.id, caption=caption)
         await send_msg.delete()
 
-    elif "verify" in code:
+    elif "verify_" in code:
         chat_id = code.split("_")[1]
         button = [
             [
