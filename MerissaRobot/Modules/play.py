@@ -19,11 +19,9 @@ from MerissaRobot import (
     ASS_MENTION,
     ASS_NAME,
     ASS_USERNAME,
-    BOT_ID,
     BOT_NAME,
     BOT_USERNAME,
     LOGGER,
-    OWNER_ID,
     pbot,
     pytgcalls,
     user,
@@ -464,6 +462,7 @@ async def vplay(_, message: Message):
         )
 
     return await merissa.delete()
+
 
 __help__ = """
 **A Telegram Streaming bot with some useful features.**
