@@ -60,7 +60,7 @@ async def pyro_callbacks(_, callback_query):
     try:
         if query == "pyrogram":
             await generate_session(callback_query)
-        elif query == "telethon:
+        elif query == "telethon":
             await generate_session(callback_query, telethon=True)
         else:
             await query.edit_message_text("Click on Below Button to Generate Session String",
