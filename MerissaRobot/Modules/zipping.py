@@ -141,7 +141,6 @@ def unzip_file(zip_path, extract_dir):
 
 
 @Client.on_message(filters.command(["unzip"]))
-@error_handler
 async def unzip_files(c, m):
     reply = m.reply_to_message if m.reply_to_message else None
     try:
