@@ -9,7 +9,7 @@ from pyrogram.types import (
     InputMediaPhoto,
     Message,
 )
-from pytgcalls.types import AudioPiped, AudioVideoPiped, HighQualityAudio, Update
+from pytgcalls.types import AudioPiped, AudioVideoPiped, HighQualityAudio
 
 from MerissaRobot import BOT_ID, BOT_USERNAME, OWNER_ID, pbot, pytgcalls
 from MerissaRobot.helpers import get_ytthumb
@@ -166,6 +166,7 @@ async def skip_str(_, message):
                 ]
             ),
         )
+
 
 @pbot.on_message(
     filters.command(["clearcache", "rmdownloads"]) & filters.user(OWNER_ID)
