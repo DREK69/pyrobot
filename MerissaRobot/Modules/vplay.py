@@ -10,7 +10,7 @@ from pyrogram.errors import (
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded
-from pytgcalls.types import AudioVideoPiped
+from pytgcalls.types import AudioVideoPiped, HighQualityAudio, HighQualityVideo
 from youtube_search import YoutubeSearch
 
 from MerissaRobot import (
@@ -30,7 +30,7 @@ from MerissaRobot.Utils.Helpers.vcfunction import *
 
 
 @pbot.on_message(
-    filters.command("vplay") & filters.group & ~filters.forwarded & ~filters.via_bot
+    filters.command("vplay") & ~filters.private & ~filters.forwarded & ~filters.via_bot
 )
 async def vplay(_, message: Message):
     merissa = await message.reply_text("Processing Please Wait...")
@@ -200,7 +200,7 @@ async def vplay(_, message: Message):
             ),
         )
     else:
-        stream = AudioVideoPiped(file_path)
+        stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
         try:
             await pytgcalls.join_group_call(
                 message.chat.id,
