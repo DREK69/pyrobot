@@ -1,11 +1,9 @@
-import collections
 import importlib
 
 from telegram import ParseMode, Update
 from telegram.ext import CallbackContext, CommandHandler
 
 from MerissaRobot import dispatcher
-
 from MerissaRobot.__main__ import (
     CHAT_SETTINGS,
     DATA_EXPORT,
