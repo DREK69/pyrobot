@@ -67,6 +67,7 @@ async def put(
     file_path,
     ruser,
     user_id,
+    stream_type,
 ):
     put_f = {
         "title": title,
@@ -75,6 +76,7 @@ async def put(
         "videoid": videoid,
         "req": ruser,
         "user_id": user_id,
+        "stream_type": stream_type,
     }
     get = merissadb.get(chat_id)
     if get:
