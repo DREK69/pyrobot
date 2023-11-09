@@ -6,12 +6,9 @@ import cv2
 from PIL import Image, ImageDraw, ImageFont
 from pyrogram import filters
 from pyrogram.types import Message
+from telegraph import upload_file
 
 from MerissaRobot import pbot
-
-import os
-from pyrogram import Client, filters
-from telegraph import upload_file
 
 
 @pbot.on_message(filters.command(["wasted"]))
@@ -29,6 +26,7 @@ async def wasted(bot, message):
     await gta.delete()
     os.remove(pic)
 
+
 @pbot.on_message(filters.command(["passed"]))
 async def mission_passed(bot, message):
     gta = await bot.send_message(message.chat.id, "`Processing...`")
@@ -43,6 +41,7 @@ async def mission_passed(bot, message):
     await message.reply_photo(url)
     await gta.delete()
     os.remove(pic)
+
 
 async def edit_or_reply(msg: Message, **kwargs):
     func = (
