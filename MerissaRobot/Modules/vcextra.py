@@ -110,7 +110,7 @@ async def skip_str(_, message):
         await message.delete()
     except:
         pass
-    get = fallendb.get(message.chat.id)
+    get = merissadb.get(message.chat.id)
     if not get:
         try:
             await _clear_(message.chat.id)
