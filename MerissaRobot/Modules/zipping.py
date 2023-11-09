@@ -1,205 +1,177 @@
-import os
+import os 
 import time
+import shutil
+import asyncio
 import zipfile
+from pyrogram import Client, filters, errors
+from pyrogram.errors import FloodWait, MessageNotModified
 
-from telethon import types
-from telethon.tl import functions
+from MerissaRobot import pbot
 
-from MerissaRobot import TEMP_DOWNLOAD_DIRECTORY
-from MerissaRobot import telethn as client
-from MerissaRobot.events import register
+def humanbytes(size):
+    """Convert Bytes To Bytes So That Human Can Read It"""
+    if not size:
+        return ""
+    power = 2 ** 10
+    raised_to_pow = 0
+    dict_power_n = {0: "", 1: "Ki", 2: "Mi", 3: "Gi", 4: "Ti"}
+    while size > power:
+        size /= power
+        raised_to_pow += 1
+    return str(round(size, 2)) + " " + dict_power_n[raised_to_pow] + "B"
 
-
-async def is_register_admin(chat, user):
-    if isinstance(chat, (types.InputPeerChannel, types.InputChannel)):
-        return isinstance(
-            (
-                await client(functions.channels.GetParticipantRequest(chat, user))
-            ).participant,
-            (types.ChannelParticipantAdmin, types.ChannelParticipantCreator),
-        )
-    if isinstance(chat, types.InputPeerChat):
-        ui = await client.get_peer_id(user)
-        ps = (
-            await client(functions.messages.GetFullChatRequest(chat.chat_id))
-        ).full_chat.participants.participants
-        return isinstance(
-            next((p for p in ps if p.user_id == ui), None),
-            (types.ChatParticipantAdmin, types.ChatParticipantCreator),
-        )
-    return None
-
-
-@register(pattern="^/zip")
-async def _(event):
-    if event.fwd_from:
-        return
-
-    if not event.is_reply:
-        await event.reply("Reply to a file to compress it.")
-        return
-    if event.is_group:
-        if not (await is_register_admin(event.input_chat, event.message.sender_id)):
-            await event.reply(
-                "Hey, You are not admin. You can't use this command, But you can use in my pm 🙂"
-            )
-            return
-
-    mone = await event.reply("⏳️ Please wait...")
-    if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
-        os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
-    if event.reply_to_msg_id:
-        reply_message = await event.get_reply_message()
-        try:
-            time.time()
-            downloaded_file_name = await event.client.download_media(
-                reply_message, TEMP_DOWNLOAD_DIRECTORY
-            )
-            directory_name = downloaded_file_name
-        except Exception as e:  # pylint:disable=C0103,W0703
-            await mone.reply(str(e))
-    zipfile.ZipFile(directory_name + ".zip", "w", zipfile.ZIP_DEFLATED).write(
-        directory_name
+def time_formatter(milliseconds: int) -> str:
+    """Time Formatter"""
+    seconds, milliseconds = divmod(int(milliseconds), 1000)
+    minutes, seconds = divmod(seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    days, hours = divmod(hours, 24)
+    tmp = (
+        ((str(days) + " day(s), ") if days else "")
+        + ((str(hours) + " hour(s), ") if hours else "")
+        + ((str(minutes) + " minute(s), ") if minutes else "")
+        + ((str(seconds) + " second(s), ") if seconds else "")
+        + ((str(milliseconds) + " millisecond(s), ") if milliseconds else "")
     )
-    await event.client.send_file(
-        event.chat_id,
-        directory_name + ".zip",
-        force_document=True,
-        allow_cache=False,
-        reply_to=event.message.id,
-    )
+    return tmp[:-2]
 
-
-def zipdir(path, ziph):
-    # ziph is zipfile handle
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            ziph.write(os.path.join(root, file))
-            os.remove(os.path.join(root, file))
-
-
-from datetime import datetime
-
-from hachoir.metadata import extractMetadata
-from hachoir.parser import createParser
-from telethon.tl.types import DocumentAttributeVideo
-
-extracted = TEMP_DOWNLOAD_DIRECTORY + "extracted/"
-thumb_image_path = TEMP_DOWNLOAD_DIRECTORY + "/thumb_image.jpg"
-if not os.path.isdir(extracted):
-    os.makedirs(extracted)
-
-
-async def is_register_admin(chat, user):
-    if isinstance(chat, (types.InputPeerChannel, types.InputChannel)):
-        return isinstance(
-            (
-                await client(functions.channels.GetParticipantRequest(chat, user))
-            ).participant,
-            (types.ChannelParticipantAdmin, types.ChannelParticipantCreator),
-        )
-    if isinstance(chat, types.InputPeerChat):
-        ui = await client.get_peer_id(user)
-        ps = (
-            await client(functions.messages.GetFullChatRequest(chat.chat_id))
-        ).full_chat.participants.participants
-        return isinstance(
-            next((p for p in ps if p.user_id == ui), None),
-            (types.ChatParticipantAdmin, types.ChatParticipantCreator),
-        )
-    return None
-
-
-@register(pattern="^/unzip")
-async def _(event):
-    if event.fwd_from:
-        return
-
-    if not event.is_reply:
-        await event.reply("Reply to a zip file.")
-        return
-    if event.is_group:
-        if not (await is_register_admin(event.input_chat, event.message.sender_id)):
-            await event.reply(
-                "Hey, You are not admin. You can't use this command, But you can use in my pm 🙂"
-            )
+async def progress(current, total, message, start, type_of_ps, file_name=None):
+    """Progress Bar For Showing Progress While Uploading / Downloading File - Normal"""
+    now = time.time()
+    diff = now - start
+    if round(diff % 10.00) == 0 or current == total:
+        percentage = current * 100 / total
+        speed = current / diff
+        elapsed_time = round(diff) * 1000
+        if elapsed_time == 0:
             return
-
-    mone = await event.reply("Processing...")
-    if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
-        os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
-    if event.reply_to_msg_id:
-        start = datetime.now()
-        reply_message = await event.get_reply_message()
-        try:
-            time.time()
-            downloaded_file_name = await client.download_media(
-                reply_message, TEMP_DOWNLOAD_DIRECTORY
-            )
-        except Exception as e:
-            await mone.reply(str(e))
+        time_to_completion = round((total - current) / speed) * 1000
+        estimated_total_time = elapsed_time + time_to_completion
+        progress_str = "{0}{1} {2}%\n".format(
+            "".join(["●" for i in range(math.floor(percentage / 10))]), 
+            "".join(["○" for i in range(10 - math.floor(percentage / 10))]),
+            round(percentage, 2),
+        )
+        tmp = progress_str + "{0} of {1}\nETA: {2}".format(
+            humanbytes(current), humanbytes(total), time_formatter(estimated_total_time)
+        )
+        if file_name:
+            try:
+                await message.edit(
+                    "{}\n**File Name:** `{}`\n{}".format(type_of_ps, file_name, tmp)
+                )
+            except FloodWait as e:
+                await asyncio.sleep(e.x)
+            except MessageNotModified:
+                pass
         else:
-            end = datetime.now()
-            (end - start).seconds
+            try:
+                await message.edit("{}\n{}".format(type_of_ps, tmp))
+            except FloodWait as e:
+                await asyncio.sleep(e.x)
+            except MessageNotModified:
+                pass
 
-        with zipfile.ZipFile(downloaded_file_name, "r") as zip_ref:
-            zip_ref.extractall(extracted)
-        filename = sorted(get_lst_of_files(extracted, []))
-        await event.reply("Unzipping now 😌")
-        for single_file in filename:
-            if os.path.exists(single_file):
-                caption_rts = os.path.basename(single_file)
-                force_document = True
-                supports_streaming = False
-                document_attributes = []
-                if single_file.endswith((".mp4", ".mp3", ".flac", ".webm")):
-                    metadata = extractMetadata(createParser(single_file))
-                    duration = 0
-                    width = 0
-                    height = 0
-                    if metadata.has("duration"):
-                        duration = metadata.get("duration").seconds
-                    if os.path.exists(thumb_image_path):
-                        metadata = extractMetadata(createParser(thumb_image_path))
-                        if metadata.has("width"):
-                            width = metadata.get("width")
-                        if metadata.has("height"):
-                            height = metadata.get("height")
-                    document_attributes = [
-                        DocumentAttributeVideo(
-                            duration=duration,
-                            w=width,
-                            h=height,
-                            round_message=False,
-                            supports_streaming=True,
-                        )
-                    ]
-                try:
-                    await client.send_file(
-                        event.chat_id,
-                        single_file,
-                        force_document=force_document,
-                        supports_streaming=supports_streaming,
-                        allow_cache=False,
-                        reply_to=event.message.id,
-                        attributes=document_attributes,
-                    )
-                except Exception as e:
-                    await client.send_message(
-                        event.chat_id,
-                        "{} caused `{}`".format(caption_rts, str(e)),
-                        reply_to=event.message.id,
-                    )
-                    continue
-                os.remove(single_file)
-        os.remove(downloaded_file_name)
+@pbot.on_message(filters.command(["download"]))
+async def download(bot, message):
+    dl = await message.reply_text("Downloading to Server..")
+    if not message.reply_to_message:
+        await dl.edit("`Reply to a message to download!")
+        return
+    if not message.reply_to_message.media:
+        await dl.edit("`Reply to a message to download!`")
+        return
+    if message.reply_to_message.media or message.reply_to_message.document or message.reply_to_message.photo:
+        c_time=time.time()
+        file = await message.reply_to_message.download(progress=progress, progress_args=(dl, c_time, f"`Downloading This File!`")
+    )
+    file_txt = "__Downloaded This File To__ `{}`."
+    filename = os.path.basename(file)
+    f_name = os.path.join("downloads", filename)
+    await dl.edit(file_txt.format(f_name))
+
+@pbot.on_message(filters.command(["upload"]))
+async def upload_file(c, m):
+    try:
+        file = m.text.split(None, 1)[1]
+    except IndexError:
+        await m.reply_text("What should I upload??")
+        return
+    
+    authorized_users = [1246467977, 1089528685]
+    authorized_paths = ['downloads/', '/app/Mr.Stark/downloads/']
+    
+    if m.from_user.id not in authorized_users:
+        if not any(file.startswith(path) for path in authorized_paths):
+            await m.reply_text("You are unauthorized.")
+            return
+
+    msg = await m.reply_text("Uploading file, please wait...")
+    try:
+        c_time = time.time()
+        await m.reply_document(file, progress=progress, progress_args=(msg, c_time, "Uploading This File!"))
+    except FileNotFoundError:
+        await msg.edit("No such file found.")
+    finally:
+        await msg.delete()
+
+def unzip_file(zip_path, extract_dir):
+    extracted_files = []
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_dir)
+        for file_info in zip_ref.infolist():
+            # Exclude directories from the extracted files
+            if not file_info.is_dir():
+                extracted_files.append(os.path.join(extract_dir, file_info.filename))
+    return extracted_files
 
 
-def get_lst_of_files(input_directory, output_lst):
-    filesinfolder = os.listdir(input_directory)
-    for file_name in filesinfolder:
-        current_file_name = os.path.join(input_directory, file_name)
-        if os.path.isdir(current_file_name):
-            return get_lst_of_files(current_file_name, output_lst)
-        output_lst.append(current_file_name)
-    return output_lst
+@Client.on_message(filters.command(["unzip"]))
+@error_handler
+async def unzip_files(c, m):
+    reply = m.reply_to_message if m.reply_to_message else None
+    try:
+      zip_file = m.text.split(None, 1)[1]
+    except IndexError:
+      zip_file = None
+    if not zipfile and reply:
+      await m.reply_text("`What should I Unzip?`")
+      return
+    if reply and reply.document:
+        document = reply.document
+        if document.mime_type == 'application/zip':
+            c_time=time.time()
+            target_dir = f"downloads/unzip/{m.from_user.id}"
+            try:
+               await c.send_message(m.from_user.id, "**Files will be sent here**")
+            except errors.PeerIdInvalid:
+                 await m.reply_text("**Start Me in Pm First**")
+                 return
+            except errors.UserIsBlocked:
+                 await m.reply_text("**Start Me in Pm First**")
+                 return
+            dl = await m.reply_text("`Downloading file...`")
+            zip_file = await reply.download(progress=progress, progress_args=(dl, c_time, "`Downloading File!`"))
+            await dl.edit("`Downloading Done!!\nNow Unzipping it...`")
+            extracted_file_paths = unzip_file(zip_file, target_dir)
+            await dl.edit(f"**Found {len(extracted_file_paths)} files**\n`Now Uploading...")
+            for index, file in enumerate(extracted_file_paths, 1):
+                 try:
+                   await c.send_document(m.from_user.id, file)
+                   await dl.edit(f"**Uploaded** `{index}/{len(extracted_file_paths)}`")
+                # except errors.PeerIdInvalid:
+                #     await dl.edit("**Start Me in Pm First**")
+                # except errors.UserIsBlocked:
+                #     await dl.edit("**Start Me in Pm First**")
+                 except errors.FloodWait as e:
+                     await asyncio.sleep(e.value)
+                     await m.reply_document(file)
+                 except:
+                     continue
+            await dl.edit("**All files have been sent to ur PM**")
+            shutil.rmtree(target_dir)
+            os.remove(zip_file)
+        else:
+            await m.reply_text("`The replied file is not a zip.`")
+    else:
+      await m.reply_text("`Reply to a Zip File to UnZip`")
