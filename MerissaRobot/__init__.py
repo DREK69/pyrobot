@@ -63,10 +63,7 @@ user = Client(
     session_string=str(STRING_SESSION),
 )
 pytgcalls = PyTgCalls(user)
-updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
-telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
-dispatcher = updater.dispatcher
-aiohttpsession = ClientSession()
+
 BOT_ID = dispatcher.bot.id
 BOT_USERNAME = dispatcher.bot.username
 BOT_NAME = dispatcher.bot.first_name
@@ -95,6 +92,8 @@ async def startpyro():
     LOGGER.info("Pytgcalls Started")
     await idle()
 
+updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
+dispatcher = updater.dispatcher
 
 DEV_USERS.add(OWNER_ID)
 sw = None
