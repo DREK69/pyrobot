@@ -2,9 +2,9 @@ from pyrogram import filters
 from pyrogram.types import Message
 from pytgcalls.types import AudioPiped, AudioVideoPiped, HighQualityAudio, Update
 
-from MerissaRobot import BOT_ID, BOT_USERNAME, pbot, pytgcalls
+from MerissaRobot import BOT_ID, BOT_USERNAME, pbot, pytgcalls, user
 from MerissaRobot.helpers import get_ytthumb
-from MerissaRobot.Utils.Helpers.vcfunction import *
+from MerissaRobot.Utils.Helpers.vcfunction import _clear_, merissadb
 
 welcome = 20
 close = 30
