@@ -22,7 +22,6 @@ from pytgcalls.types import (
     AudioVideoPiped,
     HighQualityAudio,
     HighQualityVideo,
-    Update,
 )
 from telegram import InlineKeyboardButton as IKB
 from youtube_search import YoutubeSearch
@@ -549,6 +548,7 @@ async def ub_leave(_, message: Message):
             await user.leave_chat(message.chat.id)
         except:
             pass
+
 
 __help__ = """
 **A Telegram Streaming bot with some useful features.**
