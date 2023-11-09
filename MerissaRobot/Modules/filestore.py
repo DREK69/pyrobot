@@ -54,7 +54,7 @@ async def _startfile(bot, update):
                     ),
                 ],
                 [
-                    InlineKeyboardButton(text="🔄 Close", callback_data="close"),
+                    InlineKeyboardButton(text="🔄 Close", callback_data="cb_close"),
                 ],
             ]
         )
