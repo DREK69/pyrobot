@@ -13,7 +13,6 @@ from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    InputMediaPhoto,
     Message,
 )
 from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded
@@ -333,6 +332,7 @@ async def clear_misc(_, message: Message):
         for lel in os.listdir(pth):
             os.system("rm -rf *.webm *.jpg *.png")
     await message.reply_text("All temp file Cleaned.")
+
 
 @pbot.on_message(filters.command("activevc"))
 async def activevc(_, message: Message):
