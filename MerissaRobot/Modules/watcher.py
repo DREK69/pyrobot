@@ -1,6 +1,6 @@
 from pyrogram import filters
 from pyrogram.types import Message
-from pytgcalls.types import AudioPiped, AudioVideoPiped, HighQualityAudio, Update
+from pytgcalls.types import AudioPiped, AudioVideoPiped, HighQualityAudio, HighQualityVideo, Update
 
 from MerissaRobot import BOT_ID, BOT_USERNAME, pbot, pytgcalls, user
 from MerissaRobot.helpers import get_ytthumb
@@ -72,7 +72,7 @@ async def on_stream_end(pytgcalls, update: Update):
         if stream_type == "audio":
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
         else:
-            stream = AudioVideoPiped(file_path)
+            stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
 
         try:
             await pytgcalls.change_stream(
