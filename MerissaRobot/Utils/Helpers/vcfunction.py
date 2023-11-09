@@ -1,13 +1,15 @@
-import os
 import asyncio
+import os
+from typing import Union
+
 import yt_dlp
-from typing import Callable, Union
-from pyrogram.enums import ChatMemberStatus, MessageEntityType
-from pyrogram.types import Message, Audio
+from pyrogram.enums import MessageEntityType
+from pyrogram.types import Audio, Message
 
 merissadb = {}
 active = []
 stream = {}
+
 
 async def is_active_chat(chat_id: int) -> bool:
     if chat_id not in active:
@@ -43,6 +45,7 @@ async def stream_on(chat_id: int):
 
 async def stream_off(chat_id: int):
     stream[chat_id] = False
+
 
 async def _clear_(chat_id):
     try:
