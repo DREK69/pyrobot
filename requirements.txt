@@ -75,6 +75,7 @@ pytimeparse
 pytube
 pytz
 pyYAML>=5.1.2
+qrcode
 Random-Word-Generator
 redis
 regex
