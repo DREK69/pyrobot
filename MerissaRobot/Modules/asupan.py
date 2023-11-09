@@ -18,7 +18,7 @@ async def asupan(_, message):
             ],
         ]
     )
-    await message.reply_video("asupan.mp4", reply_markup=button)
+    await message.reply_video("asupan.mp4", caption="Uploaded by @MerissaRobot", reply_markup=button)
     await x.delete()
     os.remove("asupan.mp4")
 
@@ -30,7 +30,7 @@ async def asupancb(_, query: CallbackQuery):
     )
     res = await save_file("https://api.akuari.my.id/asupan/tiktok", "asupan.mp4")
     await query.edit_message_media(
-        InputMediaVideo("asupan.mp4", caption="Powered by @MerissaRobot"),
+        InputMediaVideo("asupan.mp4", caption="Uploaded by @MerissaRobot"),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
