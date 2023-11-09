@@ -52,7 +52,7 @@ def admin_check_cb(func: Callable) -> Callable:
 
 @pbot.on_message(filters.command(["pause"]) & filters.group)
 @adminsOnly("can_manage_video_chats")
-async def pause_str(_, message: Message):
+async def pause_str(_, message):
     try:
         await message.delete()
     except:
@@ -70,7 +70,7 @@ async def pause_str(_, message: Message):
 
 @pbot.on_message(filters.command(["end"]) & filters.group)
 @adminsOnly("can_manage_video_chats")
-async def stop_str(_, message: Message):
+async def stop_str(_, message):
     try:
         await message.delete()
     except:
@@ -88,7 +88,7 @@ async def stop_str(_, message: Message):
 
 @pbot.on_message(filters.command(["resume"]) & filters.group)
 @adminsOnly("can_manage_video_chats")
-async def res_str(_, message: Message):
+async def res_str(_, message):
     try:
         await message.delete()
     except:
@@ -105,7 +105,7 @@ async def res_str(_, message: Message):
 
 @pbot.on_message(filters.command(["skip", "next"]) & filters.group)
 @adminsOnly("can_manage_video_chats")
-async def skip_str(_, message: Message):
+async def skip_str(_, message):
     try:
         await message.delete()
     except:
