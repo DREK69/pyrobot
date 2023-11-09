@@ -50,7 +50,6 @@ async def convertmin(duration):
 @Client.on_message(filters.regex(ytregex) & filters.incoming & filters.private)
 @subscribe
 async def ytregex(client, message):
-    message.from_user.id
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     link = message.text
     if "music" in link:
@@ -111,7 +110,6 @@ async def ytregex(client, message):
 @Client.on_message(filters.command(["ytdl", "video"]))
 @subscribe
 async def video(client, message):
-    message.from_user.id
     if len(message.command) < 2:
         return await message.reply_text("Give me some text to search on Youtube")
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
@@ -149,7 +147,6 @@ async def video(client, message):
 @Client.on_message(filters.command(["music", "ytmusic", "song"]))
 @subscribe
 async def song(client, message):
-    message.from_user.id
     if len(message.command) < 2:
         return await message.reply_text("Give me some text to search on Youtube")
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
