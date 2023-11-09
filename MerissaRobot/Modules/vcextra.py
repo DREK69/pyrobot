@@ -9,7 +9,7 @@ from pyrogram.types import (
     InputMediaPhoto,
     Message,
 )
-from pytgcalls.types import AudioPiped, HighQualityAudio, Update, AudioVidoePiped
+from pytgcalls.types import AudioPiped, AudioVidoePiped, HighQualityAudio, Update
 
 from MerissaRobot import BOT_ID, BOT_USERNAME, OWNER_ID, pbot, pytgcalls
 from MerissaRobot.helpers import get_ytthumb
