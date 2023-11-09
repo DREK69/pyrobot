@@ -9,7 +9,7 @@ from pyrogram.types import (
     InputMediaPhoto,
     Message,
 )
-from pytgcalls.types import AudioPiped, HighQualityAudio, Update, AudioVideoPiped
+from pytgcalls.types import AudioPiped, HighQualityAudio, Update
 
 from MerissaRobot import BOT_ID, BOT_USERNAME, pbot, pytgcalls
 from MerissaRobot.helpers import get_ytthumb
@@ -126,10 +126,10 @@ async def skip_str(_, message: Message):
         file_path = get[0]["file_path"]
         videoid = get[0]["videoid"]
         req_by = get[0]["req"]
-        user_id = get[0]["user_id"]
+        get[0]["user_id"]
         stream_type = get[0]["stream_type"]
         get.pop(0)
-        
+
         if stream_type == "audio":
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
         else:
