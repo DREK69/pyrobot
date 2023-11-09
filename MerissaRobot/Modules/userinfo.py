@@ -12,9 +12,6 @@ from telegram import MAX_MESSAGE_LENGTH, MessageEntity, ParseMode, Update, __ver
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CommandHandler
 from telegram.utils.helpers import escape_markdown, mention_html
-from telethon import events
-from telethon.tl.functions.channels import GetFullChannelRequest
-from telethon.tl.types import ChannelParticipantsAdmins
 
 import MerissaRobot.Database.sql.userinfo_sql as sql
 from MerissaRobot import (
@@ -29,7 +26,6 @@ from MerissaRobot import (
     StartTime,
     dispatcher,
     sw,
-    telethn,
 )
 from MerissaRobot.__main__ import STATS, USER_INFO
 from MerissaRobot.Database.sql.afk_sql import is_afk, set_afk
