@@ -10,12 +10,7 @@ from pyrogram.errors import (
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded
-from pytgcalls.types import (
-    AudioPiped,
-    AudioVideoPiped,
-    HighQualityAudio,
-    HighQualityVideo,
-)
+from pytgcalls.types import AudioPiped, AudioVideoPiped, HighQualityAudio
 from telegram import InlineKeyboardButton as IKB
 from youtube_search import YoutubeSearch
 
@@ -327,11 +322,7 @@ async def play(_, message: Message):
             pass
 
     ruser = message.from_user.first_name
-    audio = (
-        (message.reply_to_message.video)
-        if message.reply_to_message
-        else None
-    )
+    audio = (message.reply_to_message.video) if message.reply_to_message else None
     url = get_url(message)
     if audio:
         if round(audio.duration / 60) > DURATION_LIMIT:
@@ -473,7 +464,6 @@ async def play(_, message: Message):
         )
 
     return await merissa.delete()
-
 
 
 @pbot.on_message(
