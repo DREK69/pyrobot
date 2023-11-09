@@ -55,7 +55,6 @@ pbot = Client(
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=TOKEN,
-    workers=min(32, os.cpu_count() + 4),
 )
 user = Client(
     "MerissaMusic",
