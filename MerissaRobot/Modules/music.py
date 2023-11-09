@@ -42,14 +42,7 @@ from MerissaRobot import (
     user,
 )
 from MerissaRobot.helpers import get_ytthumb
-
-DURATION_LIMIT = int("90")
-
-welcome = 20
-close = 30
-merissadb = {}
-active = []
-stream = {}
+from MerissaRobot.Utils.Helpers.vcfunction import *
 
 
 def admin_check_cb(func: Callable) -> Callable:
