@@ -92,7 +92,7 @@ telegraph
 telethon==1.26.1
 pyshorteners
 textblob 
-TgCrypto
+tgcrypto==1.2.5
 tswift
 tzlocal
 ujson
