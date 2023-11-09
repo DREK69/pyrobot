@@ -1,10 +1,10 @@
 from pyrogram import filters
-from pyrogram.types import Messaage
 
-from MerissaRobot import pytgcalls, pbot
+from MerissaRobot import pbot, pytgcalls
 from MerissaRobot.helpers import get_ytthumb
 from MerissaRobot.Utils.Helpers.permissions import adminsOnly
 from MerissaRobot.Utils.Helpers.vcfunction import *
+
 
 @pbot.on_message(filters.command(["pause"]) & filters.group)
 @adminsOnly("can_manage_video_chats")
@@ -119,6 +119,7 @@ async def skip_str(_, message: Message):
             ),
         )
 
+
 @pytgcalls.on_left()
 @pytgcalls.on_kicked()
 @pytgcalls.on_closed_voice_chat()
@@ -185,6 +186,7 @@ async def on_stream_end(pytgcalls, update: Update):
                 ]
             ),
         )
+
 
 @pbot.on_callback_query(filters.regex(pattern=r"^(resume_cb|pause_cb|skip_cb|end_cb)$"))
 @admin_check_cb
@@ -323,8 +325,9 @@ async def admin_cbs(_, query: CallbackQuery):
                             InlineKeyboardButton(text="⏹", callback_data="end_cb"),
                         ],
                     ]
-               ),
+                ),
             )
+
 
 @pbot.on_callback_query(filters.regex("unban_ass"))
 @admin_check_cb
@@ -349,5 +352,3 @@ async def unban_ass(_, CallbackQuery):
             "I dont have permission to unban user in this chat.",
             show_alert=True,
         )
-
-
