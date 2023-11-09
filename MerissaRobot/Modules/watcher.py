@@ -1,12 +1,14 @@
 from pyrogram import filters
 from pyrogram.types import Message
-from pytgcalls.types import AudioPiped, HighQualityAudio, Update, AudioVideoPiped
+from pytgcalls.types import AudioPiped, AudioVideoPiped, HighQualityAudio, Update
 
-from MerissaRobot import BOT_ID, BOT_USERNAME, OWNER_ID, pbot, pytgcalls
+from MerissaRobot import BOT_ID, BOT_USERNAME, pbot, pytgcalls
 from MerissaRobot.helpers import get_ytthumb
 from MerissaRobot.Utils.Helpers.vcfunction import *
+
 welcome = 20
 close = 30
+
 
 @pbot.on_message(filters.video_chat_started, group=welcome)
 @pbot.on_message(filters.video_chat_ended, group=close)
@@ -16,7 +18,6 @@ async def welcome(_, message: Message):
         await pytgcalls.leave_group_call(message.chat.id)
     except:
         pass
-
 
 
 @pbot.on_message(filters.left_chat_member)
@@ -31,6 +32,7 @@ async def ub_leave(_, message: Message):
             await user.leave_chat(message.chat.id)
         except:
             pass
+
 
 @pytgcalls.on_left()
 @pytgcalls.on_kicked()
@@ -102,4 +104,3 @@ async def on_stream_end(pytgcalls, update: Update):
                 ]
             ),
         )
-
