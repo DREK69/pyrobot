@@ -42,40 +42,6 @@ from MerissaRobot import (
 from MerissaRobot.helpers import get_ytthumb
 from MerissaRobot.Utils.Helpers.vcfunction import *
 
-
-def admin_check_cb(func: Callable) -> Callable:
-    async def cb_non_admin(_, query: CallbackQuery):
-        if not await is_active_chat(query.message.chat.id):
-            return await query.answer(
-                "Bot isn't Streaming on VideoChat.", show_alert=True
-            )
-
-        try:
-            check = await pbot.get_chat_member(
-                query.message.chat.id, query.from_user.id
-            )
-        except:
-            return
-        if check.status not in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR]:
-            return await query.answer(
-                "You are not admin.",
-                show_alert=True,
-            )
-
-        admin = (
-            await pbot.get_chat_member(query.message.chat.id, query.from_user.id)
-        ).privileges
-        if admin.can_manage_video_chats:
-            return await func(_, query)
-        else:
-            return await query.answer(
-                "You don't have permission to Manage Videochat",
-                show_alert=True,
-            )
-
-    return cb_non_admin
-
-
 @pbot.on_message(
     filters.command(["play", "play@MerissaRobot"])
     & filters.group
