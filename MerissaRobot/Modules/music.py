@@ -1,23 +1,20 @@
 import asyncio
 import os
-from typing import Callable, Union
+from typing import Callable
 
-import yt_dlp
 from pyrogram import filters
-from pyrogram.enums import ChatMemberStatus, MessageEntityType
+from pyrogram.enums import ChatMemberStatus
 from pyrogram.errors import (
     ChatAdminRequired,
     UserAlreadyParticipant,
     UserNotParticipant,
 )
 from pyrogram.types import (
-    Audio,
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     InputMediaPhoto,
     Message,
-    Voice,
 )
 from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded
 from pytgcalls.types import (
