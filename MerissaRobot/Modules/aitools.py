@@ -70,7 +70,7 @@ async def chatgpt(c, m):
     await c.send_chat_action(m.chat.id, enums.ChatAction.CANCEL)
 
 
-@pbot.on_message(filters.command(["img"]))
+@pbot.on_message(filters.command(["genimg", "dream", "prompt"]))
 async def ai_img_search(c, m):
     try:
         prompt = m.text.split(None, 1)[1]
