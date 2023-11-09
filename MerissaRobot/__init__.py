@@ -19,7 +19,7 @@ from logging import (
 import spamwatch
 import telegram.ext as tg
 from aiohttp import ClientSession
-from pyrogram import Client, errors
+from pyrogram import Client, errors, idle
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 from pyrogram.errors.exceptions.flood_420 import FloodWait
 from pyrogram.types import Message
@@ -93,6 +93,7 @@ async def startpyro():
     await user.send_message(-1001446814207, "Assistant Started")
     await pytgcalls.start()
     LOGGER.info("Pytgcalls Started")
+    await idle()
 
 
 DEV_USERS.add(OWNER_ID)
