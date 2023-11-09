@@ -10,8 +10,7 @@ from pyrogram.errors import (
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded
-from pytgcalls.types import AudioPiped, AudioVideoPiped, HighQualityAudio
-from telegram import InlineKeyboardButton as IKB
+from pytgcalls.types import AudioVideoPiped
 from youtube_search import YoutubeSearch
 
 from MerissaRobot import (
@@ -19,11 +18,9 @@ from MerissaRobot import (
     ASS_MENTION,
     ASS_NAME,
     ASS_USERNAME,
-    BOT_ID,
     BOT_NAME,
     BOT_USERNAME,
     LOGGER,
-    OWNER_ID,
     pbot,
     pytgcalls,
     user,
