@@ -1,6 +1,5 @@
 import asyncio
 import os
-from typing import Callable
 
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
@@ -9,12 +8,7 @@ from pyrogram.errors import (
     UserAlreadyParticipant,
     UserNotParticipant,
 )
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded
 from pytgcalls.types import (
     AudioPiped,
@@ -41,6 +35,7 @@ from MerissaRobot import (
 )
 from MerissaRobot.helpers import get_ytthumb
 from MerissaRobot.Utils.Helpers.vcfunction import *
+
 
 @pbot.on_message(
     filters.command(["play", "play@MerissaRobot"])
