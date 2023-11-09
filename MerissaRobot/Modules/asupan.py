@@ -4,10 +4,11 @@ from pyrogram import filters
 from pyrogram.types import *
 
 from MerissaRobot import pbot as bot
-from MerissaRobot.helpers import save_file
+from MerissaRobot.helpers import save_file, subscribe
 
 
 @bot.on_message(filters.command("asupan"))
+@subscribe
 async def asupan(_, message):
     x = await message.reply_text("Please Wait Video Uploading...")
     res = await save_file("https://api.akuari.my.id/asupan/tiktok", "asupan.mp4")
