@@ -45,7 +45,6 @@ from MerissaRobot import (
     user,
 )
 from MerissaRobot.helpers import get_ytthumb
-from MerissaRobot.Utils.Helpers.permissions import adminsOnly
 
 DURATION_LIMIT = int("90")
 
@@ -617,6 +616,7 @@ async def admin_cbs(_, query: CallbackQuery):
                     ]
                 ),
             )
+
 
 @pbot.on_message(filters.command("activevc"))
 async def activevc(_, message: Message):
