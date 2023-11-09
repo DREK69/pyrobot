@@ -805,6 +805,7 @@ def main():
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
     loop.run_until_complete(startpyro())
+    updater.idle()
 
 
 if __name__ == "__main__":
