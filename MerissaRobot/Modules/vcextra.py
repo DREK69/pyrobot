@@ -6,8 +6,8 @@ from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    Message,
     InputMediaPhoto,
+    Message,
 )
 from pytgcalls.types import AudioPiped, HighQualityAudio, Update
 
