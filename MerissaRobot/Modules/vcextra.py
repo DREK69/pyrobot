@@ -416,10 +416,14 @@ async def admin_cbs(_, query: CallbackQuery):
             videoid = get[0]["videoid"]
             file_path = get[0]["file_path"]
             req_by = get[0]["req"]
-            get[0]["user_id"]
+            stream_type = get[0]["stream_type"]
             get.pop(0)
+
+            if stream_type == "audio":
+                stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+            else:
+                stream = AudioVidoePiped(file_path)
             thumb = await get_ytthumb(videoid)
-            stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
             try:
                 await pytgcalls.change_stream(
                     query.message.chat.id,
