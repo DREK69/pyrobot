@@ -240,6 +240,80 @@ async def on_stream_end(pytgcalls, update: Update):
         )
 
 
+
+@pbot.on_message(
+    filters.command(["clearcache", "rmdownloads"]) & filters.user(OWNER_ID)
+)
+async def clear_misc(_, message: Message):
+    try:
+        await message.delete()
+    except:
+        pass
+    downloads = os.path.realpath("downloads")
+    down_dir = os.listdir(downloads)
+    pth = os.path.realpath(".")
+    os_dir = os.listdir(pth)
+
+    if down_dir:
+        for file in down_dir:
+            os.remove(os.path.join(downloads, file))
+    if os_dir:
+        for lel in os.listdir(pth):
+            os.system("rm -rf *.webm *.jpg *.png")
+    await message.reply_text("All temp file Cleaned.")
+
+
+@pbot.on_message(filters.command("activevc") & filters.user(OWNER_ID))
+async def activevc(_, message: Message):
+    mystic = await message.reply_text("Getting Active Videochat...")
+    chats = await get_active_chats()
+    text = ""
+    j = 0
+    for chat in chats:
+        try:
+            title = (await pbot.get_chat(chat)).title
+        except Exception:
+            title = "Private Chat"
+        if (await pbot.get_chat(chat)).username:
+            user = (await pbot.get_chat(chat)).username
+            text += f"<b>{j + 1}.</b>  [{title}](https://t.me/{user})\n"
+        else:
+            text += f"<b>{j + 1}. {title}</b> [`{chat}`]\n"
+        j += 1
+    if not text:
+        await mystic.edit_text("No active Videochat Found...")
+    else:
+        await mystic.edit_text(
+            f"**List Active Videochat on Music Bot:**\n\n{text}",
+            disable_web_page_preview=True,
+        )
+
+
+@pbot.on_message(filters.video_chat_started, group=welcome)
+@pbot.on_message(filters.video_chat_ended, group=close)
+async def welcome(_, message: Message):
+    try:
+        await _clear_(message.chat.id)
+        await pytgcalls.leave_group_call(message.chat.id)
+    except:
+        pass
+
+
+@pbot.on_message(filters.left_chat_member)
+async def ub_leave(_, message: Message):
+    if message.left_chat_member.id == BOT_ID:
+        try:
+            await _clear_(message.chat.id)
+            await pytgcalls.leave_group_call(message.chat.id)
+        except:
+            pass
+        try:
+            await user.leave_chat(message.chat.id)
+        except:
+            pass
+
+
+
 @pbot.on_callback_query(filters.regex(pattern=r"^(resume_cb|pause_cb|skip_cb|end_cb)$"))
 @admin_check_cb
 async def admin_cbs(_, query: CallbackQuery):
