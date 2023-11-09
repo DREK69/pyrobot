@@ -175,6 +175,8 @@ async def play(_, message: Message):
         videoid = videoid
     except:
         videoid = "fuckitstgaudio"
+        
+    stream_type = "audio"
     if await is_active_chat(message.chat.id):
         await put(
             message.chat.id,
@@ -184,6 +186,7 @@ async def play(_, message: Message):
             file_path,
             ruser,
             message.from_user.id,
+            stream_type,
         )
         thumb = await get_ytthumb(videoid)
         position = len(merissadb.get(message.chat.id))
@@ -390,6 +393,8 @@ async def play(_, message: Message):
         videoid = videoid
     except:
         videoid = "fuckitstgaudio"
+
+    stream_type = "video"
     if await is_active_chat(message.chat.id):
         await put(
             message.chat.id,
@@ -399,6 +404,7 @@ async def play(_, message: Message):
             file_path,
             ruser,
             message.from_user.id,
+            stream_type,
         )
         thumb = await get_ytthumb(videoid)
         position = len(merissadb.get(message.chat.id))
