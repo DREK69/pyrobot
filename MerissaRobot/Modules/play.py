@@ -463,6 +463,7 @@ async def vplay(_, message: Message):
 
     return await merissa.delete()
 
+
 @pytgcalls.on_left()
 @pytgcalls.on_kicked()
 @pytgcalls.on_closed_voice_chat()
@@ -533,7 +534,6 @@ async def on_stream_end(pytgcalls, update: Update):
                 ]
             ),
         )
-
 
 
 __help__ = """
