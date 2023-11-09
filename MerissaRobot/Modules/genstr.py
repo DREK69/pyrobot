@@ -29,7 +29,9 @@ ERROR_MESSAGE = (
     "this error message is not being logged by us!"
 )
 
-generate_button = [[InlineKeyboardButton("Generate Session", callback_data="gen_string")]]
+generate_button = [
+    [InlineKeyboardButton("Generate Session", callback_data="gen_string")]
+]
 
 
 # Callbacks
@@ -63,16 +65,21 @@ async def pyro_callbacks(_, callback_query):
         elif query == "telethon":
             await generate_session(callback_query, telethon=True)
         else:
-            await query.edit_message_text("Click on Below Button to Generate Session String",
-            reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton("Pyrogram", callback_data="gen_pyrogram"),
-                    InlineKeyboardButton("Telethon", callback_data="gen_telethon"),
-                ]
-            ]
-          )
-        )
+            await query.edit_message_text(
+                "Click on Below Button to Generate Session String",
+                reply_markup=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                "Pyrogram", callback_data="gen_pyrogram"
+                            ),
+                            InlineKeyboardButton(
+                                "Telethon", callback_data="gen_telethon"
+                            ),
+                        ]
+                    ]
+                ),
+            )
     except Exception as e:
         await callback_query.message.reply(ERROR_MESSAGE.format(str(e)))
 
