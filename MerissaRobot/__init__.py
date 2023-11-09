@@ -49,6 +49,17 @@ getLogger("telethon").setLevel(ERROR)
 getLogger("telegram").setLevel(CRITICAL)
 getLogger("sqlalchemy").setLevel(ERROR)
 
+updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
+dispatcher = updater.dispatcher
+
+BOT_ID = dispatcher.bot.id
+BOT_USERNAME = dispatcher.bot.username
+BOT_NAME = dispatcher.bot.first_name
+BOT_MENTION = "https://t.me/MerissaRobot"
+ASS_ID = "5249696122"
+ASS_NAME = "Merissa Assistant"
+ASS_USERNAME = "MerissaAssistant"
+ASS_MENTION = "https://t.me/merissaassistant"
 
 pbot = Client(
     "MerissaRobot",
@@ -63,15 +74,6 @@ user = Client(
     session_string=str(STRING_SESSION),
 )
 pytgcalls = PyTgCalls(user)
-
-BOT_ID = dispatcher.bot.id
-BOT_USERNAME = dispatcher.bot.username
-BOT_NAME = dispatcher.bot.first_name
-BOT_MENTION = "https://t.me/MerissaRobot"
-ASS_ID = "5249696122"
-ASS_NAME = "Merissa Assistant"
-ASS_USERNAME = "MerissaAssistant"
-ASS_MENTION = "https://t.me/merissaassistant"
 
 
 async def startpyro():
@@ -92,9 +94,6 @@ async def startpyro():
     LOGGER.info("Pytgcalls Started")
     await idle()
 
-
-updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
-dispatcher = updater.dispatcher
 
 DEV_USERS.add(OWNER_ID)
 sw = None
