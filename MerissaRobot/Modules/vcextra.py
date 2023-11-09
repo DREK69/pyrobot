@@ -9,7 +9,7 @@ from pyrogram.types import (
     InputMediaPhoto,
     Message,
 )
-from pytgcalls.types import AudioPiped, HighQualityAudio, Update
+from pytgcalls.types import AudioPiped, HighQualityAudio, Update, AudioVideoPiped
 
 from MerissaRobot import BOT_ID, BOT_USERNAME, pbot, pytgcalls
 from MerissaRobot.helpers import get_ytthumb
@@ -127,9 +127,13 @@ async def skip_str(_, message: Message):
         videoid = get[0]["videoid"]
         req_by = get[0]["req"]
         user_id = get[0]["user_id"]
+        stream_type = get[0]["stream_type"]
         get.pop(0)
-
-        stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+        
+        if stream_type == "audio":
+            stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+        else:
+            stream = AudioVidoePiped(file_path)
         try:
             await pytgcalls.change_stream(
                 message.chat.id,
@@ -142,7 +146,7 @@ async def skip_str(_, message: Message):
         await message.reply_text(
             text=f"**Skipped Stream**\n\nBy : {message.from_user.mention}",
         )
-        img = await gen_thumb(videoid, user_id)
+        img = await get_ytthumb(videoid)
         return await message.reply_photo(
             photo=img,
             caption=f"📡 Streaming Started\n\n👤Requested By:{req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
@@ -196,9 +200,13 @@ async def on_stream_end(pytgcalls, update: Update):
         videoid = get[0]["videoid"]
         req_by = get[0]["req"]
         get[0]["user_id"]
+        stream_type = get[0]["stream_type"]
         get.pop(0)
         thumb = await get_ytthumb(videoid)
-        stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+        if stream_type == "audio":
+            stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+        else:
+            stream = AudioVidoePiped(file_path)
 
         try:
             await pytgcalls.change_stream(
