@@ -240,7 +240,6 @@ async def on_stream_end(pytgcalls, update: Update):
         )
 
 
-
 @pbot.on_message(
     filters.command(["clearcache", "rmdownloads"]) & filters.user(OWNER_ID)
 )
@@ -311,7 +310,6 @@ async def ub_leave(_, message: Message):
             await user.leave_chat(message.chat.id)
         except:
             pass
-
 
 
 @pbot.on_callback_query(filters.regex(pattern=r"^(resume_cb|pause_cb|skip_cb|end_cb)$"))
