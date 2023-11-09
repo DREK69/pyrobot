@@ -6,6 +6,10 @@ import yt_dlp
 from pyrogram.enums import MessageEntityType
 from pyrogram.types import Audio, Message
 
+DURATION_LIMIT = int("90")
+
+welcome = 20
+close = 30
 merissadb = {}
 active = []
 stream = {}
