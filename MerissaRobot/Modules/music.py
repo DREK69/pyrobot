@@ -362,7 +362,7 @@ async def play(_, message: Message):
             return await merissa.edit_text(
                 f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
             )
-        file_path = await ytvideo(url)
+        file_path = await ytvideo(videoid)
     else:
         if len(message.command) < 2:
             return await merissa.edit_text("Please enter query to Play!")
@@ -387,7 +387,7 @@ async def play(_, message: Message):
             return await merissa.edit(
                 f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
             )
-        file_path = await ytvideo(url)
+        file_path = await ytvideo(videoid)
 
     try:
         videoid = videoid
