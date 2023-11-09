@@ -1,9 +1,12 @@
 from pyrogram import filters
 
-from MerissaRobot import pbot, pytgcalls
+from MerissaRobot import pbot, pytgcalls,BOT_ID
 from MerissaRobot.helpers import get_ytthumb
 from MerissaRobot.Utils.Helpers.permissions import adminsOnly
 from MerissaRobot.Utils.Helpers.vcfunction import *
+
+from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded
+from pytgcalls.types import AudioPiped, HighQualityAudio, Update
 
 
 @pbot.on_message(filters.command(["pause"]) & filters.group)
@@ -330,7 +333,6 @@ async def admin_cbs(_, query: CallbackQuery):
 
 
 @pbot.on_callback_query(filters.regex("unban_ass"))
-@admin_check_cb
 async def unban_ass(_, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
     callback_request = callback_data.split(None, 1)[1]
