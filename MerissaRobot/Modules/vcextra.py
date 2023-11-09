@@ -1,22 +1,18 @@
 from pyrogram import filters
-from pytgcalls.types import AudioPiped, HighQualityAudio, Update
-
-from MerissaRobot import BOT_ID, pbot, pytgcalls
-from MerissaRobot.helpers import get_ytthumb
-from MerissaRobot.Utils.Helpers.permissions import adminsOnly
-from MerissaRobot.Utils.Helpers.vcfunction import *
 from pyrogram.enums import ChatMemberStatus
-from pyrogram.errors import (
-    ChatAdminRequired,
-    UserAlreadyParticipant,
-    UserNotParticipant,
-)
 from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     Message,
 )
+from pytgcalls.types import AudioPiped, HighQualityAudio, Update
+
+from MerissaRobot import BOT_ID, pbot, pytgcalls
+from MerissaRobot.helpers import get_ytthumb
+from MerissaRobot.Utils.Helpers.permissions import adminsOnly
+from MerissaRobot.Utils.Helpers.vcfunction import *
+
 
 def admin_check_cb(func: Callable) -> Callable:
     async def cb_non_admin(_, query: CallbackQuery):
@@ -49,7 +45,6 @@ def admin_check_cb(func: Callable) -> Callable:
             )
 
     return cb_non_admin
-
 
 
 @pbot.on_message(filters.command(["pause"]) & filters.group)
