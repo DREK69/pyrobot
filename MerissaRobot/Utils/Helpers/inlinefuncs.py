@@ -28,10 +28,11 @@ from pyrogram.types import (
     InputTextMessageContent,
 )
 from youtubesearchpython import VideosSearch
+from mutagen.mp4 import MP4
 
 from MerissaRobot import DEV_USERS, EVENT_LOGS
 from MerissaRobot import pbot as app
-from MerissaRobot.helpers import get_ytthumb, save_file
+from MerissaRobot.helpers import embed_album_art, get_ytthumb, getreq, save_file
 from MerissaRobot.Modules.info import get_chat_info, get_user_info
 from MerissaRobot.Utils.Helpers.pastebin import paste
 from MerissaRobot.Utils.Services.tasks import _get_tasks_text, all_tasks, rm_task
@@ -63,6 +64,10 @@ def convert_bytes(size: float) -> str:
         size /= power
         t_n += 1
     return "{:.2f} {}B".format(size, power_dict[t_n])
+
+async def run_async(func, *args, **kwargs):
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(None, func, *args, **kwargs)
 
 
 keywords_list = [
@@ -422,7 +427,8 @@ async def cbgames(_, cq):
     }
     try:
         with yt_dlp.YoutubeDL(opts) as ytdl:
-            info_dict = ytdl.extract_info(link, download=True)
+            await run_async(ydl.download, [link])
+            info_dict = ydl.extract_info(link, download=False)
     except Exception as e:
         await app.edit_inline_caption(
             inline_message_id, f"Failed to Download.** \n**Error :** `{str(e)}`"
@@ -467,9 +473,15 @@ async def cbgames(_, cq):
     await app.edit_inline_reply_markup(inline_message_id, reply_markup=dbutton)
     ydl_opts = {"format": "bestaudio[ext=m4a]"}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        await run_async(ydl.download, [link])
         info_dict = ydl.extract_info(link, download=False)
-        audio_file = ydl.prepare_filename(info_dict)
-        ydl.process_info(info_dict)
+    audio_file = f"{videoid}.m4a"
+    audio = MP4(audio_file)
+    audio["\xa9nam"] = title
+    audio["\xa9alb"] = album
+    audio["\xa9ART"] = artist
+    audio.save()
+    embed_album_art(thumb, audio_file)
     yt = requests.get(f"https://api.princexd.tech/ytmsearch?query={link}").json()[
         "results"
     ]["videoDetails"]
