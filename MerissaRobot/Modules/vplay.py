@@ -8,7 +8,7 @@ from pyrogram.errors import (
     UserAlreadyParticipant,
     UserNotParticipant,
 )
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded
 from pytgcalls.types import AudioVideoPiped, HighQualityAudio, HighQualityVideo
 from youtube_search import YoutubeSearch
