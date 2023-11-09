@@ -33,7 +33,7 @@ from MerissaRobot.Utils.Helpers.vcfunction import *
 @pbot.on_message(
     filters.command("play") & filters.group & ~filters.forwarded & ~filters.via_bot
 )
-async def play(_, message: Message):
+async def play(_, message):
     merissa = await message.reply_text("Processing Please Wait...")
     try:
         try:
