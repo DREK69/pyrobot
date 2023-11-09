@@ -175,7 +175,7 @@ async def play(_, message: Message):
         videoid = videoid
     except:
         videoid = "fuckitstgaudio"
-        
+
     stream_type = "audio"
     if await is_active_chat(message.chat.id):
         await put(
