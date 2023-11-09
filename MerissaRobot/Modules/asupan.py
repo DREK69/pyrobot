@@ -18,7 +18,9 @@ async def asupan(_, message):
             ],
         ]
     )
-    await message.reply_video("asupan.mp4", caption="Uploaded by @MerissaRobot", reply_markup=button)
+    await message.reply_video(
+        "asupan.mp4", caption="Uploaded by @MerissaRobot", reply_markup=button
+    )
     await x.delete()
     os.remove("asupan.mp4")
 
