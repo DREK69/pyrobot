@@ -9,7 +9,7 @@ from pyrogram.types import (
     InputMediaPhoto,
     Message,
 )
-from pytgcalls.types import AudioPiped, AudioVideoPiped, HighQualityAudio
+from pytgcalls.types import AudioPiped, AudioVideoPiped, HighQualityAudio, HighQualityVideo
 
 from MerissaRobot import BOT_ID, BOT_USERNAME, OWNER_ID, pbot, pytgcalls
 from MerissaRobot.helpers import get_ytthumb
@@ -133,7 +133,7 @@ async def skip_str(_, message):
         if stream_type == "audio":
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
         else:
-            stream = AudioVideoPiped(file_path)
+            stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
         try:
             await pytgcalls.change_stream(
                 message.chat.id,
@@ -326,7 +326,7 @@ async def admin_cbs(_, query: CallbackQuery):
             if stream_type == "audio":
                 stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
             else:
-                stream = AudioVideoPiped(file_path)
+                stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
             thumb = await get_ytthumb(videoid)
             try:
                 await pytgcalls.change_stream(
