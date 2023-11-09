@@ -137,7 +137,7 @@ async def ytaudio(videoid):
     return file
 
 
-async def ytvideo(link):
+async def ytvideo(videoid):
     file = os.path.join("downloads", f"{videoid}.mp4")
     if os.path.exists(file):
         return file
