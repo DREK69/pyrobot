@@ -10,7 +10,7 @@ from pyrogram.types import (
 )
 from pytgcalls.types import AudioPiped, HighQualityAudio, Update
 
-from MerissaRobot import BOT_ID, pbot, pytgcalls
+from MerissaRobot import BOT_ID, pbot, pytgcalls, BOT_USERNAME
 from MerissaRobot.helpers import get_ytthumb
 from MerissaRobot.Utils.Helpers.permissions import adminsOnly
 from MerissaRobot.Utils.Helpers.vcfunction import *
@@ -67,7 +67,7 @@ async def pause_str(_, message: Message):
     )
 
 
-@pbot.on_message(filters.command(["stop", "end"]) & filters.group)
+@pbot.on_message(filters.command(["end"]) & filters.group)
 @adminsOnly("can_manage_video_chats")
 async def stop_str(_, message: Message):
     try:
