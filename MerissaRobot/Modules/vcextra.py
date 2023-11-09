@@ -216,30 +216,6 @@ async def activevc(_, message: Message):
         )
 
 
-@pbot.on_message(filters.video_chat_started, group=welcome)
-@pbot.on_message(filters.video_chat_ended, group=close)
-async def welcome(_, message: Message):
-    try:
-        await _clear_(message.chat.id)
-        await pytgcalls.leave_group_call(message.chat.id)
-    except:
-        pass
-
-
-@pbot.on_message(filters.left_chat_member)
-async def ub_leave(_, message: Message):
-    if message.left_chat_member.id == BOT_ID:
-        try:
-            await _clear_(message.chat.id)
-            await pytgcalls.leave_group_call(message.chat.id)
-        except:
-            pass
-        try:
-            await user.leave_chat(message.chat.id)
-        except:
-            pass
-
-
 @pbot.on_callback_query(filters.regex(pattern=r"^(resume_cb|pause_cb|skip_cb|end_cb)$"))
 @admin_check_cb
 async def admin_cbs(_, query: CallbackQuery):
