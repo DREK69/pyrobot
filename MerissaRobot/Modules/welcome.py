@@ -154,7 +154,7 @@ def send(update, message, keyboard, backup_message):
                 reply_to_message_id=reply,
             )
 
-            LOGGER.exception()
+            LOGGER.exception("Nothing")
     return msg
 
 
