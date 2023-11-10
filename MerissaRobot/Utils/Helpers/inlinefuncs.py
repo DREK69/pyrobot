@@ -472,7 +472,7 @@ async def cbgames(_, cq):
         [[InlineKeyboardButton(text="📥 Downloading....", callback_data="agdjhdggd")]]
     )
     await app.edit_inline_reply_markup(inline_message_id, reply_markup=dbutton)
-    ydl_opts = {"format": "bestaudio[ext=m4a]"}
+    ydl_opts = {"format": "bestaudio[ext=m4a]", "outtmpl": "%(id)s.%(ext)s"}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         await run_async(ydl.download, [link])
         info_dict = ydl.extract_info(link, download=False)
@@ -525,11 +525,17 @@ async def cbgames(_, cq):
         [[InlineKeyboardButton(text="📥 Downloading....", callback_data="agdjhdggd")]]
     )
     await app.edit_inline_reply_markup(inline_message_id, reply_markup=dbutton)
-    ydl_opts = {"format": "bestaudio[ext=m4a]"}
+    ydl_opts = {"format": "bestaudio[ext=m4a]", "outtmpl": "%(id)s.%(ext)s"}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        await run_async(ydl.download, [link])
         info_dict = ydl.extract_info(link, download=False)
-        audio_file = ydl.prepare_filename(info_dict)
-        ydl.process_info(info_dict)
+    audio_file = f"{videoid}.m4a"
+    audio = MP4(audio_file)
+    audio["\xa9nam"] = title
+    audio["\xa9alb"] = album
+    audio["\xa9ART"] = artist
+    audio.save()
+    embed_album_art(thumb, audio_file)
     med = InputMediaAudio(
         audio_file,
         caption=str(info_dict["title"]),
