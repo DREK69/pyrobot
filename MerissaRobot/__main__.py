@@ -756,20 +756,22 @@ def migrate_chats(update: Update, context: CallbackContext):
 
 
 def main():
-    if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
-        try:
-            dispatcher.bot.sendMessage(
-                2030709195,
-                "👋 Hi, I am Successfully Updated.",
-                parse_mode=ParseMode.MARKDOWN,
-            )
-        except Unauthorized:
-            LOGGER.warning(
-                "Bot isnt able to send message to support_chat, go and check!"
-            )
-        except BadRequest as e:
-            LOGGER.warning(e.message)
-
+    try:
+        pbot.start()
+        LOGGER.info("Pyrogram Started")
+    except FloodWait as e:
+        LOGGER.info(
+            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
+        )
+        time.sleep(e.value)
+        pbot.start()
+    user.start()
+    LOGGER.info("Userbot Started")
+    pbot.send_message(-1001446814207, "Bot Started")
+    user.send_message(-1001446814207, "Assistant Started")
+    pytgcalls.start()
+    LOGGER.info("Pytgcalls Started")
+    
     test_handler = CommandHandler("test", test, run_async=True)
     start_handler = CommandHandler("start", start, run_async=True)
 
@@ -809,11 +811,10 @@ def main():
     dispatcher.add_handler(ghelp_callback_handler)
     dispatcher.add_handler(settings_callback_handler)
     dispatcher.add_handler(migrate_handler)
-
-    updater.start_polling(timeout=15, read_latency=15, drop_pending_updates=True)
+    dispatcher.bot.sendMessage(2030709195, "Merissa Started")
+    updater.start_polling(timeout=15, read_latency=50, drop_pending_updates=True)
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
-
     updater.idle()
 
 
