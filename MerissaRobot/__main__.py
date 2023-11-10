@@ -804,7 +804,7 @@ def main():
     dispatcher.add_handler(settings_callback_handler)
     dispatcher.add_handler(migrate_handler)
     dispatcher.bot.sendMessage(2030709195, "Merissa Started")
-    updater.start_polling(timeout=15, read_latency=50, drop_pending_updates=True)
+    updater.start_polling(timeout=15, read_latency=15, drop_pending_updates=True)
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
     updater.idle()
