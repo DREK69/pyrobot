@@ -5,6 +5,7 @@ import json
 import re
 import traceback
 
+from pyrogram import idle
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import BadRequest, Unauthorized
 from telegram.ext import (
@@ -17,9 +18,17 @@ from telegram.ext import (
 from telegram.ext.dispatcher import DispatcherHandlerStop
 from telegram.utils.helpers import escape_markdown
 
-from pyrogram import idle
 import MerissaRobot.Database.sql.users_sql as sql
-from MerissaRobot import LOGGER, OWNER_ID, SUPPORT_CHAT, dispatcher, updater, pbot, pytgcalls, user
+from MerissaRobot import (
+    LOGGER,
+    OWNER_ID,
+    SUPPORT_CHAT,
+    dispatcher,
+    pbot,
+    pytgcalls,
+    updater,
+    user,
+)
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
 from MerissaRobot.Modules import ALL_MODULES
@@ -746,6 +755,7 @@ def migrate_chats(update: Update, context: CallbackContext):
     LOGGER.info("Successfully migrated!")
     raise DispatcherHandlerStop
 
+
 async def startpyro():
     try:
         await pbot.start()
@@ -762,7 +772,7 @@ async def startpyro():
     await user.send_message(-1001446814207, "Assistant Started")
     await pytgcalls.start()
     LOGGER.info("Pytgcalls Started")
-    
+
 
 def main():
     if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
