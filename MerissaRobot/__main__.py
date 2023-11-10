@@ -6,6 +6,7 @@ import re
 import time
 import traceback
 
+import pyrogram 
 from pyrogram.errors.exceptions.flood_420 import FloodWait
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import BadRequest
@@ -836,6 +837,7 @@ def main():
 
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
+    pyrogram.idle()
     updater.idle()
 
 
