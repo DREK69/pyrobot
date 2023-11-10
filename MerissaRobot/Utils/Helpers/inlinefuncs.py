@@ -535,6 +535,18 @@ async def cbgames(_, cq):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         await run_async(ydl.download, [link])
         info_dict = ydl.extract_info(link, download=False)
+    title = info_dict["title"]
+    try:
+        album = info_dict["album"]
+    except:
+        album = title
+    yt = await getreq(f"https://api.princexd.tech/ytmsearch?query={link}").json()[
+        "results"
+    ]["videoDetails"]
+    artist = yt["author"]
+    thumb = info_dict["thumbnails"][0]["url"]
+    thumb.replace("60-", "1080-")
+    thumbnail = save_file(thumb, "thumbnail.png")
     audio_file = f"{videoid}.m4a"
     audio = MP4(audio_file)
     audio["\xa9nam"] = title
@@ -563,6 +575,7 @@ async def cbgames(_, cq):
     )
     await app.edit_inline_media(inline_message_id, media=med, reply_markup=button)
     os.remove(audio_file)
+    os.remove(thumbnail)
 
 
 @app.on_callback_query(filters.regex("cbothers"))
