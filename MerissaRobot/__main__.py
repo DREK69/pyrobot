@@ -756,24 +756,6 @@ def migrate_chats(update: Update, context: CallbackContext):
     raise DispatcherHandlerStop
 
 
-async def startpyro():
-    try:
-        await pbot.start()
-        LOGGER.info("Pyrogram Started")
-    except FloodWait as e:
-        LOGGER.info(
-            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
-        )
-        time.sleep(e.value)
-        await pbot.start()
-    await user.start()
-    LOGGER.info("Userbot Started")
-    await pbot.send_message(-1001446814207, "Bot Started")
-    await user.send_message(-1001446814207, "Assistant Started")
-    await pytgcalls.start()
-    LOGGER.info("Pytgcalls Started")
-
-
 def main():
     if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
         try:
@@ -829,7 +811,7 @@ def main():
     dispatcher.add_handler(settings_callback_handler)
     dispatcher.add_handler(migrate_handler)
 
-    updater.start_polling(timeout=15, read_latency=4, drop_pending_updates=True)
+    updater.start_polling(timeout=15, read_latency=15, drop_pending_updates=True)
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
 
@@ -838,6 +820,19 @@ def main():
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    loop.run_until_complete(startpyro())
+    try:
+        pbot.start()
+        LOGGER.info("Pyrogram Started")
+    except FloodWait as e:
+        LOGGER.info(
+            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
+        )
+        time.sleep(e.value)
+        pbot.start()
+    user.start()
+    LOGGER.info("Userbot Started")
+    pbot.send_message(-1001446814207, "Bot Started")
+    user.send_message(-1001446814207, "Assistant Started")
+    pytgcalls.start()
+    LOGGER.info("Pytgcalls Started")
     main()
-    idle()
