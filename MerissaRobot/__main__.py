@@ -757,12 +757,12 @@ def main():
         )
         time.sleep(e.value)
         pbot.start()
-    pbot.send_message(-1001446814207, "Bot Started")   
+    pbot.send_message(-1001446814207, "Bot Started")
     LOGGER.info("Pyrogram Started")
     user.start()
     user.send_message(-1001446814207, "Assistant Started")
     LOGGER.info("Userbot Started")
-            
+
     pytgcalls.start()
     LOGGER.info("Pytgcalls Started")
 
@@ -806,7 +806,7 @@ def main():
     dispatcher.add_handler(settings_callback_handler)
     dispatcher.add_handler(migrate_handler)
     dispatcher.bot.sendMessage(2030709195, "Merissa Started")
-    
+
     if WEBHOOK:
         LOGGER.info("Using webhooks.")
         updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)
@@ -818,8 +818,13 @@ def main():
 
     else:
         LOGGER.info("Using long polling.")
-        updater.start_polling(allowed_updates=Update.ALL_TYPES, timeout=15, read_latency=4, drop_pending_updates=True)
-        
+        updater.start_polling(
+            allowed_updates=Update.ALL_TYPES,
+            timeout=15,
+            read_latency=4,
+            drop_pending_updates=True,
+        )
+
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
     updater.idle()
