@@ -6,7 +6,7 @@ import re
 import traceback
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
-from telegram.error import BadRequest, Unauthorized
+from telegram.error import BadRequest
 from telegram.ext import (
     CallbackContext,
     CallbackQueryHandler,
@@ -18,16 +18,7 @@ from telegram.ext.dispatcher import DispatcherHandlerStop
 from telegram.utils.helpers import escape_markdown
 
 import MerissaRobot.Database.sql.users_sql as sql
-from MerissaRobot import (
-    LOGGER,
-    OWNER_ID,
-    SUPPORT_CHAT,
-    dispatcher,
-    pbot,
-    pytgcalls,
-    updater,
-    user,
-)
+from MerissaRobot import LOGGER, OWNER_ID, dispatcher, pbot, pytgcalls, updater, user
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
 from MerissaRobot.Modules import ALL_MODULES
@@ -771,7 +762,7 @@ def main():
     user.send_message(-1001446814207, "Assistant Started")
     pytgcalls.start()
     LOGGER.info("Pytgcalls Started")
-    
+
     test_handler = CommandHandler("test", test, run_async=True)
     start_handler = CommandHandler("start", start, run_async=True)
 
