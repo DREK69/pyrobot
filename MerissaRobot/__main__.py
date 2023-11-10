@@ -6,7 +6,7 @@ import re
 import time
 import traceback
 
-import pyrogram 
+import pyrogram
 from pyrogram.errors.exceptions.flood_420 import FloodWait
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import BadRequest
