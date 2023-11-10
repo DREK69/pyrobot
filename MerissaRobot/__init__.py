@@ -75,26 +75,6 @@ user = Client(
 )
 pytgcalls = PyTgCalls(user)
 
-
-async def startpyro():
-    try:
-        await pbot.start()
-        LOGGER.info("Pyrogram Started")
-    except FloodWait as e:
-        LOGGER.info(
-            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
-        )
-        time.sleep(e.value)
-        await pbot.start()
-    await user.start()
-    LOGGER.info("Userbot Started")
-    await pbot.send_message(-1001446814207, "Bot Started")
-    await user.send_message(-1001446814207, "Assistant Started")
-    await pytgcalls.start()
-    LOGGER.info("Pytgcalls Started")
-    await idle()
-
-
 DEV_USERS.add(OWNER_ID)
 sw = None
 
