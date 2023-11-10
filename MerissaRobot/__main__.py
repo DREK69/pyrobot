@@ -812,19 +812,4 @@ def main():
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    try:
-        pbot.start()
-        LOGGER.info("Pyrogram Started")
-    except FloodWait as e:
-        LOGGER.info(
-            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
-        )
-        time.sleep(e.value)
-        pbot.start()
-    user.start()
-    LOGGER.info("Userbot Started")
-    pbot.send_message(-1001446814207, "Bot Started")
-    user.send_message(-1001446814207, "Assistant Started")
-    pytgcalls.start()
-    LOGGER.info("Pytgcalls Started")
     main()
