@@ -5,6 +5,7 @@ import json
 import re
 import traceback
 
+from pyrogram.errors.exceptions.flood_420 import FloodWait
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import BadRequest
 from telegram.ext import (
@@ -16,8 +17,6 @@ from telegram.ext import (
 )
 from telegram.ext.dispatcher import DispatcherHandlerStop
 from telegram.utils.helpers import escape_markdown
-from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
-from pyrogram.errors.exceptions.flood_420 import FloodWait
 
 import MerissaRobot.Database.sql.users_sql as sql
 from MerissaRobot import LOGGER, OWNER_ID, dispatcher, pbot, pytgcalls, updater, user
