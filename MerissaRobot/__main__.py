@@ -17,8 +17,9 @@ from telegram.ext import (
 from telegram.ext.dispatcher import DispatcherHandlerStop
 from telegram.utils.helpers import escape_markdown
 
+from pyrogram import idle
 import MerissaRobot.Database.sql.users_sql as sql
-from MerissaRobot import LOGGER, OWNER_ID, SUPPORT_CHAT, dispatcher, startpyro, updater
+from MerissaRobot import LOGGER, OWNER_ID, SUPPORT_CHAT, dispatcher, updater, pbot, pytgcalls, user
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
 from MerissaRobot.Modules import ALL_MODULES
@@ -745,6 +746,23 @@ def migrate_chats(update: Update, context: CallbackContext):
     LOGGER.info("Successfully migrated!")
     raise DispatcherHandlerStop
 
+async def startpyro():
+    try:
+        await pbot.start()
+        LOGGER.info("Pyrogram Started")
+    except FloodWait as e:
+        LOGGER.info(
+            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
+        )
+        time.sleep(e.value)
+        await pbot.start()
+    await user.start()
+    LOGGER.info("Userbot Started")
+    await pbot.send_message(-1001446814207, "Bot Started")
+    await user.send_message(-1001446814207, "Assistant Started")
+    await pytgcalls.start()
+    LOGGER.info("Pytgcalls Started")
+    
 
 def main():
     if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
@@ -804,10 +822,12 @@ def main():
     updater.start_polling(timeout=15, read_latency=4, drop_pending_updates=True)
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
-    loop.run_until_complete(startpyro())
+
     updater.idle()
 
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+    loop.run_until_complete(startpyro())
     main()
+    idle()
