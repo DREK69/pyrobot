@@ -43,11 +43,8 @@ basicConfig(
         StreamHandler(),
     ],
 )
-getLogger("pyrogram").setLevel(ERROR)
-getLogger("apscheduler").setLevel(ERROR)
-getLogger("telethon").setLevel(ERROR)
-getLogger("telegram").setLevel(CRITICAL)
-getLogger("sqlalchemy").setLevel(ERROR)
+getLogger("pyrogram").setLevel(INFO)
+getLogger("telegram").setLevel(INFO)
 
 updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
 dispatcher = updater.dispatcher
