@@ -20,7 +20,16 @@ from telegram.ext.dispatcher import DispatcherHandlerStop
 from telegram.utils.helpers import escape_markdown
 
 import MerissaRobot.Database.sql.users_sql as sql
-from MerissaRobot import LOGGER, OWNER_ID, dispatcher, pbot, pytgcalls, updater, user, WEBHOOK
+from MerissaRobot import (
+    LOGGER,
+    OWNER_ID,
+    WEBHOOK,
+    dispatcher,
+    pbot,
+    pytgcalls,
+    updater,
+    user,
+)
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
 from MerissaRobot.Modules import ALL_MODULES
