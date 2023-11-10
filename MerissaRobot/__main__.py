@@ -807,6 +807,7 @@ def main():
     updater.start_polling(timeout=15, read_latency=15, drop_pending_updates=True)
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
+    time.sleep(10)
     updater.idle()
 
 
