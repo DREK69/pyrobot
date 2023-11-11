@@ -6,6 +6,7 @@ from pyrogram.types import Message
 
 from MerissaRobot import pbot as app
 from MerissaRobot.Utils.Helpers.errors import capture_err
+from MerissaRobot.Utils.Helpers.filter_groups import antichannel_group
 
 active_channel = []
 
@@ -62,7 +63,7 @@ async def antichannel_status(_, message: Message):
         | filters.text
     )
     & ~filters.private,
-    group=41,
+    group=antichannel_group,
 )
 async def anitchnl(_, message):
     chat_id = message.chat.id
