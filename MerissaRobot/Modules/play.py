@@ -39,10 +39,11 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     ytaudio,
 )
 
+from MerissaRobot.Utils.Helpers.filter_groups import play_group
 
 @pbot.on_message(
     filters.command("play") & ~filters.private & ~filters.forwarded & ~filters.via_bot,
-    group=21,
+    group=play_group,
 )
 async def play(_, message):
     merissa = await message.reply_text("Processing Please Wait...")
