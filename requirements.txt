@@ -89,7 +89,7 @@ speedtest-cli
 spongemock
 SQLAlchemy==1.4.46
 telegraph
-telethon==1.26.1
+telethon==1.32.0
 pyshorteners
 textblob 
 tgcrypto==1.2.5
