@@ -26,6 +26,7 @@ from MerissaRobot import (
     user,
 )
 from MerissaRobot.helpers import get_ytthumb
+from MerissaRobot.Utils.Helpers.filter_groups import vplay_group
 from MerissaRobot.Utils.Helpers.vcfunction import (
     DURATION_LIMIT,
     add_active_chat,
@@ -38,7 +39,6 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     ytvideo,
 )
 
-from MerissaRobot.Utils.Helpers.filter_groups import vplay_group
 
 @pbot.on_message(
     filters.command("vplay") & ~filters.private & ~filters.forwarded & ~filters.via_bot,
