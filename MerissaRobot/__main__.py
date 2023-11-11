@@ -760,25 +760,6 @@ def migrate_chats(update: Update, context: CallbackContext):
 
 
 def main():
-    try:
-        pbot.start()
-    except FloodWait as e:
-        LOGGER.info(
-            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
-        )
-        time.sleep(e.value)
-        pbot.start()
-    pbot.send_message(-1001446814207, "Bot Started")
-    LOGGER.info("Pyrogram Started")
-    user.start()
-    user.send_message(-1001446814207, "Assistant Started")
-    LOGGER.info("Userbot Started")
-
-    pytgcalls.start()
-    LOGGER.info("Pytgcalls Started")
-
-    telethn.start(bot_token=TOKEN)
-
     test_handler = CommandHandler("test", test, run_async=True)
     start_handler = CommandHandler("start", start, run_async=True)
 
@@ -847,7 +828,27 @@ def main():
 
     updater.idle()
 
+async def initiate_bot():
+    try:
+        pbot.start()
+    except FloodWait as e:
+        LOGGER.info(
+            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
+        )
+        time.sleep(e.value)
+        pbot.start()
+    pbot.send_message(-1001446814207, "Bot Started")
+    LOGGER.info("Pyrogram Started")
+    user.start()
+    user.send_message(-1001446814207, "Assistant Started")
+    LOGGER.info("Userbot Started")
+
+    pytgcalls.start()
+    LOGGER.info("Pytgcalls Started")
+
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+    loop.run_until_complete(initiate_bot())
+    telethn.start(bot_token=TOKEN)
     main()
