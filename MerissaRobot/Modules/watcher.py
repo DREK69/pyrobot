@@ -1,5 +1,5 @@
 from pyrogram import filters
-from pyrogram.types import InlineKeyboardButton
+from pyrogram.types import InlineKeyboardButton, Message, InlineKeyboardMarkup
 from pytgcalls.types import (
     AudioPiped,
     AudioVideoPiped,
