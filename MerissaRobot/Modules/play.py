@@ -27,6 +27,7 @@ from MerissaRobot import (
     user,
 )
 from MerissaRobot.helpers import get_ytthumb
+from MerissaRobot.Utils.Helpers.filter_groups import play_group
 from MerissaRobot.Utils.Helpers.vcfunction import (
     DURATION_LIMIT,
     add_active_chat,
@@ -39,7 +40,6 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     ytaudio,
 )
 
-from MerissaRobot.Utils.Helpers.filter_groups import play_group
 
 @pbot.on_message(
     filters.command("play") & ~filters.private & ~filters.forwarded & ~filters.via_bot,
