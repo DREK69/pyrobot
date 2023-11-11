@@ -4,7 +4,6 @@ alphabet_detector
 apscheduler
 asyncio
 beautifulsoup4
-better_profanity
 bing_image_downloader
 bleach
 bs4==0.0.1
