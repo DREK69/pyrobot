@@ -14,6 +14,8 @@ from MerissaRobot import DRAGONS as SUDO_USERS
 from MerissaRobot import pbot
 from MerissaRobot.Database.sql import forceSubscribe_sql as sql
 
+from MerissaRobot.Utils.Helpers.filter_groups import forcesub_group
+
 logging.basicConfig(level=logging.INFO)
 
 static_data_filter = filters.create(
@@ -69,7 +71,7 @@ async def _onUnMuteRequest(client, cb):
                 )
 
 
-@pbot.on_message(filters.text & ~filters.private, group=1)
+@pbot.on_message(filters.text & ~filters.private, group=forcesub_group)
 async def _check_member(client, message):
     chat_id = message.chat.id
     chat_db = sql.fs_settings(chat_id)
