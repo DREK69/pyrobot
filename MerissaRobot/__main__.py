@@ -830,7 +830,7 @@ def main():
     updater.idle()
 
 
-async def initiate_bot():
+async def pyrostart():
     try:
         await pbot.start()
     except FloodWait as e:
@@ -839,6 +839,7 @@ async def initiate_bot():
         )
         time.sleep(e.value)
         await pbot.start()
+        
     await pbot.send_message(-1001446814207, "Bot Started")
     LOGGER.info("Pyrogram Started")
     await user.start()
@@ -851,6 +852,6 @@ async def initiate_bot():
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    loop.run_until_complete(initiate_bot())
     telethn.start(bot_token=TOKEN)
+    loop.run_until_complete(pyrostart())
     main()
