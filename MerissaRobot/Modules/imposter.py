@@ -10,8 +10,8 @@ from MerissaRobot.Database.mongo.imposter_db import (
     impo_on,
     usr_data,
 )
-from MerissaRobot.Utils.Helpers.permissions import adminsOnly
 from MerissaRobot.Utils.Helpers.filter_groups import imposter_group
+from MerissaRobot.Utils.Helpers.permissions import adminsOnly
 
 
 @app.on_message(filters.group & ~filters.bot & ~filters.via_bot, group=imposter_group)
