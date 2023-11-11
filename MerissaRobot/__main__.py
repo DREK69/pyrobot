@@ -6,7 +6,6 @@ import re
 import time
 import traceback
 
-import pyrogram
 from pyrogram.errors.exceptions.flood_420 import FloodWait
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import BadRequest
@@ -28,9 +27,9 @@ from MerissaRobot import (
     dispatcher,
     pbot,
     pytgcalls,
+    telethn,
     updater,
     user,
-    telethn,
 )
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
@@ -839,10 +838,10 @@ def main():
         telethn.disconnect()
     else:
         telethn.run_until_disconnected()
-        
+
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
-    
+
     updater.idle()
 
 
