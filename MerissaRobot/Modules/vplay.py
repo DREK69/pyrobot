@@ -35,6 +35,9 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     put,
     stream_on,
     ytvideo,
+    merissadb,
+    active,
+    stream,
 )
 
 
