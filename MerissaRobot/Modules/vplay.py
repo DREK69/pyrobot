@@ -127,7 +127,7 @@ async def vplay(_, message):
         thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
 
     elif url:
-        if "youtu" in url:
+        if not "youtu" in url:
             file_path = url
             title = "Streaming Link"
             duration = int("60")
