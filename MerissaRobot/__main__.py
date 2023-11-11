@@ -17,6 +17,7 @@ from telegram.ext import (
     Filters,
     MessageHandler,
 )
+from telethon.errors.rpcerrorlist import FloodWaitError
 from telegram.ext.dispatcher import DispatcherHandlerStop
 from telegram.utils.helpers import escape_markdown
 
@@ -852,6 +853,14 @@ async def pyrostart():
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    telethn.start(bot_token=TOKEN)
+    try:
+        telethn.start(bot_token=TOKEN)
+        LOGGER.info("Telethon Started")
+    except FloodWaitError as e:
+        LOGGER.info(
+            f"[Telethon: FloodWaitError] Have to wait {e.seconds} seconds due to FloodWait."
+        )
+        time.sleep(e.seconds)
+        telethn.start(bot_token=TOKEN)
     loop.run_until_complete(pyrostart())
     main()
