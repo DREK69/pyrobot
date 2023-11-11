@@ -27,6 +27,7 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     is_streaming,
     stream_off,
     stream_on,
+    merissadb,
 )
 
 
