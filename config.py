@@ -29,7 +29,7 @@ OWNER_USERNAME = os.environ.get("OWNER_USERNAME", "NoobxCoder")
 FORCE_CHANNEL = int(os.environ.get("FORCE_CHANNEL", "-1001703270696"))
 DB_URL = os.environ.get(
     "DATABASE_URL",
-    "postgres://default:k0gxQouHbC3j@ep-gentle-bush-51137389.us-east-1.postgres.vercel-storage.com:5432/verceldb"
+    "postgres://default:k0gxQouHbC3j@ep-gentle-bush-51137389.us-east-1.postgres.vercel-storage.com:5432/verceldb",
 )
 DB_URI = DB_URL.replace("postgres://", "postgresql://", 1)
 REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", "")
