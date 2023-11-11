@@ -11,9 +11,10 @@ from MerissaRobot.Database.mongo.imposter_db import (
     usr_data,
 )
 from MerissaRobot.Utils.Helpers.permissions import adminsOnly
+from MerissaRobot.Utils.Helpers.filter_groups import imposter_group
 
 
-@app.on_message(filters.group & ~filters.bot & ~filters.via_bot, group=1)
+@app.on_message(filters.group & ~filters.bot & ~filters.via_bot, group=imposter_group)
 async def chk_usr(_, message: Message):
     if message.sender_chat or not await check_imposter(message.chat.id):
         return
