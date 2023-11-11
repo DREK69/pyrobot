@@ -853,6 +853,7 @@ async def pyrostart():
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+    loop.run_until_complete(pyrostart())
     try:
         telethn.start(bot_token=TOKEN)
         LOGGER.info("Telethon Started")
@@ -862,5 +863,4 @@ if __name__ == "__main__":
         )
         time.sleep(e.seconds)
         telethn.start(bot_token=TOKEN)
-    loop.run_until_complete(pyrostart())
     main()
