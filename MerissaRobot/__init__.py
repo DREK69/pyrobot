@@ -72,6 +72,8 @@ user = Client(
 )
 pytgcalls = PyTgCalls(user)
 
+telethn = TelegramClient("MerissaRobot", API_ID, API_HASH)
+
 DEV_USERS.add(OWNER_ID)
 sw = None
 
