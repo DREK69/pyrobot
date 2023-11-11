@@ -777,6 +777,8 @@ def main():
     pytgcalls.start()
     LOGGER.info("Pytgcalls Started")
 
+    telethn.start(bot_token=TOKEN)
+
     test_handler = CommandHandler("test", test, run_async=True)
     start_handler = CommandHandler("start", start, run_async=True)
 
@@ -848,5 +850,4 @@ def main():
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    telethn.start(bot_token=TOKEN)
     main()
