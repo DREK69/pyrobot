@@ -14,6 +14,7 @@ from MerissaRobot.Database.mongo.karma_mongo import (
     update_karma,
 )
 from MerissaRobot.Utils.Helpers.errors import capture_err
+from MerissaRobot.Utils.Helpers.filter_groups import karma_positive_group, karma_negative_group
 
 
 async def can_change_info(message):
@@ -25,10 +26,6 @@ async def can_change_info(message):
 
 regex_upvote = r"^((?i)\+|\+\+|\+1|\+69|thx|thanx|thanks|🖤|❣️|💝|💖|💕|❤|💘|cool|good|👍|baby|thankyou|love|pro)$"
 regex_downvote = r"^(\-|\-\-|\-1|👎|💔|noob|weak|fuck off|nub|gey|kid|shit|mf)$"
-
-karma_positive_group = 3
-karma_negative_group = 4
-
 
 @pbot.on_message(
     filters.text
