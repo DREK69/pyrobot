@@ -17,9 +17,9 @@ from telegram.ext import (
     Filters,
     MessageHandler,
 )
-from telethon.errors.rpcerrorlist import FloodWaitError
 from telegram.ext.dispatcher import DispatcherHandlerStop
 from telegram.utils.helpers import escape_markdown
+from telethon.errors.rpcerrorlist import FloodWaitError
 
 import MerissaRobot.Database.sql.users_sql as sql
 from MerissaRobot import (
