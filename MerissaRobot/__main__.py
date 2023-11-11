@@ -23,6 +23,7 @@ import MerissaRobot.Database.sql.users_sql as sql
 from MerissaRobot import (
     LOGGER,
     OWNER_ID,
+    TOKEN,
     WEBHOOK,
     dispatcher,
     pbot,
@@ -30,7 +31,6 @@ from MerissaRobot import (
     telethn,
     updater,
     user,
-    TOKEN
 )
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
