@@ -6,3 +6,4 @@ welcome_group = 5
 close_group = 6
 antichannel_group = 7
 forcesub_group = 8
+imposter_group = 9
