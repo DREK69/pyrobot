@@ -127,10 +127,10 @@ async def vplay(_, message):
         thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
 
     elif url:
-        if not "youtu" in url:
+        if "youtu" in url:
             file_path = url
             title = "Streaming Link"
-            dur = int("3600")
+            dur = int("60")
             videoid = "nhihai"
         else:
             results = YoutubeSearch(url, max_results=1).to_dict()
@@ -143,11 +143,11 @@ async def vplay(_, message):
                 dur += int(dur_arr[i]) * secmul
                 secmul *= 60
 
-        if (dur / 60) > DURATION_LIMIT:
-            return await merissa.edit_text(
-                f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
+            if (dur / 60) > DURATION_LIMIT:
+                return await merissa.edit_text(
+                    f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
             )
-        file_path = await ytvideo(videoid)
+            file_path = await ytvideo(videoid)
     else:
         if len(message.command) < 2:
             return await merissa.edit_text("Please enter query to Play!")
