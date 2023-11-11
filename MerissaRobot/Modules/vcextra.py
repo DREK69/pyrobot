@@ -25,9 +25,9 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     get_active_chats,
     is_active_chat,
     is_streaming,
+    merissadb,
     stream_off,
     stream_on,
-    merissadb,
 )
 
 
