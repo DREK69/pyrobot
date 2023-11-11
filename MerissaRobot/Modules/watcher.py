@@ -12,12 +12,10 @@ from MerissaRobot import BOT_ID, BOT_USERNAME, pbot, pytgcalls, user
 from MerissaRobot.helpers import get_ytthumb
 from MerissaRobot.Utils.Helpers.vcfunction import _clear_, merissadb
 
-welcome = 20
-close = 30
+from MerissaRobot.Utils.Helpers.filter_groups import welcome_group, close_group
 
-
-@pbot.on_message(filters.video_chat_started, group=welcome)
-@pbot.on_message(filters.video_chat_ended, group=close)
+@pbot.on_message(filters.video_chat_started, group=welcome_group)
+@pbot.on_message(filters.video_chat_ended, group=close_group)
 async def welcome(_, message: Message):
     try:
         await _clear_(message.chat.id)
