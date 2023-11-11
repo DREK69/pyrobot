@@ -126,7 +126,12 @@ async def vplay(_, message):
         thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
 
     elif url:
-        try:
+        if not "youtu" in url:
+            file_path = url
+            title = "Streaming Link"
+            duration = "100"
+            videoid = "nhihai"
+        else:
             results = YoutubeSearch(url, max_results=1).to_dict()
             title = results[0]["title"]
             duration = results[0]["duration"]
@@ -136,9 +141,6 @@ async def vplay(_, message):
             for i in range(len(dur_arr) - 1, -1, -1):
                 dur += int(dur_arr[i]) * secmul
                 secmul *= 60
-
-        except Exception as e:
-            return await merissa.edit_text(f"Something went wrong\n\n**Error :** `{e}`")
 
         if (dur / 60) > DURATION_LIMIT:
             return await merissa.edit_text(
