@@ -5,6 +5,7 @@ import json
 import re
 import time
 import traceback
+from sys import argv
 
 from pyrogram.errors.exceptions.flood_420 import FloodWait
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
@@ -831,20 +832,20 @@ def main():
 
 async def initiate_bot():
     try:
-        pbot.start()
+        await pbot.start()
     except FloodWait as e:
         LOGGER.info(
             f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
         )
         time.sleep(e.value)
-        pbot.start()
-    pbot.send_message(-1001446814207, "Bot Started")
+        await pbot.start()
+    await pbot.send_message(-1001446814207, "Bot Started")
     LOGGER.info("Pyrogram Started")
-    user.start()
-    user.send_message(-1001446814207, "Assistant Started")
+    await user.start()
+    await user.send_message(-1001446814207, "Assistant Started")
     LOGGER.info("Userbot Started")
 
-    pytgcalls.start()
+    await pytgcalls.start()
     LOGGER.info("Pytgcalls Started")
 
 
