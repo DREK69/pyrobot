@@ -42,7 +42,7 @@ async def post(bot, update):
         await update.reply_text(error)
 
 
-@pbot.on_message(filters.private & filters.reply & filters.command(["edit"]), group=2)
+@pbot.on_message(filters.private & filters.reply & filters.command(["edit"]))
 @subscribe
 async def edit(bot, update):
     if update.text == "/edit":
