@@ -38,10 +38,11 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     ytvideo,
 )
 
+from MerissaRobot.Utils.Helpers.filter_groups import vplay_group
 
 @pbot.on_message(
     filters.command("vplay") & ~filters.private & ~filters.forwarded & ~filters.via_bot,
-    group=22,
+    group=vplay_group,
 )
 async def vplay(_, message):
     merissa = await message.reply_text("Processing Please Wait...")
