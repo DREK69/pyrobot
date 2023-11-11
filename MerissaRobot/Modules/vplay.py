@@ -130,7 +130,7 @@ async def vplay(_, message):
         if "youtu" in url:
             file_path = url
             title = "Streaming Link"
-            dur = int("60")
+            duration = int("60")
             videoid = "nhihai"
         else:
             results = YoutubeSearch(url, max_results=1).to_dict()
