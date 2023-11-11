@@ -27,6 +27,7 @@ from MerissaRobot import (
 )
 from MerissaRobot.helpers import get_ytthumb
 from MerissaRobot.Utils.Helpers.vcfunction import (
+    DURATION_LIMIT,
     add_active_chat,
     get_file_name,
     get_url,
@@ -34,7 +35,6 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     put,
     stream_on,
     ytvideo,
-    DURATION_LIMIT,
 )
 
 
