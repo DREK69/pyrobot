@@ -52,12 +52,12 @@ class Lexica:
 
 
 @pbot.on_message(filters.command(["gpt", "ask", "chatgpt"]))
-async def chatgpt(c, m):
+async def chatgpt(c, message):
     if len(message.command) == 1:
         return await message.reply_msg(
             "Give me some questions to ask Chatgpt AI. Example- /ask question"
         )
-    query = m.text.split(None, 1)[1]
+    query = message.text.split(None, 1)[1]
     query = quote(query)
     msg = await message.reply_text(
         "Wait a moment looking for your answer..", quote=True
