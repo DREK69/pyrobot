@@ -128,7 +128,7 @@ async def _startfile(bot, update):
             return await send_msg.edit(
                 "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner."
             )
-        caption = f"{msg.caption.markdown}\n\n\n" if msg.caption else ""
+        caption = f"{msg.caption}" if msg.caption else ""
         await msg.copy(update.from_user.id, caption=caption)
         await send_msg.delete()
 
