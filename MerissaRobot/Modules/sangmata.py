@@ -36,6 +36,7 @@ async def sangmata(client, message):
             await sgbot.edit(msg.text)
             await msg.delete()
 
+
 @pbot.on_message(filters.command("animate"))
 @subscribe
 async def convert_image(client, message):
@@ -52,7 +53,11 @@ async def convert_image(client, message):
         if result.photo:
             await message.edit("Uploading...")
             converted_image_file = await client.download_media(result)
-            await client.send_photo(message.chat.id, converted_image_file, caption="Powered By @MerissaRobot")
+            await client.send_photo(
+                message.chat.id,
+                converted_image_file,
+                caption="Powered By @MerissaRobot",
+            )
             await message.delete()
         else:
             await message.edit("`Error message ...`")
