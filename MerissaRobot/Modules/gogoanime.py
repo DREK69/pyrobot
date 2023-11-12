@@ -5,7 +5,7 @@ from pyrogram.types import *
 from MerissaRobot import pbot
 
 
-@pbot.on_message(filters.command("aniflix"))
+@pbot.on_message(filters.command("gogo"))
 async def animedl(_, message):
     if len(message.command) < 2:
         return message.reply_text(
