@@ -11,14 +11,14 @@ r = telegraph.create_account(short_name="Mr.Stark")
 auth_url = r["auth_url"]
 
 
-@pbot.on_message(filters.command(["telegraph", "tgraph"]))
+@pbot.on_message(filters.command(["telegraph", "tgt", "tgm"]))
 async def telegrapher(c, m):
     tg = await m.reply_text("`Please wi8..`")
     if not m.reply_to_message:
         await tg.edit("`This command needs reply to work..`")
         return
     if m.reply_to_message.media:
-        if m.reply_to_message.image:
+        if m.reply_to_message.photo:
             m_d = await m.reply_to_message.download()
         try:
             media_url = upload_file(m_d)
