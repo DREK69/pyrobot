@@ -50,10 +50,10 @@ def admin_check_cb(func: Callable) -> Callable:
                 show_alert=True,
             )
 
-        admin = (
+        privileges = (
             await pbot.get_chat_member(query.message.chat.id, query.from_user.id)
         ).privileges
-        if admin.can_manage_video_chats:
+        if privileges.can_manage_video_chats:
             return await func(_, query)
         else:
             return await query.answer(
