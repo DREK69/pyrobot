@@ -3,7 +3,7 @@ import asyncio
 from pyrogram import filters
 
 from MerissaRobot import pbot
-from MerissaRobot import user as app2
+from MerissaRobot import user 
 from MerissaRobot.helpers import subscribe
 
 
@@ -16,14 +16,14 @@ async def sangmata(client, message):
         user = message.from_user.id
     elif not message.reply_to_message and len(message.command) != 1:
         anu = message.text.split(None, 1)[1]
-        iya = await app.get_users(anu)
+        iya = await client.get_users(anu)
         user = iya.id
     else:
         return await message.reply("__Reply to message or give Username/UserId__")
     user_id = user
     sgbot = await message.reply("**🔍 Searching**")
-    await app2.unblock_user("@sangmata_beta_bot")
-    sang = await app2.send_message("SangMata_beta_bot", f" {user_id}")
+    await user.unblock_user("@sangmata_beta_bot")
+    sang = await user.send_message("SangMata_beta_bot", f" {user_id}")
     await sang.delete()
     await asyncio.sleep(3)
     async for msg in app2.search_messages("SangMata_beta_bot", limit=4):
@@ -47,12 +47,12 @@ async def convert_image(client, message):
     reply_message = message.reply_to_message
     photo = reply_message.photo.file_id
     bot = "qq_neural_anime_bot"
-    await app2.send_photo(bot, photo=photo)
+    await user.send_photo(bot, photo=photo)
     await asyncio.sleep(18)
-    async for result in app2.search_messages(bot, limit=3):
+    async for result in user.search_messages(bot, limit=3):
         if result.photo:
             await message.edit("Uploading...")
-            converted_image_file = await client.download_media(result)
+            converted_image_file = await user.download_media(result)
             await client.send_photo(
                 message.chat.id,
                 converted_image_file,
