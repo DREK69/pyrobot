@@ -51,22 +51,47 @@ class Lexica:
         return result_str
 
 
-# Generate gpt response...
-
 
 @pbot.on_message(filters.command(["gpt", "ask", "chatgpt"]))
 async def chatgpt(c, m):
-    try:
-        query = m.text.split(None, 1)[1]
-    except:
-        await m.reply_text("`ɪ ᴅɪᴅɴ'ᴛ ɢᴇᴛ ᴛʜᴀᴛ`")
-        return
+    if len(message.command) == 1:
+        return await message.reply_msg(
+            "Give me some questions to ask Chatgpt AI. Example- /ask question"
+    )
+    query = m.text.split(None, 1)[1]
     query = quote(query)
-    await c.send_chat_action(m.chat.id, enums.ChatAction.TYPING)
-    api = SafoneAPI()
-    resp = await api.chatgpt(query)
-    response = resp.message
-    await c.send_message(m.chat.id, response, reply_to_message_id=m.id)
+    msg = await message.reply_text(
+        "Wait a moment looking for your answer..", quote=True
+    )
+    try:
+        await c.send_chat_action(m.chat.id, enums.ChatAction.TYPING)
+        api = SafoneAPI()
+        resp = await api.chatgpt(query)
+        response = resp.message
+    except:
+        response= "Something Went Wrong"
+    await msg.edit_text(m.chat.id, response, reply_to_message_id=m.id)
+    await c.send_chat_action(m.chat.id, enums.ChatAction.CANCEL)
+
+@pbot.on_message(filters.command("bard", "googleai"))
+async def bard_chatbot(c, message):
+    if len(message.command) == 1:
+        return await message.reply_msg(
+            "Give me some questions to ask Bard AI. Example- /bard question"
+        )
+    query = message.text.split(" ", 1)[1]
+    query = quote(query)
+    msg = await message.reply_text(
+        "Wait a moment looking for your answer..", quote=True
+    )
+    try:
+        await c.send_chat_action(m.chat.id, enums.ChatAction.TYPING)
+        api = SafoneAPI()
+        resp = await api.bard(query)
+        response = resp.message
+    except:
+        response = "Something went wrong"
+    await msg.edit_text(response)
     await c.send_chat_action(m.chat.id, enums.ChatAction.CANCEL)
 
 
