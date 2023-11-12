@@ -51,13 +51,12 @@ class Lexica:
         return result_str
 
 
-
 @pbot.on_message(filters.command(["gpt", "ask", "chatgpt"]))
 async def chatgpt(c, m):
     if len(message.command) == 1:
         return await message.reply_msg(
             "Give me some questions to ask Chatgpt AI. Example- /ask question"
-    )
+        )
     query = m.text.split(None, 1)[1]
     query = quote(query)
     msg = await message.reply_text(
@@ -69,9 +68,10 @@ async def chatgpt(c, m):
         resp = await api.chatgpt(query)
         response = resp.message
     except:
-        response= "Something Went Wrong"
+        response = "Something Went Wrong"
     await msg.edit_text(m.chat.id, response, reply_to_message_id=m.id)
     await c.send_chat_action(m.chat.id, enums.ChatAction.CANCEL)
+
 
 @pbot.on_message(filters.command("bard", "googleai"))
 async def bard_chatbot(c, message):
