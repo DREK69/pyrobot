@@ -63,14 +63,14 @@ async def chatgpt(c, message):
         "Wait a moment looking for your answer..", quote=True
     )
     try:
-        await c.send_chat_action(m.chat.id, enums.ChatAction.TYPING)
+        await c.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
         api = SafoneAPI()
         resp = await api.chatgpt(query)
         response = resp.message
     except:
         response = "Something Went Wrong"
-    await msg.edit_text(m.chat.id, response, reply_to_message_id=m.id)
-    await c.send_chat_action(m.chat.id, enums.ChatAction.CANCEL)
+    await msg.edit_text(response)
+    await c.send_chat_action(message.chat.id, enums.ChatAction.CANCEL)
 
 
 @pbot.on_message(filters.command("bard", "googleai"))
@@ -85,14 +85,14 @@ async def bard_chatbot(c, message):
         "Wait a moment looking for your answer..", quote=True
     )
     try:
-        await c.send_chat_action(m.chat.id, enums.ChatAction.TYPING)
+        await c.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
         api = SafoneAPI()
         resp = await api.bard(query)
         response = resp.message
     except:
         response = "Something went wrong"
     await msg.edit_text(response)
-    await c.send_chat_action(m.chat.id, enums.ChatAction.CANCEL)
+    await c.send_chat_action(message.chat.id, enums.ChatAction.CANCEL)
 
 
 @pbot.on_message(filters.command(["genimg", "dream", "prompt"]))
