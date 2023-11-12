@@ -32,7 +32,7 @@ from youtubesearchpython import VideosSearch
 
 from MerissaRobot import DEV_USERS, EVENT_LOGS
 from MerissaRobot import pbot as app
-from MerissaRobot.helpers import embed_album_art, get_ytthumb, save_file
+from MerissaRobot.helpers import embed_album_art, get_ytthumb, save_file, getreq
 from MerissaRobot.Modules.info import get_chat_info, get_user_info
 from MerissaRobot.Utils.Helpers.pastebin import paste
 from MerissaRobot.Utils.Services.tasks import _get_tasks_text, all_tasks, rm_task
@@ -41,7 +41,6 @@ from MerissaRobot.Utils.Services.types import InlineQueryResultCachedDocument
 MESSAGE_DUMP_CHAT = EVENT_LOGS
 
 arq = ""
-
 
 async def fetch(url):
     async with aiohttp.ClientSession() as session:
@@ -796,34 +795,7 @@ async def youtube_func(answers, text):
 
 
 async def anime_func(answers, text):
-    search = requests.get(f"https://api.yukkiflix.ml/search?keyw={text}&page=1").json()
-    try:
-        for result in search:
-            answers.append(
-                InlineQueryResultArticle(
-                    title=result["name"],
-                    description="{}".format(result["status"]),
-                    input_message_content=InputTextMessageContent(
-                        "https://anikatsu.me/anime/{}".format(result["anime_id"]),
-                        disable_web_page_preview=True,
-                    ),
-                    thumb_url=result["img_url"],
-                )
-            )
-    except Exception:
-        for result in search:
-            answers.append(
-                InlineQueryResultArticle(
-                    title=result["name"],
-                    description="{}".format(result["status"]),
-                    input_message_content=InputTextMessageContent(
-                        "https://anikatsu.me/anime/{}".format(result["anime_id"]),
-                        disable_web_page_preview=True,
-                    ),
-                    thumb_url="https://te.legra.ph/file/96786556f0cc818a50c87.jpg",
-                )
-            )
-    return answers
+    return text
 
 
 async def ph_func(answers, text):
@@ -969,12 +941,12 @@ async def tg_search_func(answers, text, user_id):
 
 
 async def music_inline_func(answers, query):
-    chat_id = -1001445180719
+    chat_id = -1002345689
     group_invite = "https://t.me/joinchat/vSDE2DuGK4Y4Nzll"
     try:
         messages = [
             m
-            async for m in ubot2.search_messages(
+            async for m in user.search_messages(
                 chat_id, query, filter="audio", limit=100
             )
         ]
