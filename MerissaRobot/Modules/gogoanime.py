@@ -84,7 +84,7 @@ async def movie_result(_, CallbackQuery):
     for episodeId in episodeid:
         episodeid = episodeId["episodeId"]
         episodenum = episodeId["episodeNum"]
-        link = f"https://anime.princexd.tech/watch/{episodeid}"
+        link = f"https://www9.gogoanimes.fi/{episodeid}"
         text += f"Anime Episode {episodenum}: [Click Here]({link})<br>──────────────────────────────────<br>"
     if animetype == "Movie":
         button = InlineKeyboardMarkup(
