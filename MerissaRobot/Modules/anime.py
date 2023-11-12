@@ -218,7 +218,7 @@ def anime(update: Update, context: CallbackContext):
         msg = msg[:-2] + "`\n"
         info = json.get("siteUrl")
         trailer = json.get("trailer", None)
-        json["id"]
+        id = json.get["id"]
         if trailer:
             trailer_id = trailer.get("id", None)
             site = trailer.get("site", None)
@@ -231,7 +231,7 @@ def anime(update: Update, context: CallbackContext):
             .replace("<br>", "")
         )
         msg += shorten(description, info)
-        image = json.get("bannerImage", None)
+        image = f"https://img.anili.st/media/{id}"
         if trailer:
             buttons = [
                 [
@@ -337,9 +337,10 @@ def manga(update: Update, context: CallbackContext):
         for x in json.get("genres", []):
             msg += f"{x}, "
         msg = msg[:-2]
+        id = json["id"]
         info = json["siteUrl"]
         buttons = [[InlineKeyboardButton("More Info", url=info)]]
-        image = json.get("bannerImage", False)
+        image = f"https://img.anili.st/media/{id}"
         msg += f"_{json.get('description', None)}_"
         if image:
             try:
