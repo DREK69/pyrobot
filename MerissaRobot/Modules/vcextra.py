@@ -49,17 +49,8 @@ def admin_check_cb(func: Callable) -> Callable:
                 "You are not admin.",
                 show_alert=True,
             )
-
-        privileges = (
-            await pbot.get_chat_member(query.message.chat.id, query.from_user.id)
-        ).privileges
-        if privileges.can_manage_video_chats:
-            return await func(_, query)
         else:
-            return await query.answer(
-                "You don't have permission to Manage Videochat",
-                show_alert=True,
-            )
+            return await func(_, query)
 
     return cb_non_admin
 
