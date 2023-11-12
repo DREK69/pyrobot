@@ -32,7 +32,7 @@ from youtubesearchpython import VideosSearch
 
 from MerissaRobot import DEV_USERS, EVENT_LOGS
 from MerissaRobot import pbot as app
-from MerissaRobot.helpers import embed_album_art, get_ytthumb, save_file, getreq
+from MerissaRobot.helpers import embed_album_art, get_ytthumb, getreq, save_file
 from MerissaRobot.Modules.info import get_chat_info, get_user_info
 from MerissaRobot.Utils.Helpers.pastebin import paste
 from MerissaRobot.Utils.Services.tasks import _get_tasks_text, all_tasks, rm_task
@@ -41,6 +41,7 @@ from MerissaRobot.Utils.Services.types import InlineQueryResultCachedDocument
 MESSAGE_DUMP_CHAT = EVENT_LOGS
 
 arq = ""
+
 
 async def fetch(url):
     async with aiohttp.ClientSession() as session:
