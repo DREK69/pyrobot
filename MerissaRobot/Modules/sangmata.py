@@ -2,8 +2,7 @@ import asyncio
 
 from pyrogram import filters
 
-from MerissaRobot import pbot
-from MerissaRobot import user 
+from MerissaRobot import pbot, user
 from MerissaRobot.helpers import subscribe
 
 
