@@ -55,7 +55,7 @@ def admin_check_cb(func: Callable) -> Callable:
     return cb_non_admin
 
 
-@pbot.on_message(filters.command(["pause"]) & filters.group)
+@pbot.on_message(filters.command(["pause"]) & ~filters.private)
 @adminsOnly("can_manage_video_chats")
 async def pause_str(_, message):
     try:
@@ -73,7 +73,7 @@ async def pause_str(_, message):
     )
 
 
-@pbot.on_message(filters.command(["end"]) & filters.group)
+@pbot.on_message(filters.command(["end"]) & ~filters.private)
 @adminsOnly("can_manage_video_chats")
 async def stop_str(_, message):
     try:
@@ -91,7 +91,7 @@ async def stop_str(_, message):
     )
 
 
-@pbot.on_message(filters.command(["resume"]) & filters.group)
+@pbot.on_message(filters.command(["resume"]) & ~filters.private)
 @adminsOnly("can_manage_video_chats")
 async def res_str(_, message):
     try:
@@ -108,7 +108,7 @@ async def res_str(_, message):
     )
 
 
-@pbot.on_message(filters.command(["skip", "next"]) & filters.group)
+@pbot.on_message(filters.command(["skip", "next"]) & ~filters.private)
 @adminsOnly("can_manage_video_chats")
 async def skip_str(_, message):
     try:
