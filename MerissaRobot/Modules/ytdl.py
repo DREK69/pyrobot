@@ -1,6 +1,6 @@
 import asyncio
 import os
-
+from pytube import Playlist 
 import yt_dlp
 from mutagen.mp4 import MP4
 from pykeyboard import InlineKeyboard
@@ -91,6 +91,7 @@ async def ytregex(client, message):
             caption="Your Playlist Fetched\n\nClick Below Button To Download Playlist:",
             reply_markup=InlineKeyboardMarkup(keyboards),
         )
+        await m.delete()
     else:
         yt = await getreq(f"https://api.princexd.tech/ytinfo?link={link}")
         videoid = yt["id"]
