@@ -77,6 +77,20 @@ async def ytregex(client, message):
             ),
         )
         await m.delete()
+    elif "playlist" in link:
+        pyt = Playlist(link)
+        keyboards = []
+        for link in pyt.videos:
+            button = InlineKeyboardButton(
+                link.title, callback_data=f"ytdown {link.video_id}"
+            )
+            keyboards.append([button])
+
+        await message.reply_photo(
+            "https://graph.org//file/00fcab5486cf748e74621.jpg",
+            caption="Your Playlist Fetched\n\nClick Below Button To Download Playlist:",
+            reply_markup=InlineKeyboardMarkup(keyboards),
+        )
     else:
         yt = await getreq(f"https://api.princexd.tech/ytinfo?link={link}")
         videoid = yt["id"]
