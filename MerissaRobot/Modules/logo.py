@@ -251,7 +251,7 @@ async def logo(client, message):
             "Give me some text to make logo\n\nEx. /logo Merissa or Merissa;Robot"
         )
     name = message.text.split(None, 1)[1]
-    reply = message.reply_to_message.photo
+    reply = message.reply_to_message
     if reply:
         download_location = await client.download_media(
             message=message.reply_to_message.photo,
