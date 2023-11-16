@@ -182,7 +182,9 @@ async def play(_, message):
             else:
                 file_path = await ytvideo(videoid)
                 stream_type = "video"
-                stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
+                stream = AudioVideoPiped(
+                    file_path, HighQualityAudio(), HighQualityVideo()
+                )
     else:
         if len(message.command) < 2:
             return await merissa.edit_text("Please enter query to Play!")
@@ -214,8 +216,10 @@ async def play(_, message):
             else:
                 file_path = await ytvideo(videoid)
                 stream_type = "video"
-                stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
- 
+                stream = AudioVideoPiped(
+                    file_path, HighQualityAudio(), HighQualityVideo()
+                )
+
     if dmedia == "False":
         videoid = videoid
         file_path = file_path
