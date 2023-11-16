@@ -259,7 +259,7 @@ async def logo(client, message):
         )
         x = uf(download_location)[0]
         imglink = "https://te.legra.ph" + x
-        key = imglink.split("/")[4]
+        key = imglink.split("/")[4].split(".")[0]
         logo = genlogo(name, key, None)
         url = logo[0]
         button = InlineKeyboardMarkup(
