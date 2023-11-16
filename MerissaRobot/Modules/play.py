@@ -253,7 +253,7 @@ async def play(_, message):
         if stream_type == "audio":
             stream = AudioPiped(file_path, HighQualityAudio())
         else:
-            stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())        
+            stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
         try:
             await pytgcalls.join_group_call(
                 message.chat.id,
