@@ -5,11 +5,16 @@ from typing import Union
 import yt_dlp
 from pyrogram.enums import MessageEntityType
 from pyrogram.types import Audio, Message, Voice
+import os
+import re
+import aiofiles
+import aiohttp
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
+from youtubesearchpython.__future__ import VideosSearch
+import asyncio
 
 DURATION_LIMIT = int("90")
 
-welcome = 20
-close = 30
 merissadb = {}
 active = []
 stream = {}
@@ -139,3 +144,50 @@ async def ytvideo(videoid):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         await loop.run_in_executor(None, ydl.download, [link])
     return file
+
+async def gen_thumb(videoid, status):
+    try:
+        thumbnail_path = os.path.join( "downloads/", f"{videoid}.png")
+        url = f"https://www.youtube.com/watch?v={videoid}"
+        results = VideosSearch(url, limit=1)
+        video_info = (await results.next())["result"][0]
+        title = video_info.get("title", "Unsupported Title")
+        title = re.sub("\W+", " ", title).title()
+        duration = video_info.get("duration", "Unknown Mins")
+        thumbnail_url = video_info["thumbnails"][0]["url"].split("?")[0]
+        views = video_info.get("viewCount", {}).get("short", "Unknown Views")
+        channel = video_info.get("channel", {}).get("name", "Unknown Channel")
+        async with aiohttp.ClientSession() as session:
+            async with session.get(thumbnail_url) as resp:
+                if resp.status == 200:
+                    async with aiofiles.open(thumbnail_path, mode="wb") as f:
+                        await f.write(await resp.read())
+        youtube = Image.open(thumbnail_path)
+        image1 = youtube.resize((1280, 720))
+        image2 = image1.convert("RGBA")
+        background = image2.filter(filter=ImageFilter.BoxBlur(30))
+        enhancer = ImageEnhance.Brightness(background)
+        background = enhancer.enhance(0.6)
+        Xcenter = youtube.width / 2
+        Ycenter = youtube.height / 2
+        x1 = Xcenter - 570
+        y1 = Ycenter - 250
+        x2 = Xcenter + 570
+        y2 = Ycenter + 250
+        logo = youtube.crop((x1, y1, x2, y2))
+        logo.thumbnail((1200, 550), Image.LANCZOS)
+        logo = ImageOps.expand(logo, border=8, fill="white")
+        background.paste(logo, (50, 100))
+        draw = ImageDraw.Draw(background)
+        arial = ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 30)
+        font = ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf", 30)
+        draw.text((63, 110), f"{status}", fill="white", font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25))
+        draw.text((50, 50), f"Title: {title}", fill="white", font=font)
+        draw.text((50, 620), f"Duration: {duration}", fill="white", font=arial)
+        draw.text((950, 620), f"Views: {views}", fill="white", font=arial)
+        draw.text((1010, 570), "MerissaRobot", fill="white", font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25))
+        background.save(thumbnail_path)
+        return thumbnail_path
+    except Exception as e:
+        print(f"Error generating thumbnail: {e}")
+        return "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"

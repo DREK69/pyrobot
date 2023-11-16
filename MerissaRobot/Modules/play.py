@@ -38,11 +38,12 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     put,
     stream_on,
     ytaudio,
+    gen_thumb
 )
 
 
 @pbot.on_message(
-    filters.command("play") & ~filters.private & ~filters.forwarded & ~filters.via_bot,
+    filters.command(["play", "vplay"]) & ~filters.private & ~filters.forwarded & ~filters.via_bot,
     group=play_group,
 )
 async def play(_, message):
@@ -116,42 +117,69 @@ async def play(_, message):
         else None
     )
     url = get_url(message)
-    if audio:
-        if round(audio.duration / 60) > DURATION_LIMIT:
-            raise DurationLimitError(
-                f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
-            )
+    if message.reply_to_message:
+        if audio:
+            if round(audio.duration / 60) > DURATION_LIMIT:
+                raise DurationLimitError(
+                    f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
+                )
 
-        file_name = get_file_name(audio)
-        title = file_name
-        duration = round(audio.duration / 60)
-        file_path = (
-            await message.reply_to_message.download(file_name)
-            if not os.path.isfile(os.path.join("downloads", file_name))
-            else f"downloads/{file_name}"
-        )
-        thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
+            file_name = get_file_name(audio)
+            title = file_name
+            duration = round(audio.duration / 60)
+            file_path = (
+                await message.reply_to_message.download(file_name)
+                if not os.path.isfile(os.path.join("downloads", file_name))
+                else f"downloads/{file_name}"
+            )
+            thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
+            stream_type = "audio"
+
+        if video:
+            if round(video.duration / 60) > DURATION_LIMIT:
+                raise DurationLimitError(
+                    f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
+                )
+
+            file_name = get_file_name(video)
+            title = file_name
+            duration = round(video.duration / 60)
+            file_path = (
+                await message.reply_to_message.download(file_name)
+                if not os.path.isfile(os.path.join("downloads", file_name))
+                else f"downloads/{file_name}"
+            )
+            thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
+            stream_type = "video"
+        
 
     elif url:
-        try:
+        if not "youtu" in url:
+            file_path = url
+            title = "Streaming Link"
+            duration = int("60")
+            videoid = "nhihai"
+        else:
             results = YoutubeSearch(url, max_results=1).to_dict()
             title = results[0]["title"]
             duration = results[0]["duration"]
             videoid = results[0]["id"]
-            thumb = await get_ytthumb(videoid)
             secmul, dur, dur_arr = 1, 0, duration.split(":")
             for i in range(len(dur_arr) - 1, -1, -1):
                 dur += int(dur_arr[i]) * secmul
                 secmul *= 60
 
-        except Exception as e:
-            return await merissa.edit_text(f"Something went wrong\n\n**Error :** `{e}`")
+            if (dur / 60) > DURATION_LIMIT:
+                return await merissa.edit_text(
+                    f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
+                )
+            file_path = await ytvideo(videoid)
 
         if (dur / 60) > DURATION_LIMIT:
             return await merissa.edit_text(
                 f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
             )
-        file_path = await ytaudio(videoid)
+
     else:
         if len(message.command) < 2:
             return await merissa.edit_text("Please enter query to Play!")
@@ -162,7 +190,6 @@ async def play(_, message):
             title = results[0]["title"]
             videoid = results[0]["id"]
             duration = results[0]["duration"]
-            thumb = await get_ytthumb(videoid)
             secmul, dur, dur_arr = 1, 0, duration.split(":")
             for i in range(len(dur_arr) - 1, -1, -1):
                 dur += int(dur_arr[i]) * secmul
@@ -176,14 +203,26 @@ async def play(_, message):
             return await merissa.edit(
                 f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
             )
-        file_path = await ytaudio(videoid)
 
     try:
         videoid = videoid
+        if message.command[0] == 'play':
+            file_path = await ytaudio(videoid)
+            stream_type = "audio"
+            stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+        else: 
+            file_path = await ytvideo(videoid)
+            stream_type = "video"
+            stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
     except:
         videoid = "fuckitstgaudio"
+        if stream_type == "audio":
+            file_path = file_path
+            stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+        else: 
+            file_path = file_path
+            stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
 
-    stream_type = "audio"
     if await is_active_chat(message.chat.id):
         await put(
             message.chat.id,
@@ -195,7 +234,7 @@ async def play(_, message):
             message.from_user.id,
             stream_type,
         )
-        thumb = await get_ytthumb(videoid)
+        thumb = await gen_thumb(videoid, f"Added to Queue at {position}")
         position = len(merissadb.get(message.chat.id))
         await message.reply_photo(
             photo=thumb,
@@ -217,7 +256,6 @@ async def play(_, message):
             ),
         )
     else:
-        stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
         try:
             await pytgcalls.join_group_call(
                 message.chat.id,
@@ -238,6 +276,7 @@ async def play(_, message):
             )
         await stream_on(message.chat.id)
         await add_active_chat(message.chat.id)
+        await gen_thumb(videoid, "Now Playing...")
         await message.reply_photo(
             photo=thumb,
             caption=f"📡 Streaming Started\n\n👤Requested By: {ruser}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
