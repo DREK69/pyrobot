@@ -199,8 +199,8 @@ async def play(_, message):
             return await merissa.edit(
                 f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
             )
-    
-    if dmedia == "False": 
+
+    if dmedia == "False":
         videoid = videoid
         if message.command[0] == "play":
             file_path = await ytaudio(videoid)
@@ -210,7 +210,7 @@ async def play(_, message):
             file_path = await ytvideo(videoid)
             stream_type = "video"
             stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
-    else:       
+    else:
         videoid = "fuckitstgaudio"
         file_path = file_path
         if message.command[0] == "play":
