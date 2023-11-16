@@ -210,12 +210,12 @@ async def play(_, message):
             return await merissa.edit(
                 f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
             )
-            if message.command[0] == "play":
-                file_path = await ytaudio(videoid)
-                stream_type += "audio"
-            else:
-                file_path = await ytvideo(videoid)
-                stream_type += "video"
+        if message.command[0] == "play":
+            file_path = await ytaudio(videoid)
+            stream_type += "audio"
+        else:
+            file_path = await ytvideo(videoid)
+            stream_type += "video"
 
     if await is_active_chat(message.chat.id):
         await put(
