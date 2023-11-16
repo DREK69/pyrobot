@@ -244,14 +244,15 @@ async def movie(client, message):
 
 @pbot.on_message(filters.command("logo") & filters.private)
 @subscribe
-async def movie(client, message):
+async def logo(client, message):
     m = await message.reply_text("Creating your logo...wait!")
     if len(message.command) < 2:
         return await message.reply_text(
             "Give me some text to make logo\n\nEx. /logo Merissa or Merissa;Robot"
         )
     name = message.text.split(None, 1)[1]
-    if message.reply_to_message.photo:
+    reply = message.reply_to_message.photo
+    if reply:
         download_location = await client.download_media(
             message=message.reply_to_message.photo,
             file_name="root/downloads/",
