@@ -286,29 +286,17 @@ async def snapdown(client, message):
 async def autoapprove(client, message: ChatJoinRequest):
     chat = message.chat
     user = message.from_user
-    link = (await client.create_chat_invite_link(chat.id, member_limit=1)).invite_link
     button = [
         [
-            Keyboard(text=chat.title, url=link),
-            Keyboard(text="Support", url="https://t.me/MerissaxSupport"),
+            InlineKeyboardButton(text="VERIFY", callback_data=f"verify_{chat.id}"),
         ],
-        [Keyboard(text="How to add in your Channel", callback_data="howtoaap")],
     ]
     await client.send_photo(
         chat_id=user.id,
         photo="https://te.legra.ph/file/90b1aa10cf8b77d5b781b.jpg",
-        caption=f"Hello {user.mention}\n\nYou are Join Channel by using below Link\nThis link is a one time use and will expire by [{chat.title}]({link}).",
+        caption=f"{chat.title} is being protected by @MerissaRobot\n\nClick below to verify you're human",
         reply_markup=InlineKeyboardMarkup(button),
     )
-
-
-@pbot.on_callback_query(filters.regex("^howtoaap"))
-async def howtoaap_cb(bot, query):
-    return await query.answer(
-        "Just add MerissaRobot in Your Channel as Administrator and Done ✅",
-        show_alert=True,
-    )
-
 
 __help__ = """
 @MerissaRobot Share Anything Download Anything
