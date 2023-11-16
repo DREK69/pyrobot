@@ -288,7 +288,7 @@ async def autoapprove(client, message: ChatJoinRequest):
     user = message.from_user
     button = [
         [
-            Keyboard(text="VERIFY", callback_data=f"verify_{chat.id}"),
+            Keyboard(text="VERIFY", callback_data=f"verify {chat.id}"),
         ]
     ]
     await client.send_photo(
