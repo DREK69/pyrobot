@@ -134,12 +134,6 @@ async def play(_, message):
             file_name = get_file_name(audio)
             title = file_name
             duration = round(audio.duration / 60)
-            file_path = (
-                await message.reply_to_message.download(file_name)
-                if not os.path.isfile(os.path.join("downloads", file_name))
-                else f"downloads/{file_name}"
-            )
-            thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
             stream_type = "audio"
 
         if video:
@@ -151,13 +145,13 @@ async def play(_, message):
             file_name = get_file_name(video)
             title = file_name
             duration = round(video.duration / 60)
-            file_path = (
+            stream_type = "video"
+        dmedia = (
                 await message.reply_to_message.download(file_name)
                 if not os.path.isfile(os.path.join("downloads", file_name))
                 else f"downloads/{file_name}"
             )
-            thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
-            stream_type = "video"
+        thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
 
     elif url:
         if not "youtu" in url:
@@ -179,13 +173,6 @@ async def play(_, message):
                 return await merissa.edit_text(
                     f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
                 )
-            file_path = await ytvideo(videoid)
-
-        if (dur / 60) > DURATION_LIMIT:
-            return await merissa.edit_text(
-                f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
-            )
-
     else:
         if len(message.command) < 2:
             return await merissa.edit_text("Please enter query to Play!")
@@ -209,7 +196,6 @@ async def play(_, message):
             return await merissa.edit(
                 f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
             )
-
     try:
         videoid = videoid
         if message.command[0] == "play":
@@ -223,10 +209,10 @@ async def play(_, message):
     except:
         videoid = "fuckitstgaudio"
         if message.command[0] == "play":
-            file_path = file_path
+            file_path = dmedia
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
         else:
-            file_path = file_path
+            file_path = dmedia
             stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
 
     if await is_active_chat(message.chat.id):
