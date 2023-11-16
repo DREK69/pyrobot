@@ -129,6 +129,10 @@ async def play(_, message):
         if message.reply_to_message
         else None
     )
+    video = (message.reply_to_message.video)
+        if message.reply_to_message
+        else None
+    (
     url = get_url(message)
     stream_type = ""
     if message.reply_to_message:
