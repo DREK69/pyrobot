@@ -2613,4 +2613,4 @@ def normalfont(text):
 async def style_buttons(c, m):
     text = m.text.split(None, 1)[1]
     nfont = normalfont(text)
-    await message.reply_text(nfont)
+    await m.reply_text(nfont)
