@@ -175,6 +175,14 @@ async def play(_, message):
                 return await merissa.edit_text(
                     f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
                 )
+            if message.command[0] == "play":
+                file_path = await ytaudio(videoid)
+                stream_type = "audio"
+                stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+            else:
+                file_path = await ytvideo(videoid)
+                stream_type = "video"
+                stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
     else:
         if len(message.command) < 2:
             return await merissa.edit_text("Please enter query to Play!")
@@ -199,17 +207,18 @@ async def play(_, message):
             return await merissa.edit(
                 f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
             )
-
+            if message.command[0] == "play":
+                file_path = await ytaudio(videoid)
+                stream_type = "audio"
+                stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+            else:
+                file_path = await ytvideo(videoid)
+                stream_type = "video"
+                stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
+ 
     if dmedia == "False":
         videoid = videoid
-        if message.command[0] == "play":
-            file_path = await ytaudio(videoid)
-            stream_type = "audio"
-            stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
-        else:
-            file_path = await ytvideo(videoid)
-            stream_type = "video"
-            stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
+        file_path = file_path
     else:
         videoid = "fuckitstgaudio"
         file_path = file_path
