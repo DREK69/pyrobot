@@ -218,11 +218,10 @@ async def play(_, message):
                 file_path = await ytvideo(videoid)
                 stream_type = "video"
 
-    try:
-        if stream_type == "audio":
-            stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
-        else:
-            stream = AudioVideoPiped(file_path, audio_parameters=HighQualityAudio(), HighQualityVideo())
+    if stream_type == "audio":
+        stream = AudioPiped(file_path, HighQualityAudio())
+    else:
+        stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
 
     if await is_active_chat(message.chat.id):
         await put(
