@@ -146,13 +146,17 @@ async def play(_, message):
             title = file_name
             duration = round(video.duration / 60)
             stream_type = "video"
+        videoid = "nhihai"
         file_path = (
             await message.reply_to_message.download(file_name)
             if not os.path.isfile(os.path.join("downloads", file_name))
             else f"downloads/{file_name}"
         )
-        dmedia = True
         thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
+        if message.command[0] == "play":
+            stream_type = "audio"
+        else:
+            stream_type = "video"
 
     elif url:
         if not "youtu" in url:
@@ -160,12 +164,15 @@ async def play(_, message):
             title = "Streaming Link"
             duration = int("60")
             videoid = "nhihai"
+            if message.command[0] == "play":
+                stream_type = "audio"
+            else:
+                stream_type = "video"
         else:
             results = YoutubeSearch(url, max_results=1).to_dict()
             title = results[0]["title"]
             duration = results[0]["duration"]
             videoid = results[0]["id"]
-            dmedia = False
             secmul, dur, dur_arr = 1, 0, duration.split(":")
             for i in range(len(dur_arr) - 1, -1, -1):
                 dur += int(dur_arr[i]) * secmul
@@ -178,13 +185,9 @@ async def play(_, message):
             if message.command[0] == "play":
                 file_path = await ytaudio(videoid)
                 stream_type = "audio"
-                stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
             else:
                 file_path = await ytvideo(videoid)
                 stream_type = "video"
-                stream = AudioVideoPiped(
-                    file_path, HighQualityAudio(), HighQualityVideo()
-                )
     else:
         if len(message.command) < 2:
             return await merissa.edit_text("Please enter query to Play!")
@@ -195,7 +198,6 @@ async def play(_, message):
             title = results[0]["title"]
             videoid = results[0]["id"]
             duration = results[0]["duration"]
-            dmedia = False
             secmul, dur, dur_arr = 1, 0, duration.split(":")
             for i in range(len(dur_arr) - 1, -1, -1):
                 dur += int(dur_arr[i]) * secmul
@@ -212,26 +214,15 @@ async def play(_, message):
             if message.command[0] == "play":
                 file_path = await ytaudio(videoid)
                 stream_type = "audio"
-                stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
             else:
                 file_path = await ytvideo(videoid)
                 stream_type = "video"
-                stream = AudioVideoPiped(
-                    file_path, HighQualityAudio(), HighQualityVideo()
-                )
 
-    if dmedia == "False":
-        videoid = videoid
-        file_path = file_path
-    else:
-        videoid = "fuckitstgaudio"
-        file_path = file_path
-        if message.command[0] == "play":
-            stream_type = "audio"
+    try:
+        if stream_type == "audio":
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
         else:
-            stream_type = "video"
-            stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
+            stream = AudioVideoPiped(file_path, audio_parameters=HighQualityAudio(), HighQualityVideo())
 
     if await is_active_chat(message.chat.id):
         await put(
