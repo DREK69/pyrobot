@@ -226,8 +226,8 @@ async def play(_, message):
             message.from_user.id,
             stream_type,
         )
-        thumb = await gen_thumb(videoid, f"Added to Queue at {position}")
         position = len(merissadb.get(message.chat.id))
+        thumb = await gen_thumb(videoid, f"Added to Queue at {position}")
         await message.reply_photo(
             photo=thumb,
             caption=f"⏳ Added to Queue at {position}\n\n👤Requested By:{ruser}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
