@@ -9,7 +9,12 @@ from pyrogram.errors import (
     UserNotParticipant,
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded, NoAudioSourceFound
+from pytgcalls.exceptions import (
+    NoActiveGroupCall,
+    NoAudioSourceFound,
+    TelegramServerError,
+    UnMuteNeeded,
+)
 from pytgcalls.types import (
     AudioPiped,
     AudioVideoPiped,
@@ -268,9 +273,7 @@ async def play(_, message):
                 "Telegram having some internal Error, Please Restart the Videochat and play again."
             )
         except NoAudioSourceFound:
-            return await merissa.edit_text(
-                "M3u8 Link Not Supported."
-            )
+            return await merissa.edit_text("M3u8 Link Not Supported.")
         except UnMuteNeeded:
             return await merissa.edit_text(
                 f"{BOT_NAME} Assisant Muted on VideoChat,\n\nPlease Unmute {ASS_MENTION} on Videochat and play again"
