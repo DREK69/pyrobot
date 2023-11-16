@@ -124,6 +124,7 @@ async def play(_, message):
         else None
     )
     url = get_url(message)
+    stream_type = ""
     if message.reply_to_message:
         if audio:
             if round(audio.duration / 60) > DURATION_LIMIT:
@@ -134,7 +135,6 @@ async def play(_, message):
             file_name = get_file_name(audio)
             title = file_name
             duration = round(audio.duration / 60)
-            stream_type = "audio"
 
         if video:
             if round(video.duration / 60) > DURATION_LIMIT:
@@ -145,7 +145,6 @@ async def play(_, message):
             file_name = get_file_name(video)
             title = file_name
             duration = round(video.duration / 60)
-            stream_type = "video"
         videoid = "nhihai"
         file_path = (
             await message.reply_to_message.download(file_name)
@@ -154,9 +153,9 @@ async def play(_, message):
         )
         thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
         if message.command[0] == "play":
-            stream_type = "audio"
+            stream_type += "audio"
         else:
-            stream_type = "video"
+            stream_type += "video"
 
     elif url:
         if not "youtu" in url:
@@ -165,9 +164,9 @@ async def play(_, message):
             duration = int("60")
             videoid = "nhihai"
             if message.command[0] == "play":
-                stream_type = "audio"
+                stream_type += "audio"
             else:
-                stream_type = "video"
+                stream_type += "video"
         else:
             results = YoutubeSearch(url, max_results=1).to_dict()
             title = results[0]["title"]
@@ -184,10 +183,10 @@ async def play(_, message):
                 )
             if message.command[0] == "play":
                 file_path = await ytaudio(videoid)
-                stream_type = "audio"
+                stream_type += "audio"
             else:
                 file_path = await ytvideo(videoid)
-                stream_type = "video"
+                stream_type += "video"
     else:
         if len(message.command) < 2:
             return await merissa.edit_text("Please enter query to Play!")
@@ -213,10 +212,10 @@ async def play(_, message):
             )
             if message.command[0] == "play":
                 file_path = await ytaudio(videoid)
-                stream_type = "audio"
+                stream_type += "audio"
             else:
                 file_path = await ytvideo(videoid)
-                stream_type = "video"
+                stream_type += "video"
 
     if stream_type == "audio":
         stream = AudioPiped(file_path, HighQualityAudio())
