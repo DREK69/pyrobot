@@ -10,7 +10,7 @@ from pyrogram.errors import (
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, UnMuteNeeded
-from pytgcalls.types import AudioPiped, HighQualityAudio
+from pytgcalls.types import AudioPiped, HighQualityAudio, AudioVideoPiped, HighQualityVideo
 from telegram import InlineKeyboardButton as IKB
 from youtube_search import YoutubeSearch
 
@@ -217,7 +217,7 @@ async def play(_, message):
             stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
     except:
         videoid = "fuckitstgaudio"
-        if stream_type == "audio":
+        if message.command[0] == 'play':
             file_path = file_path
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
         else:
@@ -277,7 +277,7 @@ async def play(_, message):
             )
         await stream_on(message.chat.id)
         await add_active_chat(message.chat.id)
-        await gen_thumb(videoid, "Now Playing...")
+        thumb = await gen_thumb(videoid, "Now Playing...")
         await message.reply_photo(
             photo=thumb,
             caption=f"📡 Streaming Started\n\n👤Requested By: {ruser}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
