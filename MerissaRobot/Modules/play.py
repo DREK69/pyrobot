@@ -26,11 +26,11 @@ from MerissaRobot import (
     pytgcalls,
     user,
 )
-from MerissaRobot.helpers import get_ytthumb
 from MerissaRobot.Utils.Helpers.filter_groups import play_group
 from MerissaRobot.Utils.Helpers.vcfunction import (
     DURATION_LIMIT,
     add_active_chat,
+    gen_thumb,
     get_file_name,
     get_url,
     is_active_chat,
@@ -38,12 +38,14 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     put,
     stream_on,
     ytaudio,
-    gen_thumb
 )
 
 
 @pbot.on_message(
-    filters.command(["play", "vplay"]) & ~filters.private & ~filters.forwarded & ~filters.via_bot,
+    filters.command(["play", "vplay"])
+    & ~filters.private
+    & ~filters.forwarded
+    & ~filters.via_bot,
     group=play_group,
 )
 async def play(_, message):
@@ -151,7 +153,6 @@ async def play(_, message):
             )
             thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
             stream_type = "video"
-        
 
     elif url:
         if not "youtu" in url:
@@ -206,11 +207,11 @@ async def play(_, message):
 
     try:
         videoid = videoid
-        if message.command[0] == 'play':
+        if message.command[0] == "play":
             file_path = await ytaudio(videoid)
             stream_type = "audio"
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
-        else: 
+        else:
             file_path = await ytvideo(videoid)
             stream_type = "video"
             stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
@@ -219,7 +220,7 @@ async def play(_, message):
         if stream_type == "audio":
             file_path = file_path
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
-        else: 
+        else:
             file_path = file_path
             stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
 

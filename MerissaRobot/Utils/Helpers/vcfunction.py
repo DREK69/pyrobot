@@ -1,17 +1,15 @@
 import asyncio
 import os
+import re
 from typing import Union
 
-import yt_dlp
-from pyrogram.enums import MessageEntityType
-from pyrogram.types import Audio, Message, Voice
-import os
-import re
 import aiofiles
 import aiohttp
+import yt_dlp
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
+from pyrogram.enums import MessageEntityType
+from pyrogram.types import Audio, Message, Voice
 from youtubesearchpython.__future__ import VideosSearch
-import asyncio
 
 DURATION_LIMIT = int("90")
 
@@ -145,9 +143,10 @@ async def ytvideo(videoid):
         await loop.run_in_executor(None, ydl.download, [link])
     return file
 
+
 async def gen_thumb(videoid, status):
     try:
-        thumbnail_path = os.path.join( "downloads/", f"{videoid}.png")
+        thumbnail_path = os.path.join("downloads/", f"{videoid}.png")
         url = f"https://www.youtube.com/watch?v={videoid}"
         results = VideosSearch(url, limit=1)
         video_info = (await results.next())["result"][0]
@@ -156,7 +155,7 @@ async def gen_thumb(videoid, status):
         duration = video_info.get("duration", "Unknown Mins")
         thumbnail_url = video_info["thumbnails"][0]["url"].split("?")[0]
         views = video_info.get("viewCount", {}).get("short", "Unknown Views")
-        channel = video_info.get("channel", {}).get("name", "Unknown Channel")
+        video_info.get("channel", {}).get("name", "Unknown Channel")
         async with aiohttp.ClientSession() as session:
             async with session.get(thumbnail_url) as resp:
                 if resp.status == 200:
@@ -181,11 +180,21 @@ async def gen_thumb(videoid, status):
         draw = ImageDraw.Draw(background)
         arial = ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 30)
         font = ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf", 30)
-        draw.text((63, 110), f"{status}", fill="white", font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25))
+        draw.text(
+            (63, 110),
+            f"{status}",
+            fill="white",
+            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25),
+        )
         draw.text((50, 50), f"Title: {title}", fill="white", font=font)
         draw.text((50, 620), f"Duration: {duration}", fill="white", font=arial)
         draw.text((950, 620), f"Views: {views}", fill="white", font=arial)
-        draw.text((1010, 570), "MerissaRobot", fill="white", font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25))
+        draw.text(
+            (1010, 570),
+            "MerissaRobot",
+            fill="white",
+            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25),
+        )
         background.save(thumbnail_path)
         return thumbnail_path
     except Exception as e:
