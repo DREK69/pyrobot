@@ -2554,6 +2554,7 @@ async def style(c, m):
     except:
         pass
 
+
 def normalfont(text):
     string = text
     font1 = list("𝔄𝔅ℭ𝔇𝔈𝔉𝔊ℌℑ𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔ℜ𝔖𝔗𝔘𝔙𝔚𝔛𝔜ℨ")
@@ -2607,8 +2608,9 @@ def normalfont(text):
         cout += 1
     return string
 
+
 @Client.on_message(filters.private & filters.command(["nfont"]))
 async def style_buttons(c, m):
-    text= m.text.split(None, 1)[1]
+    text = m.text.split(None, 1)[1]
     nfont = normalfont(text)
     await message.reply_text(nfont)

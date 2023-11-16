@@ -298,6 +298,7 @@ async def autoapprove(client, message: ChatJoinRequest):
         reply_markup=InlineKeyboardMarkup(button),
     )
 
+
 __help__ = """
 @MerissaRobot Share Anything Download Anything
 
