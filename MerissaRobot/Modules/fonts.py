@@ -2608,7 +2608,7 @@ def normalfont(text):
     return string
 
 @Client.on_message(filters.private & filters.command(["nfont"]))
-async def style_buttons(c, m)
+async def style_buttons(c, m):
     text= m.text.split(None, 1)[1]
     nfont = normalfont(text)
     await message.reply_text(nfont)
