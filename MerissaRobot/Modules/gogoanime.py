@@ -5,7 +5,7 @@ from pyrogram.types import *
 from MerissaRobot import pbot
 
 
-@pbot.on_message(filters.command("gogo"))
+@pbot.on_message(filters.command("aniflix"))
 async def animedl(_, message):
     if len(message.command) < 2:
         return message.reply_text(
@@ -84,7 +84,7 @@ async def movie_result(_, CallbackQuery):
     for episodeId in episodeid:
         episodeid = episodeId["episodeId"]
         episodenum = episodeId["episodeNum"]
-        link = f"https://www9.gogoanimes.fi/{episodeid}"
+        link = f"https://api.princexd.tech/anime/watch/{episodeid}"
         text += f"Anime Episode {episodenum}: [Click Here]({link})<br>──────────────────────────────────<br>"
     if animetype == "Movie":
         button = InlineKeyboardMarkup(
