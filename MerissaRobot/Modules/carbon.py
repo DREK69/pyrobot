@@ -19,9 +19,11 @@ async def carbon(client, message):
     nan = await message.reply_text("Processing...")
     try:
         data = {"code": txt}
-        resp = requests.post("https://carbonbyprince-cb2b465f5222.herokuapp.com/", json=data).content    
+        resp = requests.post(
+            "https://carbonbyprince-cb2b465f5222.herokuapp.com/", json=data
+        ).content
         phu = io.BytesIO(x)
-        phu.name = 'huhu.png'
+        phu.name = "huhu.png"
         await message.reply_photo(
             photo=phu, caption=f"<b>Carbonimg By :</b> {client.me.mention}"
         )
