@@ -1,3 +1,4 @@
+import os
 import asyncio
 
 from pyrogram import filters
@@ -43,9 +44,10 @@ async def convert_image(client, message):
     if message.reply_to_message:
         await message.reply_text("`Processing...`")
     reply_message = message.reply_to_message
-    photo = reply_message.photo.file_id
+    photo = reply_message.photo.download()
     bot = "qq_neural_anime_bot"
     await user.send_photo(bot, photo=photo)
+    os.remove(photo)
     await asyncio.sleep(18)
     async for result in user.search_messages(bot, limit=3):
         if result.photo:
