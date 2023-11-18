@@ -32,6 +32,15 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     stream_on,
 )
 
+button = [
+                    [
+                        InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
+                        InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
+                        InlineKeyboardButton(text="❌", callback_data="cb_close"),
+                        InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
+                        InlineKeyboardButton(text="⏹", callback_data="end_cb"),
+                    ]
+]
 
 def admin_check_cb(func: Callable) -> Callable:
     async def cb_non_admin(_, query: CallbackQuery):
@@ -157,21 +166,7 @@ async def skip_str(_, message):
         return await message.reply_photo(
             photo=img,
             caption=f"📡 Streaming Started\n\n👤Requested By:{req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text="Stream Skipped", callback_data="_StreaMing"
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
-                        InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
-                        InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
-                        InlineKeyboardButton(text="⏹", callback_data="end_cb"),
-                    ],
-                ]
-            ),
+            reply_markup=InlineKeyboardMarkup(button)
         )
 
 
@@ -240,24 +235,10 @@ async def admin_cbs(_, query: CallbackQuery):
             )
         await stream_on(query.message.chat.id)
         await pytgcalls.resume_stream(query.message.chat.id)
-        await query.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text="Stream Resumed", callback_data="_StreaMing"
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
-                        InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
-                        InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
-                        InlineKeyboardButton(text="⏹", callback_data="end_cb"),
-                    ],
-                ]
-            ),
+        return await query.message.reply_text(
+            text=f"**Stream Resumed**\n\nBy : {message.from_user.mention}",
         )
-
+        
     elif data == "pause_cb":
         if not await is_streaming(query.message.chat.id):
             return await query.answer(
@@ -265,22 +246,8 @@ async def admin_cbs(_, query: CallbackQuery):
             )
         await stream_off(query.message.chat.id)
         await pytgcalls.pause_stream(query.message.chat.id)
-        await query.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text="Stream Paused", callback_data="_StreaMing"
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
-                        InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
-                        InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
-                        InlineKeyboardButton(text="⏹", callback_data="end_cb"),
-                    ],
-                ]
-            ),
+        return await query.message.reply_text(
+            text=f"**Stream Paused**\n\nBy : {message.from_user.mention}",
         )
 
     elif data == "end_cb":
@@ -289,16 +256,8 @@ async def admin_cbs(_, query: CallbackQuery):
             return await pytgcalls.leave_group_call(query.message.chat.id)
         except:
             pass
-        await query.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text="Stream Stoped", callback_data="_StreaMing"
-                        ),
-                    ],
-                ]
-            ),
+        return await query.message.reply_text(
+            text=f"**Stream Ended**\n\nBy : {message.from_user.mention}",
         )
         await query.message.delete()
 
@@ -308,17 +267,10 @@ async def admin_cbs(_, query: CallbackQuery):
             try:
                 await _clear_(query.message.chat.id)
                 await pytgcalls.leave_group_call(query.message.chat.id)
-                return await query.edit_message_reply_markup(
-                    reply_markup=InlineKeyboardMarkup(
-                        [
-                            [
-                                InlineKeyboardButton(
-                                    text="Stream Skipped", callback_data="_StreaMing"
-                                ),
-                            ],
-                        ]
-                    ),
+                await query.message.reply_text(
+                    text=f"**Stream Skipped**\n\nBy : {message.from_user.mention}",
                 )
+                return await query.message.delete()
             except:
                 return
         else:
@@ -346,28 +298,15 @@ async def admin_cbs(_, query: CallbackQuery):
                 LOGGER.error(ex)
                 await _clear_(query.message.chat.id)
                 return await pytgcalls.leave_group_call(query.message.chat.id)
-
-            return await query.edit_message_media(
-                InputMediaPhoto(
-                    thumb,
-                    caption=f"📡 Streaming Started\n\n👤 Requested By: {req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
-                ),
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                text="Stream Skipped", callback_data="_StreaMing"
-                            ),
-                        ],
-                        [
-                            InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
-                            InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
-                            InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
-                            InlineKeyboardButton(text="⏹", callback_data="end_cb"),
-                        ],
-                    ]
-                ),
+            await query.message.reply_text(
+                text=f"**Stream Skipped**\n\nBy : {message.from_user.mention}",
+            )     
+            await query.message.reply_photo(
+                thumb,
+                caption=f"📡 Streaming Started\n\n👤 Requested By: {req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
+                reply_markup=InlineKeyboardMarkup(button)
             )
+            return await query.message.delete()
 
 
 @pbot.on_callback_query(filters.regex("unban_ass"))
@@ -473,19 +412,5 @@ async def on_stream_end(pytgcalls, update: Update):
             chat_id=chat_id,
             photo=thumb,
             caption=f"📡 Streaming Started\n\n👤Requested By:{req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text="Streaming Started", callback_data="_StreaMing"
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
-                        InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
-                        InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
-                        InlineKeyboardButton(text="⏹", callback_data="end_cb"),
-                    ],
-                ]
-            ),
+            reply_markup=InlineKeyboardMarkup(button)
         )
