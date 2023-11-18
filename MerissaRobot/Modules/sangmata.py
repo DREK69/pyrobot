@@ -42,14 +42,13 @@ async def convert_image(client, message):
     if not message.reply_to_message:
         return await message.reply_text("**Please Reply to photo**")
     if message.reply_to_message:
-        await message.reply_text("`Processing...`")
-    message.reply_to_message
+        m = await message.reply_text("`Processing...`")
     photo = await message.reply_to_message.download()
     bot = "qq_neural_anime_bot"
     await user.send_photo(bot, photo=photo)
     os.remove(photo)
     await asyncio.sleep(18)
-    async for result in user.search_messages(bot, limit=3):
+    async for result in user.search_messages(bot, limit=2):
         if result.photo:
             await message.edit("Uploading...")
             converted_image_file = await user.download_media(result)
@@ -60,4 +59,4 @@ async def convert_image(client, message):
             )
             await message.delete()
         else:
-            await message.edit("`Error message ...`")
+            await m.edit("`Error message ...`")
