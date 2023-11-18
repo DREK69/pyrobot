@@ -10,16 +10,15 @@ from MerissaRobot.helpers import subscribe
 @subscribe
 async def sangmata(client, message):
     if message.reply_to_message:
-        user = message.reply_to_message.from_user.id
+        user_id = message.reply_to_message.from_user.id
     elif not message.reply_to_message and len(message.command) == 1:
-        user = message.from_user.id
+        user_id = message.from_user.id
     elif not message.reply_to_message and len(message.command) != 1:
         anu = message.text.split(None, 1)[1]
         iya = await client.get_users(anu)
-        user = iya.id
+        user_id = iya.id
     else:
         return await message.reply("__Reply to message or give Username/UserId__")
-    user_id = user
     sgbot = await message.reply("**🔍 Searching**")
     await user.unblock_user("@sangmata_beta_bot")
     sang = await user.send_message("SangMata_beta_bot", f" {user_id}")
