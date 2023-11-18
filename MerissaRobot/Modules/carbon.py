@@ -23,7 +23,7 @@ async def carbon(client, message):
         resp = requests.post(
             "https://carbonbyprince-cb2b465f5222.herokuapp.com/", json=data
         ).content
-        phu = io.BytesIO(x)
+        phu = io.BytesIO(resp)
         phu.name = "huhu.png"
         await message.reply_photo(
             photo=phu, caption=f"<b>Carbonimg By :</b> {client.me.mention}"
