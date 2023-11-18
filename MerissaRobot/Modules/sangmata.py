@@ -39,9 +39,9 @@ async def sangmata(client, message):
 @subscribe
 async def convert_image(client, message):
     if not message.reply_to_message:
-        return await message.edit("**Please Reply to photo**")
+        return await message.reply_text("**Please Reply to photo**")
     if message.reply_to_message:
-        await message.edit("`Processing...`")
+        await message.reply_text("`Processing...`")
     reply_message = message.reply_to_message
     photo = reply_message.photo.file_id
     bot = "qq_neural_anime_bot"
