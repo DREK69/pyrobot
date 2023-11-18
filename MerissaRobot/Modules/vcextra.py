@@ -7,7 +7,6 @@ from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    InputMediaPhoto,
     Message,
 )
 from pytgcalls.types import (
@@ -33,14 +32,15 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
 )
 
 button = [
-                    [
-                        InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
-                        InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
-                        InlineKeyboardButton(text="❌", callback_data="cb_close"),
-                        InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
-                        InlineKeyboardButton(text="⏹", callback_data="end_cb"),
-                    ]
+    [
+        InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
+        InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
+        InlineKeyboardButton(text="❌", callback_data="cb_close"),
+        InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
+        InlineKeyboardButton(text="⏹", callback_data="end_cb"),
+    ]
 ]
+
 
 def admin_check_cb(func: Callable) -> Callable:
     async def cb_non_admin(_, query: CallbackQuery):
@@ -166,7 +166,7 @@ async def skip_str(_, message):
         return await message.reply_photo(
             photo=img,
             caption=f"📡 Streaming Started\n\n👤Requested By:{req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
-            reply_markup=InlineKeyboardMarkup(button)
+            reply_markup=InlineKeyboardMarkup(button),
         )
 
 
@@ -238,7 +238,7 @@ async def admin_cbs(_, query: CallbackQuery):
         return await query.message.reply_text(
             text=f"**Stream Resumed**\n\nBy : {message.from_user.mention}",
         )
-        
+
     elif data == "pause_cb":
         if not await is_streaming(query.message.chat.id):
             return await query.answer(
@@ -300,11 +300,11 @@ async def admin_cbs(_, query: CallbackQuery):
                 return await pytgcalls.leave_group_call(query.message.chat.id)
             await query.message.reply_text(
                 text=f"**Stream Skipped**\n\nBy : {message.from_user.mention}",
-            )     
+            )
             await query.message.reply_photo(
                 thumb,
                 caption=f"📡 Streaming Started\n\n👤 Requested By: {req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
-                reply_markup=InlineKeyboardMarkup(button)
+                reply_markup=InlineKeyboardMarkup(button),
             )
             return await query.message.delete()
 
@@ -412,5 +412,5 @@ async def on_stream_end(pytgcalls, update: Update):
             chat_id=chat_id,
             photo=thumb,
             caption=f"📡 Streaming Started\n\n👤Requested By:{req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
-            reply_markup=InlineKeyboardMarkup(button)
+            reply_markup=InlineKeyboardMarkup(button),
         )
