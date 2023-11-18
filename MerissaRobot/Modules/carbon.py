@@ -1,3 +1,5 @@
+import io
+
 from pyrogram import filters
 
 from MerissaRobot import pbot as app
@@ -16,11 +18,12 @@ async def carbon(client, message):
         )
     nan = await message.reply_text("Processing...")
     try:
-        data = {"code": txt, "bgcolor": "white"}
-        resp = await postreq("https://api.princexd.tech/carbon", data)
-        file = resp["url"]
+        data = {"code": txt}
+        resp = requests.post("https://carbonbyprince-cb2b465f5222.herokuapp.com/", json=data).content    
+        phu = io.BytesIO(x)
+        phu.name = 'huhu.png'
         await message.reply_photo(
-            photo=file, caption=f"<b>Carbonimg By :</b> {client.me.mention}"
+            photo=phu, caption=f"<b>Carbonimg By :</b> {client.me.mention}"
         )
         await nan.delete()
     except Exception as e:
