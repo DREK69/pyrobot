@@ -44,7 +44,7 @@ async def convert_image(client, message):
     if message.reply_to_message:
         await message.reply_text("`Processing...`")
     reply_message = message.reply_to_message
-    photo = reply_message.photo.download()
+    photo = await message.reply_to_message.download()
     bot = "qq_neural_anime_bot"
     await user.send_photo(bot, photo=photo)
     os.remove(photo)
