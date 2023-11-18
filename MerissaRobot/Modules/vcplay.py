@@ -51,6 +51,16 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     ytvideo,
 )
 
+button = [
+            [
+                InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
+                InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
+                InlineKeyboardButton(text="❌", callback_data="cb_close"),
+                InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
+                InlineKeyboardButton(text="⏹", callback_data="end_cb"),
+        ]
+]
+
 
 @pbot.on_message(
     filters.command(["play", "vplay"])
@@ -240,21 +250,7 @@ async def play(_, message):
         await message.reply_photo(
             photo=thumb,
             caption=f"⏳ Added to Queue at {position}\n\n👤Requested By:{ruser}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text="Streaming Queued", callback_data="_StreaMing"
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
-                        InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
-                        InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
-                        InlineKeyboardButton(text="⏹", callback_data="end_cb"),
-                    ],
-                ]
-            ),
+            reply_markup=InlineKeyboardMarkup(button)
         )
     else:
         if stream_type == "audio":
@@ -286,22 +282,8 @@ async def play(_, message):
         await message.reply_photo(
             photo=thumb,
             caption=f"📡 Streaming Started\n\n👤Requested By: {ruser}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text="Streaming Started", callback_data="_StreaMing"
-                        ),
-                    ],
-                    [
-                        InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
-                        InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
-                        InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
-                        InlineKeyboardButton(text="⏹", callback_data="end_cb"),
-                    ],
-                ]
-            ),
-        )
+            reply_markup=InlineKeyboardMarkup(button)
+    )
 
     return await merissa.delete()
 
