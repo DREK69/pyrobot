@@ -236,7 +236,7 @@ async def admin_cbs(_, query: CallbackQuery):
         await stream_on(query.message.chat.id)
         await pytgcalls.resume_stream(query.message.chat.id)
         return await query.message.reply_text(
-            text=f"**Stream Resumed**\n\nBy : {message.from_user.mention}",
+            text=f"**Stream Resumed**\n\nBy : {query.from_user.mention}",
         )
 
     elif data == "pause_cb":
@@ -247,7 +247,7 @@ async def admin_cbs(_, query: CallbackQuery):
         await stream_off(query.message.chat.id)
         await pytgcalls.pause_stream(query.message.chat.id)
         return await query.message.reply_text(
-            text=f"**Stream Paused**\n\nBy : {message.from_user.mention}",
+            text=f"**Stream Paused**\n\nBy : {query.from_user.mention}",
         )
 
     elif data == "end_cb":
@@ -257,7 +257,7 @@ async def admin_cbs(_, query: CallbackQuery):
         except:
             pass
         return await query.message.reply_text(
-            text=f"**Stream Ended**\n\nBy : {message.from_user.mention}",
+            text=f"**Stream Ended**\n\nBy : {query.from_user.mention}",
         )
         await query.message.delete()
 
@@ -268,7 +268,7 @@ async def admin_cbs(_, query: CallbackQuery):
                 await _clear_(query.message.chat.id)
                 await pytgcalls.leave_group_call(query.message.chat.id)
                 await query.message.reply_text(
-                    text=f"**Stream Skipped**\n\nBy : {message.from_user.mention}",
+                    text=f"**Stream Skipped**\n\nBy : {query.from_user.mention}",
                 )
                 return await query.message.delete()
             except:
@@ -299,7 +299,7 @@ async def admin_cbs(_, query: CallbackQuery):
                 await _clear_(query.message.chat.id)
                 return await pytgcalls.leave_group_call(query.message.chat.id)
             await query.message.reply_text(
-                text=f"**Stream Skipped**\n\nBy : {message.from_user.mention}",
+                text=f"**Stream Skipped**\n\nBy : {query.from_user.mention}",
             )
             await query.message.reply_photo(
                 thumb,
