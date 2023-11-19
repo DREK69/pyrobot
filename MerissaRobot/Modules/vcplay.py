@@ -40,6 +40,7 @@ from MerissaRobot.Utils.Helpers.filter_groups import play_group
 from MerissaRobot.Utils.Helpers.vcfunction import (
     DURATION_LIMIT,
     add_active_chat,
+    button,
     gen_thumb,
     get_file_name,
     get_url,
@@ -49,8 +50,8 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     stream_on,
     ytaudio,
     ytvideo,
-    button
 )
+
 
 @pbot.on_message(
     filters.command(["play", "vplay"])

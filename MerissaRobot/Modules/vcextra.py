@@ -3,12 +3,7 @@ from typing import Callable
 
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-)
+from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
 from pytgcalls.types import (
     AudioPiped,
     AudioVideoPiped,
@@ -23,14 +18,15 @@ from MerissaRobot.Utils.Helpers.filter_groups import close_group, welcome_group
 from MerissaRobot.Utils.Helpers.permissions import adminsOnly
 from MerissaRobot.Utils.Helpers.vcfunction import (
     _clear_,
+    button,
     get_active_chats,
     is_active_chat,
     is_streaming,
     merissadb,
     stream_off,
     stream_on,
-    button
 )
+
 
 def admin_check_cb(func: Callable) -> Callable:
     async def cb_non_admin(_, query: CallbackQuery):
@@ -208,13 +204,11 @@ async def activevc(_, message: Message):
         )
 
 
-@pbot.on_callback_query(
-    filters.regex("^vccb")
-)
+@pbot.on_callback_query(filters.regex("^vccb"))
 @admin_check_cb
-async def admin_cbs(_, query: CallbackQuery):  
+async def admin_cbs(_, query: CallbackQuery):
     callback_data = callbackquery.data.strip()
-    data = callback_data.split("_")[1]    
+    data = callback_data.split("_")[1]
     if data == "resume":
         if await is_streaming(query.message.chat.id):
             return await query.answer(
