@@ -55,7 +55,7 @@ button = [
     [
         InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
         InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
-        InlineKeyboardButton(text="❌", callback_data="cb_close"),
+        InlineKeyboardButton(text="❌", callback_data="close_cb"),
         InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
         InlineKeyboardButton(text="⏹", callback_data="end_cb"),
     ]
@@ -63,7 +63,7 @@ button = [
 
 
 @pbot.on_message(
-    filters.command(["play", "vplay"])
+    filters.command(["play", "vplay", "cplay"])
     & ~filters.private
     & ~filters.forwarded
     & ~filters.via_bot,
