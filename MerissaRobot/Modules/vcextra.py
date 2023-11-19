@@ -399,7 +399,7 @@ async def on_stream_end(pytgcalls, update: Update):
         req_by = get[1]["req"]
         get[1]["user_id"]
         stream_type = get[1]["stream_type"]
-        get.pop(0)
+        get.pop(1)
         thumb = await get_ytthumb(videoid)
         if stream_type == "audio":
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
