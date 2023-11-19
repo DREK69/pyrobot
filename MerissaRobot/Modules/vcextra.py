@@ -218,7 +218,9 @@ async def activevc(_, message: Message):
         )
 
 
-@pbot.on_callback_query(filters.regex(pattern=r"^(resume_cb|pause_cb|skip_cb|end_cb|close_cb)$"))
+@pbot.on_callback_query(
+    filters.regex(pattern=r"^(resume_cb|pause_cb|skip_cb|end_cb|close_cb)$")
+)
 @admin_check_cb
 async def admin_cbs(_, query: CallbackQuery):
     try:
@@ -260,7 +262,7 @@ async def admin_cbs(_, query: CallbackQuery):
             text=f"**Stream Ended**\n\nBy : {query.from_user.mention}",
         )
         await query.message.delete()
-        
+
     elif data == "close_cb":
         try:
             await query.message.delete()
