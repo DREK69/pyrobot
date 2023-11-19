@@ -73,7 +73,7 @@ async def play(_, message):
     merissa = await message.reply_text("🎵 **Processing**")
     if "c" in message.command[0]:
         try:
-            chat = await bot.get_chat(int(chat.id)).linked_chat
+            chat = await pbot.get_chat(int(chat.id)).linked_chat
             chat_id = channel.id
         except:
             return await merissa.edit(
