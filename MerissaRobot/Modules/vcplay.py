@@ -49,18 +49,8 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     stream_on,
     ytaudio,
     ytvideo,
+    button
 )
-
-button = [
-    [
-        InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
-        InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
-        InlineKeyboardButton(text="❌", callback_data="close_cb"),
-        InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
-        InlineKeyboardButton(text="⏹", callback_data="end_cb"),
-    ]
-]
-
 
 @pbot.on_message(
     filters.command(["play", "vplay"])
