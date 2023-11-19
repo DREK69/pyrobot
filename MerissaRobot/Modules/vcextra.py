@@ -29,18 +29,8 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     merissadb,
     stream_off,
     stream_on,
+    button
 )
-
-button = [
-    [
-        InlineKeyboardButton(text="▶️", callback_data="vccb_resume"),
-        InlineKeyboardButton(text="⏸", callback_data="vccb_pause"),
-        InlineKeyboardButton(text="❌", callback_data="vccb_close"),
-        InlineKeyboardButton(text="⏯", callback_data="vccb_skip"),
-        InlineKeyboardButton(text="⏹", callback_data="vccb_end"),
-    ]
-]
-
 
 def admin_check_cb(func: Callable) -> Callable:
     async def cb_non_admin(_, query: CallbackQuery):
