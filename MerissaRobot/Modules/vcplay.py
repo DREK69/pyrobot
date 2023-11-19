@@ -309,11 +309,11 @@ async def playlist(client, message):
         temp.append(t)
     now_playing = temp[0]["title"]
     by = temp[0]["req"]
-    temp[0]["stream_type"]
+    stream_type = temp[0]["stream_type"]
     msg = "**Now Playing** in {}".format(message.chat.title)
     msg += "\n- " + now_playing
     msg += "\n- Req by " + by
-    msg += "\n- StreamType " + strean_type
+    msg += "\n- StreamType " + stream_type
     temp.pop(0)
     if temp:
         msg += "\n\n"
@@ -321,10 +321,10 @@ async def playlist(client, message):
         for song in temp:
             now_playing = temp[1]["title"]
             by = temp[1]["req"]
-            temp[1]["stream_type"]
+            stream_type = temp[1]["stream_type"]
             msg += f"\n- {name}"
             msg += f"\n- Req by {usr}\n"
-            msg += "\n- StreamType " + strean_type
+            msg += "\n- StreamType " + stream_type
     await message.reply_text(msg)
 
 
