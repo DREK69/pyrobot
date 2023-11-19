@@ -207,7 +207,7 @@ async def activevc(_, message: Message):
 @pbot.on_callback_query(filters.regex("^vccb"))
 @admin_check_cb
 async def admin_cbs(_, query: CallbackQuery):
-    callback_data = callbackquery.data.strip()
+    callback_data = query.data.strip()
     data = callback_data.split("_")[1]
     if data == "resume":
         if await is_streaming(query.message.chat.id):
@@ -358,7 +358,6 @@ async def swr_handler(_, chat_id: int):
 @pytgcalls.on_stream_end()
 async def on_stream_end(pytgcalls, update: Update):
     chat_id = update.chat_id
-
     get = merissadb.get(chat_id)
     if not get:
         try:
