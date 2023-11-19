@@ -50,7 +50,7 @@ async def convert_image(client, message):
     await asyncio.sleep(18)
     async for result in user.search_messages(bot, limit=4):
         if result.photo:
-            await message.edit("Uploading...")
+            await m.edit("Uploading...")
             converted_image_file = await user.download_media(result)
             await client.send_photo(
                 message.chat.id,
