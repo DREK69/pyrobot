@@ -247,14 +247,14 @@ async def play(_, message):
 
     if await is_active_chat(chat_id):
         await put(
-          chat_id,
-          title,
-          duration,
-          videoid,
-          file_path,
-          ruser,
-          message.from_user.id,
-          stream_type,
+            chat_id,
+            title,
+            duration,
+            videoid,
+            file_path,
+            ruser,
+            message.from_user.id,
+            stream_type,
         )
         position = len(merissadb.get(chat_id))
         thumb = await gen_thumb(videoid, f"Added to Queue at {position}")
