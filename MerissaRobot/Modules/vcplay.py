@@ -244,7 +244,7 @@ async def play(_, message):
         else:
             file_path = await ytaudio(videoid)
             stream_type += "audio"
-            
+
     await put(
         chat_id,
         title,
@@ -298,8 +298,9 @@ async def play(_, message):
 
     return await merissa.delete()
 
+
 @Client.on_message(filters.command("playlist") & filters.group)
-async def playlist(client, message):    
+async def playlist(client, message):
     queue = merissadb.get(int(message.chat.id))
     if not queue:
         await message.reply_text("Player is idle")
@@ -308,7 +309,7 @@ async def playlist(client, message):
         temp.append(t)
     now_playing = temp[0]["title"]
     by = temp[0]["req"]
-    stream_type = temp[0]["stream_type"]
+    temp[0]["stream_type"]
     msg = "**Now Playing** in {}".format(message.chat.title)
     msg += "\n- " + now_playing
     msg += "\n- Req by " + by
@@ -320,7 +321,7 @@ async def playlist(client, message):
         for song in temp:
             now_playing = temp[1]["title"]
             by = temp[1]["req"]
-            stream_type = temp[1]["stream_type"]
+            temp[1]["stream_type"]
             msg += f"\n- {name}"
             msg += f"\n- Req by {usr}\n"
             msg += "\n- StreamType " + strean_type
