@@ -35,7 +35,7 @@ button = [
     [
         InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
         InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
-        InlineKeyboardButton(text="❌", callback_data="cb_close"),
+        InlineKeyboardButton(text="❌", callback_data="close_cb"),
         InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
         InlineKeyboardButton(text="⏹", callback_data="end_cb"),
     ]
@@ -137,14 +137,14 @@ async def skip_str(_, message):
         except:
             return
     else:
-        get[0]["title"]
-        get[0]["duration"]
-        file_path = get[0]["file_path"]
-        videoid = get[0]["videoid"]
-        req_by = get[0]["req"]
-        get[0]["user_id"]
-        stream_type = get[0]["stream_type"]
-        get.pop(0)
+        get[1]["title"]
+        get[1]["duration"]
+        file_path = get[1]["file_path"]
+        videoid = get[1]["videoid"]
+        req_by = get[1]["req"]
+        get[1]["user_id"]
+        stream_type = get[1]["stream_type"]
+        get.pop(1)
 
         if stream_type == "audio":
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
@@ -218,7 +218,7 @@ async def activevc(_, message: Message):
         )
 
 
-@pbot.on_callback_query(filters.regex(pattern=r"^(resume_cb|pause_cb|skip_cb|end_cb)$"))
+@pbot.on_callback_query(filters.regex(pattern=r"^(resume_cb|pause_cb|skip_cb|end_cb|close_cb)$"))
 @admin_check_cb
 async def admin_cbs(_, query: CallbackQuery):
     try:
@@ -226,7 +226,7 @@ async def admin_cbs(_, query: CallbackQuery):
     except:
         pass
 
-    data = query.matches[0].group(1)
+    data = query.matches[1].group(1)
 
     if data == "resume_cb":
         if await is_streaming(query.message.chat.id):
@@ -260,6 +260,12 @@ async def admin_cbs(_, query: CallbackQuery):
             text=f"**Stream Ended**\n\nBy : {query.from_user.mention}",
         )
         await query.message.delete()
+        
+    elif data == "close_cb":
+        try:
+            await query.message.delete()
+        except:
+            pass
 
     elif data == "skip_cb":
         get = merissadb.get(query.message.chat.id)
@@ -274,13 +280,13 @@ async def admin_cbs(_, query: CallbackQuery):
             except:
                 return
         else:
-            get[0]["title"]
-            get[0]["duration"]
-            videoid = get[0]["videoid"]
-            file_path = get[0]["file_path"]
-            req_by = get[0]["req"]
-            stream_type = get[0]["stream_type"]
-            get.pop(0)
+            get[1]["title"]
+            get[1]["duration"]
+            videoid = get[1]["videoid"]
+            file_path = get[1]["file_path"]
+            req_by = get[1]["req"]
+            stream_type = get[1]["stream_type"]
+            get.pop(1)
 
             if stream_type == "audio":
                 stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
@@ -384,13 +390,13 @@ async def on_stream_end(pytgcalls, update: Update):
             chat_id=chat_id,
             text="Downloading next track from queue...",
         )
-        get[0]["title"]
-        get[0]["duration"]
-        file_path = get[0]["file_path"]
-        videoid = get[0]["videoid"]
-        req_by = get[0]["req"]
-        get[0]["user_id"]
-        stream_type = get[0]["stream_type"]
+        get[1]["title"]
+        get[1]["duration"]
+        file_path = get[1]["file_path"]
+        videoid = get[1]["videoid"]
+        req_by = get[1]["req"]
+        get[1]["user_id"]
+        stream_type = get[1]["stream_type"]
         get.pop(0)
         thumb = await get_ytthumb(videoid)
         if stream_type == "audio":
