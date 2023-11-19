@@ -299,7 +299,7 @@ async def play(_, message):
     return await merissa.delete()
 
 
-@Client.on_message(filters.command("playlist") & filters.group)
+@pbot.on_message(filters.command("playlist") & filters.group)
 async def playlist(client, message):
     queue = merissadb.get(int(message.chat.id))
     if not queue:
