@@ -48,15 +48,14 @@ async def convert_image(client, message):
     await user.send_photo(bot, photo=photo)
     os.remove(photo)
     await asyncio.sleep(18)
-    async for result in user.search_messages(bot, from_user=bot):
+    async for result in user.search_messages(bot):
         if result.photo:
             await m.edit("Uploading...")
             converted_image_file = await user.download_media(result)
-            await client.send_photo(
-                message.chat.id,
+            await message.reply_photo(
                 converted_image_file,
                 caption="Powered By @MerissaRobot",
             )
-            await message.delete()
+            await m.delete()
         else:
             await m.edit("`Error message ...`")
