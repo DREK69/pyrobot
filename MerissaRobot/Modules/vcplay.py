@@ -71,7 +71,8 @@ button = [
 )
 async def play(_, message):
     merissa = await message.reply_text("🎵 **Processing**")
-    chat_id = message.chat.id
+    chat = message.chat
+    chat_id = chat.id
     try:
         try:
             get = await pbot.get_chat_member(chat_id, ASS_ID)
