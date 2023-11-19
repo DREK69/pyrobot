@@ -8,10 +8,8 @@ import aiohttp
 import yt_dlp
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
 from pyrogram.enums import MessageEntityType
-from pyrogram.types import Audio, Message, Voice
+from pyrogram.types import Audio, InlineKeyboardButton, Message, Voice
 from youtubesearchpython.__future__ import VideosSearch
-
-from pyrogram.types import InlineKeyboardButton 
 
 DURATION_LIMIT = int("90")
 
@@ -121,6 +119,7 @@ def get_url(message_1: Message) -> Union[str, None]:
 def get_file_name(audio: Union[Audio, Voice]):
     return f'{audio.file_unique_id}.{audio.file_name.split(".")[-1] if not isinstance(audio, Voice) else "ogg"}'
 
+
 button = [
     [
         InlineKeyboardButton(text="▶️", callback_data="vccb_resume"),
@@ -130,6 +129,7 @@ button = [
         InlineKeyboardButton(text="⏹", callback_data="vccb_end"),
     ]
 ]
+
 
 async def ytaudio(videoid):
     file = os.path.join("downloads", f"{videoid}.m4a")
