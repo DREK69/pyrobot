@@ -301,12 +301,12 @@ async def playlist(client, message):
         msg += "\n\n"
         msg += "**Queue**"
         for song in temp:
-            now_playing = temp[1]["title"]
+            name = temp[1]["title"]
             by = temp[1]["req"]
             stream_type = temp[1]["stream_type"]
             msg += f"\n- {name}"
-            msg += f"\n- Req by {usr}\n"
-            msg += "\n- StreamType " + stream_type
+            msg += f"\n- Req by {by}"
+            msg += "\n- StreamType:" + stream_type + "\n"
     await message.reply_text(msg)
 
 
