@@ -63,15 +63,15 @@ button = [
 
 
 @pbot.on_message(
-    filters.command(["play", "vplay", "cplay"])
+    filters.command(["play", "vplay", "cplay", "cvplay"])
     & ~filters.private
     & ~filters.forwarded
     & ~filters.via_bot,
     group=play_group,
 )
 async def play(_, message):
-    merissa = await message.reply_text("Processing Please Wait...")
-    if message.command[0] == "cplay":
+    merissa = await message.reply_text("🎵 **Processing**")
+    if "c" in message.command[0]:
         try:
             chat = await bot.get_chat(int(chat.id)).linked_chat
             chat_id = channel.id
@@ -180,10 +180,10 @@ async def play(_, message):
             else f"downloads/{file_name}"
         )
         thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
-        if message.command[0] == "play":
-            stream_type += "audio"
-        else:
+        if "v" in message.command[0]:
             stream_type += "video"
+        else:
+            stream_type += "audio"
 
     elif url:
         if not "youtu" in url:
@@ -209,12 +209,12 @@ async def play(_, message):
                 return await merissa.edit_text(
                     f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
                 )
-            if message.command[0] == "play":
-                file_path = await ytaudio(videoid)
-                stream_type += "audio"
-            else:
+            if "v" in message.command[0]:
                 file_path = await ytvideo(videoid)
                 stream_type += "video"
+            else:
+                file_path = await ytaudio(videoid)
+                stream_type += "audio"
     else:
         if len(message.command) < 2:
             return await merissa.edit_text("Please enter query to Play!")
@@ -238,12 +238,13 @@ async def play(_, message):
             return await merissa.edit(
                 f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
             )
-        if message.command[0] == "play":
-            file_path = await ytaudio(videoid)
-            stream_type += "audio"
-        else:
+        if "v" in message.command[0]:
             file_path = await ytvideo(videoid)
             stream_type += "video"
+        else:
+            file_path = await ytaudio(videoid)
+            stream_type += "audio"
+            
     await put(
         chat_id,
         title,
@@ -297,8 +298,33 @@ async def play(_, message):
 
     return await merissa.delete()
 
-
-DISABLED_GROUPS = []
+@Client.on_message(filters.command("playlist") & filters.group)
+async def playlist(client, message):    
+    queue = merissadb.get(int(message.chat.id))
+    if not queue:
+        await message.reply_text("Player is idle")
+    temp = []
+    for t in queue:
+        temp.append(t)
+    now_playing = temp[0]["title"]
+    by = temp[0]["req"]
+    stream_type = temp[0]["stream_type"]
+    msg = "**Now Playing** in {}".format(message.chat.title)
+    msg += "\n- " + now_playing
+    msg += "\n- Req by " + by
+    msg += "\n- StreamType " + strean_type
+    temp.pop(0)
+    if temp:
+        msg += "\n\n"
+        msg += "**Queue**"
+        for song in temp:
+            now_playing = temp[1]["title"]
+            by = temp[1]["req"]
+            stream_type = temp[1]["stream_type"]
+            msg += f"\n- {name}"
+            msg += f"\n- Req by {usr}\n"
+            msg += "\n- StreamType " + strean_type
+    await message.reply_text(msg)
 
 
 __help__ = """
