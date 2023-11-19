@@ -63,7 +63,7 @@ button = [
 
 
 @pbot.on_message(
-    filters.command(["play", "vplay", "cplay", "cvplay"])
+    filters.command(["play", "vplay"])
     & ~filters.private
     & ~filters.forwarded
     & ~filters.via_bot,
@@ -71,17 +71,7 @@ button = [
 )
 async def play(_, message):
     merissa = await message.reply_text("🎵 **Processing**")
-    if "c" in message.command[0]:
-        try:
-            chat = (await pbot.get_chat(int(message.chat.id))).linked_chat
-            chat_id = channel.id
-        except:
-            return await merissa.edit(
-                "Make sure Your group has connected channel and Bot is admin on your connected channel"
-            )
-    else:
-        chat = message.chat
-        chat_id = chat.id
+    chat_id = message.chat.id
     try:
         try:
             get = await pbot.get_chat_member(chat_id, ASS_ID)
