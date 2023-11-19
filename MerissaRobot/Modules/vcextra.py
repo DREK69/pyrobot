@@ -33,11 +33,11 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
 
 button = [
     [
-        InlineKeyboardButton(text="▶️", callback_data="resume_cb"),
-        InlineKeyboardButton(text="⏸", callback_data="pause_cb"),
-        InlineKeyboardButton(text="❌", callback_data="close_cb"),
-        InlineKeyboardButton(text="⏯", callback_data="skip_cb"),
-        InlineKeyboardButton(text="⏹", callback_data="end_cb"),
+        InlineKeyboardButton(text="▶️", callback_data="vccb_resume"),
+        InlineKeyboardButton(text="⏸", callback_data="vccb_pause"),
+        InlineKeyboardButton(text="❌", callback_data="vccb_close"),
+        InlineKeyboardButton(text="⏯", callback_data="vccb_skip"),
+        InlineKeyboardButton(text="⏹", callback_data="vccb_end"),
     ]
 ]
 
@@ -219,18 +219,13 @@ async def activevc(_, message: Message):
 
 
 @pbot.on_callback_query(
-    filters.regex(pattern=r"^(resume_cb|pause_cb|skip_cb|end_cb|close_cb)$")
+    filters.regex("^vccb")
 )
 @admin_check_cb
-async def admin_cbs(_, query: CallbackQuery):
-    try:
-        await query.answer()
-    except:
-        pass
-
-    data = query.matches[1].group(1)
-
-    if data == "resume_cb":
+async def admin_cbs(_, query: CallbackQuery):  
+    callback_data = callbackquery.data.strip()
+    data = callback_data.split("_")[1]    
+    if data == "resume":
         if await is_streaming(query.message.chat.id):
             return await query.answer(
                 "Did you remember that you paused Stream?", show_alert=True
@@ -241,7 +236,7 @@ async def admin_cbs(_, query: CallbackQuery):
             text=f"**Stream Resumed**\n\nBy : {query.from_user.mention}",
         )
 
-    elif data == "pause_cb":
+    elif data == "pause":
         if not await is_streaming(query.message.chat.id):
             return await query.answer(
                 "Did you Remember that you resumed the Stream ?", show_alert=True
@@ -252,7 +247,7 @@ async def admin_cbs(_, query: CallbackQuery):
             text=f"**Stream Paused**\n\nBy : {query.from_user.mention}",
         )
 
-    elif data == "end_cb":
+    elif data == "end":
         try:
             await _clear_(query.message.chat.id)
             return await pytgcalls.leave_group_call(query.message.chat.id)
@@ -263,13 +258,13 @@ async def admin_cbs(_, query: CallbackQuery):
         )
         await query.message.delete()
 
-    elif data == "close_cb":
+    elif data == "close":
         try:
             await query.message.delete()
         except:
             pass
 
-    elif data == "skip_cb":
+    elif data == "skip":
         get = merissadb.get(query.message.chat.id)
         if not get:
             try:
