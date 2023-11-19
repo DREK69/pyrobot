@@ -71,12 +71,21 @@ button = [
 )
 async def play(_, message):
     merissa = await message.reply_text("Processing Please Wait...")
+    if message.command[0] == "cplay":
+        try:
+            chat = await bot.get_chat(int(chat.id)).linked_chat
+            chat_id = channel.id
+        except:
+            return await merissa.edit("Make sure Your group has connected channel and Bot is admin on your connected channel")
+    else: 
+        chat = message.chat
+        chat_id = chat.id
     try:
         try:
-            get = await pbot.get_chat_member(message.chat.id, ASS_ID)
+            get = await pbot.get_chat_member(chat_id, ASS_ID)
         except ChatAdminRequired:
             return await merissa.edit_text(
-                f"I don't have permissions to invite users via link for inviting {BOT_NAME} Assistant to {message.chat.title}."
+                f"I don't have permissions to invite users via link for inviting {BOT_NAME} Assistant to {chat.title}."
             )
         if get.status == ChatMemberStatus.BANNED:
             unban_butt = InlineKeyboardMarkup(
@@ -84,37 +93,37 @@ async def play(_, message):
                     [
                         InlineKeyboardButton(
                             text=f"Unban {ASS_NAME}",
-                            callback_data=f"unban_ass {message.chat.id}|{ASS_ID}",
+                            callback_data=f"unban_ass {chat_id}|{ASS_ID}",
                         ),
                     ]
                 ]
             )
             return await merissa.edit_text(
-                text=f"{BOT_NAME} Assistant is banned in {message.chat.title}\n\nID: {ASS_ID}\nName: {ASS_MENTION}\nUsername: @{ASS_USERNAME}\n\nPlease unban the assistant and play again...",
+                text=f"{BOT_NAME} Assistant is banned in {chat.title}\n\nID: {ASS_ID}\nName: {ASS_MENTION}\nUsername: @{ASS_USERNAME}\n\nPlease unban the assistant and play again...",
                 reply_markup=unban_butt,
             )
     except UserNotParticipant:
-        if message.chat.username:
-            invitelink = message.chat.username
+        if chat.username:
+            invitelink = chat.username
             try:
                 await user.resolve_peer(invitelink)
             except Exception as ex:
                 LOGGER.error(ex)
         else:
             try:
-                invitelink = await pbot.export_chat_invite_link(message.chat.id)
+                invitelink = await pbot.export_chat_invite_link(chat_id)
             except ChatAdminRequired:
                 return await merissa.edit_text(
-                    f"I don't have permissions to invite users via link for inviting {BOT_NAME} Assistant to {message.chat.title}."
+                    f"I don't have permissions to invite users via link for inviting {BOT_NAME} Assistant to {chat.title}."
                 )
             except Exception as ex:
                 return await merissa.edit_text(
-                    f"Failed to Invite {BOT_NAME} Assistant to {message.chat.title}.\n\n**Reason :** `{ex}`"
+                    f"Failed to Invite {BOT_NAME} Assistant to {chat.title}.\n\n**Reason :** `{ex}`"
                 )
         if invitelink.startswith("https://t.me/+"):
             invitelink = invitelink.replace("https://t.me/+", "https://t.me/joinchat/")
         anon = await merissa.edit_text(
-            f"Please Wait...\n\nInviting {ASS_NAME} to {message.chat.title}."
+            f"Please Wait...\n\nInviting {ASS_NAME} to {chat.title}."
         )
         try:
             await user.join_chat(invitelink)
@@ -126,7 +135,7 @@ async def play(_, message):
             pass
         except Exception as ex:
             return await merissa.edit_text(
-                f"Failed to Invite {BOT_NAME} Assistant to {message.chat.title}.\n\n**Reason :** `{ex}`"
+                f"Failed to Invite {BOT_NAME} Assistant to {chat.title}.\n\n**Reason :** `{ex}`"
             )
         try:
             await user.resolve_peer(invitelink)
@@ -233,19 +242,18 @@ async def play(_, message):
         else:
             file_path = await ytvideo(videoid)
             stream_type += "video"
-
-    if await is_active_chat(message.chat.id):
-        await put(
-            message.chat.id,
-            title,
-            duration,
-            videoid,
-            file_path,
-            ruser,
-            message.from_user.id,
-            stream_type,
-        )
-        position = len(merissadb.get(message.chat.id))
+    await put(
+        chat_id,
+        title,
+        duration,
+        videoid,
+        file_path,
+        ruser,
+        message.from_user.id,
+        stream_type,
+    )
+    if await is_active_chat(chat_id):
+        position = len(merissadb.get(chat_id))
         thumb = await gen_thumb(videoid, f"Added to Queue at {position}")
         await message.reply_photo(
             photo=thumb,
@@ -259,7 +267,7 @@ async def play(_, message):
             stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
         try:
             await pytgcalls.join_group_call(
-                message.chat.id,
+                chat_id,
                 stream,
             )
         except NoActiveGroupCall:
@@ -276,8 +284,8 @@ async def play(_, message):
             return await merissa.edit_text(
                 f"{BOT_NAME} Assisant Muted on VideoChat,\n\nPlease Unmute {ASS_MENTION} on Videochat and play again"
             )
-        await stream_on(message.chat.id)
-        await add_active_chat(message.chat.id)
+        await stream_on(chat_id)
+        await add_active_chat(chat_id)
         thumb = await gen_thumb(videoid, "Now Playing...")
         await message.reply_photo(
             photo=thumb,
@@ -286,6 +294,8 @@ async def play(_, message):
         )
 
     return await merissa.delete()
+
+DISABLED_GROUPS = []
 
 
 __help__ = """
