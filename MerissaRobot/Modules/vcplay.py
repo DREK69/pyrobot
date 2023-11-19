@@ -76,8 +76,10 @@ async def play(_, message):
             chat = await bot.get_chat(int(chat.id)).linked_chat
             chat_id = channel.id
         except:
-            return await merissa.edit("Make sure Your group has connected channel and Bot is admin on your connected channel")
-    else: 
+            return await merissa.edit(
+                "Make sure Your group has connected channel and Bot is admin on your connected channel"
+            )
+    else:
         chat = message.chat
         chat_id = chat.id
     try:
@@ -294,6 +296,7 @@ async def play(_, message):
         )
 
     return await merissa.delete()
+
 
 DISABLED_GROUPS = []
 
