@@ -1,10 +1,10 @@
 import json
 import os
 import random
+from uuid import uuid4
 
 import pyrogram
 import requests
-from uuid import uuid4
 from bs4 import BeautifulSoup
 from pyrogram import filters
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
@@ -359,13 +359,7 @@ async def _packkang(app: pbot, message):
         await txt.edit(
             f"**Here is Your Kanged Link**!\n**Total Stickers**: {len(sticks)}",
             reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        Keyboard(
-                            "ᴘᴀᴄᴋ ʟɪɴᴋ", url=f"http://t.me/addstickers/{short_name}"
-                        )
-                    ]
-                ]
+                [[Keyboard("ᴘᴀᴄᴋ ʟɪɴᴋ", url=f"http://t.me/addstickers/{short_name}")]]
             ),
         )
     except Exception as e:
