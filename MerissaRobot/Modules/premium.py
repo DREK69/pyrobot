@@ -331,7 +331,6 @@ async def _packkang(app: pbot, message):
     )
     shits = stickers.documents
     sticks = []
-
     for i in shits:
         sex = pyrogram.raw.types.InputDocument(
             id=i.id, access_hash=i.access_hash, file_reference=i.thumbs[0].bytes
@@ -342,10 +341,9 @@ async def _packkang(app: pbot, message):
                 document=sex, emoji=i.attributes[1].alt
             )
         )
-
     try:
         short_name = (
-            f'stikcer_pack_{str(uuid4()).replace("-","")}_by_{Yumikoo.me.username}'
+            f'stikcer_pack_{str(uuid4()).replace("-","")}_by_{app.me.username}'
         )
         user_id = await app.resolve_peer(message.from_user.id)
         await app.invoke(
