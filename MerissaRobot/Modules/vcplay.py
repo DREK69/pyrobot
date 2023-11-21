@@ -174,8 +174,8 @@ async def play(_, message):
         else:
             results = VideosSearch(url, limit=1)
             vidinfo = (await results.next())["result"][0]
-            title = vidinfo['title']
-            duration = vidinfo['duration']
+            title = vidinfo["title"]
+            duration = vidinfo["duration"]
             videoid = vidinfo["id"]
             secmul, dur, dur_arr = 1, 0, duration.split(":")
             for i in range(len(dur_arr) - 1, -1, -1):
@@ -193,7 +193,7 @@ async def play(_, message):
             else:
                 file_path = await ytaudio(videoid)
                 stream_type += "audio"
-            
+
     else:
         if len(message.command) < 2:
             return await merissa.edit_text("Please enter query to Play!")
