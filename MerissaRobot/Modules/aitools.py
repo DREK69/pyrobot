@@ -6,7 +6,6 @@ from urllib.parse import quote
 import httpx
 from pyrogram import enums, filters
 from pyrogram.types import InputMediaPhoto
-from SafoneAPI import SafoneAPI
 
 from MerissaRobot import pbot
 
@@ -64,7 +63,9 @@ async def chatgpt(c, message):
     )
     try:
         await c.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
-        response = await getreq(f"https://vihangayt.me/tools/chatgpt?q={query}").json()['data']
+        response = await getreq(f"https://vihangayt.me/tools/chatgpt?q={query}").json()[
+            "data"
+        ]
     except:
         response = "Something Went Wrong"
     await msg.edit_text(response)
@@ -84,7 +85,9 @@ async def bard_chatbot(c, message):
     )
     try:
         await c.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
-        response = await getreq(f"https://vihangayt.me/tools/bard?q={query}").json()['data']
+        response = await getreq(f"https://vihangayt.me/tools/bard?q={query}").json()[
+            "data"
+        ]
     except:
         response = "Something went wrong"
     await msg.edit_text(response)
@@ -114,10 +117,11 @@ async def ai_img_search(c, m):
     except:
         await x.edit("`Failed to get images`")
 
+
 @pbot.on_message(filters.command(["generate", "dream", "prompt"]))
 async def ai_img_search(c, m):
     try:
-        prompt = m.text.split(None, 1)[1]
+        m.text.split(None, 1)[1]
     except IndexError:
         await m.reply_text(
             "`What should i imagine??\nGive some prompt along with the command`"
@@ -126,7 +130,9 @@ async def ai_img_search(c, m):
     x = await m.reply_text("`Processing...`")
     try:
         await c.send_chat_action(message.chat.id, enums.ChatAction.PHOTO)
-        response = await getreq(f"https://vihangayt.me/tools/photoleap?q={query}").json()['data']
+        response = await getreq(
+            f"https://vihangayt.me/tools/photoleap?q={query}"
+        ).json()["data"]
         await message.reply_photo(response)
     except:
         await message.reply_text("Something went wrong")
