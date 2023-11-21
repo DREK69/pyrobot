@@ -79,7 +79,6 @@ Random-Word-Generator
 redis
 regex
 requests 
-safoneapi
 search_engine_parser
 secureme
 shazamio==0.0.2
