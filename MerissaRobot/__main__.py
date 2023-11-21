@@ -26,7 +26,6 @@ from MerissaRobot import (
     LOGGER,
     OWNER_ID,
     TOKEN,
-    WEBHOOK,
     dispatcher,
     pbot,
     pytgcalls,
@@ -809,7 +808,7 @@ def main():
         read_latency=4,
         drop_pending_updates=True,
     )
-    
+
     if len(argv) not in (1, 3, 4):
         telethn.disconnect()
     else:
