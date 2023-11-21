@@ -61,7 +61,7 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     group=play_group,
 )
 async def play(_, message):
-    merissa = await message.reply_text("🎵 **Processing**")
+    merissa = await message.reply_text("🎵 Processing")
     chat = message.chat
     chat_id = chat.id
     try:
@@ -125,7 +125,7 @@ async def play(_, message):
             await user.resolve_peer(invitelink)
         except:
             pass
-
+            
     ruser = message.from_user.first_name
     audio = (
         (message.reply_to_message.audio or message.reply_to_message.voice)
@@ -136,6 +136,7 @@ async def play(_, message):
     url = get_url(message)
     stream_type = ""
     if message.reply_to_message:
+        await merissa.edit_text("📥 Downloading...")
         if audio:
             if round(audio.duration / 60) > DURATION_LIMIT:
                 raise DurationLimitError(
@@ -191,6 +192,7 @@ async def play(_, message):
                 return await merissa.edit_text(
                     f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
                 )
+            await merissa.edit_text("📥 Downloading...")
             if "v" in message.command[0]:
                 file_path = await ytvideo(videoid)
                 stream_type += "video"
@@ -220,6 +222,7 @@ async def play(_, message):
             return await merissa.edit(
                 f"Sorry, Track longer than  {DURATION_LIMIT} Minutes are not allowed to play on {BOT_NAME}."
             )
+        await merissa.edit_text("📥 Downloading...")
         if "v" in message.command[0]:
             file_path = await ytvideo(videoid)
             stream_type += "video"
@@ -239,10 +242,8 @@ async def play(_, message):
             stream_type,
         )
         position = len(merissadb.get(chat_id))
-        thumb = await gen_thumb(videoid, f"Added to Queue at {position}")
-        await message.reply_photo(
-            photo=thumb,
-            caption=f"⏳ Added to Queue at {position}\n\n👤Requested By:{ruser}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
+        await message.reply_text(
+            f"⏳ Added to Queue at {position}\n🎧 Title: {title}\n👤 Requested By:{ruser}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
             reply_markup=InlineKeyboardMarkup(button),
         )
     else:
