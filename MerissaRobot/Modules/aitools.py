@@ -130,8 +130,8 @@ async def ai_img_search(c, m):
         await c.send_chat_action(message.chat.id, enums.ChatAction.PHOTO)
         response = await getreq(
             f"https://vihangayt.me/tools/photoleap?q={query}"
-        ).json()["data"]
-        await message.reply_photo(response)
+        )
+        await m.reply_photo(response["data"])
     except:
-        await message.reply_text("Something went wrong")
+        await m.reply_text("Something went wrong")
     await x.delete()
