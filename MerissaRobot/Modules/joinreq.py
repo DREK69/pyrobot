@@ -11,7 +11,7 @@ from telegram.utils.helpers import mention_html
 
 from MerissaRobot import dispatcher
 from MerissaRobot.Handler.decorators import merissacallback
-from MerissaRobot.Hanler.anonymous import AdminPerms, user_admin
+from MerissaRobot.Handler.anonymous import AdminPerms, user_admin
 from MerissaRobot.Modules.log_channel import loggable
 
 
