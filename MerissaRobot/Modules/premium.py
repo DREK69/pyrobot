@@ -355,7 +355,7 @@ async def _packkang(app: pbot, message):
         await txt.edit(
             f"**Here is Your Kanged Link**!\n**Total Stickers**: {len(sticks)}",
             reply_markup=InlineKeyboardMarkup(
-                [[Keyboard("ᴘᴀᴄᴋ ʟɪɴᴋ", url=f"http://t.me/addstickers/{short_name}")]]
+                [[Keyboard("Pack Link", url=f"http://t.me/addstickers/{short_name}")]]
             ),
         )
     except Exception as e:
