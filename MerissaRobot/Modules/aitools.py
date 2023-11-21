@@ -117,7 +117,7 @@ async def ai_img_search(c, m):
 @pbot.on_message(filters.command(["generate", "dream", "prompt"]))
 async def ai_img_search(c, m):
     try:
-        m.text.split(None, 1)[1]
+        query = m.text.split(None, 1)[1]
     except IndexError:
         await m.reply_text(
             "`What should i imagine??\nGive some prompt along with the command`"
