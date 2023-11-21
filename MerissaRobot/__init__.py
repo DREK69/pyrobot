@@ -43,8 +43,9 @@ basicConfig(
         StreamHandler(),
     ],
 )
-getLogger("pyrogram").setLevel(INFO)
-getLogger("telegram").setLevel(INFO)
+getLogger("pyrogram").setLevel(ERROR)
+getLogger("telethon").setLevel(ERROR)
+getLogger("telegram").setLevel(ERROR)
 
 updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
 dispatcher = updater.dispatcher
