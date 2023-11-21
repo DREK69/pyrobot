@@ -284,8 +284,8 @@ async def snapdown(client, message):
         )
 
 
-@pbot.on_chat_join_request((filters.channel))
-async def autoapprove(client, message: ChatJoinRequest):
+@pbot.on_chat_join_request(filters.channel)
+async def autoapprovec(client, message: ChatJoinRequest):
     chat = message.chat
     user = message.from_user
     button = [
@@ -300,6 +300,30 @@ async def autoapprove(client, message: ChatJoinRequest):
         reply_markup=InlineKeyboardMarkup(button),
     )
 
+@pbot.on_chat_join_request(filters.group)
+async def autoapproveg(client, message: ChatJoinRequest):  
+    user = message.from_user
+    chat = message.chat
+    keyboard = InlineKeyboardMarkup(
+        [
+            [
+                Keyboard(
+                    "✅ Approve", callback_data="cb_approve={}".format(user.id)
+                ),
+                Keyboard(
+                    "❌ Decline", callback_data="cb_decline={}".format(user.id)
+                ),
+            ]
+        ]
+    )
+    client.send_messagw(
+        chat.id,
+        "{} wants to join {}".format(
+            mention_html(user.id, user.first_name), chat.title or "this chat"
+        ),
+        reply_markup=keyboard,
+        parse_mode=ParseMode.HTML,
+    )
 
 @pbot.on_message(filters.command("packkang"))
 @subscribe
