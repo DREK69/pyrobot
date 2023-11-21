@@ -133,9 +133,7 @@ def chatbot(update: Update, context: CallbackContext):
         if not merissa_message(context, message):
             return
         bot.send_chat_action(chat_id, action="typing")
-        url = f"https://chat.merissabot.me/api/apikey={api}/query={message.text}"
-        results = requests.get(url).json()
-        sleep(0.5)
+        results = requests.get(f"https://chat.merissabot.me/api/apikey=2030709195-MERISSAWk8XcW9hM3/query={message.text}").json()
         message.reply_text(results["reply"])
 
 
