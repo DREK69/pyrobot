@@ -1,15 +1,10 @@
 import html
 import re
 
-from telegram import ParseMode
-from telegram.ext import ChatJoinRequestHandler
 from telegram.ext.callbackcontext import CallbackContext
-from telegram.inline.inlinekeyboardbutton import InlineKeyboardButton
-from telegram.inline.inlinekeyboardmarkup import InlineKeyboardMarkup
 from telegram.update import Update
 from telegram.utils.helpers import mention_html
 
-from MerissaRobot import dispatcher
 from MerissaRobot.Handler.anonymous import AdminPerms, user_admin
 from MerissaRobot.Handler.decorators import merissacallback
 from MerissaRobot.Modules.log_channel import loggable
