@@ -1,6 +1,7 @@
 import json
 import os
 import random
+import pyrogram 
 
 import requests
 from bs4 import BeautifulSoup
