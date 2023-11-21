@@ -9,7 +9,7 @@ from MerissaRobot import pbot
 async def animedl(_, message):
     if len(message.command) < 2:
         return message.reply_text(
-            "Give some Anime Movie/Series name to Find it on my Database\n\nEx. /gogo suzume"
+            "Give some Anime Movie/Series name to Find it on my Database\n\nEx. /aniflix suzume"
         )
     search_results = await message.reply_text("Processing...")
     animeinput = message.text.split(None, 1)[1]
@@ -69,7 +69,7 @@ async def movie_result(_, CallbackQuery):
     data = callback_data.split("|")
     id = data[1]
     m = await CallbackQuery.message.edit(
-        text="Please Wait Movie/Series Details Fetching From GogoAnime",
+        text="Please Wait Fetching Movie/Series Details",
         reply_markup=None,
     )
     search = requests.get(f"https://animeapi.princexd.tech/getAnime/{id}").json()
