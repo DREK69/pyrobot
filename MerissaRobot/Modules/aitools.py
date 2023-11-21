@@ -9,6 +9,7 @@ from pyrogram.types import InputMediaPhoto
 from MerissaRobot import pbot
 from MerissaRobot.helpers import getreq
 
+
 class Lexica:
     def __init__(
         self,
