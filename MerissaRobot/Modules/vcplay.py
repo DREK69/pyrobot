@@ -22,7 +22,7 @@ from pytgcalls.types import (
     HighQualityVideo,
 )
 from telegram import InlineKeyboardButton as IKB
-from youtube_search import YoutubeSearch
+from youtubesearchpython.__future__ import VideosSearch
 
 from MerissaRobot import (
     ASS_ID,
@@ -156,7 +156,7 @@ async def play(_, message):
             file_name = get_file_name(video)
             title = file_name
             duration = round(video.duration / 60)
-        videoid = "nhihai"
+        videoid = "videoidhotitodedeta"
         file_path = (
             await message.reply_to_message.download(file_name)
             if not os.path.isfile(os.path.join("downloads", file_name))
@@ -170,19 +170,13 @@ async def play(_, message):
 
     elif url:
         if not "youtu" in url:
-            file_path = url
-            title = "Streaming Link"
-            duration = int("60")
-            videoid = "nhihai"
-            if message.command[0] == "play":
-                stream_type += "audio"
-            else:
-                stream_type += "video"
+            return await merissa.edit_text("Only Youtube link Works")
         else:
-            results = YoutubeSearch(url, max_results=1).to_dict()
-            title = results[0]["title"]
-            duration = results[0]["duration"]
-            videoid = results[0]["id"]
+            results = VideosSearch(url, limit=1)
+            vidinfo = (await results.next())["result"][0]
+            title = vidinfo['title']
+            duration = vidinfo['duration']
+            videoid = vidinfo["id"]
             secmul, dur, dur_arr = 1, 0, duration.split(":")
             for i in range(len(dur_arr) - 1, -1, -1):
                 dur += int(dur_arr[i]) * secmul
@@ -199,12 +193,13 @@ async def play(_, message):
             else:
                 file_path = await ytaudio(videoid)
                 stream_type += "audio"
+            
     else:
         if len(message.command) < 2:
             return await merissa.edit_text("Please enter query to Play!")
         query = message.text.split(None, 1)[1]
         try:
-            results = YoutubeSearch(query, max_results=1).to_dict()
+            results = VideosSearch(query, max_results=1).to_dict()
             url = f"https://youtube.com{results[0]['url_suffix']}"
             title = results[0]["title"]
             videoid = results[0]["id"]
