@@ -15,32 +15,6 @@ from MerissaRobot.Handler.decorators import merissacallback
 from MerissaRobot.Modules.log_channel import loggable
 
 
-def chat_join_req(upd: Update, ctx: CallbackContext):
-    bot = ctx.bot
-    user = upd.chat_join_request.from_user
-    chat = upd.chat_join_request.chat
-    keyboard = InlineKeyboardMarkup(
-        [
-            [
-                InlineKeyboardButton(
-                    "✅ Approve", callback_data="cb_approve={}".format(user.id)
-                ),
-                InlineKeyboardButton(
-                    "❌ Decline", callback_data="cb_decline={}".format(user.id)
-                ),
-            ]
-        ]
-    )
-    bot.send_message(
-        chat.id,
-        "{} wants to join {}".format(
-            mention_html(user.id, user.first_name), chat.title or "this chat"
-        ),
-        reply_markup=keyboard,
-        parse_mode=ParseMode.HTML,
-    )
-
-
 @merissacallback(pattern=r"cb_approve=")
 @user_admin(AdminPerms.CAN_INVITE_USERS)
 @loggable
@@ -103,6 +77,3 @@ def decline_joinReq(update: Update, context: CallbackContext) -> str:
         return logmsg
     except Exception as e:
         update.effective_message.edit_text(str(e))
-
-
-dispatcher.add_handler(ChatJoinRequestHandler(callback=chat_join_req, run_async=True))
