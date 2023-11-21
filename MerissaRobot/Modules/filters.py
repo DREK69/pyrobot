@@ -419,9 +419,7 @@ def reply_filter(update, context):
                                 reply_markup=keyboard,
                             )
                     except BadRequest:
-                        LOGGER.exception(
-                            "Failed to send message: " + excp.message
-                        ) 
+                        LOGGER.exception("Failed to send message: " + excp.message)
                 break
             else:
                 if filt.is_sticker:
