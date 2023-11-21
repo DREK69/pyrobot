@@ -63,9 +63,8 @@ async def chatgpt(c, message):
     )
     try:
         await c.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
-        response = await getreq(f"https://vihangayt.me/tools/chatgpt?q={query}").json()[
-            "data"
-        ]
+        x = await getreq(f"https://vihangayt.me/tools/chatgpt?q={query}")
+        response = x["data"]
     except:
         response = "Something Went Wrong"
     await msg.edit_text(response)
@@ -85,9 +84,8 @@ async def bard_chatbot(c, message):
     )
     try:
         await c.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
-        response = await getreq(f"https://vihangayt.me/tools/bard?q={query}").json()[
-            "data"
-        ]
+        x = await getreq(f"https://vihangayt.me/tools/bard?q={query}")
+        response = x["data"]
     except:
         response = "Something went wrong"
     await msg.edit_text(response)
