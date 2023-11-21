@@ -319,7 +319,7 @@ async def _packkang(app: pbot, message):
     if len(message.command) < 2:
         pack_name = f"{message.from_user.first_name} :: @MerissaRobot"
     else:
-        pack_name = message.text.split(maxsplit=1)[1]
+        pack_name = message.text.split(maxsplit=1)[1] + " :: @MerissaRobot"
     short_name = message.reply_to_message.sticker.set_name
     stickers = await app.invoke(
         pyrogram.raw.functions.messages.GetStickerSet(
