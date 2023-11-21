@@ -154,6 +154,13 @@ async def ytvideo(videoid):
         await loop.run_in_executor(None, ydl.download, [link])
     return file
 
+def changeImageSize(maxWidth, maxHeight, image):
+    widthRatio = maxWidth / image.size[0]
+    heightRatio = maxHeight / image.size[1]
+    newWidth = int(widthRatio * image.size[0])
+    newHeight = int(heightRatio * image.size[1])
+    newImage = image.resize((newWidth, newHeight))
+    return newImage
 
 async def gen_thumb(videoid, status):
     try:
@@ -173,7 +180,7 @@ async def gen_thumb(videoid, status):
                     async with aiofiles.open(thumbnail_path, mode="wb") as f:
                         await f.write(await resp.read())
         youtube = Image.open(thumbnail_path)
-        image1 = youtube.resize((1280, 720))
+        image1 = changeImageSize(1280, 720, youtube)
         image2 = image1.convert("RGBA")
         background = image2.filter(filter=ImageFilter.BoxBlur(30))
         enhancer = ImageEnhance.Brightness(background)
