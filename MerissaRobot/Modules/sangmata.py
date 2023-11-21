@@ -34,28 +34,3 @@ async def sangmata(client, message):
         if "Name" in msg.text:
             await sgbot.edit(msg.text)
             await msg.delete()
-
-
-@pbot.on_message(filters.command("animate"))
-@subscribe
-async def convert_image(client, message):
-    if not message.reply_to_message:
-        return await message.reply_text("**Please Reply to photo**")
-    if message.reply_to_message:
-        m = await message.reply_text("`Processing...`")
-    photo = await message.reply_to_message.download()
-    bot = "qq_neural_anime_bot"
-    await user.send_photo(bot, photo=photo)
-    os.remove(photo)
-    await asyncio.sleep(18)
-    async for result in user.search_messages(bot):
-        if result.photo:
-            await m.edit("Uploading...")
-            converted_image_file = await user.download_media(result)
-            await message.reply_photo(
-                converted_image_file,
-                caption="Powered By @MerissaRobot",
-            )
-            await m.delete()
-        else:
-            await m.edit("`Error message ...`")
