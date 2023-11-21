@@ -64,9 +64,7 @@ async def chatgpt(c, message):
     )
     try:
         await c.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
-        api = SafoneAPI()
-        resp = await api.chatgpt(query)
-        response = resp.message
+        response = await getreq(f"https://vihangayt.me/tools/chatgpt?q={query}").json()['data']
     except:
         response = "Something Went Wrong"
     await msg.edit_text(response)
@@ -86,16 +84,14 @@ async def bard_chatbot(c, message):
     )
     try:
         await c.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
-        api = SafoneAPI()
-        resp = await api.bard(query)
-        response = resp.message
+        response = await getreq(f"https://vihangayt.me/tools/bard?q={query}").json()['data']
     except:
         response = "Something went wrong"
     await msg.edit_text(response)
     await c.send_chat_action(message.chat.id, enums.ChatAction.CANCEL)
 
 
-@pbot.on_message(filters.command(["genimg", "dream", "prompt"]))
+@pbot.on_message(filters.command("lexica"))
 async def ai_img_search(c, m):
     try:
         prompt = m.text.split(None, 1)[1]
@@ -117,3 +113,21 @@ async def ai_img_search(c, m):
         await x.delete()
     except:
         await x.edit("`Failed to get images`")
+
+@pbot.on_message(filters.command(["generate", "dream", "prompt"]))
+async def ai_img_search(c, m):
+    try:
+        prompt = m.text.split(None, 1)[1]
+    except IndexError:
+        await m.reply_text(
+            "`What should i imagine??\nGive some prompt along with the command`"
+        )
+        return
+    x = await m.reply_text("`Processing...`")
+    try:
+        await c.send_chat_action(message.chat.id, enums.ChatAction.PHOTO)
+        response = await getreq(f"https://vihangayt.me/tools/photoleap?q={query}").json()['data']
+        await message.reply_photo(response)
+    except:
+        await message.reply_text("Something went wrong")
+    await x.delete()
