@@ -9,6 +9,7 @@ from pyrogram.types import Message
 from telegraph import upload_file
 
 from MerissaRobot import pbot
+from MerissaRobot.helpers import subscribe
 
 
 @pbot.on_message(filters.command("ocr") & filters.private)
