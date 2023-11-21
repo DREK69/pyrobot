@@ -316,7 +316,7 @@ async def autoapproveg(client, message: ChatJoinRequest):
     await client.send_message(
         chat.id,
         "{} wants to join {}".format(user.first_name, chat.title),
-        reply_markup=keyboard
+        reply_markup=keyboard,
     )
 
 
