@@ -199,7 +199,8 @@ async def play(_, message):
             return await merissa.edit_text("Please enter query to Play!")
         query = message.text.split(None, 1)[1]
         try:
-            results = VideosSearch(query, max_results=1).to_dict()
+            vidinfo = VideosSearch(query, limit=1)
+            results = (await vidinfo.next())["result"][0]
             url = f"https://youtube.com{results[0]['url_suffix']}"
             title = results[0]["title"]
             videoid = results[0]["id"]
