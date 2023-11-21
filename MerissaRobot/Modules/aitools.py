@@ -7,7 +7,7 @@ from pyrogram import enums, filters
 from pyrogram.types import InputMediaPhoto
 
 from MerissaRobot import pbot
-
+from MerissaRobot.helpers import getreq
 
 class Lexica:
     def __init__(
