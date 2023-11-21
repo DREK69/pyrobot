@@ -6,12 +6,15 @@ from uuid import uuid4
 import pyrogram
 import requests
 from bs4 import BeautifulSoup
+
+from telegram import InlineKeyboardButton
+from telegram.utils.helpers import mention_html
+
 from pyrogram import filters
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.types import ChatJoinRequest
 from pyrogram.types import InlineKeyboardButton as Keyboard
 from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto, InputMediaVideo
-from telegram import InlineKeyboardButton
 
 from MerissaRobot import FORCE_CHANNEL, pbot
 from MerissaRobot.helpers import getreq, save_file, subscribe
@@ -313,10 +316,10 @@ async def autoapproveg(client, message: ChatJoinRequest):
             ]
         ]
     )
-    client.send_messagw(
+    await client.send_messagw(
         chat.id,
         "{} wants to join {}".format(
-            mention_html(user.id, user.first_name), chat.title or "this chat"
+            user.first_name, chat.title
         ),
         reply_markup=keyboard,
         parse_mode=ParseMode.HTML,
