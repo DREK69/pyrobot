@@ -418,7 +418,7 @@ def reply_filter(update, context):
                                 parse_mode=ParseMode.HTML,
                                 reply_markup=keyboard,
                             )
-                    except BadRequest:
+                    except BadRequest as excp:
                         LOGGER.exception("Failed to send message: " + excp.message)
                 break
             else:
