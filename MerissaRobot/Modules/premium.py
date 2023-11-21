@@ -300,19 +300,16 @@ async def autoapprovec(client, message: ChatJoinRequest):
         reply_markup=InlineKeyboardMarkup(button),
     )
 
+
 @pbot.on_chat_join_request(filters.group)
-async def autoapproveg(client, message: ChatJoinRequest):  
+async def autoapproveg(client, message: ChatJoinRequest):
     user = message.from_user
     chat = message.chat
     keyboard = InlineKeyboardMarkup(
         [
             [
-                Keyboard(
-                    "✅ Approve", callback_data="cb_approve={}".format(user.id)
-                ),
-                Keyboard(
-                    "❌ Decline", callback_data="cb_decline={}".format(user.id)
-                ),
+                Keyboard("✅ Approve", callback_data="cb_approve={}".format(user.id)),
+                Keyboard("❌ Decline", callback_data="cb_decline={}".format(user.id)),
             ]
         ]
     )
@@ -324,6 +321,7 @@ async def autoapproveg(client, message: ChatJoinRequest):
         reply_markup=keyboard,
         parse_mode=ParseMode.HTML,
     )
+
 
 @pbot.on_message(filters.command("packkang"))
 @subscribe
