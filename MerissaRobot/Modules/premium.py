@@ -298,47 +298,53 @@ async def autoapprove(client, message: ChatJoinRequest):
         reply_markup=InlineKeyboardMarkup(button),
     )
 
+
 @pbot.on_message(filters.command("packkang"))
 @subscribe
-async def _packkang(app : pbot, message):  
+async def _packkang(app: pbot, message):
     txt = await message.reply_text("**Processing....**")
     if not message.reply_to_message:
-        await txt.edit('Reply to Sticker')
+        await txt.edit("Reply to Sticker")
         return
     if not message.reply_to_message.sticker:
-        await txt.edit('Reply to Sticker')
+        await txt.edit("Reply to Sticker")
         return
-    if message.reply_to_message.sticker.is_animated or  message.reply_to_message.sticker.is_video:
+    if (
+        message.reply_to_message.sticker.is_animated
+        or message.reply_to_message.sticker.is_video
+    ):
         return await txt.edit("reply to non animated sticker")
     if len(message.command) < 2:
-        pack_name =  f'{message.from_user.first_name}_sticker_pack_by_@YumikooRobot'
-    else :
+        pack_name = f"{message.from_user.first_name}_sticker_pack_by_@YumikooRobot"
+    else:
         pack_name = message.text.split(maxsplit=1)[1]
     short_name = message.reply_to_message.sticker.set_name
     stickers = await app.invoke(
         pyrogram.raw.functions.messages.GetStickerSet(
             stickerset=pyrogram.raw.types.InputStickerSetShortName(
-                short_name=short_name),
-            hash=0))
+                short_name=short_name
+            ),
+            hash=0,
+        )
+    )
     shits = stickers.documents
     sticks = []
-    
+
     for i in shits:
         sex = pyrogram.raw.types.InputDocument(
-                id=i.id,
-                access_hash=i.access_hash,
-                file_reference=i.thumbs[0].bytes
-            )
-        
+            id=i.id, access_hash=i.access_hash, file_reference=i.thumbs[0].bytes
+        )
+
         sticks.append(
             pyrogram.raw.types.InputStickerSetItem(
-                document=sex,
-                emoji=i.attributes[1].alt
+                document=sex, emoji=i.attributes[1].alt
             )
         )
 
     try:
-        short_name = f'stikcer_pack_{str(uuid4()).replace("-","")}_by_{Yumikoo.me.username}'
+        short_name = (
+            f'stikcer_pack_{str(uuid4()).replace("-","")}_by_{Yumikoo.me.username}'
+        )
         user_id = await app.resolve_peer(message.from_user.id)
         await app.invoke(
             pyrogram.raw.functions.stickers.CreateStickerSet(
@@ -348,10 +354,20 @@ async def _packkang(app : pbot, message):
                 stickers=sticks,
             )
         )
-        await txt.edit(f"**ʜᴇʀᴇ ɪs ʏᴏᴜʀ ᴋᴀɴɢᴇᴅ ʟɪɴᴋ**!\n**ᴛᴏᴛᴀʟ sᴛɪᴄᴋᴇʀ **: {len(sticks)}",reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ᴘᴀᴄᴋ ʟɪɴᴋ",url=f"http://t.me/addstickers/{short_name}")]]))
+        await txt.edit(
+            f"**ʜᴇʀᴇ ɪs ʏᴏᴜʀ ᴋᴀɴɢᴇᴅ ʟɪɴᴋ**!\n**ᴛᴏᴛᴀʟ sᴛɪᴄᴋᴇʀ **: {len(sticks)}",
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            "ᴘᴀᴄᴋ ʟɪɴᴋ", url=f"http://t.me/addstickers/{short_name}"
+                        )
+                    ]
+                ]
+            ),
+        )
     except Exception as e:
         await message.reply(str(e))
-        
 
 
 __help__ = """
