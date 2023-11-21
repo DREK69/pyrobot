@@ -57,7 +57,6 @@ async def chatgpt(c, message):
             "Give me some questions to ask Chatgpt AI. Example- /ask question"
         )
     query = message.text.split(None, 1)[1]
-    query = quote(query)
     msg = await message.reply_text(
         "Wait a moment looking for your answer..", quote=True
     )
@@ -74,11 +73,10 @@ async def chatgpt(c, message):
 @pbot.on_message(filters.command("bard", "googleai"))
 async def bard_chatbot(c, message):
     if len(message.command) == 1:
-        return await message.reply_msg(
+        return await message.reply_text(
             "Give me some questions to ask Bard AI. Example- /bard question"
         )
-    query = message.text.split(" ", 1)[1]
-    query = quote(query)
+    query = message.text.split(None, 1)[1]
     msg = await message.reply_text(
         "Wait a moment looking for your answer..", quote=True
     )
