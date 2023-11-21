@@ -154,6 +154,7 @@ async def ytvideo(videoid):
         await loop.run_in_executor(None, ydl.download, [link])
     return file
 
+
 def changeImageSize(maxWidth, maxHeight, image):
     widthRatio = maxWidth / image.size[0]
     heightRatio = maxHeight / image.size[1]
@@ -161,6 +162,7 @@ def changeImageSize(maxWidth, maxHeight, image):
     newHeight = int(heightRatio * image.size[1])
     newImage = image.resize((newWidth, newHeight))
     return newImage
+
 
 async def gen_thumb(videoid, status):
     try:
