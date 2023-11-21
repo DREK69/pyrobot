@@ -1,7 +1,6 @@
 import random
 import string
 from random import sample
-from urllib.parse import quote
 
 import httpx
 from pyrogram import enums, filters
