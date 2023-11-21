@@ -342,9 +342,7 @@ async def _packkang(app: pbot, message):
             )
         )
     try:
-        short_name = (
-            f'stikcer_pack_{str(uuid4()).replace("-","")}_by_{app.me.username}'
-        )
+        short_name = f'stikcer_pack_{str(uuid4()).replace("-","")}_by_{app.me.username}'
         user_id = await app.resolve_peer(message.from_user.id)
         await app.invoke(
             pyrogram.raw.functions.stickers.CreateStickerSet(

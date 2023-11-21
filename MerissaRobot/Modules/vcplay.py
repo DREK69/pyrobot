@@ -125,7 +125,7 @@ async def play(_, message):
             await user.resolve_peer(invitelink)
         except:
             pass
-            
+
     ruser = message.from_user.first_name
     audio = (
         (message.reply_to_message.audio or message.reply_to_message.voice)
