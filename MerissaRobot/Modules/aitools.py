@@ -70,7 +70,7 @@ async def chatgpt(c, message):
     await c.send_chat_action(message.chat.id, enums.ChatAction.CANCEL)
 
 
-@pbot.on_message(filters.command("bard", "googleai"))
+@pbot.on_message(filters.command(["bard", "googleai"]))
 async def bard_chatbot(c, message):
     if len(message.command) == 1:
         return await message.reply_text(
