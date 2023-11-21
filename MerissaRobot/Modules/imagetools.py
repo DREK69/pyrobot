@@ -10,6 +10,7 @@ from telegraph import upload_file
 
 from MerissaRobot import pbot
 
+
 @pbot.on_message(filters.command("ocr") & filters.private)
 @subscribe
 async def movie(client, message):
@@ -27,6 +28,7 @@ async def movie(client, message):
         await m.edit_text(text)
     else:
         await message.reply_text("please reply to image for ocr")
+
 
 @pbot.on_message(filters.command(["wasted"]))
 async def wasted(bot, message):
