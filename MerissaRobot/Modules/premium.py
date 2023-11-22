@@ -66,7 +66,7 @@ async def instadown(client, message):
             except:
                 try:
                     response = await getreq(
-                        f"https://api.princexd.tech/instadown?link={link}"
+                        f"https://wild-elnore-prince-xd.koyeb.app/instadown?link={link}"
                     )
                     video = response["media"][0]
                     try:
@@ -85,7 +85,7 @@ async def instadown(client, message):
                     try:
                         key = random.choice(apikey)
                         resp = await getreq(
-                            f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
+                            f"https://wild-elnore-prince-xd.koyeb.app/igdown?apikey={key}&link={link}"
                         )
                         video = resp["links"][0]["url"]
                         try:
@@ -140,7 +140,7 @@ async def instadown(client, message):
             await msg.delete()
         except:
             try:
-                resp = await getreq(f"https://api.princexd.tech/instadown?link={link}")
+                resp = await getreq(f"https://wild-elnore-prince-xd.koyeb.app//instadown?link={link}")
                 post = resp["media"]
                 singlelink = posts[0]
                 if len(posts) == 1:
@@ -168,7 +168,7 @@ async def instadown(client, message):
             except:
                 key = random.choice(apikey)
                 resp = await getreq(
-                    f"https://api.princexd.tech/igdown?apikey={key}&link={link}"
+                    f"https://wild-elnore-prince-xd.koyeb.app/igdown?apikey={key}&link={link}"
                 )
                 posts = resp["links"]
                 singlelink = posts[0]
