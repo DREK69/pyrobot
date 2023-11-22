@@ -807,15 +807,10 @@ def main():
         timeout=15,
         read_latency=4,
         drop_pending_updates=True,
-    )
-
-    if len(argv) not in (1, 3, 4):
-        telethn.disconnect()
-    else:
-        telethn.run_until_disconnected()
-
+    )        
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
+    time.sleep(10)
 
     updater.idle()
 
