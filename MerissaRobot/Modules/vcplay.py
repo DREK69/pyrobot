@@ -60,6 +60,7 @@ def merge_audio_files(file1, file2, output_file):
     audio2 = AudioSegment.from_file(file2)
     merged_audio = audio1 + audio2
     merged_audio.export(output_file, format="mp3")
+    return output_file
 
 
 @pbot.on_message(
@@ -254,7 +255,7 @@ async def play(_, message):
     else:
         if stream_type == "audio":
             audio = await ai_merissa(
-                f"https://serverless-tts.vercel.app/api/demo?voice=en-GB_CharlotteV3Voice&text=You%20are%20listening:%20{title[:25]}"
+                f"https://serverless-tts.vercel.app/api/demo?voice=en-GB_CharlotteV3Voice&text=You%20are%20listening:%20{title}"
             )
             file_path = merge_audio_files(
                 audio, f"downloads/{videoid}.m4a", f"downloads/m{videoid}.mp3"
