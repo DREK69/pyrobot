@@ -1,7 +1,6 @@
 import asyncio
 import os
 
-from pydub import AudioSegment
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.errors import (
@@ -37,7 +36,6 @@ from MerissaRobot import (
     pytgcalls,
     user,
 )
-from MerissaRobot.Modules.chatbotvc import ai_merissa
 from MerissaRobot.Utils.Helpers.filter_groups import play_group
 from MerissaRobot.Utils.Helpers.vcfunction import (
     DURATION_LIMIT,
@@ -53,14 +51,6 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     ytaudio,
     ytvideo,
 )
-
-
-def merge_audio_files(file1, file2, output_file):
-    audio1 = AudioSegment.from_file(file1)
-    audio2 = AudioSegment.from_file(file2)
-    merged_audio = audio1 + audio2
-    merged_audio.export(output_file, format="mp3")
-    return output_file
 
 
 @pbot.on_message(
@@ -254,12 +244,6 @@ async def play(_, message):
         )
     else:
         if stream_type == "audio":
-            audio = await ai_merissa(
-                f"https://serverless-tts.vercel.app/api/demo?voice=en-GB_CharlotteV3Voice&text=You%20are%20listening:%20{title[:30]}"
-            )
-            file_path = merge_audio_files(
-                audio, f"downloads/{videoid}.m4a", f"downloads/m{videoid}.mp3"
-            )
             stream = AudioPiped(file_path, HighQualityAudio())
         else:
             stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
