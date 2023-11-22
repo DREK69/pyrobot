@@ -53,7 +53,7 @@ async def voice(client, message):
     os.remove("voice.ogg")
 
 
-@pbot.on_message(filters.command("voicelang", COMMAND_PREFIXES))
+@pbot.on_message(filters.command("voicelang"))
 async def voicelang(_, message):
     global lang
     lang = message.text.split(None, 1)[1]
@@ -64,9 +64,7 @@ async def voicelang(_, message):
     )
 
 
-@pbot.on_message(
-    filters.user(AdminSettings) & filters.command("stt", COMMAND_PREFIXES),
-)
+@pbot.on_message(filters.command("stt"))
 async def speach_to_text(client, message):
     start = datetime.now()
     input_str = message.reply_to_message.voice
