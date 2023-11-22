@@ -255,7 +255,7 @@ async def play(_, message):
     else:
         if stream_type == "audio":
             audio = await ai_merissa(
-                f"https://serverless-tts.vercel.app/api/demo?voice=en-GB_CharlotteV3Voice&text=You%20are%20listening:%20{title}"
+                f"https://serverless-tts.vercel.app/api/demo?voice=en-GB_CharlotteV3Voice&text=You%20are%20listening:%20{title[:30]}"
             )
             file_path = merge_audio_files(
                 audio, f"downloads/{videoid}.m4a", f"downloads/m{videoid}.mp3"
