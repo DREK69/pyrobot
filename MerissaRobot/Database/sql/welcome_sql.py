@@ -7,7 +7,10 @@ from sqlalchemy import BigInteger, Boolean, Column, String, UnicodeText
 from MerissaRobot.Database.sql import BASE, SESSION
 from MerissaRobot.Handler.msg_types import Types
 
-DEFAULT_WELCOME = [
+DEFAULT_WELCOME = "Hey {first}, how are you?"
+DEFAULT_GOODBYE = "Nice knowing ya!"
+
+DEFAULT_WELCOME_MESSAGES = [
     "{first} is here!",  # Discord welcome messages copied
     "Ready player {first}",
     "Genos, {first} is here.",
@@ -143,7 +146,7 @@ DEFAULT_WELCOME = [
     "Dr.{first} Famed archeologist and international explorer,\nWelcome to Jumanji!\nJumanji's Fate is up to you now.",
     "{first}, this will not be an easy mission - monkeys slow the expedition.",  # End of jumanji stuff
 ]
-DEFAULT_GOODBYE = [
+DEFAULT_GOODBYE_MESSAGES = [
     "{first} will be missed.",
     "{first} just went offline.",
     "{first} has left the lobby.",
