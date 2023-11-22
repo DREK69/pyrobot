@@ -33,7 +33,6 @@ from MerissaRobot import (
     updater,
     user,
 )
-
 from MerissaRobot.Handler.chat_status import is_user_admin
 from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
 from MerissaRobot.Modules import ALL_MODULES
