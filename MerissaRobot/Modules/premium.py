@@ -140,7 +140,9 @@ async def instadown(client, message):
             await msg.delete()
         except:
             try:
-                resp = await getreq(f"https://wild-elnore-prince-xd.koyeb.app//instadown?link={link}")
+                resp = await getreq(
+                    f"https://wild-elnore-prince-xd.koyeb.app//instadown?link={link}"
+                )
                 post = resp["media"]
                 singlelink = posts[0]
                 if len(posts) == 1:
