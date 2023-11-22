@@ -809,7 +809,11 @@ def main():
     )
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
-    time.sleep(10)
+    
+    if len(argv) not in (1, 3, 4):
+        telethn.disconnect()
+    else:
+        telethn.run_until_disconnected()
 
     updater.idle()
 
