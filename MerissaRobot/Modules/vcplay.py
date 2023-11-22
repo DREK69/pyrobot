@@ -201,10 +201,10 @@ async def play(_, message):
         try:
             vidinfo = VideosSearch(query, limit=1)
             results = (await vidinfo.next())["result"][0]
-            url = f"https://youtube.com{results[0]['url_suffix']}"
             title = results["title"]
             videoid = results["id"]
             duration = results["duration"]
+            url = results["link"]
             secmul, dur, dur_arr = 1, 0, duration.split(":")
             for i in range(len(dur_arr) - 1, -1, -1):
                 dur += int(dur_arr[i]) * secmul
