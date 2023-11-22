@@ -8,6 +8,7 @@ from pyrogram.errors import (
     UserAlreadyParticipant,
     UserNotParticipant,
 )
+from pydub import AudioSegment
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pytgcalls.exceptions import (
     NoActiveGroupCall,
@@ -51,6 +52,13 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     ytaudio,
     ytvideo,
 )
+from MerissaRobot.Modules.chatbotvc import ai_merissa
+
+def merge_audio_files(file1, file2, output_file):
+    audio1 = AudioSegment.from_file(file1)
+    audio2 = AudioSegment.from_file(file2)
+    merged_audio = audio1 + audio2
+    merged_audio.export(output_file, format="mp3")
 
 
 @pbot.on_message(
@@ -244,6 +252,8 @@ async def play(_, message):
         )
     else:
         if stream_type == "audio":
+            audio = await ai_merissa("https://serverless-tts.vercel.app/api/demo?voice=en-GB_CharlotteV3Voice&text=You%20are%20listening:%20Kabir%20singh%20kaise%20hua")
+            file_path = merge_audio_files(audio, f"downloads/{videoid}.m4a", f"downloads/m{videoid}.mp3")
             stream = AudioPiped(file_path, HighQualityAudio())
         else:
             stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
