@@ -33,7 +33,7 @@ async def handwrite(client, message):
         )
     w = await message.reply_text("Processing...")
     try:
-        img = Image.open("./MerissaRobot/Utils/Resources/template.jpg")
+        img = Image.open("./MerissaRobot/Utils/Resources/write.jpg")
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype("./MerissaRobot/Utils/Resources/font/assfont.ttf", 30)
         x, y = 150, 140
