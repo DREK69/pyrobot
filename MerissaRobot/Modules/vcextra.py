@@ -131,6 +131,7 @@ async def skip_str(_, message):
         req_by = get[0]["req"]
         get[0]["user_id"]
         stream_type = get[0]["stream_type"]
+        thumb = get[0]["thumb"]
         get.pop(0)
 
         if stream_type == "audio":
@@ -149,9 +150,8 @@ async def skip_str(_, message):
         await message.reply_text(
             text=f"**Skipped Stream**\n\nBy : {message.from_user.mention}",
         )
-        img = await get_ytthumb(videoid)
         return await message.reply_photo(
-            photo=img,
+            photo=thumb,
             caption=f"📡 Streaming Started\n\n👤Requested By:{req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
             reply_markup=InlineKeyboardMarkup(button),
         )
@@ -360,7 +360,8 @@ async def swr_handler(_, chat_id: int):
 async def on_stream_end(pytgcalls, update: Update):
     chat_id = update.chat_id
     get = merissadb.get(chat_id)
-    if not get:
+    get.pop(0)
+    if not get[1]:
         try:
             await _clear_(chat_id)
             return await pytgcalls.leave_group_call(chat_id)
@@ -378,8 +379,9 @@ async def on_stream_end(pytgcalls, update: Update):
         req_by = get[0]["req"]
         get[0]["user_id"]
         stream_type = get[0]["stream_type"]
+        thumb = get[0]["thumb"]
         get.pop(0)
-        thumb = await get_ytthumb(videoid)
+        
         if stream_type == "audio":
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
         else:
