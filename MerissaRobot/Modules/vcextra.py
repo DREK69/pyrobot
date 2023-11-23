@@ -251,7 +251,8 @@ async def admin_cbs(_, query: CallbackQuery):
 
     elif data == "skip":
         get = merissadb.get(query.message.chat.id)
-        if not get:
+        get.pop(0)
+        if not get[1]:
             try:
                 await _clear_(query.message.chat.id)
                 await pytgcalls.leave_group_call(query.message.chat.id)
@@ -381,7 +382,7 @@ async def on_stream_end(pytgcalls, update: Update):
         stream_type = get[0]["stream_type"]
         thumb = get[0]["thumb"]
         get.pop(0)
-
+        
         if stream_type == "audio":
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
         else:
