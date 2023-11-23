@@ -50,16 +50,21 @@ getLogger("telegram").setLevel(ERROR)
 updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
 dispatcher = updater.dispatcher
 
+BOT_ID = dispatcher.bot.id
+BOT_USERNAME = dispatcher.bot.username
+BOT_NAME = dispatcher.bot.first_name
+BOT_MENTION = "https://t.me/MerissaRobot"
+ASS_ID = "5249696122"
+ASS_NAME = "Merissa Assistant"
+ASS_USERNAME = "MerissaAssistant"
+ASS_MENTION = "https://t.me/merissaassistant"
+
 pbot = Client(
     "MerissaRobot",
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=TOKEN,
 )
-BOT_ID = pbot.me.id
-BOT_USERNAME = pbot.me.username
-BOT_NAME = pbot.me.first_name
-BOT_MENTION = pbot.me.mention
 
 user = Client(
     "MerissaMusic",
@@ -67,11 +72,6 @@ user = Client(
     api_hash=API_HASH,
     session_string=str(STRING_SESSION),
 )
-ASS_ID = user.me.id
-ASS_NAME = user.me.first_name
-ASS_USERNAME = user.me.username
-ASS_MENTION = user.me.mention
-
 pytgcalls = PyTgCalls(user)
 
 telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
