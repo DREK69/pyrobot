@@ -69,7 +69,7 @@ pyTelegramBotAPI==4.8.0
 py-tgcalls==1.0.1
 python-barcode==0.14.0
 python-dotenv==0.*
-python-telegram-bot==13.12
+python-telegram-bot==13.14
 pytimeparse
 pytube
 pytz
