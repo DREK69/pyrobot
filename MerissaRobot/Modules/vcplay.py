@@ -236,7 +236,7 @@ async def play(_, message):
         stream_type,
     )
     if await is_active_chat(chat_id):
-        position = len(merissadb.get(chat_id))
+        position = len(merissadb.get(chat_id)) - 1
         await message.reply_text(
             f"⏳ Added to Queue at {position}\n\n🎧 Title: {title[:25]}\n👤 Requested By:{ruser}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
             reply_markup=InlineKeyboardMarkup(button),
