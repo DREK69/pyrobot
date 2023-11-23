@@ -79,6 +79,7 @@ telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
 DEV_USERS.add(OWNER_ID)
 sw = None
 
+
 def dirr():
     for file in os.listdir():
         if file.endswith(".jpg"):
@@ -89,6 +90,7 @@ def dirr():
     if "downloads" not in os.listdir():
         os.mkdir("downloads")
     LOGGER(__name__).info("Directories Updated.")
+
 
 DRAGONS = list(DRAGONS) + list(DEV_USERS)
 DEV_USERS = list(DEV_USERS)
