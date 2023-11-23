@@ -382,7 +382,7 @@ async def on_stream_end(pytgcalls, update: Update):
         stream_type = get[0]["stream_type"]
         thumb = get[0]["thumb"]
         get.pop(0)
-        
+
         if stream_type == "audio":
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
         else:
