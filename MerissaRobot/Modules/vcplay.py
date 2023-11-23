@@ -225,6 +225,7 @@ async def play(_, message):
         else:
             file_path = await ytaudio(videoid)
             stream_type += "audio"
+    thumb = await gen_thumb(videoid, "Now Playing...")
     await put(
         chat_id,
         title,
@@ -234,6 +235,7 @@ async def play(_, message):
         ruser,
         message.from_user.id,
         stream_type,
+        thumb,
     )
     if await is_active_chat(chat_id):
         position = len(merissadb.get(chat_id)) - 1
@@ -269,7 +271,6 @@ async def play(_, message):
             )
         await stream_on(chat_id)
         await add_active_chat(chat_id)
-        thumb = await gen_thumb(videoid, "Now Playing...")
         await message.reply_photo(
             photo=thumb,
             caption=f"📡 Streaming Started\n\n👤Requested By: {ruser}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
