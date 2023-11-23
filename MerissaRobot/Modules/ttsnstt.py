@@ -5,7 +5,7 @@ from inspect import getfullargspec
 
 from aiohttp import BasicAuth, ClientSession
 from gtts import gTTS
-from pyrogram import filters
+from pyrogram import filters, enums
 from pyrogram.types import Message
 
 from MerissaRobot import IBM_WATSON_CRED_PASSWORD, IBM_WATSON_CRED_URL, pbot
@@ -37,7 +37,7 @@ async def voice(client, message):
         await asyncio.sleep(2)
         await message.delete()
         return
-    await client.send_chat_action(message.chat.id, "record_audio")
+    await client.send_chat_action(message.chat.id, enums.ChatAction.RECORD_VIDEO_NOTE)
     tts = gTTS(v_text, lang=lang)
     tts.save("voice.ogg")
     await message.delete()
@@ -49,7 +49,7 @@ async def voice(client, message):
         )
     else:
         await client.send_voice(message.chat.id, voice="voice.ogg")
-    await client.send_chat_action(message.chat.id, action="cancel")
+    await client.send_chat_action(message.chat.id, enums.ChatAction.CANCEL)
     os.remove("voice.ogg")
 
 
@@ -100,18 +100,17 @@ async def speach_to_text(client, message):
                 ms = (end - start).seconds
                 if transcript_response != "":
                     string_to_show = f"""
-<b>TRANSCRIPT</b>:
-<pre>{transcript_response}<pre>
+**TRANSCRIPT**:
+``{transcript_response}``
 
-<b>Time Taken</b>: <pre>{ms} seconds<pre>
-<b>Confidence</b>: <pre>{transcript_confidence}<pre>
+**Time Taken**: `{ms} seconds`
+**Confidence**: `{transcript_confidence}`
 """
                 else:
-                    string_to_show = "<pre>No Results Found<pre>"
+                    string_to_show = "``No Results Found`"
                 await edit_or_reply(
                     message,
                     text=string_to_show,
-                    parse_mode="html",
                 )
             else:
                 await edit_or_reply(message, text=r["error"])
