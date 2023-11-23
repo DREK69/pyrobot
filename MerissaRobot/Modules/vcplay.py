@@ -294,15 +294,15 @@ async def playlist(client, message):
     msg = "**Now Playing** in {}".format(message.chat.title)
     msg += "\n- " + now_playing
     msg += "\n- Req by " + by
-    msg += "\n- StreamType " + stream_type
+    msg += "\n- StreamType: " + stream_type
     temp.pop(0)
     if temp:
         msg += "\n\n"
         msg += "**Queue**"
         for song in temp:
-            name = temp[1]["title"]
-            by = temp[1]["req"]
-            stream_type = temp[1]["stream_type"]
+            name = song["title"]
+            by = song["req"]
+            stream_type = song]["stream_type"]
             msg += f"\n- {name}"
             msg += f"\n- Req by {by}"
             msg += "\n- StreamType:" + stream_type + "\n"
