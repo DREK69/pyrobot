@@ -226,7 +226,7 @@ async def play(_, message):
             file_path = await ytaudio(videoid)
             stream_type += "audio"
 
-    thumb = await gen_thumb(videoid, message.from_user.id)
+    thumb = await gen_thumb(videoid, message.from_user.id, message.chat.title)
 
     await put(
         chat_id,
