@@ -225,9 +225,7 @@ async def play(_, message):
         else:
             file_path = await ytaudio(videoid)
             stream_type += "audio"
-
-    if await is_active_chat(chat_id):
-        await put(
+    await put(
             chat_id,
             title,
             duration,
@@ -237,6 +235,7 @@ async def play(_, message):
             message.from_user.id,
             stream_type,
         )
+    if await is_active_chat(chat_id):
         position = len(merissadb.get(chat_id))
         await message.reply_text(
             f"⏳ Added to Queue at {position}\n🎧 Title: {title}\n👤 Requested By:{ruser}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
