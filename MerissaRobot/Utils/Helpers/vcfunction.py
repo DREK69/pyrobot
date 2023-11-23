@@ -395,7 +395,7 @@ async def gen_thumb(videoid, user_id, chattitle):
         except:
             pass
         background.save(f"downloads/{videoid}_{user_id}.png")
-        return f"{videoid}_{user_id}.png"
+        return f"downloads/{videoid}_{user_id}.png"
     except Exception as e:
         print(str(e))
         return "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
