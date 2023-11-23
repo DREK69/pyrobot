@@ -113,7 +113,8 @@ async def skip_str(_, message):
     except:
         pass
     get = merissadb.get(message.chat.id)
-    if not get:
+    get.pop(0)
+    if not get[1]:
         try:
             await _clear_(message.chat.id)
             await pytgcalls.leave_group_call(message.chat.id)
