@@ -6,10 +6,14 @@ from typing import Union
 import aiofiles
 import aiohttp
 import yt_dlp
-from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
+import textwrap
+import numpy as np
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps, ImageChops
 from pyrogram.enums import MessageEntityType
 from pyrogram.types import Audio, InlineKeyboardButton, Message, Voice
 from youtubesearchpython.__future__ import VideosSearch
+from MerissaRobot.Modules.fonts import normalfont
+from MerissaRobot import pbot, BOT_ID
 
 DURATION_LIMIT = int("90")
 
@@ -175,8 +179,8 @@ def add_corners(im):
     im.putalpha(mask)
 
 
-async def gen_thumb(videoid, user_id):
-    os.path.join(f"downloads/{videoid}_{user_id}.png")
+async def gen_thumb(videoid, user_id, chattitle):
+    file = os.path.join(f"downloads/{videoid}_{user_id}.png")
     if os.path.exists(file):
         return file
     url = f"https://www.youtube.com/watch?v={videoid}"
@@ -210,16 +214,19 @@ async def gen_thumb(videoid, user_id):
                     await f.write(await resp.read())
                     await f.close()
         try:
-            wxy = await app.download_media(
-                (await app.get_users(user_id)).photo.big_file_id,
+            getuser = await pbot.get_users(user_id)
+            wxy = await pbot.download_media(
+                getuser.photo.big_file_id,
                 file_name=f"downloads/{user_id}.jpg",
             )
         except:
-            wxy = await app.download_media(
-                (await app.get_users(BOT_ID)).photo.big_file_id,
+            getuser = await pbot.get_users(BOT_ID)
+            wxy = await pbot.download_media(
+                getuser.photo.big_file_id,
                 file_name=f"downlaods/{BOT_ID}.jpg",
             )
 
+        user_name = getuser.first_name
         xy = Image.open(wxy)
         a = Image.new("L", [722, 722], 0)
         b = ImageDraw.Draw(a)
@@ -231,7 +238,7 @@ async def gen_thumb(videoid, user_id):
         x = f.resize((110, 110))
 
         youtube = Image.open(f"thumb{videoid}.png")
-        bg = Image.open(f"bgimg.png")
+        bg = Image.open(f"MerissaRobot/Utils/Resources/bgimg.png")
         image1 = changeImageSize(1280, 720, youtube)
         image2 = image1.convert("RGBA")
         background = image2.filter(filter=ImageFilter.BoxBlur(15))
@@ -259,12 +266,10 @@ async def gen_thumb(videoid, user_id):
         crop_img = Image.open(f"cropped{videoid}.png")
         logo = crop_img.convert("RGBA")
         logo.thumbnail((370, 370), Image.ANTIALIAS)
-        int((1280 - 365) / 2)
         background = Image.open(f"temp{videoid}.png")
         background.paste(logo, (115, 150), mask=logo)
         background.paste(x, (375, 449), mask=x)
         background.paste(image3, (0, 0), mask=image3)
-
         draw = ImageDraw.Draw(background)
         draw.text(
             (1170, 10),
@@ -347,7 +352,7 @@ async def gen_thumb(videoid, user_id):
         )
         draw.text(
             (717, 318),
-            f"Prince",
+            normalfont(user_name),
             fill="white",
             stroke_width=1,
             stroke_fill="rgb(82, 84, 80)",
@@ -363,22 +368,21 @@ async def gen_thumb(videoid, user_id):
         )
         draw.text(
             (658, 350),
-            f"MerissaxSupport",
+            normalfont(chattitle),
             fill="white",
             stroke_width=1,
             stroke_fill="rgb(82, 84, 80)",
             font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25),
         )
-
         draw.text(
-            (1180, 430),
-            f"{duration}",
+            (580, 430),
+            "0:00",
             fill="white",
             font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 30),
         )
         draw.text(
-            (580, 430),
-            "0:00",
+            (1180, 430),
+            f"{duration}",
             fill="white",
             font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 30),
         )
