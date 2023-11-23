@@ -81,7 +81,7 @@ async def put(
         "req": ruser,
         "user_id": user_id,
         "stream_type": stream_type,
-        "thumb": thumb
+        "thumb": thumb,
     }
     get = merissadb.get(chat_id)
     if get:
