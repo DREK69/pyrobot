@@ -302,7 +302,7 @@ async def playlist(client, message):
         for song in temp:
             name = song["title"]
             by = song["req"]
-            stream_type = song]["stream_type"]
+            stream_type = song["stream_type"]
             msg += f"\n- {name}"
             msg += f"\n- Req by {by}"
             msg += "\n- StreamType:" + stream_type + "\n"
