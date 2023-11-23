@@ -156,7 +156,6 @@ async def ytvideo(videoid):
         await loop.run_in_executor(None, ydl.download, [link])
     return file
 
-
 def changeImageSize(maxWidth, maxHeight, image):
     widthRatio = maxWidth / image.size[0]
     heightRatio = maxHeight / image.size[1]
@@ -165,60 +164,216 @@ def changeImageSize(maxWidth, maxHeight, image):
     newImage = image.resize((newWidth, newHeight))
     return newImage
 
+def add_corners(im):
+    bigsize = (im.size[0] * 3, im.size[1] * 3)
+    mask = Image.new("L", bigsize, 0)
+    ImageDraw.Draw(mask).ellipse((0, 0) + bigsize, fill=255)
+    mask = mask.resize(im.size, Image.LANCZOS)
+    mask = ImageChops.darker(mask, im.split()[-1])
+    im.putalpha(mask)
 
-async def gen_thumb(videoid, status):
+async def gen_thumb(videoid, user_id):
+    thumbnail_path = os.path.join(f"downloads/{videoid}_{user_id}.png")
+    if os.path.exists(file):
+        return file
+    url = f"https://www.youtube.com/watch?v={videoid}"
     try:
-        thumbnail_path = os.path.join("downloads/", f"{videoid}.png")
-        url = f"https://www.youtube.com/watch?v={videoid}"
         results = VideosSearch(url, limit=1)
-        video_info = (await results.next())["result"][0]
-        title = video_info.get("title", "Unsupported Title")
-        title = re.sub("\W+", " ", title).title()
-        duration = video_info.get("duration", "Unknown Mins")
-        thumbnail_url = video_info["thumbnails"][0]["url"].split("?")[0]
-        views = video_info.get("viewCount", {}).get("short", "Unknown Views")
-        video_info.get("channel", {}).get("name", "Unknown Channel")
+        for result in (await results.next())["result"]:
+            try:
+                title = result["title"]
+                title = re.sub("\W+", " ", title)
+                title = title.title()
+            except:
+                title = "Unsupported Title"
+            try:
+                duration = result["duration"]
+            except:
+                duration = "Unknown"
+            thumbnail = result["thumbnails"][0]["url"].split("?")[0]
+            try:
+                view = result["viewCount"]["short"]
+            except:
+                pass
+            try:
+                channel = result["channel"]["name"]
+            except:
+                pass
+
         async with aiohttp.ClientSession() as session:
-            async with session.get(thumbnail_url) as resp:
+            async with session.get(thumbnail) as resp:
                 if resp.status == 200:
-                    async with aiofiles.open(thumbnail_path, mode="wb") as f:
-                        await f.write(await resp.read())
-        youtube = Image.open(thumbnail_path)
+                    f = await aiofiles.open(f"thumb{videoid}.png", mode="wb")
+                    await f.write(await resp.read())
+                    await f.close()
+        try:
+            wxy = await app.download_media(
+                (await app.get_users(user_id)).photo.big_file_id,
+                file_name=f"downloads/{user_id}.jpg",
+            )
+        except:
+            wxy = await app.download_media(
+                (await app.get_users(BOT_ID)).photo.big_file_id,
+                file_name=f"downlaods/{BOT_ID}.jpg",
+            )
+
+        xy = Image.open(wxy)
+        a = Image.new("L", [722, 722], 0)
+        b = ImageDraw.Draw(a)
+        b.pieslice([(0, 0), (640, 640)], 0, 360, fill=255, outline="white")
+        c = np.array(xy)
+        d = np.array(a)
+        e = np.dstack((c, d))
+        f = Image.fromarray(e)
+        x = f.resize((110, 110))
+
+        youtube = Image.open(f"thumb{videoid}.png")
+        bg = Image.open(f"bgimg.png")
         image1 = changeImageSize(1280, 720, youtube)
         image2 = image1.convert("RGBA")
-        background = image2.filter(filter=ImageFilter.BoxBlur(30))
+        background = image2.filter(filter=ImageFilter.BoxBlur(15))
         enhancer = ImageEnhance.Brightness(background)
         background = enhancer.enhance(0.6)
+
+        image3 = changeImageSize(1280, 720, bg)
+        image5 = image3.convert("RGBA")
+        Image.alpha_composite(background, image5).save(f"temp{videoid}.png")
+
         Xcenter = youtube.width / 2
         Ycenter = youtube.height / 2
-        x1 = Xcenter - 570
-        y1 = Ycenter - 250
-        x2 = Xcenter + 570
-        y2 = Ycenter + 250
+        x1 = Xcenter - 640
+        y1 = Ycenter - 640
+        x2 = Xcenter + 640
+        y2 = Ycenter + 640
         logo = youtube.crop((x1, y1, x2, y2))
-        logo.thumbnail((1200, 550), Image.LANCZOS)
-        logo = ImageOps.expand(logo, border=8, fill="white")
-        background.paste(logo, (50, 100))
+        logo.thumbnail((550, 550), Image.ANTIALIAS)
+        logo.save(f"chop{videoid}.png")
+        if not os.path.isfile(f"cropped{videoid}.png"):
+            im = Image.open(f"chop{videoid}.png").convert("RGBA")
+            add_corners(im)
+            im.save(f"cropped{videoid}.png")
+
+        crop_img = Image.open(f"cropped{videoid}.png")
+        logo = crop_img.convert("RGBA")
+        logo.thumbnail((370, 370), Image.ANTIALIAS)
+        width = int((1280 - 365) / 2)
+        background = Image.open(f"temp{videoid}.png")
+        background.paste(logo, (115, 150), mask=logo)
+        background.paste(x, (375, 449), mask=x)
+        background.paste(image3, (0, 0), mask=image3)
+
         draw = ImageDraw.Draw(background)
-        arial = ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 30)
-        font = ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf", 30)
         draw.text(
-            (63, 110),
-            f"{status}",
+            (1170, 10),
+            'Merissa',
             fill="white",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25),
+            stroke_width=1,
+            stroke_fill="black",
+            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf", 28),
         )
-        draw.text((50, 50), f"Title: {title}", fill="white", font=font)
-        draw.text((50, 620), f"Duration: {duration}", fill="white", font=arial)
-        draw.text((950, 620), f"Views: {views}", fill="white", font=arial)
         draw.text(
-            (1010, 570),
-            "MerissaRobot",
-            fill="white",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25),
+            (1195, 40),
+            'Music',
+            fill="rgb(170, 51, 106)",
+            stroke_width=1,
+            stroke_fill="black",
+            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 20),
         )
-        background.save(thumbnail_path)
-        return thumbnail_path
+        draw.text(
+                (580, 150),
+                "Now Playing...",
+                fill="white",
+                stroke_width=1,
+                stroke_fill="rgb(82, 84, 80)",
+                font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf", 30),
+        )
+        para = textwrap.wrap(title, width=32)
+        try:
+            if para[0]:
+                text_w, text_h = draw.textsize(f"{para[0]}", font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf",40))
+                draw.text(
+                    (580, 185),
+                    f"{para[0]}",
+                    fill="white",
+                    stroke_width=1,
+                    stroke_fill="black",
+                    font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf",40),
+                )
+            if para[1]:
+                text_w, text_h = draw.textsize(f"{para[1]}", font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf",40))
+                draw.text(
+                    (650, 230),
+                    f"{para[1]}",
+                    fill="white",
+                    stroke_width=1,
+                    stroke_fill="black",
+                    font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf",40),
+                )
+        except:
+            pass
+        
+        draw.text(
+                (580, 280),
+                f"Artist: {channel}",
+                fill="white",
+                stroke_width=1,
+                stroke_fill="black",
+                font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 30),
+        )
+        draw.text(
+                (580, 318),
+                f"Played By :",
+                fill="white",
+                stroke_width=1,
+                stroke_fill="black",
+                font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25),
+        )
+        draw.text(
+                (717, 318),
+                f"Prince",
+                fill="white",
+                stroke_width=1,
+                stroke_fill="rgb(82, 84, 80)",
+                font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25),
+        )
+        draw.text(
+                (580, 350),
+                f"Chat :",
+                fill="white",
+                stroke_width=1,
+                stroke_fill="black",
+                font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25),
+        )
+        draw.text(
+                (658, 350),
+                f"MerissaxSupport",
+                fill="white",
+                stroke_width=1,
+                stroke_fill="rgb(82, 84, 80)",
+                font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25),
+        )
+
+        draw.text(
+            (1180, 430),
+            f"{duration}",
+            fill="white",
+            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 30),
+        )
+        draw.text(
+            (580, 430),
+            '0:00',
+            fill="white",
+            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 30),
+        )
+        try:
+            os.remove(f"thumb{videoid}.png")
+            os.remove(f"chop{videoid}.png")
+            os.remove(f"cropped{videoid}.png")
+            os.remove(f"temp{videoid}.png")
+        except:
+            pass
+        background.save(f"downloads/{videoid}_{user_id}.png")
+        return f"{videoid}_{user_id}.png"
     except Exception as e:
-        print(f"Error generating thumbnail: {e}")
+        print(str(e))
         return "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
