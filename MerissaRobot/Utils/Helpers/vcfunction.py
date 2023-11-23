@@ -84,7 +84,7 @@ async def put(
         "thumb": thumb,
     }
     get = merissadb.get(chat_id)
-    if get[1]:
+    if get:
         merissadb[chat_id].append(put_f)
     else:
         merissadb[chat_id] = []
