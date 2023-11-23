@@ -5,7 +5,7 @@ from inspect import getfullargspec
 
 from aiohttp import BasicAuth, ClientSession
 from gtts import gTTS
-from pyrogram import filters, enums
+from pyrogram import enums, filters
 from pyrogram.types import Message
 
 from MerissaRobot import IBM_WATSON_CRED_PASSWORD, IBM_WATSON_CRED_URL, pbot
