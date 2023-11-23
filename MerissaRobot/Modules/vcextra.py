@@ -13,7 +13,6 @@ from pytgcalls.types import (
 )
 
 from MerissaRobot import BOT_ID, BOT_USERNAME, OWNER_ID, pbot, pytgcalls, user
-from MerissaRobot.helpers import get_ytthumb
 from MerissaRobot.Utils.Helpers.filter_groups import close_group, welcome_group
 from MerissaRobot.Utils.Helpers.permissions import adminsOnly
 from MerissaRobot.Utils.Helpers.vcfunction import (
