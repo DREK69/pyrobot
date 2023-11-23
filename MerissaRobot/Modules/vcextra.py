@@ -114,7 +114,7 @@ async def skip_str(_, message):
         pass
     get = merissadb.get(message.chat.id)
     get.pop(0)
-    if not get[1]:
+    if not get:
         try:
             await _clear_(message.chat.id)
             await pytgcalls.leave_group_call(message.chat.id)
@@ -129,7 +129,6 @@ async def skip_str(_, message):
         file_path = get[0]["file_path"]
         videoid = get[0]["videoid"]
         req_by = get[0]["req"]
-        get[0]["user_id"]
         stream_type = get[0]["stream_type"]
         thumb = get[0]["thumb"]
         get.pop(0)
@@ -252,7 +251,7 @@ async def admin_cbs(_, query: CallbackQuery):
     elif data == "skip":
         get = merissadb.get(query.message.chat.id)
         get.pop(0)
-        if not get[1]:
+        if not get:
             try:
                 await _clear_(query.message.chat.id)
                 await pytgcalls.leave_group_call(query.message.chat.id)
@@ -269,6 +268,7 @@ async def admin_cbs(_, query: CallbackQuery):
             file_path = get[0]["file_path"]
             req_by = get[0]["req"]
             stream_type = get[0]["stream_type"]
+            thumb = get[0]["thumb"]
             get.pop(0)
 
             if stream_type == "audio":
@@ -277,7 +277,6 @@ async def admin_cbs(_, query: CallbackQuery):
                 stream = AudioVideoPiped(
                     file_path, HighQualityAudio(), HighQualityVideo()
                 )
-            thumb = await get_ytthumb(videoid)
             try:
                 await pytgcalls.change_stream(
                     query.message.chat.id,
@@ -362,7 +361,7 @@ async def on_stream_end(pytgcalls, update: Update):
     chat_id = update.chat_id
     get = merissadb.get(chat_id)
     get.pop(0)
-    if not get[1]:
+    if not get:
         try:
             await _clear_(chat_id)
             return await pytgcalls.leave_group_call(chat_id)
