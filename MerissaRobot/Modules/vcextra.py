@@ -130,7 +130,6 @@ async def skip_str(_, message):
         req_by = get[0]["req"]
         stream_type = get[0]["stream_type"]
         thumb = get[0]["thumb"]
-        get.pop(0)
 
         if stream_type == "audio":
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
@@ -268,7 +267,6 @@ async def admin_cbs(_, query: CallbackQuery):
             req_by = get[0]["req"]
             stream_type = get[0]["stream_type"]
             thumb = get[0]["thumb"]
-            get.pop(0)
 
             if stream_type == "audio":
                 stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
@@ -379,7 +377,6 @@ async def on_stream_end(pytgcalls, update: Update):
         get[0]["user_id"]
         stream_type = get[0]["stream_type"]
         thumb = get[0]["thumb"]
-        get.pop(0)
 
         if stream_type == "audio":
             stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
