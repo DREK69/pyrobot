@@ -226,15 +226,15 @@ async def play(_, message):
             file_path = await ytaudio(videoid)
             stream_type += "audio"
     await put(
-            chat_id,
-            title,
-            duration,
-            videoid,
-            file_path,
-            ruser,
-            message.from_user.id,
-            stream_type,
-        )
+        chat_id,
+        title,
+        duration,
+        videoid,
+        file_path,
+        ruser,
+        message.from_user.id,
+        stream_type,
+    )
     if await is_active_chat(chat_id):
         position = len(merissadb.get(chat_id))
         await message.reply_text(
