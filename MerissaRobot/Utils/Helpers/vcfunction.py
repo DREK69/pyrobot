@@ -229,9 +229,9 @@ async def gen_thumb(videoid, user_id, chattitle):
 
         user_name = getuser.first_name
         xy = Image.open(wxy)
-        a = Image.new("L", [722, 722], 0)
+        a = Image.new("L", [640, 640], 0)
         b = ImageDraw.Draw(a)
-        b.pieslice([(0, 0), (722, 722)], 0, 360, fill=255, outline="white")
+        b.pieslice([(0, 0), (640, 640)], 0, 360, fill=255, outline="white")
         c = np.array(xy)
         d = np.array(a)
         e = np.dstack((c, d))
