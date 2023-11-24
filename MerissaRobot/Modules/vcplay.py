@@ -61,7 +61,7 @@ from MerissaRobot.Utils.Helpers.vcfunction import (
     group=play_group,
 )
 async def play(_, message):
-    merissa = await message.reply_text("🎵 Processing")
+    merissa = await message.reply_text("🔎 Searching...")
     chat = message.chat
     chat_id = chat.id
     try:
