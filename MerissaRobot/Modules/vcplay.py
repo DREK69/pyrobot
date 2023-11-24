@@ -282,35 +282,6 @@ async def play(_, message):
     return await merissa.delete()
 
 
-@pbot.on_message(filters.command("playlist") & filters.group)
-async def playlist(client, message):
-    queue = merissadb.get(int(message.chat.id))
-    if not queue:
-        await message.reply_text("Player is idle")
-    temp = []
-    for t in queue:
-        temp.append(t)
-    now_playing = temp[0]["title"]
-    by = temp[0]["req"]
-    stream_type = temp[0]["stream_type"]
-    msg = "**Now Playing** in {}".format(message.chat.title)
-    msg += "\n- " + now_playing
-    msg += "\n- Req by " + by
-    msg += "\n- StreamType: " + stream_type
-    temp.pop(0)
-    if temp:
-        msg += "\n\n"
-        msg += "**Queue**"
-        for song in temp:
-            name = song["title"]
-            by = song["req"]
-            stream_type = song["stream_type"]
-            msg += f"\n- {name}"
-            msg += f"\n- Req by {by}"
-            msg += "\n- StreamType:" + stream_type + "\n"
-    await message.reply_text(msg)
-
-
 __help__ = """
 **A Telegram Streaming bot with some useful features.**
 
