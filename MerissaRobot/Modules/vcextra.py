@@ -267,6 +267,48 @@ async def admin_cbs(_, query: CallbackQuery):
             await query.message.delete()
         except:
             pass
+            
+    elif data == "pnow":
+        track = int(data.split(None, 1)[1])
+        get = merissadb.get(query.message.chat.id)
+        try:
+            get[track]["title"]
+            get[track]["duration"]
+            videoid = get[track]["videoid"]
+            file_path = get[track]["file_path"]
+            req_by = get[track]["req"]
+            stream_type = get[track]["stream_type"]
+            thumb = get[track]["thumb"]
+            get.pop(track)
+
+            if stream_type == "audio":
+                stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+            else:
+                stream = AudioVideoPiped(
+                    file_path, HighQualityAudio(), HighQualityVideo()
+                )
+            try:
+                await pytgcalls.change_stream(
+                    query.message.chat.id,
+                    stream,
+                )
+            except Exception as ex:
+                LOGGER.error(ex)
+                await _clear_(query.message.chat.id)
+                return await pytgcalls.leave_group_call(query.message.chat.id)
+            await query.message.reply_text(
+                text=f"**Stream FocePlayed**\n\nBy : {query.from_user.mention}",
+            )
+            await query.message.reply_photo(
+                thumb,
+                caption=f"📡 Streaming Started\n\n👤 Requested By: {req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
+                reply_markup=InlineKeyboardMarkup(button),
+            )
+            return await query.message.delete() 
+        except:
+            return await query.message.reply_text(
+                text="Failed to Play Track",
+            )
 
     elif data == "skip":
         get = merissadb.get(query.message.chat.id)
