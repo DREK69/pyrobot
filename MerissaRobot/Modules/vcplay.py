@@ -243,7 +243,13 @@ async def play(_, message):
         position = len(merissadb.get(chat_id)) - 1
         await message.reply_text(
             f"⏳ Added to Queue at {position}\n\n🎧 Title: {title[:25]}\n👤 Requested By:{ruser}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
-            reply_markup=InlineKeyboardMarkup(button),
+            reply_markup=InlineKeyboardMarkup([
+              [
+                InlineKeyboardButton(text="▶️", callback_data=f"vccb_pnow {position}"),
+                InlineKeyboardButton(text="❌", callback_data="vccb_close"),
+              ]
+             ]
+            ),
             disable_web_page_preview=True,
         )
     else:
