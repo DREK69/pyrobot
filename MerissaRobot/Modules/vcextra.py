@@ -269,7 +269,7 @@ async def admin_cbs(_, query: CallbackQuery):
             pass
 
     elif data == "pnow":
-        track = int(data.split(None, 1)[1])
+        track = int(callback_data.data.split(None, 1)[1])
         get = merissadb.get(query.message.chat.id)
         try:
             get[track]["title"]
