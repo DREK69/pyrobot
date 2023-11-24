@@ -325,7 +325,8 @@ async def admin_cbs(_, query: CallbackQuery):
             req_by = get[track]["req"]
             stream_type = get[track]["stream_type"]
             thumb = get[track]["thumb"]
-            get.pop(track)
+            element_to_move = get.pop(track)
+            get.insert(0, element_to_move)
 
             if stream_type == "audio":
                 stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
