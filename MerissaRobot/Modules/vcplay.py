@@ -247,9 +247,9 @@ async def play(_, message):
                 [
                     [
                         InlineKeyboardButton(
-                            text="▶️", callback_data=f"vccb_pnow {position}"
+                            text="▶️ Play Now", callback_data=f"vccb_pnow {position}"
                         ),
-                        InlineKeyboardButton(text="❌", callback_data="vccb_close"),
+                        InlineKeyboardButton(text="❌ Close", callback_data="vccb_close"),
                     ]
                 ]
             ),
