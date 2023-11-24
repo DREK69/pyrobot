@@ -61,7 +61,9 @@ async def vc_controls(_, message):
             pass
 
         if not await is_streaming(message.chat.id):
-            return await message.reply_text("Did you remember that you resume the stream?")
+            return await message.reply_text(
+                "Did you remember that you resume the stream?"
+            )
 
         await pytgcalls.pause_stream(message.chat.id)
         await stream_off(message.chat.id)
@@ -123,7 +125,9 @@ async def vc_controls(_, message):
             if stream_type == "audio":
                 stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
             else:
-                stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
+                stream = AudioVideoPiped(
+                    file_path, HighQualityAudio(), HighQualityVideo()
+                )
             try:
                 await pytgcalls.change_stream(
                     message.chat.id,
