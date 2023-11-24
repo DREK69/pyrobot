@@ -51,7 +51,9 @@ def admin_check_cb(func: Callable) -> Callable:
     return cb_non_admin
 
 
-@pbot.on_message(filters.command(["pause", "resume", "end", "skip", "playlist"]) & ~filters.private)
+@pbot.on_message(
+    filters.command(["pause", "resume", "end", "skip", "playlist"]) & ~filters.private
+)
 @adminsOnly("can_manage_video_chats")
 async def vc_controls(_, message):
     if message.command[0] == "pause":
@@ -149,7 +151,7 @@ async def vc_controls(_, message):
         queue = merissadb.get(message.chat.id)
         if not queue:
             return await message.reply_text("Player is idle")
-        m = await message.reply_text("Processing...")  
+        m = await message.reply_text("Processing...")
         temp = []
         for t in queue:
             temp.append(t)
