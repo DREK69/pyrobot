@@ -267,7 +267,7 @@ async def admin_cbs(_, query: CallbackQuery):
             await query.message.delete()
         except:
             pass
-            
+
     elif data == "pnow":
         track = int(data.split(None, 1)[1])
         get = merissadb.get(query.message.chat.id)
@@ -304,7 +304,7 @@ async def admin_cbs(_, query: CallbackQuery):
                 caption=f"📡 Streaming Started\n\n👤 Requested By: {req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
                 reply_markup=InlineKeyboardMarkup(button),
             )
-            return await query.message.delete() 
+            return await query.message.delete()
         except:
             return await query.message.reply_text(
                 text="Failed to Play Track",
