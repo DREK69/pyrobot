@@ -282,6 +282,7 @@ async def admin_cbs(_, query: CallbackQuery):
             except:
                 return
         else:
+            await query.message.delete()
             get[0]["title"]
             get[0]["duration"]
             videoid = get[0]["videoid"]
@@ -308,12 +309,11 @@ async def admin_cbs(_, query: CallbackQuery):
             await query.message.reply_text(
                 text=f"**Stream Skipped**\n\nBy : {query.from_user.mention}",
             )
-            await query.message.reply_photo(
+            return await query.message.reply_photo(
                 thumb,
                 caption=f"📡 Streaming Started\n\n👤 Requested By: {req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
                 reply_markup=InlineKeyboardMarkup(button),
             )
-            return await query.message.delete()
     else:
         track = int(callback_data.split(None, 1)[1])
         get = merissadb.get(query.message.chat.id)
@@ -343,7 +343,7 @@ async def admin_cbs(_, query: CallbackQuery):
                 await _clear_(query.message.chat.id)
                 return await pytgcalls.leave_group_call(query.message.chat.id)
             await query.message.reply_text(
-                text=f"**Stream FocePlayed**\n\nBy : {query.from_user.mention}",
+                text=f"**Stream ForcePlayed**\n\nBy : {query.from_user.mention}",
             )
             await query.message.reply_photo(
                 thumb,
