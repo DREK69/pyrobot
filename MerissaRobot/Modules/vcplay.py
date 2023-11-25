@@ -126,7 +126,7 @@ async def play(_, message):
         except:
             pass
 
-    ruser = message.from_user.first_name
+    ruser = message.from_user.mention
     audio = (
         (message.reply_to_message.audio or message.reply_to_message.voice)
         if message.reply_to_message
