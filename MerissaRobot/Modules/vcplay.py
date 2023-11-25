@@ -22,7 +22,8 @@ from pytgcalls.types import (
     HighQualityVideo,
 )
 from telegram import InlineKeyboardButton as IKB
-from youtubesearchpython.__future__ import VideosSearch
+from youtubesearchpython.__future__ import VideosSearch as LINK
+from youtubesearchpython import VideosSearch as QUERY
 
 from MerissaRobot import (
     ASS_ID,
@@ -172,7 +173,7 @@ async def play(_, message):
         if not "youtu" in url:
             return await merissa.edit_text("Only Youtube link Works")
         else:
-            results = VideosSearch(url, limit=1)
+            results = URL(url, limit=1)
             vidinfo = (await results.next())["result"][0]
             title = vidinfo["title"]
             duration = vidinfo["duration"]
@@ -199,12 +200,12 @@ async def play(_, message):
             return await merissa.edit_text("Please enter query to Play!")
         query = message.text.split(None, 1)[1]
         try:
-            vidinfo = VideosSearch(query, limit=1)
-            results = (await vidinfo.next())["result"][0]
-            title = results["title"]
-            videoid = results["id"]
-            duration = results["duration"]
-            url = results["link"]
+            vidinfo = QUERY(query, limit=1).result()
+            yt = search["result"][0]
+            title = yt["title"]
+            duration = yt["duration"]
+            videoid = yt["id"]
+            url = f"https://m.youtube.com/watch?v={videoid}"
             secmul, dur, dur_arr = 1, 0, duration.split(":")
             for i in range(len(dur_arr) - 1, -1, -1):
                 dur += int(dur_arr[i]) * secmul
