@@ -22,7 +22,6 @@ from pytgcalls.types import (
     HighQualityVideo,
 )
 from telegram import InlineKeyboardButton as IKB
-from youtubesearchpython.__future__ import VideosSearch as LINK
 from youtubesearchpython import VideosSearch as QUERY
 
 from MerissaRobot import (
