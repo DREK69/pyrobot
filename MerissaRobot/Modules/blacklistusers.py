@@ -16,8 +16,8 @@ from MerissaRobot import (
     WOLVES,
     dispatcher,
 )
-from MerissaRobot.Handler.chat_status import dev_plus
-from MerissaRobot.Handler.extraction import extract_user, extract_user_and_text
+from MerissaRobot.Handler.ptb.chat_status import dev_plus
+from MerissaRobot.Handler.ptb.extraction import extract_user, extract_user_and_text
 from MerissaRobot.Modules.log_channel import gloggable
 
 BLACKLISTWHITELIST = [OWNER_ID] + DEV_USERS + DRAGONS + WOLVES + DEMONS

@@ -20,8 +20,8 @@ import MerissaRobot.Database.sql.rules_sql as rulessql
 from MerissaRobot import JOIN_LOGGER, LOGGER, OWNER_ID, SUPPORT_CHAT, dispatcher
 from MerissaRobot.__main__ import DATA_IMPORT
 from MerissaRobot.Database.sql import disable_sql as disabledsql
-from MerissaRobot.Handler.alternate import typing_action
-from MerissaRobot.Handler.chat_status import user_admin
+from MerissaRobot.Handler.ptb.alternate import typing_action
+from MerissaRobot.Handler.ptb.chat_status import user_admin
 from MerissaRobot.Modules.connection import connected
 
 

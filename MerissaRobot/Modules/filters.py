@@ -16,14 +16,14 @@ from telegram.utils.helpers import escape_markdown, mention_html
 
 from MerissaRobot import DRAGONS, LOGGER, dispatcher
 from MerissaRobot.Database.sql import cust_filters_sql as sql
-from MerissaRobot.Handler.alternate import send_message, typing_action
-from MerissaRobot.Handler.chat_status import user_admin
-from MerissaRobot.Handler.extraction import extract_text
-from MerissaRobot.Handler.filters import CustomFilters
-from MerissaRobot.Handler.handlers import MessageHandlerChecker
-from MerissaRobot.Handler.misc import build_keyboard_parser
-from MerissaRobot.Handler.msg_types import get_filter_type
-from MerissaRobot.Handler.string_handling import (
+from MerissaRobot.Handler.ptb.alternate import send_message, typing_action
+from MerissaRobot.Handler.ptb.chat_status import user_admin
+from MerissaRobot.Handler.ptb.extraction import extract_text
+from MerissaRobot.Handler.ptb.filters import CustomFilters
+from MerissaRobot.Handler.ptb.handlers import MessageHandlerChecker
+from MerissaRobot.Handler.ptb.misc import build_keyboard_parser
+from MerissaRobot.Handler.ptb.msg_types import get_filter_type
+from MerissaRobot.Handler.ptb.string_handling import (
     button_markdown_parser,
     escape_invalid_curly_brackets,
     markdown_to_html,

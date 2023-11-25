@@ -29,14 +29,14 @@ from MerissaRobot import (
     WOLVES,
     dispatcher,
 )
-from MerissaRobot.Handler.alternate import send_message
-from MerissaRobot.Handler.chat_status import is_user_admin
-from MerissaRobot.Handler.extraction import (
+from MerissaRobot.Handler.ptb.alternate import send_message
+from MerissaRobot.Handler.ptb.chat_status import is_user_admin
+from MerissaRobot.Handler.ptb.extraction import (
     extract_unt_fedban,
     extract_user,
     extract_user_fban,
 )
-from MerissaRobot.Handler.string_handling import markdown_parser
+from MerissaRobot.Handler.ptb.string_handling import markdown_parser
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 # Hello bot owner, I spended for feds many hours of my life, Please don't remove this if you still respect MrYacha and peaktogoo and AyraHikari too

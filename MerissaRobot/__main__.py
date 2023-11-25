@@ -33,8 +33,8 @@ from MerissaRobot import (
     updater,
     user,
 )
-from MerissaRobot.Handler.chat_status import is_user_admin
-from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
+from MerissaRobot.Handler.ptb.chat_status import is_user_admin
+from MerissaRobot.Handler.ptb.misc import gpaginate_modules, paginate_modules
 from MerissaRobot.Modules import ALL_MODULES
 from MerissaRobot.text import (
     GROUP_HELP_BUTTON,

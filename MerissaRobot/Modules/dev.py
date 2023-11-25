@@ -9,7 +9,7 @@ from telegram.error import Unauthorized
 from telegram.ext import CallbackContext, CommandHandler
 
 from MerissaRobot import dispatcher
-from MerissaRobot.Handler.chat_status import dev_plus
+from MerissaRobot.Handler.ptb.chat_status import dev_plus
 
 
 @dev_plus

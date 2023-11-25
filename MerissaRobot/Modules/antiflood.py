@@ -15,14 +15,14 @@ from telegram.utils.helpers import mention_html
 from MerissaRobot import TIGERS, WOLVES, dispatcher
 from MerissaRobot.Database.sql import antiflood_sql as sql
 from MerissaRobot.Database.sql.approve_sql import is_approved
-from MerissaRobot.Handler.alternate import send_message
-from MerissaRobot.Handler.chat_status import (
+from MerissaRobot.Handler.ptb.alternate import send_message
+from MerissaRobot.Handler.ptb.chat_status import (
     bot_admin,
     is_user_admin,
     user_admin,
     user_admin_no_reply,
 )
-from MerissaRobot.Handler.string_handling import extract_time
+from MerissaRobot.Handler.ptb.string_handling import extract_time
 from MerissaRobot.Modules.connection import connected
 from MerissaRobot.Modules.log_channel import loggable
 

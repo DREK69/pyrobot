@@ -3,7 +3,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Upda
 from telegram.ext import CallbackContext, CallbackQueryHandler
 
 from MerissaRobot import DEV_USERS, dispatcher
-from MerissaRobot.Handler.chat_status import dev_plus
+from MerissaRobot.Handler.ptb.chat_status import dev_plus
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 

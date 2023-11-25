@@ -14,8 +14,8 @@ from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CommandHandler, Filters
 
 from MerissaRobot import WALL_API, dispatcher
-from MerissaRobot.Handler.alternate import send_action
-from MerissaRobot.Handler.chat_status import user_admin
+from MerissaRobot.Handler.ptb.alternate import send_action
+from MerissaRobot.Handler.ptb.chat_status import user_admin
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 MARKDOWN_HELP = """

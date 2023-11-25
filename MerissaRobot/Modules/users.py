@@ -8,7 +8,7 @@ from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandle
 import MerissaRobot.Database.sql.users_sql as sql
 from MerissaRobot import DEV_USERS, LOGGER, OWNER_ID, dispatcher
 from MerissaRobot.Database.sql.users_sql import get_all_users
-from MerissaRobot.Handler.chat_status import dev_plus, sudo_plus
+from MerissaRobot.Handler.ptb.chat_status import dev_plus, sudo_plus
 
 USERS_GROUP = 4
 CHAT_GROUP = 5

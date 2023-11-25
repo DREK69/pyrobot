@@ -13,8 +13,8 @@ from MerissaRobot.Database.mongo.karma_mongo import (
     karma_on,
     update_karma,
 )
-from MerissaRobot.Handler.pyro.errors import capture_err
-from MerissaRobot.Handler.pyro.filter_groups import (
+from MerissaRobot.Handler.ptb.pyro.errors import capture_err
+from MerissaRobot.Handler.ptb.pyro.filter_groups import (
     karma_negative_group,
     karma_positive_group,
 )

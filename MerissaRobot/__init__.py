@@ -99,7 +99,7 @@ DEMONS = list(DEMONS)
 TIGERS = list(TIGERS)
 
 # Load at end to ensure all prev variables have been set
-from MerissaRobot.Handler.handlers import (
+from MerissaRobot.Handler.ptb.handlers import (
     CustomCommandHandler,
     CustomMessageHandler,
     CustomRegexHandler,

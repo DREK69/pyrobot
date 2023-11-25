@@ -27,21 +27,21 @@ from telegram.utils.helpers import mention_html
 from MerissaRobot import TIGERS, WOLVES, dispatcher
 from MerissaRobot.Database.sql import warns_sql as sql
 from MerissaRobot.Database.sql.approve_sql import is_approved
-from MerissaRobot.Handler.chat_status import (
+from MerissaRobot.Handler.ptb.chat_status import (
     bot_admin,
     can_restrict,
     is_user_admin,
     user_admin,
     user_admin_no_reply,
 )
-from MerissaRobot.Handler.extraction import (
+from MerissaRobot.Handler.ptb.extraction import (
     extract_text,
     extract_user,
     extract_user_and_text,
 )
-from MerissaRobot.Handler.filters import CustomFilters
-from MerissaRobot.Handler.misc import split_message
-from MerissaRobot.Handler.string_handling import split_quotes
+from MerissaRobot.Handler.ptb.filters import CustomFilters
+from MerissaRobot.Handler.ptb.misc import split_message
+from MerissaRobot.Handler.ptb.string_handling import split_quotes
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.log_channel import loggable
 

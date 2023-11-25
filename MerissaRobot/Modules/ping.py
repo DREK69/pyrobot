@@ -6,7 +6,7 @@ from telegram import ParseMode, Update
 from telegram.ext import CallbackContext
 
 from MerissaRobot import StartTime, dispatcher
-from MerissaRobot.Handler.chat_status import sudo_plus
+from MerissaRobot.Handler.ptb.chat_status import sudo_plus
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 sites_list = {

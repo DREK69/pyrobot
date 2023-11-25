@@ -5,8 +5,8 @@ import aiofiles
 from pyrogram import filters
 
 from MerissaRobot import pbot as app
-from MerissaRobot.Handler.pyro.errors import capture_err
-from MerissaRobot.Handler.pyro.pastebin import paste
+from MerissaRobot.Handler.ptb.pyro.errors import capture_err
+from MerissaRobot.Handler.ptb.pyro.pastebin import paste
 
 __mod_name__ = "Paste​"
 

@@ -7,8 +7,8 @@ from telegram.ext import CallbackQueryHandler, CommandHandler
 
 import MerissaRobot.Database.sql.connection_sql as sql
 from MerissaRobot import DEV_USERS, DRAGONS, dispatcher
-from MerissaRobot.Handler import chat_status
-from MerissaRobot.Handler.alternate import send_message, typing_action
+from MerissaRobot.Handler.ptb import chat_status
+from MerissaRobot.Handler.ptb.alternate import send_message, typing_action
 
 user_admin = chat_status.user_admin
 

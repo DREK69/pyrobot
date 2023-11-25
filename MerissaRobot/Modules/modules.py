@@ -15,7 +15,7 @@ from MerissaRobot.__main__ import (
     USER_INFO,
     USER_SETTINGS,
 )
-from MerissaRobot.Handler.chat_status import dev_plus, sudo_plus
+from MerissaRobot.Handler.ptb.chat_status import dev_plus, sudo_plus
 
 
 @dev_plus

@@ -4,7 +4,7 @@ from pyrogram import filters
 from pyrogram.types import Message
 
 from MerissaRobot import pbot
-from MerissaRobot.Handler.pyro.permissions import adminsOnly
+from MerissaRobot.Handler.ptb.pyro.permissions import adminsOnly
 
 
 @pbot.on_message(filters.command(["zombies", "ghosts"]))

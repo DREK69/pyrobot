@@ -3,7 +3,7 @@ from telegram.ext import CallbackQueryHandler, Filters
 from telegram.utils.helpers import escape_markdown, mention_markdown
 
 from MerissaRobot import dispatcher
-from MerissaRobot.Handler.chat_status import user_admin, user_admin_no_reply
+from MerissaRobot.Handler.ptb.chat_status import user_admin, user_admin_no_reply
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 

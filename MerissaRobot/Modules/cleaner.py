@@ -5,7 +5,7 @@ from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandle
 
 from MerissaRobot import ALLOW_EXCL, CustomCommandHandler, dispatcher
 from MerissaRobot.Database.sql import cleaner_sql as sql
-from MerissaRobot.Handler.chat_status import (
+from MerissaRobot.Handler.ptb.chat_status import (
     bot_can_delete,
     connection_status,
     dev_plus,

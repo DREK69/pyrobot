@@ -13,8 +13,8 @@ from telegram.ext import (
 from telegram.utils.helpers import escape_markdown
 
 from MerissaRobot import dispatcher
-from MerissaRobot.Handler.handlers import CMD_STARTERS, SpamChecker
-from MerissaRobot.Handler.misc import is_module_loaded
+from MerissaRobot.Handler.ptb.handlers import CMD_STARTERS, SpamChecker
+from MerissaRobot.Handler.ptb.misc import is_module_loaded
 
 CMD_STARTERS = tuple(CMD_STARTERS)
 
@@ -23,7 +23,7 @@ FILENAME = __name__.rsplit(".", 1)[-1]
 # If module is due to be loaded, then setup all the magical handlers
 if is_module_loaded(FILENAME):
     from MerissaRobot.Database.sql import disable_sql as sql
-    from MerissaRobot.Handler.chat_status import (
+    from MerissaRobot.Handler.ptb.chat_status import (
         connection_status,
         is_user_admin,
         user_admin,

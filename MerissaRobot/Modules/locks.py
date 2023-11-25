@@ -10,8 +10,8 @@ from telegram.utils.helpers import mention_html
 import MerissaRobot.Database.sql.locks_sql as sql
 from MerissaRobot import LOGGER, dispatcher
 from MerissaRobot.Database.sql.approve_sql import is_approved
-from MerissaRobot.Handler.alternate import send_message, typing_action
-from MerissaRobot.Handler.chat_status import (
+from MerissaRobot.Handler.ptb.alternate import send_message, typing_action
+from MerissaRobot.Handler.ptb.chat_status import (
     can_delete,
     is_bot_admin,
     is_user_admin,

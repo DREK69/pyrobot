@@ -22,7 +22,7 @@ from MerissaRobot import (
     WOLVES,
     dispatcher,
 )
-from MerissaRobot.Handler.chat_status import (
+from MerissaRobot.Handler.ptb.chat_status import (
     bot_admin,
     can_delete,
     can_restrict,
@@ -35,9 +35,9 @@ from MerissaRobot.Handler.chat_status import (
     user_admin_no_reply,
     user_can_ban,
 )
-from MerissaRobot.Handler.extraction import extract_user_and_text
-from MerissaRobot.Handler.filters import CustomFilters
-from MerissaRobot.Handler.string_handling import extract_time
+from MerissaRobot.Handler.ptb.extraction import extract_user_and_text
+from MerissaRobot.Handler.ptb.filters import CustomFilters
+from MerissaRobot.Handler.ptb.string_handling import extract_time
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.log_channel import gloggable, loggable
 

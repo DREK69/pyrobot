@@ -7,7 +7,7 @@ from telegram.ext import CallbackContext, CommandHandler, Filters
 
 from MerissaRobot import OWNER_ID, dispatcher
 from MerissaRobot.Database.sql.users_sql import get_user_com_chats
-from MerissaRobot.Handler.extraction import extract_user
+from MerissaRobot.Handler.ptb.extraction import extract_user
 
 
 def get_user_common_chats(update: Update, context: CallbackContext):

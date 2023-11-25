@@ -7,10 +7,10 @@ from telegram.utils.helpers import mention_html, mention_markdown
 
 import MerissaRobot.Database.sql.blsticker_sql as sql
 from MerissaRobot import LOGGER, dispatcher
-from MerissaRobot.Handler.alternate import send_message
-from MerissaRobot.Handler.chat_status import user_admin, user_not_admin
-from MerissaRobot.Handler.misc import split_message
-from MerissaRobot.Handler.string_handling import extract_time
+from MerissaRobot.Handler.ptb.alternate import send_message
+from MerissaRobot.Handler.ptb.chat_status import user_admin, user_not_admin
+from MerissaRobot.Handler.ptb.misc import split_message
+from MerissaRobot.Handler.ptb.string_handling import extract_time
 from MerissaRobot.Modules.connection import connected
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.log_channel import loggable

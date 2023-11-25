@@ -3,7 +3,7 @@ from functools import wraps
 
 from telegram.ext import CallbackContext
 
-from MerissaRobot.Handler.misc import is_module_loaded
+from MerissaRobot.Handler.ptb.misc import is_module_loaded
 
 FILENAME = __name__.rsplit(".", 1)[-1]
 
@@ -15,7 +15,7 @@ if is_module_loaded(FILENAME):
 
     from MerissaRobot import EVENT_LOGS, LOGGER, dispatcher
     from MerissaRobot.Database.sql import log_channel_sql as sql
-    from MerissaRobot.Handler.chat_status import user_admin
+    from MerissaRobot.Handler.ptb.chat_status import user_admin
 
     def loggable(func):
         @wraps(func)

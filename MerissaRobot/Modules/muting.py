@@ -18,7 +18,7 @@ from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler
 from telegram.utils.helpers import mention_html
 
 from MerissaRobot import LOGGER, TIGERS, dispatcher
-from MerissaRobot.Handler.chat_status import (
+from MerissaRobot.Handler.ptb.chat_status import (
     bot_admin,
     can_delete,
     can_restrict,
@@ -27,8 +27,8 @@ from MerissaRobot.Handler.chat_status import (
     user_admin,
     user_admin_no_reply,
 )
-from MerissaRobot.Handler.extraction import extract_user_and_text
-from MerissaRobot.Handler.string_handling import extract_time
+from MerissaRobot.Handler.ptb.extraction import extract_user_and_text
+from MerissaRobot.Handler.ptb.string_handling import extract_time
 from MerissaRobot.Modules.log_channel import loggable
 
 

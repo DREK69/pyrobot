@@ -6,8 +6,8 @@ from telegram.utils.helpers import mention_html
 
 import MerissaRobot.Database.sql.mod_sql as sql
 from MerissaRobot import dispatcher
-from MerissaRobot.Handler.chat_status import user_admin
-from MerissaRobot.Handler.extraction import extract_user
+from MerissaRobot.Handler.ptb.chat_status import user_admin
+from MerissaRobot.Handler.ptb.extraction import extract_user
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.log_channel import loggable
 

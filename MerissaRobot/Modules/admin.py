@@ -7,9 +7,9 @@ from telegram.ext import CallbackContext, CommandHandler, Filters
 from telegram.utils.helpers import mention_html
 
 from MerissaRobot import DRAGONS, SUPPORT_CHAT, dispatcher
-from MerissaRobot.Handler.admin_rights import user_can_changeinfo
-from MerissaRobot.Handler.alternate import send_message
-from MerissaRobot.Handler.chat_status import (
+from MerissaRobot.Handler.ptb.admin_rights import user_can_changeinfo
+from MerissaRobot.Handler.ptb.alternate import send_message
+from MerissaRobot.Handler.ptb.chat_status import (
     ADMIN_CACHE,
     bot_admin,
     can_pin,
@@ -17,7 +17,7 @@ from MerissaRobot.Handler.chat_status import (
     connection_status,
     user_admin,
 )
-from MerissaRobot.Handler.extraction import extract_user, extract_user_and_text
+from MerissaRobot.Handler.ptb.extraction import extract_user, extract_user_and_text
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.log_channel import loggable
 

@@ -13,7 +13,7 @@ from telegram.utils.helpers import mention_html
 
 from MerissaRobot import DRAGONS, LOGGER, TIGERS, WOLVES, dispatcher
 from MerissaRobot.Database.sql import reporting_sql as sql
-from MerissaRobot.Handler.chat_status import user_admin, user_not_admin
+from MerissaRobot.Handler.ptb.chat_status import user_admin, user_not_admin
 from MerissaRobot.Modules.log_channel import loggable
 
 REPORT_GROUP = 12

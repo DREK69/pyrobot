@@ -35,11 +35,11 @@ from MerissaRobot import (
     sw,
 )
 from MerissaRobot.Database.sql.global_bans_sql import is_user_gbanned
-from MerissaRobot.Handler.chat_status import is_user_ban_protected, user_admin
-from MerissaRobot.Handler.handlers import MessageHandlerChecker
-from MerissaRobot.Handler.misc import build_keyboard, revert_buttons
-from MerissaRobot.Handler.msg_types import get_welcome_type
-from MerissaRobot.Handler.string_handling import (
+from MerissaRobot.Handler.ptb.chat_status import is_user_ban_protected, user_admin
+from MerissaRobot.Handler.ptb.handlers import MessageHandlerChecker
+from MerissaRobot.Handler.ptb.misc import build_keyboard, revert_buttons
+from MerissaRobot.Handler.ptb.msg_types import get_welcome_type
+from MerissaRobot.Handler.ptb.string_handling import (
     escape_invalid_curly_brackets,
     markdown_parser,
 )

@@ -31,8 +31,8 @@ from MerissaRobot.__main__ import STATS, USER_INFO
 from MerissaRobot.Database.sql.afk_sql import is_afk, set_afk
 from MerissaRobot.Database.sql.global_bans_sql import is_user_gbanned
 from MerissaRobot.Database.sql.users_sql import get_user_num_chats
-from MerissaRobot.Handler.chat_status import sudo_plus
-from MerissaRobot.Handler.extraction import extract_user
+from MerissaRobot.Handler.ptb.chat_status import sudo_plus
+from MerissaRobot.Handler.ptb.extraction import extract_user
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 

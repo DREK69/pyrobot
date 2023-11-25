@@ -22,11 +22,11 @@ from telegram.utils.helpers import escape_markdown, mention_markdown
 
 import MerissaRobot.Database.sql.notes_sql as sql
 from MerissaRobot import DRAGONS, JOIN_LOGGER, LOGGER, SUPPORT_CHAT, dispatcher
-from MerissaRobot.Handler.chat_status import connection_status, user_admin
-from MerissaRobot.Handler.handlers import MessageHandlerChecker
-from MerissaRobot.Handler.misc import build_keyboard, revert_buttons
-from MerissaRobot.Handler.msg_types import get_note_type
-from MerissaRobot.Handler.string_handling import escape_invalid_curly_brackets
+from MerissaRobot.Handler.ptb.chat_status import connection_status, user_admin
+from MerissaRobot.Handler.ptb.handlers import MessageHandlerChecker
+from MerissaRobot.Handler.ptb.misc import build_keyboard, revert_buttons
+from MerissaRobot.Handler.ptb.msg_types import get_note_type
+from MerissaRobot.Handler.ptb.string_handling import escape_invalid_curly_brackets
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 FILE_MATCHER = re.compile(r"^###file_id(!photo)?###:(.*?)(?:\s|$)")

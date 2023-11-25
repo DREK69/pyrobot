@@ -37,8 +37,8 @@ from MerissaRobot import (
     pytgcalls,
     user,
 )
-from MerissaRobot.Handler.pyro.filter_groups import play_group
-from MerissaRobot.Handler.pyro.vcfunction import (
+from MerissaRobot.Handler.ptb.pyro.filter_groups import play_group
+from MerissaRobot.Handler.ptb.pyro.vcfunction import (
     DURATION_LIMIT,
     add_active_chat,
     button,

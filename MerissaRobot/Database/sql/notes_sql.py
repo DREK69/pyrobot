@@ -4,7 +4,7 @@ import threading
 from sqlalchemy import BigInteger, Boolean, Column, String, UnicodeText, distinct, func
 
 from MerissaRobot.Database.sql import BASE, SESSION
-from MerissaRobot.Handler.msg_types import Types
+from MerissaRobot.Handler.ptb.msg_types import Types
 
 
 class Notes(BASE):

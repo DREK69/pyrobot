@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler
 
 from MerissaRobot import dispatcher
-from MerissaRobot.Handler.chat_status import dev_plus
+from MerissaRobot.Handler.ptb.chat_status import dev_plus
 
 DEBUG_MODE = False
 

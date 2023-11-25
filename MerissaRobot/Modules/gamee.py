@@ -7,7 +7,7 @@ from pyrogram import filters
 from MerissaRobot import DEV_USERS as SUPREME_USERS
 from MerissaRobot import pbot as app
 from MerissaRobot.Database.mongo import db
-from MerissaRobot.Handler.readable_time import get_readable_time
+from MerissaRobot.Handler.ptb.readable_time import get_readable_time
 
 gamesdb = db.games
 

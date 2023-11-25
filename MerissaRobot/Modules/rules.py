@@ -5,8 +5,8 @@ from telegram.utils.helpers import escape_markdown
 
 import MerissaRobot.Database.sql.rules_sql as sql
 from MerissaRobot import dispatcher
-from MerissaRobot.Handler.chat_status import user_admin
-from MerissaRobot.Handler.string_handling import markdown_parser
+from MerissaRobot.Handler.ptb.chat_status import user_admin
+from MerissaRobot.Handler.ptb.string_handling import markdown_parser
 
 
 def get_rules(update: Update, context: CallbackContext):

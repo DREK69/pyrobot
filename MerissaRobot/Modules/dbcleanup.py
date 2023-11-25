@@ -7,7 +7,7 @@ from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler
 import MerissaRobot.Database.sql.global_bans_sql as gban_sql
 import MerissaRobot.Database.sql.users_sql as user_sql
 from MerissaRobot import DEV_USERS, OWNER_ID, dispatcher
-from MerissaRobot.Handler.chat_status import dev_plus
+from MerissaRobot.Handler.ptb.chat_status import dev_plus
 
 
 def get_invalid_chats(update: Update, context: CallbackContext, remove: bool = False):
