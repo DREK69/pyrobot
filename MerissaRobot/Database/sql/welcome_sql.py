@@ -5,7 +5,7 @@ from typing import Union
 from sqlalchemy import BigInteger, Boolean, Column, String, UnicodeText
 
 from MerissaRobot.Database.sql import BASE, SESSION
-from MerissaRobot.Handler.ptb.msg_types import Types
+from MerissaRobot.Handler.msg_types import Types
 
 DEFAULT_WELCOME = "Hey {first}, how are you?"
 DEFAULT_GOODBYE = "Nice knowing ya!"

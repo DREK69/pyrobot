@@ -1,6 +1,6 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
 from telegram.error import Unauthorized
-from telegram.ext import CallbackQueryHandler.ptb, CommandHandler.ptb, run_async
+from telegram.ext import CallbackQueryHandler, CommandHandler, run_async
 
 from MerissaRobot import dispatcher
 
@@ -362,14 +362,14 @@ def greyson_cancel_callback(update, context):
         )
 
 
-policy_callback_handler = CallbackQueryHandler.ptb(
+policy_callback_handler = CallbackQueryHandler(
     greyson_policy_callback, pattern=r"policy_"
 )
-cancel_callback_handler = CallbackQueryHandler.ptb(
+cancel_callback_handler = CallbackQueryHandler(
     greyson_cancel_callback, pattern=r"cancel_"
 )
 
-privacy_handler = CommandHandler.ptb("privacy", privacy)
+privacy_handler = CommandHandler("privacy", privacy)
 
 dispatcher.add_handler(privacy_handler)
 dispatcher.add_handler(cancel_callback_handler)

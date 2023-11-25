@@ -5,7 +5,7 @@ from io import BytesIO
 
 from telegram import ParseMode
 from telegram.error import BadRequest
-from telegram.ext import CommandHandler.ptb
+from telegram.ext import CommandHandler
 
 # from MerissaRobot.Database.sql import warns_sql as warnssql
 import MerissaRobot.Database.sql.blacklist_sql as blacklistsql
@@ -20,8 +20,8 @@ import MerissaRobot.Database.sql.rules_sql as rulessql
 from MerissaRobot import JOIN_LOGGER, LOGGER, OWNER_ID, SUPPORT_CHAT, dispatcher
 from MerissaRobot.__main__ import DATA_IMPORT
 from MerissaRobot.Database.sql import disable_sql as disabledsql
-from MerissaRobot.Handler.ptb.alternate import typing_action
-from MerissaRobot.Handler.ptb.chat_status import user_admin
+from MerissaRobot.Handler.alternate import typing_action
+from MerissaRobot.Handler.chat_status import user_admin
 from MerissaRobot.Modules.connection import connected
 
 
@@ -378,8 +378,8 @@ def get_chat(chat_id, chat_data):
 
 __mod_name__ = "Backups"
 
-IMPORT_HANDLER = CommandHandler.ptb("import", import_data, run_async=True)
-EXPORT_HANDLER = CommandHandler.ptb(
+IMPORT_HANDLER = CommandHandler("import", import_data, run_async=True)
+EXPORT_HANDLER = CommandHandler(
     "export", export_data, pass_chat_data=True, run_async=True
 )
 

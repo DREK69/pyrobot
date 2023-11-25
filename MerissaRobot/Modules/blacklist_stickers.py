@@ -2,17 +2,17 @@ import html
 
 from telegram import ChatPermissions, ParseMode, Update
 from telegram.error import BadRequest
-from telegram.ext import CallbackContext, CommandHandler.ptb, Filters, MessageHandler.ptb
+from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler
 from telegram.utils.helpers import mention_html, mention_markdown
 
 import MerissaRobot.Database.sql.blsticker_sql as sql
 from MerissaRobot import LOGGER, dispatcher
-from MerissaRobot.Handler.ptb.alternate import send_message
-from MerissaRobot.Handler.ptb.chat_status import user_admin, user_not_admin
-from MerissaRobot.Handler.ptb.misc import split_message
-from MerissaRobot.Handler.ptb.string_handling import extract_time
+from MerissaRobot.Handler.alternate import send_message
+from MerissaRobot.Handler.chat_status import user_admin, user_not_admin
+from MerissaRobot.Handler.misc import split_message
+from MerissaRobot.Handler.string_handling import extract_time
 from MerissaRobot.Modules.connection import connected
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.log_channel import loggable
 from MerissaRobot.Modules.warns import warn
 
@@ -505,24 +505,24 @@ def __stats__():
 
 __mod_name__ = "BL-Stickers 🚫"
 
-BLACKLIST_STICKER_HANDLER = DisableAbleCommandHandler.ptb(
+BLACKLIST_STICKER_HANDLER = DisableAbleCommandHandler(
     "blsticker",
     blackliststicker,
     admin_ok=True,
     run_async=True,
 )
-ADDBLACKLIST_STICKER_HANDLER = DisableAbleCommandHandler.ptb(
+ADDBLACKLIST_STICKER_HANDLER = DisableAbleCommandHandler(
     "addblsticker",
     add_blackliststicker,
     run_async=True,
 )
-UNBLACKLIST_STICKER_HANDLER = CommandHandler.ptb(
+UNBLACKLIST_STICKER_HANDLER = CommandHandler(
     ["unblsticker", "rmblsticker"],
     unblackliststicker,
     run_async=True,
 )
-BLACKLISTMODE_HANDLER = CommandHandler.ptb("blstickermode", blacklist_mode)
-BLACKLIST_STICKER_DEL_HANDLER = MessageHandler.ptb(
+BLACKLISTMODE_HANDLER = CommandHandler("blstickermode", blacklist_mode)
+BLACKLIST_STICKER_DEL_HANDLER = MessageHandler(
     Filters.sticker & Filters.chat_type.groups,
     del_blackliststicker,
     run_async=True,

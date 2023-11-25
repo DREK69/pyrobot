@@ -13,21 +13,21 @@ from telegram import (
 from telegram.error import BadRequest
 from telegram.ext import (
     CallbackContext,
-    CallbackQueryHandler.ptb,
-    CommandHandler.ptb,
+    CallbackQueryHandler,
+    CommandHandler,
     Filters,
-    MessageHandler.ptb,
+    MessageHandler,
 )
 from telegram.utils.helpers import escape_markdown, mention_markdown
 
 import MerissaRobot.Database.sql.notes_sql as sql
 from MerissaRobot import DRAGONS, JOIN_LOGGER, LOGGER, SUPPORT_CHAT, dispatcher
-from MerissaRobot.Handler.ptb.chat_status import connection_status, user_admin
-from MerissaRobot.Handler.ptb.handlers import MessageHandler.ptbChecker
-from MerissaRobot.Handler.ptb.misc import build_keyboard, revert_buttons
-from MerissaRobot.Handler.ptb.msg_types import get_note_type
-from MerissaRobot.Handler.ptb.string_handling import escape_invalid_curly_brackets
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
+from MerissaRobot.Handler.chat_status import connection_status, user_admin
+from MerissaRobot.Handler.handlers import MessageHandlerChecker
+from MerissaRobot.Handler.misc import build_keyboard, revert_buttons
+from MerissaRobot.Handler.msg_types import get_note_type
+from MerissaRobot.Handler.string_handling import escape_invalid_curly_brackets
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 FILE_MATCHER = re.compile(r"^###file_id(!photo)?###:(.*?)(?:\s|$)")
 STICKER_MATCHER = re.compile(r"^###sticker(!photo)?###:")
@@ -60,7 +60,7 @@ def get(update, context, notename, show_none=True, no_format=False):
     message = update.effective_message  # type: Optional[Message]
 
     if note:
-        if MessageHandler.ptbChecker.check_user(update.effective_user.id):
+        if MessageHandlerChecker.check_user(update.effective_user.id):
             return
         # If we're replying to a message, reply to that message (unless it's an error)
         if message.reply_to_message:
@@ -573,16 +573,16 @@ A button can be added to a note by using standard markdown link syntax - the lin
 
 __mod_name__ = "Notes 📝"
 
-GET_HANDLER = CommandHandler.ptb("get", cmd_get, run_async=True)
-HASH_GET_HANDLER = MessageHandler.ptb(Filters.regex(r"^#[^\s]+"), hash_get, run_async=True)
-SLASH_GET_HANDLER = MessageHandler.ptb(Filters.regex(r"^/\d+$"), slash_get, run_async=True)
-SAVE_HANDLER = CommandHandler.ptb("save", save, run_async=True)
-DELETE_HANDLER = CommandHandler.ptb("clear", clear, run_async=True)
-LIST_HANDLER = DisableAbleCommandHandler.ptb(
+GET_HANDLER = CommandHandler("get", cmd_get, run_async=True)
+HASH_GET_HANDLER = MessageHandler(Filters.regex(r"^#[^\s]+"), hash_get, run_async=True)
+SLASH_GET_HANDLER = MessageHandler(Filters.regex(r"^/\d+$"), slash_get, run_async=True)
+SAVE_HANDLER = CommandHandler("save", save, run_async=True)
+DELETE_HANDLER = CommandHandler("clear", clear, run_async=True)
+LIST_HANDLER = DisableAbleCommandHandler(
     ["notes", "saved"], list_notes, admin_ok=True, run_async=True
 )
-CLEARALL = DisableAbleCommandHandler.ptb("removeallnotes", clearall, run_async=True)
-CLEARALL_BTN = CallbackQueryHandler.ptb(clearall_btn, pattern=r"notes_.*", run_async=True)
+CLEARALL = DisableAbleCommandHandler("removeallnotes", clearall, run_async=True)
+CLEARALL_BTN = CallbackQueryHandler(clearall_btn, pattern=r"notes_.*", run_async=True)
 
 dispatcher.add_handler(GET_HANDLER)
 dispatcher.add_handler(SAVE_HANDLER)

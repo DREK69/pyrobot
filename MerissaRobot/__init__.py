@@ -9,7 +9,7 @@ from logging import (
     ERROR,
     INFO,
     WARNING,
-    StreamHandler.ptb,
+    StreamHandler,
     basicConfig,
     disable,
     getLogger,
@@ -39,8 +39,8 @@ basicConfig(
     format="[%(asctime)s - %(levelname)s] - %(name)s.%(funcName)s - %(message)s",
     datefmt="%d-%b-%y %H:%M:%S",
     handlers=[
-        handlers.RotatingFileHandler.ptb("log.txt", mode="w+", maxBytes=1000000),
-        StreamHandler.ptb(),
+        handlers.RotatingFileHandler("log.txt", mode="w+", maxBytes=1000000),
+        StreamHandler(),
     ],
 )
 getLogger("pyrogram").setLevel(ERROR)
@@ -99,13 +99,13 @@ DEMONS = list(DEMONS)
 TIGERS = list(TIGERS)
 
 # Load at end to ensure all prev variables have been set
-from MerissaRobot.Handler.ptb.handlers import (
-    CustomCommandHandler.ptb,
-    CustomMessageHandler.ptb,
-    CustomRegexHandler.ptb,
+from MerissaRobot.Handler.handlers import (
+    CustomCommandHandler,
+    CustomMessageHandler,
+    CustomRegexHandler,
 )
 
 # make sure the regex handler can take extra kwargs
-tg.RegexHandler.ptb = CustomRegexHandler.ptb
-tg.CommandHandler.ptb = CustomCommandHandler.ptb
-tg.MessageHandler.ptb = CustomMessageHandler.ptb
+tg.RegexHandler = CustomRegexHandler
+tg.CommandHandler = CustomCommandHandler
+tg.MessageHandler = CustomMessageHandler

@@ -3,7 +3,7 @@ import html
 
 from telegram import ParseMode, Update
 from telegram.error import BadRequest
-from telegram.ext import CallbackContext, CommandHandler.ptb
+from telegram.ext import CallbackContext, CommandHandler
 from telegram.utils.helpers import mention_html
 
 import MerissaRobot.Database.sql.blacklistusers_sql as sql
@@ -16,8 +16,8 @@ from MerissaRobot import (
     WOLVES,
     dispatcher,
 )
-from MerissaRobot.Handler.ptb.chat_status import dev_plus
-from MerissaRobot.Handler.ptb.extraction import extract_user, extract_user_and_text
+from MerissaRobot.Handler.chat_status import dev_plus
+from MerissaRobot.Handler.extraction import extract_user, extract_user_and_text
 from MerissaRobot.Modules.log_channel import gloggable
 
 BLACKLISTWHITELIST = [OWNER_ID] + DEV_USERS + DRAGONS + WOLVES + DEMONS
@@ -148,9 +148,9 @@ def __user_info__(user_id):
     return text
 
 
-BL_HANDLER = CommandHandler.ptb("ignore", bl_user, run_async=True)
-UNBL_HANDLER = CommandHandler.ptb("notice", unbl_user, run_async=True)
-BLUSERS_HANDLER = CommandHandler.ptb("ignoredlist", bl_users, run_async=True)
+BL_HANDLER = CommandHandler("ignore", bl_user, run_async=True)
+UNBL_HANDLER = CommandHandler("notice", unbl_user, run_async=True)
+BLUSERS_HANDLER = CommandHandler("ignoredlist", bl_users, run_async=True)
 
 dispatcher.add_handler(BL_HANDLER)
 dispatcher.add_handler(UNBL_HANDLER)

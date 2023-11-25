@@ -15,7 +15,7 @@ from telegram import (
     Update,
 )
 from telegram.error import BadRequest, TelegramError, Unauthorized
-from telegram.ext import CallbackContext, CallbackQueryHandler.ptb, CommandHandler.ptb
+from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler
 from telegram.utils.helpers import mention_html, mention_markdown
 
 import MerissaRobot.Database.sql.feds_sql as sql
@@ -29,15 +29,15 @@ from MerissaRobot import (
     WOLVES,
     dispatcher,
 )
-from MerissaRobot.Handler.ptb.alternate import send_message
-from MerissaRobot.Handler.ptb.chat_status import is_user_admin
-from MerissaRobot.Handler.ptb.extraction import (
+from MerissaRobot.Handler.alternate import send_message
+from MerissaRobot.Handler.chat_status import is_user_admin
+from MerissaRobot.Handler.extraction import (
     extract_unt_fedban,
     extract_user,
     extract_user_fban,
 )
-from MerissaRobot.Handler.ptb.string_handling import markdown_parser
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
+from MerissaRobot.Handler.string_handling import markdown_parser
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 # Hello bot owner, I spended for feds many hours of my life, Please don't remove this if you still respect MrYacha and peaktogoo and AyraHikari too
 # Federation by MrYacha 2018-2019
@@ -2422,40 +2422,40 @@ Commands:
 __mod_name__ = "Federations 🕴️"
 
 
-NEW_FED_HANDLER = CommandHandler.ptb("newfed", new_fed, run_async=True)
-DEL_FED_HANDLER = CommandHandler.ptb("delfed", del_fed, run_async=True)
-RENAME_FED = CommandHandler.ptb("renamefed", rename_fed, run_async=True)
-JOIN_FED_HANDLER = CommandHandler.ptb("joinfed", join_fed, run_async=True)
-LEAVE_FED_HANDLER = CommandHandler.ptb("leavefed", leave_fed, run_async=True)
-PROMOTE_FED_HANDLER = CommandHandler.ptb("fpromote", user_join_fed, run_async=True)
-DEMOTE_FED_HANDLER = CommandHandler.ptb("fdemote", user_demote_fed, run_async=True)
-INFO_FED_HANDLER = CommandHandler.ptb("fedinfo", fed_info, run_async=True)
-BAN_FED_HANDLER = DisableAbleCommandHandler.ptb("fban", fed_ban, run_async=True)
-UN_BAN_FED_HANDLER = CommandHandler.ptb("unfban", unfban, run_async=True)
-FED_BROADCAST_HANDLER = CommandHandler.ptb("fbroadcast", fed_broadcast, run_async=True)
-FED_SET_RULES_HANDLER = CommandHandler.ptb("setfrules", set_frules, run_async=True)
-FED_GET_RULES_HANDLER = CommandHandler.ptb("frules", get_frules, run_async=True)
-FED_CHAT_HANDLER = CommandHandler.ptb("chatfed", fed_chat, run_async=True)
-FED_ADMIN_HANDLER = CommandHandler.ptb("fedadmins", fed_admin, run_async=True)
-FED_USERBAN_HANDLER = CommandHandler.ptb("fbanlist", fed_ban_list, run_async=True)
-FED_NOTIF_HANDLER = CommandHandler.ptb("fednotif", fed_notif, run_async=True)
-FED_CHATLIST_HANDLER = CommandHandler.ptb("fedchats", fed_chats, run_async=True)
-FED_IMPORTBAN_HANDLER = CommandHandler.ptb("importfbans", fed_import_bans, run_async=True)
-FEDSTAT_USER = DisableAbleCommandHandler.ptb(
+NEW_FED_HANDLER = CommandHandler("newfed", new_fed, run_async=True)
+DEL_FED_HANDLER = CommandHandler("delfed", del_fed, run_async=True)
+RENAME_FED = CommandHandler("renamefed", rename_fed, run_async=True)
+JOIN_FED_HANDLER = CommandHandler("joinfed", join_fed, run_async=True)
+LEAVE_FED_HANDLER = CommandHandler("leavefed", leave_fed, run_async=True)
+PROMOTE_FED_HANDLER = CommandHandler("fpromote", user_join_fed, run_async=True)
+DEMOTE_FED_HANDLER = CommandHandler("fdemote", user_demote_fed, run_async=True)
+INFO_FED_HANDLER = CommandHandler("fedinfo", fed_info, run_async=True)
+BAN_FED_HANDLER = DisableAbleCommandHandler("fban", fed_ban, run_async=True)
+UN_BAN_FED_HANDLER = CommandHandler("unfban", unfban, run_async=True)
+FED_BROADCAST_HANDLER = CommandHandler("fbroadcast", fed_broadcast, run_async=True)
+FED_SET_RULES_HANDLER = CommandHandler("setfrules", set_frules, run_async=True)
+FED_GET_RULES_HANDLER = CommandHandler("frules", get_frules, run_async=True)
+FED_CHAT_HANDLER = CommandHandler("chatfed", fed_chat, run_async=True)
+FED_ADMIN_HANDLER = CommandHandler("fedadmins", fed_admin, run_async=True)
+FED_USERBAN_HANDLER = CommandHandler("fbanlist", fed_ban_list, run_async=True)
+FED_NOTIF_HANDLER = CommandHandler("fednotif", fed_notif, run_async=True)
+FED_CHATLIST_HANDLER = CommandHandler("fedchats", fed_chats, run_async=True)
+FED_IMPORTBAN_HANDLER = CommandHandler("importfbans", fed_import_bans, run_async=True)
+FEDSTAT_USER = DisableAbleCommandHandler(
     ["fedstat", "fbanstat"], fed_stat_user, run_async=True
 )
-SET_FED_LOG = CommandHandler.ptb("setfedlog", set_fed_log, run_async=True)
-UNSET_FED_LOG = CommandHandler.ptb("unsetfedlog", unset_fed_log, run_async=True)
-SUBS_FED = CommandHandler.ptb("subfed", subs_feds, run_async=True)
-UNSUBS_FED = CommandHandler.ptb("unsubfed", unsubs_feds, run_async=True)
-MY_SUB_FED = CommandHandler.ptb("fedsubs", get_myfedsubs, run_async=True)
-MY_FEDS_LIST = CommandHandler.ptb("myfeds", get_myfeds_list, run_async=True)
-DELETEBTN_FED_HANDLER = CallbackQueryHandler.ptb(
+SET_FED_LOG = CommandHandler("setfedlog", set_fed_log, run_async=True)
+UNSET_FED_LOG = CommandHandler("unsetfedlog", unset_fed_log, run_async=True)
+SUBS_FED = CommandHandler("subfed", subs_feds, run_async=True)
+UNSUBS_FED = CommandHandler("unsubfed", unsubs_feds, run_async=True)
+MY_SUB_FED = CommandHandler("fedsubs", get_myfedsubs, run_async=True)
+MY_FEDS_LIST = CommandHandler("myfeds", get_myfeds_list, run_async=True)
+DELETEBTN_FED_HANDLER = CallbackQueryHandler(
     del_fed_button, pattern=r"rmfed_", run_async=True
 )
-FED_OWNER_HELP_HANDLER = CommandHandler.ptb("fedownerhelp", fed_owner_help, run_async=True)
-FED_ADMIN_HELP_HANDLER = CommandHandler.ptb("fedadminhelp", fed_admin_help, run_async=True)
-FED_USER_HELP_HANDLER = CommandHandler.ptb("feduserhelp", fed_user_help, run_async=True)
+FED_OWNER_HELP_HANDLER = CommandHandler("fedownerhelp", fed_owner_help, run_async=True)
+FED_ADMIN_HELP_HANDLER = CommandHandler("fedadminhelp", fed_admin_help, run_async=True)
+FED_USER_HELP_HANDLER = CommandHandler("feduserhelp", fed_user_help, run_async=True)
 
 dispatcher.add_handler(NEW_FED_HANDLER)
 dispatcher.add_handler(DEL_FED_HANDLER)

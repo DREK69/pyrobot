@@ -1,10 +1,10 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
-from telegram.ext import CallbackQueryHandler.ptb, Filters
+from telegram.ext import CallbackQueryHandler, Filters
 from telegram.utils.helpers import escape_markdown, mention_markdown
 
 from MerissaRobot import dispatcher
-from MerissaRobot.Handler.ptb.chat_status import user_admin, user_admin_no_reply
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
+from MerissaRobot.Handler.chat_status import user_admin, user_admin_no_reply
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 
 @user_admin
@@ -127,12 +127,12 @@ def end_attendance_cmd(update, context):
         context.chat_data["attendees"].clear()
 
 
-START_ATTENDANCE_CMD = DisableAbleCommandHandler.ptb(
+START_ATTENDANCE_CMD = DisableAbleCommandHandler(
     "attendance", start_attendance, filters=Filters.chat_type.groups
 )
-MARK_ATTENDANCE = CallbackQueryHandler.ptb(mark_attendance, pattern="present")
-END_ATTENDANCE = CallbackQueryHandler.ptb(end_attendance, pattern="end_attendance")
-END_ATTENDANCE_CMD = DisableAbleCommandHandler.ptb(
+MARK_ATTENDANCE = CallbackQueryHandler(mark_attendance, pattern="present")
+END_ATTENDANCE = CallbackQueryHandler(end_attendance, pattern="end_attendance")
+END_ATTENDANCE_CMD = DisableAbleCommandHandler(
     "attendancestop", end_attendance_cmd, filters=Filters.chat_type.groups
 )
 

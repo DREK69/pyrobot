@@ -10,7 +10,7 @@ import requests
 from psutil import boot_time, cpu_percent, disk_usage, virtual_memory
 from telegram import MAX_MESSAGE_LENGTH, MessageEntity, ParseMode, Update, __version__
 from telegram.error import BadRequest
-from telegram.ext import CallbackContext, CommandHandler.ptb
+from telegram.ext import CallbackContext, CommandHandler
 from telegram.utils.helpers import escape_markdown, mention_html
 
 import MerissaRobot.Database.sql.userinfo_sql as sql
@@ -31,9 +31,9 @@ from MerissaRobot.__main__ import STATS, USER_INFO
 from MerissaRobot.Database.sql.afk_sql import is_afk, set_afk
 from MerissaRobot.Database.sql.global_bans_sql import is_user_gbanned
 from MerissaRobot.Database.sql.users_sql import get_user_num_chats
-from MerissaRobot.Handler.ptb.chat_status import sudo_plus
-from MerissaRobot.Handler.ptb.extraction import extract_user
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
+from MerissaRobot.Handler.chat_status import sudo_plus
+from MerissaRobot.Handler.extraction import extract_user
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 
 def no_by_per(totalhp, percentage):
@@ -514,15 +514,15 @@ Examples:
 ❂ /json*:* Get Detailed info about any message.
 """
 
-SET_BIO_HANDLER = DisableAbleCommandHandler.ptb("setbio", set_about_bio, run_async=True)
-GET_BIO_HANDLER = DisableAbleCommandHandler.ptb("bio", about_bio, run_async=True)
+SET_BIO_HANDLER = DisableAbleCommandHandler("setbio", set_about_bio, run_async=True)
+GET_BIO_HANDLER = DisableAbleCommandHandler("bio", about_bio, run_async=True)
 
-STATS_HANDLER = CommandHandler.ptb(["stats", "statistics"], stats, run_async=True)
-ID_HANDLER = DisableAbleCommandHandler.ptb("id", get_id, run_async=True)
-GIFID_HANDLER = DisableAbleCommandHandler.ptb("gifid", gifid, run_async=True)
-INFO_HANDLER = DisableAbleCommandHandler.ptb("info", info, run_async=True)
-SET_ABOUT_HANDLER = DisableAbleCommandHandler.ptb("setme", set_about_me, run_async=True)
-GET_ABOUT_HANDLER = DisableAbleCommandHandler.ptb("me", about_me, run_async=True)
+STATS_HANDLER = CommandHandler(["stats", "statistics"], stats, run_async=True)
+ID_HANDLER = DisableAbleCommandHandler("id", get_id, run_async=True)
+GIFID_HANDLER = DisableAbleCommandHandler("gifid", gifid, run_async=True)
+INFO_HANDLER = DisableAbleCommandHandler("info", info, run_async=True)
+SET_ABOUT_HANDLER = DisableAbleCommandHandler("setme", set_about_me, run_async=True)
+GET_ABOUT_HANDLER = DisableAbleCommandHandler("me", about_me, run_async=True)
 
 dispatcher.add_handler(STATS_HANDLER)
 dispatcher.add_handler(ID_HANDLER)

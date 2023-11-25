@@ -4,7 +4,7 @@ from sqlalchemy import Boolean, Column, String, UnicodeText, distinct, func
 from sqlalchemy.sql.sqltypes import BigInteger
 
 from MerissaRobot.Database.sql import BASE, SESSION
-from MerissaRobot.Handler.ptb.msg_types import Types
+from MerissaRobot.Handler.msg_types import Types
 
 
 class CustomFilters(BASE):

@@ -6,9 +6,9 @@ from telegram.utils.helpers import mention_html
 
 import MerissaRobot.Database.sql.mod_sql as sql
 from MerissaRobot import dispatcher
-from MerissaRobot.Handler.ptb.chat_status import user_admin
-from MerissaRobot.Handler.ptb.extraction import extract_user
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
+from MerissaRobot.Handler.chat_status import user_admin
+from MerissaRobot.Handler.extraction import extract_user
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.log_channel import loggable
 
 
@@ -133,10 +133,10 @@ __help__ = """
 ❂ `/modlist`*:* moderation user list.
 """
 
-ADDMOD = DisableAbleCommandHandler.ptb("addmod", mod, run_async=True)
-RMMOD = DisableAbleCommandHandler.ptb("rmmod", dismod, run_async=True)
-MODLIST = DisableAbleCommandHandler.ptb("modlist", modd, run_async=True)
-MODCHECK = DisableAbleCommandHandler.ptb("modcheck", modr, run_async=True)
+ADDMOD = DisableAbleCommandHandler("addmod", mod, run_async=True)
+RMMOD = DisableAbleCommandHandler("rmmod", dismod, run_async=True)
+MODLIST = DisableAbleCommandHandler("modlist", modd, run_async=True)
+MODCHECK = DisableAbleCommandHandler("modcheck", modr, run_async=True)
 dispatcher.add_handler(ADDMOD)
 dispatcher.add_handler(RMMOD)
 dispatcher.add_handler(MODLIST)

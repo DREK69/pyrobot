@@ -3,19 +3,19 @@ from functools import wraps
 
 from telegram.ext import CallbackContext
 
-from MerissaRobot.Handler.ptb.misc import is_module_loaded
+from MerissaRobot.Handler.misc import is_module_loaded
 
 FILENAME = __name__.rsplit(".", 1)[-1]
 
 if is_module_loaded(FILENAME):
     from telegram import ParseMode, Update
     from telegram.error import BadRequest, Unauthorized
-    from telegram.ext import CommandHandler.ptb, JobQueue
+    from telegram.ext import CommandHandler, JobQueue
     from telegram.utils.helpers import escape_markdown
 
     from MerissaRobot import EVENT_LOGS, LOGGER, dispatcher
     from MerissaRobot.Database.sql import log_channel_sql as sql
-    from MerissaRobot.Handler.ptb.chat_status import user_admin
+    from MerissaRobot.Handler.chat_status import user_admin
 
     def loggable(func):
         @wraps(func)
@@ -191,9 +191,9 @@ if is_module_loaded(FILENAME):
 
     __mod_name__ = "Log-Channel 📋"
 
-    LOG_HANDLER = CommandHandler.ptb("logchannel", logging, run_async=True)
-    SET_LOG_HANDLER = CommandHandler.ptb("setlog", setlog, run_async=True)
-    UNSET_LOG_HANDLER = CommandHandler.ptb("unsetlog", unsetlog, run_async=True)
+    LOG_HANDLER = CommandHandler("logchannel", logging, run_async=True)
+    SET_LOG_HANDLER = CommandHandler("setlog", setlog, run_async=True)
+    UNSET_LOG_HANDLER = CommandHandler("unsetlog", unsetlog, run_async=True)
 
     dispatcher.add_handler(LOG_HANDLER)
     dispatcher.add_handler(SET_LOG_HANDLER)

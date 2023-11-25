@@ -2,14 +2,14 @@ import html
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import BadRequest
-from telegram.ext import CallbackContext, CallbackQueryHandler.ptb
+from telegram.ext import CallbackContext, CallbackQueryHandler
 from telegram.utils.helpers import mention_html
 
 import MerissaRobot.Database.sql.approve_sql as sql
 from MerissaRobot import DRAGONS, dispatcher
-from MerissaRobot.Handler.ptb.chat_status import user_admin
-from MerissaRobot.Handler.ptb.extraction import extract_user
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
+from MerissaRobot.Handler.chat_status import user_admin
+from MerissaRobot.Handler.extraction import extract_user
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.log_channel import loggable
 
 
@@ -194,12 +194,12 @@ def unapproveall_btn(update: Update, context: CallbackContext):
             query.answer("You need to be admin to do this.")
 
 
-APPROVE = DisableAbleCommandHandler.ptb("approve", approve, run_async=True)
-DISAPPROVE = DisableAbleCommandHandler.ptb("unapprove", disapprove, run_async=True)
-APPROVED = DisableAbleCommandHandler.ptb("approved", approved, run_async=True)
-APPROVAL = DisableAbleCommandHandler.ptb("approval", approval, run_async=True)
-UNAPPROVEALL = DisableAbleCommandHandler.ptb("unapproveall", unapproveall, run_async=True)
-UNAPPROVEALL_BTN = CallbackQueryHandler.ptb(
+APPROVE = DisableAbleCommandHandler("approve", approve, run_async=True)
+DISAPPROVE = DisableAbleCommandHandler("unapprove", disapprove, run_async=True)
+APPROVED = DisableAbleCommandHandler("approved", approved, run_async=True)
+APPROVAL = DisableAbleCommandHandler("approval", approval, run_async=True)
+UNAPPROVEALL = DisableAbleCommandHandler("unapproveall", unapproveall, run_async=True)
+UNAPPROVEALL_BTN = CallbackQueryHandler(
     unapproveall_btn, pattern=r"unapproveall_.*", run_async=True
 )
 

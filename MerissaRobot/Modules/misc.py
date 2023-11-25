@@ -11,12 +11,12 @@ from telegram import (
     Update,
 )
 from telegram.error import BadRequest
-from telegram.ext import CallbackContext, CommandHandler.ptb, Filters
+from telegram.ext import CallbackContext, CommandHandler, Filters
 
 from MerissaRobot import WALL_API, dispatcher
-from MerissaRobot.Handler.ptb.alternate import send_action
-from MerissaRobot.Handler.ptb.chat_status import user_admin
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
+from MerissaRobot.Handler.alternate import send_action
+from MerissaRobot.Handler.chat_status import user_admin
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 MARKDOWN_HELP = """
 Markdown is a very powerful formatting tool supported by telegram. Merissa has some enhancements, to make sure that \
@@ -192,12 +192,12 @@ __help__ = """
 
 __mod_name__ = "Extras 🥴"
 
-ECHO_HANDLER = DisableAbleCommandHandler.ptb(
+ECHO_HANDLER = DisableAbleCommandHandler(
     "echo", echo, filters=Filters.chat_type.groups, run_async=True
 )
-MD_HELP_HANDLER = CommandHandler.ptb("markdownhelp", markdown_help, run_async=True)
-WIKI_HANDLER = DisableAbleCommandHandler.ptb("wiki", wiki, run_async=True)
-WALLPAPER_HANDLER = DisableAbleCommandHandler.ptb("wall", wall, run_async=True)
+MD_HELP_HANDLER = CommandHandler("markdownhelp", markdown_help, run_async=True)
+WIKI_HANDLER = DisableAbleCommandHandler("wiki", wiki, run_async=True)
+WALLPAPER_HANDLER = DisableAbleCommandHandler("wall", wall, run_async=True)
 
 dispatcher.add_handler(ECHO_HANDLER)
 dispatcher.add_handler(MD_HELP_HANDLER)

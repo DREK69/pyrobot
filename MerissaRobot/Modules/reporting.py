@@ -4,16 +4,16 @@ from telegram import Chat, InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
 from telegram.error import BadRequest, Unauthorized
 from telegram.ext import (
     CallbackContext,
-    CallbackQueryHandler.ptb,
-    CommandHandler.ptb,
+    CallbackQueryHandler,
+    CommandHandler,
     Filters,
-    MessageHandler.ptb,
+    MessageHandler,
 )
 from telegram.utils.helpers import mention_html
 
 from MerissaRobot import DRAGONS, LOGGER, TIGERS, WOLVES, dispatcher
 from MerissaRobot.Database.sql import reporting_sql as sql
-from MerissaRobot.Handler.ptb.chat_status import user_admin, user_not_admin
+from MerissaRobot.Handler.chat_status import user_admin, user_not_admin
 from MerissaRobot.Modules.log_channel import loggable
 
 REPORT_GROUP = 12
@@ -275,14 +275,14 @@ __help__ = """
 ❂ If in group, toggles that groups's status.
 """
 
-SETTING_HANDLER = CommandHandler.ptb("reports", report_setting, run_async=True)
-REPORT_HANDLER = CommandHandler.ptb(
+SETTING_HANDLER = CommandHandler("reports", report_setting, run_async=True)
+REPORT_HANDLER = CommandHandler(
     "report", report, filters=Filters.chat_type.groups, run_async=True
 )
-ADMIN_REPORT_HANDLER = MessageHandler.ptb(
+ADMIN_REPORT_HANDLER = MessageHandler(
     Filters.regex(r"(?i)@admin(s)?"), report, run_async=True
 )
-REPORT_BUTTON_USER_HANDLER = CallbackQueryHandler.ptb(
+REPORT_BUTTON_USER_HANDLER = CallbackQueryHandler(
     buttons, pattern=r"report_", run_async=True
 )
 

@@ -3,19 +3,19 @@ import re
 
 from telegram import ChatPermissions, ParseMode
 from telegram.error import BadRequest
-from telegram.ext import CommandHandler.ptb, Filters, MessageHandler.ptb
+from telegram.ext import CommandHandler, Filters, MessageHandler
 from telegram.utils.helpers import mention_html
 
 import MerissaRobot.Database.sql.blacklist_sql as sql
 from MerissaRobot import LOGGER, dispatcher
 from MerissaRobot.Database.sql.approve_sql import is_approved
-from MerissaRobot.Handler.ptb.alternate import send_message, typing_action
-from MerissaRobot.Handler.ptb.chat_status import user_admin, user_not_admin
-from MerissaRobot.Handler.ptb.extraction import extract_text
-from MerissaRobot.Handler.ptb.misc import split_message
-from MerissaRobot.Handler.ptb.string_handling import extract_time
+from MerissaRobot.Handler.alternate import send_message, typing_action
+from MerissaRobot.Handler.chat_status import user_admin, user_not_admin
+from MerissaRobot.Handler.extraction import extract_text
+from MerissaRobot.Handler.misc import split_message
+from MerissaRobot.Handler.string_handling import extract_time
 from MerissaRobot.Modules.connection import connected
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.log_channel import loggable
 from MerissaRobot.Modules.warns import warn
 
@@ -477,19 +477,19 @@ Note:
 ❂ <sticker link> can be `https://t.me/addstickers/<sticker>` or just `<sticker>` or reply to the sticker message
 
 """
-BLACKLIST_HANDLER = DisableAbleCommandHandler.ptb(
+BLACKLIST_HANDLER = DisableAbleCommandHandler(
     "blacklist",
     blacklist,
     pass_args=True,
     admin_ok=True,
     run_async=True,
 )
-ADD_BLACKLIST_HANDLER = CommandHandler.ptb("addblacklist", add_blacklist, run_async=True)
-UNBLACKLIST_HANDLER = CommandHandler.ptb("unblacklist", unblacklist, run_async=True)
-BLACKLISTMODE_HANDLER = CommandHandler.ptb(
+ADD_BLACKLIST_HANDLER = CommandHandler("addblacklist", add_blacklist, run_async=True)
+UNBLACKLIST_HANDLER = CommandHandler("unblacklist", unblacklist, run_async=True)
+BLACKLISTMODE_HANDLER = CommandHandler(
     "blacklistmode", blacklist_mode, pass_args=True, run_async=True
 )
-BLACKLIST_DEL_HANDLER = MessageHandler.ptb(
+BLACKLIST_DEL_HANDLER = MessageHandler(
     (Filters.text | Filters.command | Filters.sticker | Filters.photo)
     & Filters.chat_type.groups,
     del_blacklist,

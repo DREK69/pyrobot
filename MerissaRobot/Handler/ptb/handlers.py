@@ -6,7 +6,7 @@ from pyrate_limiter import (
     RequestRate,
 )
 from telegram import Update
-from telegram.ext import CommandHandler.ptb, Filters, MessageHandler.ptb, RegexHandler.ptb
+from telegram.ext import CommandHandler, Filters, MessageHandler, RegexHandler
 
 import MerissaRobot.Database.sql.blacklistusers_sql as sql
 from MerissaRobot import ALLOW_EXCL, DEMONS, DEV_USERS, DRAGONS, TIGERS, WOLVES
@@ -58,10 +58,10 @@ class AntiSpam:
 
 
 SpamChecker = AntiSpam()
-MessageHandler.ptbChecker = AntiSpam()
+MessageHandlerChecker = AntiSpam()
 
 
-class CustomCommandHandler.ptb(CommandHandler.ptb):
+class CustomCommandHandler(CommandHandler):
     def __init__(self, command, callback, admin_ok=False, allow_edit=False, **kwargs):
         super().__init__(command, callback, **kwargs)
 
@@ -120,12 +120,12 @@ class CustomCommandHandler.ptb(CommandHandler.ptb):
                 context.update(check_result[1])
 
 
-class CustomRegexHandler.ptb(RegexHandler.ptb):
+class CustomRegexHandler(RegexHandler):
     def __init__(self, pattern, callback, friendly="", **kwargs):
         super().__init__(pattern, callback, **kwargs)
 
 
-class CustomMessageHandler.ptb(MessageHandler.ptb):
+class CustomMessageHandler(MessageHandler):
     def __init__(self, filters, callback, friendly="", allow_edit=False, **kwargs):
         super().__init__(filters, callback, **kwargs)
         if allow_edit is False:

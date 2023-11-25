@@ -15,10 +15,10 @@ from telegram import (
 from telegram.error import BadRequest
 from telegram.ext import (
     CallbackContext,
-    CallbackQueryHandler.ptb,
-    CommandHandler.ptb,
+    CallbackQueryHandler,
+    CommandHandler,
     Filters,
-    MessageHandler.ptb,
+    MessageHandler,
 )
 from telegram.utils.helpers import escape_markdown, mention_html, mention_markdown
 
@@ -35,11 +35,11 @@ from MerissaRobot import (
     sw,
 )
 from MerissaRobot.Database.sql.global_bans_sql import is_user_gbanned
-from MerissaRobot.Handler.ptb.chat_status import is_user_ban_protected, user_admin
-from MerissaRobot.Handler.ptb.handlers import MessageHandler.ptbChecker
-from MerissaRobot.Handler.ptb.misc import build_keyboard, revert_buttons
-from MerissaRobot.Handler.ptb.msg_types import get_welcome_type
-from MerissaRobot.Handler.ptb.string_handling import (
+from MerissaRobot.Handler.chat_status import is_user_ban_protected, user_admin
+from MerissaRobot.Handler.handlers import MessageHandlerChecker
+from MerissaRobot.Handler.misc import build_keyboard, revert_buttons
+from MerissaRobot.Handler.msg_types import get_welcome_type
+from MerissaRobot.Handler.string_handling import (
     escape_invalid_curly_brackets,
     markdown_parser,
 )
@@ -278,7 +278,7 @@ def new_member(update: Update, context: CallbackContext):  # sourcery no-metrics
                 new_mem.first_name or "PersonWithNoName"
             )  # edge case of empty name - occurs for some bugs.
 
-            if MessageHandler.ptbChecker.check_user(update.effective_user.id):
+            if MessageHandlerChecker.check_user(update.effective_user.id):
                 return
 
             if cust_welcome:
@@ -1305,45 +1305,45 @@ __helpbtns__ = [
     ],
 ]
 
-NEW_MEM_HANDLER = MessageHandler.ptb(
+NEW_MEM_HANDLER = MessageHandler(
     Filters.status_update.new_chat_members, new_member, run_async=True
 )
-LEFT_MEM_HANDLER = MessageHandler.ptb(
+LEFT_MEM_HANDLER = MessageHandler(
     Filters.status_update.left_chat_member, left_member, run_async=True
 )
-WELC_PREF_HANDLER = CommandHandler.ptb(
+WELC_PREF_HANDLER = CommandHandler(
     "welcome", welcome, filters=Filters.chat_type.groups, run_async=True
 )
-GOODBYE_PREF_HANDLER = CommandHandler.ptb(
+GOODBYE_PREF_HANDLER = CommandHandler(
     "goodbye", goodbye, filters=Filters.chat_type.groups, run_async=True
 )
-SET_WELCOME = CommandHandler.ptb(
+SET_WELCOME = CommandHandler(
     "setwelcome", set_welcome, filters=Filters.chat_type.groups, run_async=True
 )
-SET_GOODBYE = CommandHandler.ptb(
+SET_GOODBYE = CommandHandler(
     "setgoodbye", set_goodbye, filters=Filters.chat_type.groups, run_async=True
 )
-RESET_WELCOME = CommandHandler.ptb(
+RESET_WELCOME = CommandHandler(
     "resetwelcome", reset_welcome, filters=Filters.chat_type.groups, run_async=True
 )
-RESET_GOODBYE = CommandHandler.ptb(
+RESET_GOODBYE = CommandHandler(
     "resetgoodbye", reset_goodbye, filters=Filters.chat_type.groups, run_async=True
 )
-WELCOMEMUTE_HANDLER = CommandHandler.ptb(
+WELCOMEMUTE_HANDLER = CommandHandler(
     "welcomemute", welcomemute, filters=Filters.chat_type.groups, run_async=True
 )
-CLEAN_SERVICE_HANDLER = CommandHandler.ptb(
+CLEAN_SERVICE_HANDLER = CommandHandler(
     "cleanservice", cleanservice, filters=Filters.chat_type.groups, run_async=True
 )
-CLEAN_WELCOME = CommandHandler.ptb(
+CLEAN_WELCOME = CommandHandler(
     "cleanwelcome", clean_welcome, filters=Filters.chat_type.groups, run_async=True
 )
-WELCOME_HELP = CommandHandler.ptb("welcomehelp", welcome_help, run_async=True)
-WELCOME_MUTE_HELP = CommandHandler.ptb("welcomemutehelp", welcome_mute_help, run_async=True)
-BUTTON_VERIFY_HANDLER = CallbackQueryHandler.ptb(
+WELCOME_HELP = CommandHandler("welcomehelp", welcome_help, run_async=True)
+WELCOME_MUTE_HELP = CommandHandler("welcomemutehelp", welcome_mute_help, run_async=True)
+BUTTON_VERIFY_HANDLER = CallbackQueryHandler(
     user_button, pattern=r"user_join_", run_async=True
 )
-CAPTCHA_BUTTON_VERIFY_HANDLER = CallbackQueryHandler.ptb(
+CAPTCHA_BUTTON_VERIFY_HANDLER = CallbackQueryHandler(
     user_captcha_button,
     pattern=r"user_captchajoin_\([\d\-]+,\d+\)_\(\d{4}\)",
     run_async=True,

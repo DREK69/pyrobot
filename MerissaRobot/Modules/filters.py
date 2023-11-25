@@ -6,31 +6,31 @@ import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
 from telegram.error import BadRequest
 from telegram.ext import (
-    CallbackQueryHandler.ptb,
-    CommandHandler.ptb,
-    DispatcherHandler.ptbStop,
+    CallbackQueryHandler,
+    CommandHandler,
+    DispatcherHandlerStop,
     Filters,
-    MessageHandler.ptb,
+    MessageHandler,
 )
 from telegram.utils.helpers import escape_markdown, mention_html
 
 from MerissaRobot import DRAGONS, LOGGER, dispatcher
 from MerissaRobot.Database.sql import cust_filters_sql as sql
-from MerissaRobot.Handler.ptb.alternate import send_message, typing_action
-from MerissaRobot.Handler.ptb.chat_status import user_admin
-from MerissaRobot.Handler.ptb.extraction import extract_text
-from MerissaRobot.Handler.ptb.filters import CustomFilters
-from MerissaRobot.Handler.ptb.handlers import MessageHandler.ptbChecker
-from MerissaRobot.Handler.ptb.misc import build_keyboard_parser
-from MerissaRobot.Handler.ptb.msg_types import get_filter_type
-from MerissaRobot.Handler.ptb.string_handling import (
+from MerissaRobot.Handler.alternate import send_message, typing_action
+from MerissaRobot.Handler.chat_status import user_admin
+from MerissaRobot.Handler.extraction import extract_text
+from MerissaRobot.Handler.filters import CustomFilters
+from MerissaRobot.Handler.handlers import MessageHandlerChecker
+from MerissaRobot.Handler.misc import build_keyboard_parser
+from MerissaRobot.Handler.msg_types import get_filter_type
+from MerissaRobot.Handler.string_handling import (
     button_markdown_parser,
     escape_invalid_curly_brackets,
     markdown_to_html,
     split_quotes,
 )
 from MerissaRobot.Modules.connection import connected
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 HANDLER_GROUP = 10
 
@@ -217,7 +217,7 @@ def filters(update, context):
             "Saved filter '{}' in *{}*!".format(keyword, chat_name),
             parse_mode=telegram.ParseMode.MARKDOWN,
         )
-    raise DispatcherHandler.ptbStop
+    raise DispatcherHandlerStop
 
 
 # NOT ASYNC BECAUSE DISPATCHER HANDLER RAISED
@@ -257,7 +257,7 @@ def stop_filter(update, context):
                 "Okay, I'll stop replying to that filter in *{}*.".format(chat_name),
                 parse_mode=telegram.ParseMode.MARKDOWN,
             )
-            raise DispatcherHandler.ptbStop
+            raise DispatcherHandlerStop
 
     send_message(
         update.effective_message,
@@ -279,7 +279,7 @@ def reply_filter(update, context):
     for keyword in chat_filters:
         pattern = r"( |^|[^\w])" + re.escape(keyword) + r"( |$|[^\w])"
         if re.search(pattern, to_match, flags=re.IGNORECASE):
-            if MessageHandler.ptbChecker.check_user(update.effective_user.id):
+            if MessageHandlerChecker.check_user(update.effective_user.id):
                 return
             filt = sql.get_filter(chat.id, keyword)
             if filt.reply == "there is should be a new reply":
@@ -632,18 +632,18 @@ Check /markdownhelp to know more!
 
 __mod_name__ = "Filters 📝"
 
-FILTER_HANDLER = CommandHandler.ptb("filter", filters)
-STOP_HANDLER = CommandHandler.ptb("stop", stop_filter)
-RMALLFILTER_HANDLER = CommandHandler.ptb(
+FILTER_HANDLER = CommandHandler("filter", filters)
+STOP_HANDLER = CommandHandler("stop", stop_filter)
+RMALLFILTER_HANDLER = CommandHandler(
     "removeallfilters", rmall_filters, filters=Filters.chat_type.groups, run_async=True
 )
-RMALLFILTER_CALLBACK = CallbackQueryHandler.ptb(
+RMALLFILTER_CALLBACK = CallbackQueryHandler(
     rmall_callback, pattern=r"filters_.*", run_async=True
 )
-LIST_HANDLER = DisableAbleCommandHandler.ptb(
+LIST_HANDLER = DisableAbleCommandHandler(
     "filters", list_handlers, admin_ok=True, run_async=True
 )
-CUST_FILTER_HANDLER = MessageHandler.ptb(
+CUST_FILTER_HANDLER = MessageHandler(
     CustomFilters.has_text & ~Filters.update.edited_message,
     reply_filter,
     run_async=True,

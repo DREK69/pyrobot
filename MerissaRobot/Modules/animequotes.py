@@ -3,10 +3,10 @@ import random
 
 import requests
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
-from telegram.ext import CallbackContext, CallbackQueryHandler.ptb
+from telegram.ext import CallbackContext, CallbackQueryHandler
 
 from MerissaRobot import dispatcher
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 
 def anime_quote():
@@ -128,13 +128,13 @@ QUOTES_IMG = (
     "https://i.imgur.com/6lG4tsO.jpg",
 )
 
-ANIMEQUOTES_HANDLER = DisableAbleCommandHandler.ptb(
+ANIMEQUOTES_HANDLER = DisableAbleCommandHandler(
     "animequotes", animequotes, run_async=True
 )
-QUOTES_HANDLER = DisableAbleCommandHandler.ptb("quote", quotes, run_async=True)
+QUOTES_HANDLER = DisableAbleCommandHandler("quote", quotes, run_async=True)
 
-CHANGE_QUOTE = CallbackQueryHandler.ptb(change_quote, pattern=r"change_.*")
-QUOTE_CHANGE = CallbackQueryHandler.ptb(change_quote, pattern=r"quote_.*")
+CHANGE_QUOTE = CallbackQueryHandler(change_quote, pattern=r"change_.*")
+QUOTE_CHANGE = CallbackQueryHandler(change_quote, pattern=r"quote_.*")
 
 dispatcher.add_handler(CHANGE_QUOTE)
 dispatcher.add_handler(QUOTE_CHANGE)

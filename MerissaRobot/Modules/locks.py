@@ -4,14 +4,14 @@ import html
 from alphabet_detector import AlphabetDetector
 from telegram import ChatPermissions, MessageEntity, ParseMode, TelegramError
 from telegram.error import BadRequest
-from telegram.ext import CommandHandler.ptb, Filters, MessageHandler.ptb
+from telegram.ext import CommandHandler, Filters, MessageHandler
 from telegram.utils.helpers import mention_html
 
 import MerissaRobot.Database.sql.locks_sql as sql
 from MerissaRobot import LOGGER, dispatcher
 from MerissaRobot.Database.sql.approve_sql import is_approved
-from MerissaRobot.Handler.ptb.alternate import send_message, typing_action
-from MerissaRobot.Handler.ptb.chat_status import (
+from MerissaRobot.Handler.alternate import send_message, typing_action
+from MerissaRobot.Handler.chat_status import (
     can_delete,
     is_bot_admin,
     is_user_admin,
@@ -19,7 +19,7 @@ from MerissaRobot.Handler.ptb.chat_status import (
     user_not_admin,
 )
 from MerissaRobot.Modules.connection import connected
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.log_channel import loggable
 
 ad = AlphabetDetector()
@@ -560,14 +560,14 @@ Locking bots will stop non-admins from adding bots to the chat.
 
 __mod_name__ = "Locks 🔐"
 
-LOCKTYPES_HANDLER = DisableAbleCommandHandler.ptb("locktypes", locktypes, run_async=True)
-LOCK_HANDLER = CommandHandler.ptb(
+LOCKTYPES_HANDLER = DisableAbleCommandHandler("locktypes", locktypes, run_async=True)
+LOCK_HANDLER = CommandHandler(
     "lock", lock, pass_args=True, run_async=True
 )  # , filters=Filters.chat_type.groups)
-UNLOCK_HANDLER = CommandHandler.ptb(
+UNLOCK_HANDLER = CommandHandler(
     "unlock", unlock, pass_args=True, run_async=True
 )  # , filters=Filters.chat_type.groups)
-LOCKED_HANDLER = CommandHandler.ptb(
+LOCKED_HANDLER = CommandHandler(
     "locks", list_locks, run_async=True
 )  # , filters=Filters.chat_type.groups)
 
@@ -577,7 +577,7 @@ dispatcher.add_handler(LOCKTYPES_HANDLER)
 dispatcher.add_handler(LOCKED_HANDLER)
 
 dispatcher.add_handler(
-    MessageHandler.ptb(
+    MessageHandler(
         Filters.all & Filters.chat_type.groups, del_lockables, run_async=True
     ),
     PERM_GROUP,

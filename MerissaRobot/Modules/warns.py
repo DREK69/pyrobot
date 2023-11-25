@@ -16,33 +16,33 @@ from telegram import (
 from telegram.error import BadRequest
 from telegram.ext import (
     CallbackContext,
-    CallbackQueryHandler.ptb,
-    CommandHandler.ptb,
-    DispatcherHandler.ptbStop,
+    CallbackQueryHandler,
+    CommandHandler,
+    DispatcherHandlerStop,
     Filters,
-    MessageHandler.ptb,
+    MessageHandler,
 )
 from telegram.utils.helpers import mention_html
 
 from MerissaRobot import TIGERS, WOLVES, dispatcher
 from MerissaRobot.Database.sql import warns_sql as sql
 from MerissaRobot.Database.sql.approve_sql import is_approved
-from MerissaRobot.Handler.ptb.chat_status import (
+from MerissaRobot.Handler.chat_status import (
     bot_admin,
     can_restrict,
     is_user_admin,
     user_admin,
     user_admin_no_reply,
 )
-from MerissaRobot.Handler.ptb.extraction import (
+from MerissaRobot.Handler.extraction import (
     extract_text,
     extract_user,
     extract_user_and_text,
 )
-from MerissaRobot.Handler.ptb.filters import CustomFilters
-from MerissaRobot.Handler.ptb.misc import split_message
-from MerissaRobot.Handler.ptb.string_handling import split_quotes
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
+from MerissaRobot.Handler.filters import CustomFilters
+from MerissaRobot.Handler.misc import split_message
+from MerissaRobot.Handler.string_handling import split_quotes
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.log_channel import loggable
 
 WARN_HANDLER_GROUP = 9
@@ -299,7 +299,7 @@ def add_warn_filter(update: Update, context: CallbackContext):
     sql.add_warn_filter(chat.id, keyword, content)
 
     update.effective_message.reply_text(f"Warn handler added for '{keyword}'!")
-    raise DispatcherHandler.ptbStop
+    raise DispatcherHandlerStop
 
 
 @user_admin
@@ -332,7 +332,7 @@ def remove_warn_filter(update: Update, context: CallbackContext):
         if filt == to_remove:
             sql.remove_warn_filter(chat.id, to_remove)
             msg.reply_text("Okay, I'll stop warning people for that.")
-            raise DispatcherHandler.ptbStop
+            raise DispatcherHandlerStop
 
     msg.reply_text(
         "That's not a current warning filter - run /warnlist for all active warning filters."
@@ -505,44 +505,44 @@ __help__ = """
 
 __mod_name__ = "Warning ⚠"
 
-WARN_HANDLER = CommandHandler.ptb(
+WARN_HANDLER = CommandHandler(
     ["warn", "dwarn"], warn_user, filters=Filters.chat_type.groups, run_async=True
 )
-RESET_WARN_HANDLER = CommandHandler.ptb(
+RESET_WARN_HANDLER = CommandHandler(
     ["resetwarn", "resetwarns"],
     reset_warns,
     filters=Filters.chat_type.groups,
     run_async=True,
 )
-CALLBACK_QUERY_HANDLER = CallbackQueryHandler.ptb(
+CALLBACK_QUERY_HANDLER = CallbackQueryHandler(
     button, pattern=r"rm_warn", run_async=True
 )
-MYWARNS_HANDLER = DisableAbleCommandHandler.ptb(
+MYWARNS_HANDLER = DisableAbleCommandHandler(
     "warns", warns, filters=Filters.chat_type.groups, run_async=True
 )
-ADD_WARN_HANDLER = CommandHandler.ptb(
+ADD_WARN_HANDLER = CommandHandler(
     "addwarn", add_warn_filter, filters=Filters.chat_type.groups, run_async=True
 )
-RM_WARN_HANDLER = CommandHandler.ptb(
+RM_WARN_HANDLER = CommandHandler(
     ["nowarn", "stopwarn"],
     remove_warn_filter,
     filters=Filters.chat_type.groups,
     run_async=True,
 )
-LIST_WARN_HANDLER = DisableAbleCommandHandler.ptb(
+LIST_WARN_HANDLER = DisableAbleCommandHandler(
     ["warnlist", "warnfilters"],
     list_warn_filters,
     filters=Filters.chat_type.groups,
     admin_ok=True,
     run_async=True,
 )
-WARN_FILTER_HANDLER = MessageHandler.ptb(
+WARN_FILTER_HANDLER = MessageHandler(
     CustomFilters.has_text & Filters.chat_type.groups, reply_filter, run_async=True
 )
-WARN_LIMIT_HANDLER = CommandHandler.ptb(
+WARN_LIMIT_HANDLER = CommandHandler(
     "warnlimit", set_warn_limit, filters=Filters.chat_type.groups, run_async=True
 )
-WARN_STRENGTH_HANDLER = CommandHandler.ptb(
+WARN_STRENGTH_HANDLER = CommandHandler(
     "strongwarn", set_warn_strength, filters=Filters.chat_type.groups, run_async=True
 )
 

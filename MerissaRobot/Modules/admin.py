@@ -3,13 +3,13 @@ import os
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import BadRequest, Unauthorized
-from telegram.ext import CallbackContext, CommandHandler.ptb, Filters
+from telegram.ext import CallbackContext, CommandHandler, Filters
 from telegram.utils.helpers import mention_html
 
 from MerissaRobot import DRAGONS, SUPPORT_CHAT, dispatcher
-from MerissaRobot.Handler.ptb.admin_rights import user_can_changeinfo
-from MerissaRobot.Handler.ptb.alternate import send_message
-from MerissaRobot.Handler.ptb.chat_status import (
+from MerissaRobot.Handler.admin_rights import user_can_changeinfo
+from MerissaRobot.Handler.alternate import send_message
+from MerissaRobot.Handler.chat_status import (
     ADMIN_CACHE,
     bot_admin,
     can_pin,
@@ -17,8 +17,8 @@ from MerissaRobot.Handler.ptb.chat_status import (
     connection_status,
     user_admin,
 )
-from MerissaRobot.Handler.ptb.extraction import extract_user, extract_user_and_text
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
+from MerissaRobot.Handler.extraction import extract_user, extract_user_and_text
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.log_channel import loggable
 
 
@@ -982,48 +982,48 @@ We Upgrade Merissa Robot everyday to simplifie use of telegram and give a better
 Click on below buttons and check amazing Admin commands for Users.
 """
 
-SET_DESC_HANDLER = CommandHandler.ptb(
+SET_DESC_HANDLER = CommandHandler(
     "setdesc", set_desc, filters=Filters.chat_type.groups, run_async=True
 )
-SET_STICKER_HANDLER = CommandHandler.ptb(
+SET_STICKER_HANDLER = CommandHandler(
     "setsticker", set_sticker, filters=Filters.chat_type.groups, run_async=True
 )
-SETCHATPIC_HANDLER = CommandHandler.ptb(
+SETCHATPIC_HANDLER = CommandHandler(
     "setgpic", setchatpic, filters=Filters.chat_type.groups, run_async=True
 )
-RMCHATPIC_HANDLER = CommandHandler.ptb(
+RMCHATPIC_HANDLER = CommandHandler(
     "delgpic", rmchatpic, filters=Filters.chat_type.groups, run_async=True
 )
-SETCHAT_TITLE_HANDLER = CommandHandler.ptb(
+SETCHAT_TITLE_HANDLER = CommandHandler(
     "setgtitle", setchat_title, filters=Filters.chat_type.groups, run_async=True
 )
 
-ADMINLIST_HANDLER = DisableAbleCommandHandler.ptb("admins", adminlist, run_async=True)
-BUG_HANDLER = DisableAbleCommandHandler.ptb("bug", bug_reporting, run_async=True)
+ADMINLIST_HANDLER = DisableAbleCommandHandler("admins", adminlist, run_async=True)
+BUG_HANDLER = DisableAbleCommandHandler("bug", bug_reporting, run_async=True)
 
-PIN_HANDLER = CommandHandler.ptb(
+PIN_HANDLER = CommandHandler(
     "pin", pin, filters=Filters.chat_type.groups, run_async=True
 )
-UNPIN_HANDLER = CommandHandler.ptb(
+UNPIN_HANDLER = CommandHandler(
     "unpin", unpin, filters=Filters.chat_type.groups, run_async=True
 )
-PINNED_HANDLER = CommandHandler.ptb(
+PINNED_HANDLER = CommandHandler(
     "pinned", pinned, filters=Filters.chat_type.groups, run_async=True
 )
 
-INVITE_HANDLER = DisableAbleCommandHandler.ptb("invitelink", invite, run_async=True)
+INVITE_HANDLER = DisableAbleCommandHandler("invitelink", invite, run_async=True)
 
-PROMOTE_HANDLER = DisableAbleCommandHandler.ptb("promote", promote, run_async=True)
-FULLPROMOTE_HANDLER = DisableAbleCommandHandler.ptb(
+PROMOTE_HANDLER = DisableAbleCommandHandler("promote", promote, run_async=True)
+FULLPROMOTE_HANDLER = DisableAbleCommandHandler(
     "fullpromote", fullpromote, run_async=True
 )
-LOW_PROMOTE_HANDLER = DisableAbleCommandHandler.ptb(
+LOW_PROMOTE_HANDLER = DisableAbleCommandHandler(
     "lowpromote", lowpromote, run_async=True
 )
-DEMOTE_HANDLER = DisableAbleCommandHandler.ptb("demote", demote, run_async=True)
+DEMOTE_HANDLER = DisableAbleCommandHandler("demote", demote, run_async=True)
 
-SET_TITLE_HANDLER = CommandHandler.ptb("title", set_title, run_async=True)
-ADMIN_REFRESH_HANDLER = CommandHandler.ptb(
+SET_TITLE_HANDLER = CommandHandler("title", set_title, run_async=True)
+ADMIN_REFRESH_HANDLER = CommandHandler(
     "admincache", refresh_admin, filters=Filters.chat_type.groups, run_async=True
 )
 

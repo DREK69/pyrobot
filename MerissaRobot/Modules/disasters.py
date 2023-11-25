@@ -4,7 +4,7 @@ import os
 from typing import Optional
 
 from telegram import ParseMode, TelegramError, Update
-from telegram.ext import CallbackContext, CommandHandler.ptb
+from telegram.ext import CallbackContext, CommandHandler
 from telegram.utils.helpers import mention_html
 
 from MerissaRobot import (
@@ -16,8 +16,8 @@ from MerissaRobot import (
     WOLVES,
     dispatcher,
 )
-from MerissaRobot.Handler.ptb.chat_status import dev_plus, sudo_plus, whitelist_plus
-from MerissaRobot.Handler.ptb.extraction import extract_user
+from MerissaRobot.Handler.chat_status import dev_plus, sudo_plus, whitelist_plus
+from MerissaRobot.Handler.extraction import extract_user
 from MerissaRobot.Modules.log_channel import gloggable
 
 ELEVATED_USERS_FILE = os.path.join(os.getcwd(), "MerissaRobot.Handler.pyro/users.json")
@@ -533,33 +533,33 @@ def devlist(update: Update, context: CallbackContext):
     m.edit_text(reply, parse_mode=ParseMode.HTML)
 
 
-SUDO_HANDLER = CommandHandler.ptb(("addsudo", "addemperor"), addsudo, run_async=True)
-SUPPORT_HANDLER = CommandHandler.ptb(
+SUDO_HANDLER = CommandHandler(("addsudo", "addemperor"), addsudo, run_async=True)
+SUPPORT_HANDLER = CommandHandler(
     ("addsupport", "addcaptain"), addsupport, run_async=True
 )
-TIGER_HANDLER = CommandHandler.ptb(("addsoldier"), addtiger, run_async=True)
-WHITELIST_HANDLER = CommandHandler.ptb(
+TIGER_HANDLER = CommandHandler(("addsoldier"), addtiger, run_async=True)
+WHITELIST_HANDLER = CommandHandler(
     ("addwhitelist", "addtrader"), addwhitelist, run_async=True
 )
-UNSUDO_HANDLER = CommandHandler.ptb(
+UNSUDO_HANDLER = CommandHandler(
     ("removesudo", "removeemperor"), removesudo, run_async=True
 )
-UNSUPPORT_HANDLER = CommandHandler.ptb(
+UNSUPPORT_HANDLER = CommandHandler(
     ("removesupport", "removesoldier"), removesupport, run_async=True
 )
-UNTIGER_HANDLER = CommandHandler.ptb(("removetiger"), removetiger, run_async=True)
-UNWHITELIST_HANDLER = CommandHandler.ptb(
+UNTIGER_HANDLER = CommandHandler(("removetiger"), removetiger, run_async=True)
+UNWHITELIST_HANDLER = CommandHandler(
     ("removewhitelist", "removetrader"), removewhitelist, run_async=True
 )
-WHITELISTLIST_HANDLER = CommandHandler.ptb(
+WHITELISTLIST_HANDLER = CommandHandler(
     ["whitelistlist", "trader"], whitelistlist, run_async=True
 )
-TIGERLIST_HANDLER = CommandHandler.ptb(["trader"], tigerlist, run_async=True)
-SUPPORTLIST_HANDLER = CommandHandler.ptb(
+TIGERLIST_HANDLER = CommandHandler(["trader"], tigerlist, run_async=True)
+SUPPORTLIST_HANDLER = CommandHandler(
     ["supportlist", "captain"], supportlist, run_async=True
 )
-SUDOLIST_HANDLER = CommandHandler.ptb(["sudolist", "emperor"], sudolist, run_async=True)
-DEVLIST_HANDLER = CommandHandler.ptb(["devlist", "kingdom"], devlist, run_async=True)
+SUDOLIST_HANDLER = CommandHandler(["sudolist", "emperor"], sudolist, run_async=True)
+DEVLIST_HANDLER = CommandHandler(["devlist", "kingdom"], devlist, run_async=True)
 
 dispatcher.add_handler(SUDO_HANDLER)
 dispatcher.add_handler(SUPPORT_HANDLER)

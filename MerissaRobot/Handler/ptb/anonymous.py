@@ -5,7 +5,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Upda
 from telegram.ext import CallbackContext
 
 from MerissaRobot import DEV_USERS, DRAGONS, dispatcher
-from MerissaRobot.Handler.ptb.decorators import merissacallback
+from MerissaRobot.Handler.decorators import merissacallback
 
 
 class AdminPerms(Enum):

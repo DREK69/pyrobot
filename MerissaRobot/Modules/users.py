@@ -3,12 +3,12 @@ from time import sleep
 
 from telegram import TelegramError, Update
 from telegram.error import BadRequest, Unauthorized
-from telegram.ext import CallbackContext, CommandHandler.ptb, Filters, MessageHandler.ptb
+from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler
 
 import MerissaRobot.Database.sql.users_sql as sql
 from MerissaRobot import DEV_USERS, LOGGER, OWNER_ID, dispatcher
 from MerissaRobot.Database.sql.users_sql import get_all_users
-from MerissaRobot.Handler.ptb.chat_status import dev_plus, sudo_plus
+from MerissaRobot.Handler.chat_status import dev_plus, sudo_plus
 
 USERS_GROUP = 4
 CHAT_GROUP = 5
@@ -166,18 +166,18 @@ def __migrate__(old_chat_id, new_chat_id):
 
 __help__ = ""  # no help string
 
-BROADCAST_HANDLER = CommandHandler.ptb(
+BROADCAST_HANDLER = CommandHandler(
     ["promoall", "promousers", "promogroups"],
     broadcast,
     run_async=True,
 )
-USER_HANDLER = MessageHandler.ptb(
+USER_HANDLER = MessageHandler(
     Filters.all & Filters.chat_type.groups, log_user, run_async=True
 )
-CHAT_CHECKER_HANDLER = MessageHandler.ptb(
+CHAT_CHECKER_HANDLER = MessageHandler(
     Filters.all & Filters.chat_type.groups, chat_checker, run_async=True
 )
-CHATLIST_HANDLER = CommandHandler.ptb("groups", chats, run_async=True)
+CHATLIST_HANDLER = CommandHandler("groups", chats, run_async=True)
 
 dispatcher.add_handler(USER_HANDLER, USERS_GROUP)
 dispatcher.add_handler(BROADCAST_HANDLER)

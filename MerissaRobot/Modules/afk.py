@@ -4,13 +4,13 @@ from datetime import datetime
 import humanize
 from telegram import MessageEntity, ParseMode, Update
 from telegram.error import BadRequest
-from telegram.ext import CallbackContext, Filters, MessageHandler.ptb
+from telegram.ext import CallbackContext, Filters, MessageHandler
 
 from MerissaRobot import dispatcher
 from MerissaRobot.Database.sql import afk_sql as sql
 from MerissaRobot.Modules.disable import (
-    DisableAbleCommandHandler.ptb,
-    DisableAbleMessageHandler.ptb,
+    DisableAbleCommandHandler,
+    DisableAbleMessageHandler,
 )
 from MerissaRobot.Modules.users import get_user_id
 
@@ -157,14 +157,14 @@ def __gdpr__(user_id):
     sql.rm_afk(user_id)
 
 
-AFK_HANDLER = DisableAbleCommandHandler.ptb("afk", afk, run_async=True)
-AFK_REGEX_HANDLER = DisableAbleMessageHandler.ptb(
+AFK_HANDLER = DisableAbleCommandHandler("afk", afk, run_async=True)
+AFK_REGEX_HANDLER = DisableAbleMessageHandler(
     Filters.regex(r"^(?i)brb(.*)$"), afk, friendly="afk"
 )
-NO_AFK_HANDLER = MessageHandler.ptb(
+NO_AFK_HANDLER = MessageHandler(
     Filters.all & Filters.chat_type.groups, no_longer_afk, run_async=True
 )
-AFK_REPLY_HANDLER = MessageHandler.ptb(
+AFK_REPLY_HANDLER = MessageHandler(
     Filters.all & Filters.chat_type.groups, reply_afk, run_async=True
 )
 

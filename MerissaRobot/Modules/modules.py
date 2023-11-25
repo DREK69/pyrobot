@@ -1,7 +1,7 @@
 import importlib
 
 from telegram import ParseMode, Update
-from telegram.ext import CallbackContext, CommandHandler.ptb
+from telegram.ext import CallbackContext, CommandHandler
 
 from MerissaRobot import dispatcher
 from MerissaRobot.__main__ import (
@@ -15,7 +15,7 @@ from MerissaRobot.__main__ import (
     USER_INFO,
     USER_SETTINGS,
 )
-from MerissaRobot.Handler.ptb.chat_status import dev_plus, sudo_plus
+from MerissaRobot.Handler.chat_status import dev_plus, sudo_plus
 
 
 @dev_plus
@@ -168,9 +168,9 @@ def listModules(update: Update, context: CallbackContext):
     message.reply_text(module_list, parse_mode=ParseMode.HTML)
 
 
-LOAD_HANDLER = CommandHandler.ptb("load", load, run_async=True)
-UNLOAD_HANDLER = CommandHandler.ptb("unload", unload, run_async=True)
-LISTMODULES_HANDLER = CommandHandler.ptb("listModules", listModules, run_async=True)
+LOAD_HANDLER = CommandHandler("load", load, run_async=True)
+UNLOAD_HANDLER = CommandHandler("unload", unload, run_async=True)
+LISTMODULES_HANDLER = CommandHandler("listModules", listModules, run_async=True)
 
 dispatcher.add_handler(LOAD_HANDLER)
 dispatcher.add_handler(UNLOAD_HANDLER)
