@@ -165,7 +165,7 @@ async def vc_controls(_, message):
         temp.pop(0)
         if temp:
             msg += "\n\n"
-            msg += "**Queue**"
+            msg += "**In Queue**"
             for song in temp:
                 name = song["title"]
                 by = song["req"]
