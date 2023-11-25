@@ -1,5 +1,5 @@
 play_group = 1
-vplay_group = 2
+vc_function = 2
 karma_positive_group = 3
 karma_negative_group = 4
 welcome_group = 5
