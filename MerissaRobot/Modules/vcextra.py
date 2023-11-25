@@ -270,7 +270,10 @@ async def admin_cbs(_, query: CallbackQuery):
 
     elif data == "skip":
         get = merissadb.get(query.message.chat.id)
-        get.pop(0)
+        try:
+            get.pop(0)
+        except:
+            pass
         if not get:
             try:
                 await _clear_(query.message.chat.id)
@@ -437,7 +440,10 @@ async def swr_handler(_, chat_id: int):
 async def on_stream_end(pytgcalls, update: Update):
     chat_id = update.chat_id
     get = merissadb.get(chat_id)
-    get.pop(0)
+    try:
+        get.pop(0)
+    except:
+        pass
     if not get:
         try:
             await _clear_(chat_id)
