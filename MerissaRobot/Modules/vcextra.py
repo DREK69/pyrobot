@@ -13,7 +13,7 @@ from pytgcalls.types import (
 )
 
 from MerissaRobot import BOT_ID, BOT_USERNAME, OWNER_ID, pbot, pytgcalls, user
-from MerissaRobot.Handler.pyro.filter_groups import close_group, welcome_group
+from MerissaRobot.Handler.pyro.filter_groups import close_group, welcome_group, vc_function
 from MerissaRobot.Handler.pyro.permissions import adminsOnly
 from MerissaRobot.Handler.pyro.vcfunction import (
     _clear_,
@@ -52,7 +52,7 @@ def admin_check_cb(func: Callable) -> Callable:
 
 
 @pbot.on_message(
-    filters.command(["pause", "resume", "end", "skip", "playlist"]) & ~filters.private
+    filters.command(["pause", "resume", "end", "skip", "playlist"]) & ~filters.private, group=vc_function
 )
 @adminsOnly("can_manage_video_chats")
 async def vc_controls(_, message):
