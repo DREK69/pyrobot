@@ -23,6 +23,7 @@ from pytgcalls.types import (
 )
 from telegram import InlineKeyboardButton as IKB
 from youtubesearchpython import VideosSearch as QUERY
+from youtubesearchpython.__future__ import VideosSearch as URL
 
 from MerissaRobot import (
     ASS_ID,
@@ -200,7 +201,7 @@ async def play(_, message):
         query = message.text.split(None, 1)[1]
         try:
             vidinfo = QUERY(query, limit=1).result()
-            yt = search["result"][0]
+            yt = vidinfo["result"][0]
             title = yt["title"]
             duration = yt["duration"]
             videoid = yt["id"]
