@@ -131,7 +131,7 @@ button = [
     [
         InlineKeyboardButton(text="▶️", callback_data="vccb_resume"),
         InlineKeyboardButton(text="⏸", callback_data="vccb_pause"),
-        InlineKeyboardButton(text="❌", callback_data="vccb_close"),
+        InlineKeyboardButton(text="🗑️", callback_data="vccb_close"),
         InlineKeyboardButton(text="⏯", callback_data="vccb_skip"),
         InlineKeyboardButton(text="⏹", callback_data="vccb_end"),
     ]
