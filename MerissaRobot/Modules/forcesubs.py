@@ -13,7 +13,7 @@ from pyrogram.types import ChatPermissions, InlineKeyboardButton, InlineKeyboard
 from MerissaRobot import DRAGONS as SUDO_USERS
 from MerissaRobot import pbot
 from MerissaRobot.Database.sql import forceSubscribe_sql as sql
-from MerissaRobot.Utils.Helpers.filter_groups import forcesub_group
+from MerissaRobot.Handler.pyro.filter_groups import forcesub_group
 
 logging.basicConfig(level=logging.INFO)
 

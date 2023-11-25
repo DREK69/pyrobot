@@ -31,7 +31,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 from pyrogram.types import Message
 
 from MerissaRobot import aiohttpsession as aiosession
-from MerissaRobot.Utils.Helpers.http import get, post
+from MerissaRobot.Handler.pyro.http import get, post
 
 
 def generate_captcha():
