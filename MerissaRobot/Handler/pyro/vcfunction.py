@@ -256,7 +256,7 @@ async def gen_thumb(videoid):
             font=ImageFont.truetype("MerissaRobot/Resources/font/font2.ttf", 28),
         )
         draw.text(
-            (1075, 60),
+            (1075, 57),
             "Music",
             fill="rgb(170, 51, 106)",
             font=ImageFont.truetype("MerissaRobot/Resources/font/font.ttf", 20),
