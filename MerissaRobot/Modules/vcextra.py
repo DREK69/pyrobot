@@ -318,7 +318,7 @@ async def admin_cbs(_, query: CallbackQuery):
 
 @pbot.on_callback_query(filters.regex("^vcque"))
 @admin_check_cb
-async def admin_cbs(_, query: CallbackQuery):
+async def admin_quecb(_, query: CallbackQuery):
     callback_data = query.data.strip()
     data = callback_data.split("_")[1]
     track = int(callback_data.split(None, 1)[1])
@@ -366,7 +366,7 @@ async def admin_cbs(_, query: CallbackQuery):
         try:
             get.pop(track)
             await query.message.edit_text(
-                text=f"**Stream Cancelled**\nBy : {query.from_user.mention}",
+                text=f"**Stream Deleted**\nBy : {query.from_user.mention}",
             )
         except:
             await query.message.edit_text(
