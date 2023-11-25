@@ -248,7 +248,7 @@ async def gen_thumb(videoid):
         arial = ImageFont.truetype("MerissaRobot/Resources/font/font.ttf", 27)
 
         draw.text(
-            (1050, 50),
+            (1050, 30),
             "Merissa",
             fill="white",
             stroke_width=1,
@@ -256,15 +256,13 @@ async def gen_thumb(videoid):
             font=ImageFont.truetype("MerissaRobot/Resources/font/font2.ttf", 28),
         )
         draw.text(
-            (1075, 80),
+            (1075, 60),
             "Music",
             fill="rgb(170, 51, 106)",
-            stroke_width=1,
-            stroke_fill="black",
             font=ImageFont.truetype("MerissaRobot/Resources/font/font.ttf", 20),
         )
         draw.text(
-            (30, 40),
+            (20, 10),
             "NOW PLAYING...",
             fill="white",
             stroke_width=2,
@@ -276,7 +274,7 @@ async def gen_thumb(videoid):
             if para[0]:
                 text_w, text_h = draw.textsize(f"{para[0]}", font=font)
                 draw.text(
-                    (450, 180),
+                    ((1280 - text_w) / 1.32, 180),
                     f"{para[0]}",
                     fill="white",
                     stroke_width=1,
@@ -286,7 +284,7 @@ async def gen_thumb(videoid):
             if para[1]:
                 text_w, text_h = draw.textsize(f"{para[1]}", font=font)
                 draw.text(
-                    (575, 230),
+                    ((1280 - text_w) / 1.45, 230),
                     f"{para[1]}",
                     fill="white",
                     stroke_width=1,
