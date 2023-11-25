@@ -180,10 +180,8 @@ def add_corners(im):
     im.putalpha(mask)
 
 
-async def gen_thumb(videoid, user_id, chattitle):
-    file = os.path.join(f"downloads/{videoid}_{user_id}.png")
-    if os.path.exists(file):
-        return file
+async def gen_thumb(videoid):
+    thumbnail_path = os.path.join(f"downloads/{videoid}.png")
     url = f"https://www.youtube.com/watch?v={videoid}"
     try:
         results = VideosSearch(url, limit=1)
@@ -200,7 +198,7 @@ async def gen_thumb(videoid, user_id, chattitle):
                 duration = "Unknown"
             thumbnail = result["thumbnails"][0]["url"].split("?")[0]
             try:
-                result["viewCount"]["short"]
+                view = result["viewCount"]["short"]
             except:
                 pass
             try:
@@ -214,32 +212,9 @@ async def gen_thumb(videoid, user_id, chattitle):
                     f = await aiofiles.open(f"thumb{videoid}.png", mode="wb")
                     await f.write(await resp.read())
                     await f.close()
-        try:
-            getuser = await pbot.get_users(user_id)
-            wxy = await pbot.download_media(
-                getuser.photo.big_file_id,
-                file_name=f"downloads/{user_id}.jpg",
-            )
-        except:
-            getuser = await pbot.get_users(BOT_ID)
-            wxy = await pbot.download_media(
-                getuser.photo.big_file_id,
-                file_name=f"downlaods/{BOT_ID}.jpg",
-            )
-
-        user_name = getuser.first_name
-        xy = Image.open(wxy)
-        a = Image.new("L", [640, 640], 0)
-        b = ImageDraw.Draw(a)
-        b.pieslice([(0, 0), (640, 640)], 0, 360, fill=255, outline="white")
-        c = np.array(xy)
-        d = np.array(a)
-        e = np.dstack((c, d))
-        f = Image.fromarray(e)
-        x = f.resize((110, 110))
 
         youtube = Image.open(f"thumb{videoid}.png")
-        bg = Image.open(f"MerissaRobot/Utils/Resources/bgimg.png")
+        bg = Image.open("thumb.png")
         image1 = changeImageSize(1280, 720, youtube)
         image2 = image1.convert("RGBA")
         background = image2.filter(filter=ImageFilter.BoxBlur(15))
@@ -267,125 +242,85 @@ async def gen_thumb(videoid, user_id, chattitle):
         crop_img = Image.open(f"cropped{videoid}.png")
         logo = crop_img.convert("RGBA")
         logo.thumbnail((370, 370), Image.ANTIALIAS)
+        width = int((1280 - 365) / 2)
         background = Image.open(f"temp{videoid}.png")
-        background.paste(logo, (115, 150), mask=logo)
-        background.paste(x, (375, 449), mask=x)
+        background.paste(logo, (50, 150), mask=logo)
         background.paste(image3, (0, 0), mask=image3)
+
         draw = ImageDraw.Draw(background)
+        font = ImageFont.truetype("font2.ttf",45)
+        ImageFont.truetype("font2.ttf", 70)
+        arial = ImageFont.truetype("font.ttf", 27)
+
         draw.text(
-            (1170, 10),
-            "Merissa",
+            (1050, 50),
+            'Merissa',
             fill="white",
             stroke_width=1,
             stroke_fill="black",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf", 28),
+            font=ImageFont.truetype("font2.ttf", 28),
         )
         draw.text(
-            (1195, 40),
-            "Music",
+            (1075, 80),
+            'Music',
             fill="rgb(170, 51, 106)",
             stroke_width=1,
             stroke_fill="black",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 20),
+            font=ImageFont.truetype("font.ttf", 20),
         )
         draw.text(
-            (580, 150),
-            "Now Playing...",
-            fill="white",
-            stroke_width=1,
-            stroke_fill="rgb(82, 84, 80)",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf", 30),
+                (30, 40),
+                "NOW PLAYING...",
+                fill="white",
+                stroke_width=2,
+                stroke_fill="rgb(82, 84, 80)",
+                font=ImageFont.truetype("font2.ttf", 30),
         )
-        para = textwrap.wrap(title, width=32)
+        para = textwrap.wrap(title, width=30)
         try:
             if para[0]:
-                text_w, text_h = draw.textsize(
-                    f"{para[0]}",
-                    font=ImageFont.truetype(
-                        "MerissaRobot/Utils/Resources/font/font2.ttf", 40
-                    ),
-                )
+                text_w, text_h = draw.textsize(f"{para[0]}", font=font)
                 draw.text(
-                    (580, 185),
+                    (450, 180),
                     f"{para[0]}",
                     fill="white",
                     stroke_width=1,
                     stroke_fill="black",
-                    font=ImageFont.truetype(
-                        "MerissaRobot/Utils/Resources/font/font2.ttf", 40
-                    ),
+                    font=font,
                 )
             if para[1]:
-                text_w, text_h = draw.textsize(
-                    f"{para[1]}",
-                    font=ImageFont.truetype(
-                        "MerissaRobot/Utils/Resources/font/font2.ttf", 40
-                    ),
-                )
+                text_w, text_h = draw.textsize(f"{para[1]}", font=font)
                 draw.text(
-                    (650, 230),
+                    (575, 230),
                     f"{para[1]}",
                     fill="white",
                     stroke_width=1,
                     stroke_fill="black",
-                    font=ImageFont.truetype(
-                        "MerissaRobot/Utils/Resources/font/font2.ttf", 40
-                    ),
+                    font=font,
                 )
         except:
             pass
+        text_w, text_h = draw.textsize(f"{channel}", font=ImageFont.truetype("font.ttf", 35))
+        draw.text(
+                ((1280 - text_w) / 1.45, 295),
+                f"{channel}",
+                fill="white",
+                stroke_width=1,
+                stroke_fill="black",
+                font=ImageFont.truetype("font.ttf", 35),
+        )
 
         draw.text(
-            (580, 280),
-            f"Artist: {channel}",
-            fill="white",
-            stroke_width=1,
-            stroke_fill="black",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 30),
-        )
-        draw.text(
-            (580, 318),
-            f"Played By :",
-            fill="white",
-            stroke_width=1,
-            stroke_fill="black",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25),
-        )
-        draw.text(
-            (717, 318),
-            normalfont(user_name),
-            fill="white",
-            stroke_width=1,
-            stroke_fill="rgb(82, 84, 80)",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25),
-        )
-        draw.text(
-            (580, 350),
-            f"Chat :",
-            fill="white",
-            stroke_width=1,
-            stroke_fill="black",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25),
-        )
-        draw.text(
-            (658, 350),
-            normalfont(chattitle),
-            fill="white",
-            stroke_width=1,
-            stroke_fill="rgb(82, 84, 80)",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 25),
-        )
-        draw.text(
-            (580, 430),
-            "0:00",
-            fill="white",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 30),
-        )
-        draw.text(
-            (1180, 430),
+            (1185, 390),
             f"{duration}",
             fill="white",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 30),
+            font=arial,
+        )
+        draw.text(
+            (450, 390),
+            '0:00',
+            fill="white",
+            font=arial,
         )
         try:
             os.remove(f"thumb{videoid}.png")
@@ -394,8 +329,8 @@ async def gen_thumb(videoid, user_id, chattitle):
             os.remove(f"temp{videoid}.png")
         except:
             pass
-        background.save(f"downloads/{videoid}_{user_id}.png")
-        return f"downloads/{videoid}_{user_id}.png"
+        background.save(f"downloads/{videoid}.png")
+        return f"downloads/{videoid}.png"
     except Exception as e:
         print(str(e))
         return "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
