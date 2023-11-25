@@ -315,6 +315,7 @@ async def admin_cbs(_, query: CallbackQuery):
                 reply_markup=InlineKeyboardMarkup(button),
             )
 
+
 @pbot.on_callback_query(filters.regex("^vcque"))
 @admin_check_cb
 async def admin_cbs(_, query: CallbackQuery):
@@ -371,6 +372,7 @@ async def admin_cbs(_, query: CallbackQuery):
             await query.message.edit_text(
                 text="Failed to delete Track",
             )
+
 
 @pbot.on_callback_query(filters.regex("unban_ass"))
 @admin_check_cb
