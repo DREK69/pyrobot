@@ -34,7 +34,7 @@ from MerissaRobot import DEV_USERS, EVENT_LOGS
 from MerissaRobot import pbot as app
 from MerissaRobot.helpers import embed_album_art, get_ytthumb, getreq, save_file
 from MerissaRobot.Modules.info import get_chat_info, get_user_info
-from MerissaRobot.Handler.ptb.pyro.pastebin import paste
+from MerissaRobot.Handler.pyro.pastebin import paste
 from MerissaRobot.Handler.ptb.services.tasks import _get_tasks_text, all_tasks, rm_task
 from MerissaRobot.Handler.ptb.services.types import InlineQueryResultCachedDocument
 

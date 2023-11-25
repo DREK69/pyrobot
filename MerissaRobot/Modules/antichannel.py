@@ -5,8 +5,8 @@ from pyrogram import filters
 from pyrogram.types import Message
 
 from MerissaRobot import pbot as app
-from MerissaRobot.Handler.ptb.pyro.errors import capture_err
-from MerissaRobot.Handler.ptb.pyro.filter_groups import antichannel_group
+from MerissaRobot.Handler.pyro.errors import capture_err
+from MerissaRobot.Handler.pyro.filter_groups import antichannel_group
 
 active_channel = []
 

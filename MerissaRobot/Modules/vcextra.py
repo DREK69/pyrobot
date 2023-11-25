@@ -13,9 +13,9 @@ from pytgcalls.types import (
 )
 
 from MerissaRobot import BOT_ID, BOT_USERNAME, OWNER_ID, pbot, pytgcalls, user
-from MerissaRobot.Handler.ptb.pyro.filter_groups import close_group, welcome_group
-from MerissaRobot.Handler.ptb.pyro.permissions import adminsOnly
-from MerissaRobot.Handler.ptb.pyro.vcfunction import (
+from MerissaRobot.Handler.pyro.filter_groups import close_group, welcome_group
+from MerissaRobot.Handler.pyro.permissions import adminsOnly
+from MerissaRobot.Handler.pyro.vcfunction import (
     _clear_,
     button,
     get_active_chats,
