@@ -6,15 +6,11 @@ from typing import Union
 
 import aiofiles
 import aiohttp
-import numpy as np
 import yt_dlp
 from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 from pyrogram.enums import MessageEntityType
 from pyrogram.types import Audio, InlineKeyboardButton, Message, Voice
 from youtubesearchpython.__future__ import VideosSearch
-
-from MerissaRobot import BOT_ID, pbot
-from MerissaRobot.Modules.fonts import normalfont
 
 DURATION_LIMIT = int("90")
 
@@ -181,7 +177,7 @@ def add_corners(im):
 
 
 async def gen_thumb(videoid):
-    thumbnail_path = os.path.join(f"downloads/{videoid}.png")
+    os.path.join(f"downloads/{videoid}.png")
     url = f"https://www.youtube.com/watch?v={videoid}"
     try:
         results = VideosSearch(url, limit=1)
@@ -198,7 +194,7 @@ async def gen_thumb(videoid):
                 duration = "Unknown"
             thumbnail = result["thumbnails"][0]["url"].split("?")[0]
             try:
-                view = result["viewCount"]["short"]
+                result["viewCount"]["short"]
             except:
                 pass
             try:
@@ -242,19 +238,19 @@ async def gen_thumb(videoid):
         crop_img = Image.open(f"cropped{videoid}.png")
         logo = crop_img.convert("RGBA")
         logo.thumbnail((370, 370), Image.ANTIALIAS)
-        width = int((1280 - 365) / 2)
+        int((1280 - 365) / 2)
         background = Image.open(f"temp{videoid}.png")
         background.paste(logo, (50, 150), mask=logo)
         background.paste(image3, (0, 0), mask=image3)
 
         draw = ImageDraw.Draw(background)
-        font = ImageFont.truetype("font2.ttf",45)
+        font = ImageFont.truetype("font2.ttf", 45)
         ImageFont.truetype("font2.ttf", 70)
         arial = ImageFont.truetype("font.ttf", 27)
 
         draw.text(
             (1050, 50),
-            'Merissa',
+            "Merissa",
             fill="white",
             stroke_width=1,
             stroke_fill="black",
@@ -262,19 +258,19 @@ async def gen_thumb(videoid):
         )
         draw.text(
             (1075, 80),
-            'Music',
+            "Music",
             fill="rgb(170, 51, 106)",
             stroke_width=1,
             stroke_fill="black",
             font=ImageFont.truetype("font.ttf", 20),
         )
         draw.text(
-                (30, 40),
-                "NOW PLAYING...",
-                fill="white",
-                stroke_width=2,
-                stroke_fill="rgb(82, 84, 80)",
-                font=ImageFont.truetype("font2.ttf", 30),
+            (30, 40),
+            "NOW PLAYING...",
+            fill="white",
+            stroke_width=2,
+            stroke_fill="rgb(82, 84, 80)",
+            font=ImageFont.truetype("font2.ttf", 30),
         )
         para = textwrap.wrap(title, width=30)
         try:
@@ -300,14 +296,16 @@ async def gen_thumb(videoid):
                 )
         except:
             pass
-        text_w, text_h = draw.textsize(f"{channel}", font=ImageFont.truetype("font.ttf", 35))
+        text_w, text_h = draw.textsize(
+            f"{channel}", font=ImageFont.truetype("font.ttf", 35)
+        )
         draw.text(
-                ((1280 - text_w) / 1.45, 295),
-                f"{channel}",
-                fill="white",
-                stroke_width=1,
-                stroke_fill="black",
-                font=ImageFont.truetype("font.ttf", 35),
+            ((1280 - text_w) / 1.45, 295),
+            f"{channel}",
+            fill="white",
+            stroke_width=1,
+            stroke_fill="black",
+            font=ImageFont.truetype("font.ttf", 35),
         )
 
         draw.text(
@@ -318,7 +316,7 @@ async def gen_thumb(videoid):
         )
         draw.text(
             (450, 390),
-            '0:00',
+            "0:00",
             fill="white",
             font=arial,
         )
