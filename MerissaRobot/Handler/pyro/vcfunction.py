@@ -284,7 +284,7 @@ async def gen_thumb(videoid):
             if para[1]:
                 text_w, text_h = draw.textsize(f"{para[1]}", font=font)
                 draw.text(
-                    ((1280 - text_w) / 1.45, 230),
+                    ((1280 - text_w) / 1.40, 230),
                     f"{para[1]}",
                     fill="white",
                     stroke_width=1,
