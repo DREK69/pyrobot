@@ -328,8 +328,8 @@ async def admin_quecb(_, query: CallbackQuery):
     get = merissadb.get(query.message.chat.id)
     if "pnow" in data:
         try:
-            title = get[track]["title"]
-            dur = get[track]["duration"]
+            get[track]["title"]
+            get[track]["duration"]
             videoid = get[track]["videoid"]
             file_path = get[track]["file_path"]
             req_by = get[track]["req"]
