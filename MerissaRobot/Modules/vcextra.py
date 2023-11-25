@@ -358,7 +358,7 @@ async def admin_quecb(_, query: CallbackQuery):
             )
             await query.message.reply_photo(
                 thumb,
-                caption=f"📡 Streaming Started\nTitle: {title}\nDuration: {dur}\n\n👤 Requested By: {req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
+                caption=f"📡 Streaming Started\n\nTitle: {title}\nDuration: {dur}\n👤 Requested By: {req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
                 reply_markup=InlineKeyboardMarkup(button),
             )
         except:
