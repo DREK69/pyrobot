@@ -242,11 +242,11 @@ async def gen_thumb(videoid):
         background = Image.open(f"temp{videoid}.png")
         background.paste(logo, (50, 150), mask=logo)
         background.paste(image3, (0, 0), mask=image3)
-        
+
         draw = ImageDraw.Draw(background)
         font = ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf", 45)
         arial = ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 27)
-        
+
         draw.text(
             (1050, 50),
             "Merissa",
@@ -296,7 +296,8 @@ async def gen_thumb(videoid):
         except:
             pass
         text_w, text_h = draw.textsize(
-            f"{channel}", font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 35)
+            f"{channel}",
+            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 35),
         )
         draw.text(
             ((1280 - text_w) / 1.45, 295),
