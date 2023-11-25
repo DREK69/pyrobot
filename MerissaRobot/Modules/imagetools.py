@@ -80,7 +80,7 @@ async def tiny(client: pbot, message: Message):
         return await edit_or_reply(message, text="**Please Reply to Sticker**")
     Man = await edit_or_reply(message, text="`Processing . . .`")
     ik = await client.download_media(reply)
-    im1 = Image.open("MerissaRobot/Utils/Resources/ken.png")
+    im1 = Image.open("MerissaRobot/Resources/ken.png")
     if ik.endswith(".tgs"):
         await client.download_media(reply, "man.tgs")
         await bash("lottie_convert.py man.tgs json.json")
@@ -171,7 +171,7 @@ async def drawText(image_path, text):
     if os.name == "nt":
         fnt = "ariel.ttf"
     else:
-        fnt = "./MerissaRobot/Utils/Resources/font/default.ttf"
+        fnt = "./MerissaRobot/Resources/font/default.ttf"
     m_font = ImageFont.truetype(fnt, int((70 / 640) * i_width))
     if ";" in text:
         upper_text, lower_text = text.split(";")

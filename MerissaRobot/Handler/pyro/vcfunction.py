@@ -210,7 +210,7 @@ async def gen_thumb(videoid):
                     await f.close()
 
         youtube = Image.open(f"thumb{videoid}.png")
-        bg = Image.open("MerissaRobot/Utils/Resources/thumb.png")
+        bg = Image.open("MerissaRobot/Resources/thumb.png")
         image1 = changeImageSize(1280, 720, youtube)
         image2 = image1.convert("RGBA")
         background = image2.filter(filter=ImageFilter.BoxBlur(15))
@@ -244,8 +244,8 @@ async def gen_thumb(videoid):
         background.paste(image3, (0, 0), mask=image3)
 
         draw = ImageDraw.Draw(background)
-        font = ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf", 45)
-        arial = ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 27)
+        font = ImageFont.truetype("MerissaRobot/Resources/font/font2.ttf", 45)
+        arial = ImageFont.truetype("MerissaRobot/Resources/font/font.ttf", 27)
 
         draw.text(
             (1050, 50),
@@ -253,7 +253,7 @@ async def gen_thumb(videoid):
             fill="white",
             stroke_width=1,
             stroke_fill="black",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf", 28),
+            font=ImageFont.truetype("MerissaRobot/Resources/font/font2.ttf", 28),
         )
         draw.text(
             (1075, 80),
@@ -261,7 +261,7 @@ async def gen_thumb(videoid):
             fill="rgb(170, 51, 106)",
             stroke_width=1,
             stroke_fill="black",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 20),
+            font=ImageFont.truetype("MerissaRobot/Resources/font/font.ttf", 20),
         )
         draw.text(
             (30, 40),
@@ -269,7 +269,7 @@ async def gen_thumb(videoid):
             fill="white",
             stroke_width=2,
             stroke_fill="rgb(82, 84, 80)",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font2.ttf", 30),
+            font=ImageFont.truetype("MerissaRobot/Resources/font/font2.ttf", 30),
         )
         para = textwrap.wrap(title, width=30)
         try:
@@ -297,7 +297,7 @@ async def gen_thumb(videoid):
             pass
         text_w, text_h = draw.textsize(
             f"{channel}",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 35),
+            font=ImageFont.truetype("MerissaRobot/Resources/font/font.ttf", 35),
         )
         draw.text(
             ((1280 - text_w) / 1.45, 295),
@@ -305,7 +305,7 @@ async def gen_thumb(videoid):
             fill="white",
             stroke_width=1,
             stroke_fill="black",
-            font=ImageFont.truetype("MerissaRobot/Utils/Resources/font/font.ttf", 35),
+            font=ImageFont.truetype("MerissaRobot/Resources/font/font.ttf", 35),
         )
 
         draw.text(

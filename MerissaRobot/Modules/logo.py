@@ -163,13 +163,13 @@ def genlogo(text, image, tfont):
         fontSize = int(imgSize[1] / 5)
         image_widthz, image_heightz = img.size
         font = ImageFont.truetype(
-            f"./MerissaRobot/Utils/Resources/font/{randFont}", fontSize
+            f"./MerissaRobot/Resources/font/{randFont}", fontSize
         )
         textSize = font.getsize(upper_text)
         while textSize[0] > imgSize[0] - 100:
             fontSize -= 1
             font = ImageFont.truetype(
-                f"./MerissaRobot/Utils/Resources/font/{randFont}", fontSize
+                f"./MerissaRobot/Resources/font/{randFont}", fontSize
             )
             textSize = font.getsize(upper_text)
         w, h = draw.textsize(upper_text, font=font)
@@ -190,13 +190,13 @@ def genlogo(text, image, tfont):
         fontSize = int(imgSize[1] / 14)
         image_widthz, image_heightz = img.size
         font = ImageFont.truetype(
-            f"./MerissaRobot/Utils/Resources/font/{randFont}", fontSize
+            f"./MerissaRobot/Resources/font/{randFont}", fontSize
         )
         textSize = font.getsize(lower_text)
         while textSize[0] > imgSize[0] - 100:
             fontSize -= 1
             font = ImageFont.truetype(
-                f"./MerissaRobot/Utils/Resources/font/{randFont}", fontSize
+                f"./MerissaRobot/Resources/font/{randFont}", fontSize
             )
             textSize = font.getsize(lower_text)
         w, h = draw.textsize(lower_text, font=font)
