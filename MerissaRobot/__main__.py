@@ -779,7 +779,7 @@ def main():
 
     pytgcalls.start()
     LOGGER.info("Pytgcalls Started")
-    
+
     try:
         telethn.start(bot_token=TOKEN)
         LOGGER.info("Telethon Started")
@@ -789,7 +789,7 @@ def main():
         )
         time.sleep(e.seconds)
         telethn.start(bot_token=TOKEN)
-    
+
     test_handler = CommandHandler("test", test, run_async=True)
     start_handler = CommandHandler("start", start, run_async=True)
 
@@ -846,6 +846,7 @@ def main():
         telethn.run_until_disconnected()
 
     updater.idle()
+
 
 if __name__ == "__main__":
     main()
