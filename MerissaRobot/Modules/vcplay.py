@@ -257,7 +257,7 @@ async def play(_, message):
                         InlineKeyboardButton(
                             text="🗑️ Close", callback_data=f"vccb_close"
                         )
-                    ]
+                    ],
                 ]
             ),
             disable_web_page_preview=True,
