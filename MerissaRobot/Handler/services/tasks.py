@@ -1,7 +1,7 @@
 from asyncio import Lock, create_task
 from time import time
 
-from MerissaRobot.Utils.Services.sections import bold, section, w
+from MerissaRobot.Handler.services.sections import bold, section, w
 
 tasks = {}
 TASKS_LOCK = Lock()
