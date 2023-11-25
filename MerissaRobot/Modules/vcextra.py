@@ -314,12 +314,18 @@ async def admin_cbs(_, query: CallbackQuery):
                 caption=f"📡 Streaming Started\n\n👤 Requested By: {req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
                 reply_markup=InlineKeyboardMarkup(button),
             )
-    else:
-        track = int(callback_data.split(None, 1)[1])
-        get = merissadb.get(query.message.chat.id)
+
+@pbot.on_callback_query(filters.regex("^vcque"))
+@admin_check_cb
+async def admin_cbs(_, query: CallbackQuery):
+    callback_data = query.data.strip()
+    data = callback_data.split("_")[1]
+    track = int(callback_data.split(None, 1)[1])
+    get = merissadb.get(query.message.chat.id)
+    if "pnow" in data:
         try:
-            get[track]["title"]
-            get[track]["duration"]
+            title = get[track]["title"]
+            dur = get[track]["duration"]
             videoid = get[track]["videoid"]
             file_path = get[track]["file_path"]
             req_by = get[track]["req"]
@@ -343,20 +349,28 @@ async def admin_cbs(_, query: CallbackQuery):
                 LOGGER.error(ex)
                 await _clear_(query.message.chat.id)
                 return await pytgcalls.leave_group_call(query.message.chat.id)
-            await query.message.reply_text(
+            await query.message.edit_text(
                 text=f"**Stream ForcePlayed**\n\nBy : {query.from_user.mention}",
             )
             await query.message.reply_photo(
                 thumb,
-                caption=f"📡 Streaming Started\n\n👤 Requested By: {req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
+                caption=f"📡 Streaming Started\nTitle: {title}\nDuration: {dur}\n\n👤 Requested By: {req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
                 reply_markup=InlineKeyboardMarkup(button),
             )
-            return await query.message.delete()
         except:
-            return await query.message.reply_text(
+            await query.message.edit_text(
                 text="Failed to Play Track",
             )
-
+    else:
+        try:
+            get.pop(track)
+            await query.message.edit_text(
+                text=f"**Stream Cancelled**\nBy : {query.from_user.mention}",
+            )
+        except:
+            await query.message.edit_text(
+                text="Failed to delete Track",
+            )
 
 @pbot.on_callback_query(filters.regex("unban_ass"))
 @admin_check_cb
