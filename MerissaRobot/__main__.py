@@ -761,6 +761,35 @@ def migrate_chats(update: Update, context: CallbackContext):
 
 
 def main():
+    LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+    try:
+        pbot.start()
+    except FloodWait as e:
+        LOGGER.info(
+            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
+        )
+        time.sleep(e.value)
+        pbot.start()
+
+    pbot.send_message(-1001446814207, "Bot Started")
+    LOGGER.info("Pyrogram Started")
+    user.start()
+    user.send_message(-1001446814207, "Assistant Started")
+    LOGGER.info("Userbot Started")
+
+    pytgcalls.start()
+    LOGGER.info("Pytgcalls Started")
+    
+    try:
+        telethn.start(bot_token=TOKEN)
+        LOGGER.info("Telethon Started")
+    except FloodWaitError as e:
+        LOGGER.info(
+            f"[Telethon: FloodWaitError] Have to wait {e.seconds} seconds due to FloodWait."
+        )
+        time.sleep(e.seconds)
+        telethn.start(bot_token=TOKEN)
+    
     test_handler = CommandHandler("test", test, run_async=True)
     start_handler = CommandHandler("start", start, run_async=True)
 
@@ -804,8 +833,8 @@ def main():
 
     LOGGER.info("Using long polling.")
     updater.start_polling(
-        timeout=15,
-        read_latency=4,
+        timeout=5,
+        read_latency=10,
         drop_pending_updates=True,
     )
     LOGGER.info("PTB Started")
@@ -818,37 +847,5 @@ def main():
 
     updater.idle()
 
-
-async def pyrostart():
-    try:
-        await pbot.start()
-    except FloodWait as e:
-        LOGGER.info(
-            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
-        )
-        time.sleep(e.value)
-        await pbot.start()
-
-    await pbot.send_message(-1001446814207, "Bot Started")
-    LOGGER.info("Pyrogram Started")
-    await user.start()
-    await user.send_message(-1001446814207, "Assistant Started")
-    LOGGER.info("Userbot Started")
-
-    await pytgcalls.start()
-    LOGGER.info("Pytgcalls Started")
-
-
 if __name__ == "__main__":
-    LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-    loop.run_until_complete(pyrostart())
-    try:
-        telethn.start(bot_token=TOKEN)
-        LOGGER.info("Telethon Started")
-    except FloodWaitError as e:
-        LOGGER.info(
-            f"[Telethon: FloodWaitError] Have to wait {e.seconds} seconds due to FloodWait."
-        )
-        time.sleep(e.seconds)
-        telethn.start(bot_token=TOKEN)
     main()
