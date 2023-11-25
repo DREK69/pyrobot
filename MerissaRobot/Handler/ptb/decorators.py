@@ -1,22 +1,22 @@
 from typing import List, Optional, Union
 
 from telegram.ext import (
-    CallbackQueryHandler,
-    CommandHandler,
-    InlineQueryHandler,
-    MessageHandler,
+    CallbackQueryHandler.ptb,
+    CommandHandler.ptb,
+    InlineQueryHandler.ptb,
+    MessageHandler.ptb,
 )
 from telegram.ext.filters import MessageFilter
 
 from MerissaRobot import LOGGER
 from MerissaRobot import dispatcher as d
 from MerissaRobot.Modules.disable import (
-    DisableAbleCommandHandler,
-    DisableAbleMessageHandler,
+    DisableAbleCommandHandler.ptb,
+    DisableAbleMessageHandler.ptb,
 )
 
 
-class MerissaHandler:
+class MerissaHandler.ptb:
     def __init__(self, d):
         self._dispatcher = d
 
@@ -35,7 +35,7 @@ class MerissaHandler:
             try:
                 if can_disable:
                     self._dispatcher.add_handler(
-                        DisableAbleCommandHandler(
+                        DisableAbleCommandHandler.ptb(
                             command,
                             func,
                             filters=filters,
@@ -47,7 +47,7 @@ class MerissaHandler:
                     )
                 else:
                     self._dispatcher.add_handler(
-                        CommandHandler(
+                        CommandHandler.ptb(
                             command,
                             func,
                             filters=filters,
@@ -62,7 +62,7 @@ class MerissaHandler:
             except TypeError:
                 if can_disable:
                     self._dispatcher.add_handler(
-                        DisableAbleCommandHandler(
+                        DisableAbleCommandHandler.ptb(
                             command,
                             func,
                             filters=filters,
@@ -74,7 +74,7 @@ class MerissaHandler:
                     )
                 else:
                     self._dispatcher.add_handler(
-                        CommandHandler(
+                        CommandHandler.ptb(
                             command,
                             func,
                             filters=filters,
@@ -103,14 +103,14 @@ class MerissaHandler:
             try:
                 if can_disable:
                     self._dispatcher.add_handler(
-                        DisableAbleMessageHandler(
+                        DisableAbleMessageHandler.ptb(
                             pattern, func, friendly=friendly, run_async=run_async
                         ),
                         group,
                     )
                 else:
                     self._dispatcher.add_handler(
-                        MessageHandler(pattern, func, run_async=run_async), group
+                        MessageHandler.ptb(pattern, func, run_async=run_async), group
                     )
                 LOGGER.debug(
                     f"[INNEXIAMSG] Loaded filter pattern {pattern} for function {func.__name__} in group {group}"
@@ -118,13 +118,13 @@ class MerissaHandler:
             except TypeError:
                 if can_disable:
                     self._dispatcher.add_handler(
-                        DisableAbleMessageHandler(
+                        DisableAbleMessageHandler.ptb(
                             pattern, func, friendly=friendly, run_async=run_async
                         )
                     )
                 else:
                     self._dispatcher.add_handler(
-                        MessageHandler(pattern, func, run_async=run_async)
+                        MessageHandler.ptb(pattern, func, run_async=run_async)
                     )
                 LOGGER.debug(
                     f"[INNEXIAMSG] Loaded filter pattern {pattern} for function {func.__name__}"
@@ -137,7 +137,7 @@ class MerissaHandler:
     def callbackquery(self, pattern: str = None, run_async: bool = True):
         def _callbackquery(func):
             self._dispatcher.add_handler(
-                CallbackQueryHandler(
+                CallbackQueryHandler.ptb(
                     pattern=pattern, callback=func, run_async=run_async
                 )
             )
@@ -158,7 +158,7 @@ class MerissaHandler:
     ):
         def _inlinequery(func):
             self._dispatcher.add_handler(
-                InlineQueryHandler(
+                InlineQueryHandler.ptb(
                     pattern=pattern,
                     callback=func,
                     run_async=run_async,
@@ -175,7 +175,7 @@ class MerissaHandler:
         return _inlinequery
 
 
-merissacmd = MerissaHandler(d).command
-merissamsg = MerissaHandler(d).message
-merissacallback = MerissaHandler(d).callbackquery
-merissainline = MerissaHandler(d).inlinequery
+merissacmd = MerissaHandler.ptb(d).command
+merissamsg = MerissaHandler.ptb(d).message
+merissacallback = MerissaHandler.ptb(d).callbackquery
+merissainline = MerissaHandler.ptb(d).inlinequery

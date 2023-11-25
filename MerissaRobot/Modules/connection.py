@@ -3,12 +3,12 @@ import time
 
 from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import BadRequest, Unauthorized
-from telegram.ext import CallbackQueryHandler, CommandHandler
+from telegram.ext import CallbackQueryHandler.ptb, CommandHandler.ptb
 
 import MerissaRobot.Database.sql.connection_sql as sql
 from MerissaRobot import DEV_USERS, DRAGONS, dispatcher
-from MerissaRobot.Handler import chat_status
-from MerissaRobot.Handler.alternate import send_message, typing_action
+from MerissaRobot.Handler.ptb import chat_status
+from MerissaRobot.Handler.ptb.alternate import send_message, typing_action
 
 user_admin = chat_status.user_admin
 
@@ -409,21 +409,21 @@ This allows you to connect to a chat's database, and add things to it without th
 ❂ /allowconnect <yes/no>: allow a user to connect to a chat
 """
 
-CONNECT_CHAT_HANDLER = CommandHandler(
+CONNECT_CHAT_HANDLER = CommandHandler.ptb(
     "connect", connect_chat, pass_args=True, run_async=True
 )
-CONNECTION_CHAT_HANDLER = CommandHandler("connection", connection_chat, run_async=True)
-DISCONNECT_CHAT_HANDLER = CommandHandler("disconnect", disconnect_chat, run_async=True)
-ALLOW_CONNECTIONS_HANDLER = CommandHandler(
+CONNECTION_CHAT_HANDLER = CommandHandler.ptb("connection", connection_chat, run_async=True)
+DISCONNECT_CHAT_HANDLER = CommandHandler.ptb("disconnect", disconnect_chat, run_async=True)
+ALLOW_CONNECTIONS_HANDLER = CommandHandler.ptb(
     "allowconnect",
     allow_connections,
     pass_args=True,
     run_async=True,
 )
-HELP_CONNECT_CHAT_HANDLER = CommandHandler(
+HELP_CONNECT_CHAT_HANDLER = CommandHandler.ptb(
     "helpconnect", help_connect_chat, run_async=True
 )
-CONNECT_BTN_HANDLER = CallbackQueryHandler(
+CONNECT_BTN_HANDLER = CallbackQueryHandler.ptb(
     connect_button, pattern=r"connect", run_async=True
 )
 

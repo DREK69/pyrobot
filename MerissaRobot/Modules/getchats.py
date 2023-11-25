@@ -3,11 +3,11 @@ from time import sleep
 
 from telegram import Update
 from telegram.error import BadRequest, RetryAfter, Unauthorized
-from telegram.ext import CallbackContext, CommandHandler, Filters
+from telegram.ext import CallbackContext, CommandHandler.ptb, Filters
 
 from MerissaRobot import OWNER_ID, dispatcher
 from MerissaRobot.Database.sql.users_sql import get_user_com_chats
-from MerissaRobot.Handler.extraction import extract_user
+from MerissaRobot.Handler.ptb.extraction import extract_user
 
 
 def get_user_common_chats(update: Update, context: CallbackContext):
@@ -43,7 +43,7 @@ def get_user_common_chats(update: Update, context: CallbackContext):
         os.remove("common_chats.txt")
 
 
-COMMON_CHATS_HANDLER = CommandHandler(
+COMMON_CHATS_HANDLER = CommandHandler.ptb(
     "getchats",
     get_user_common_chats,
     filters=Filters.user(OWNER_ID),

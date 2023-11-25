@@ -1,21 +1,21 @@
 import html
 
 from telegram import ParseMode, Update
-from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler
+from telegram.ext import CallbackContext, CommandHandler.ptb, Filters, MessageHandler.ptb
 
-from MerissaRobot import ALLOW_EXCL, CustomCommandHandler, dispatcher
+from MerissaRobot import ALLOW_EXCL, CustomCommandHandler.ptb, dispatcher
 from MerissaRobot.Database.sql import cleaner_sql as sql
-from MerissaRobot.Handler.chat_status import (
+from MerissaRobot.Handler.ptb.chat_status import (
     bot_can_delete,
     connection_status,
     dev_plus,
     user_admin,
 )
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
 
 CMD_STARTERS = ("/", "!") if ALLOW_EXCL else "/"
 BLUE_TEXT_CLEAN_GROUP = 13
-CommandHandlerList = (CommandHandler, CustomCommandHandler, DisableAbleCommandHandler)
+CommandHandler.ptbList = (CommandHandler.ptb, CustomCommandHandler.ptb, DisableAbleCommandHandler.ptb)
 command_list = [
     "cleanblue",
     "ignoreblue",
@@ -34,7 +34,7 @@ command_list = [
 
 for handler_list in dispatcher.handlers:
     for handler in dispatcher.handlers[handler_list]:
-        if any(isinstance(handler, cmd_handler) for cmd_handler in CommandHandlerList):
+        if any(isinstance(handler, cmd_handler) for cmd_handler in CommandHandler.ptbList):
             command_list += handler.command
 
 
@@ -222,29 +222,29 @@ __help__ = """
 ❂ /ungignoreblue <word>*:* remove said command from global cleaning list
 """
 
-SET_CLEAN_BLUE_TEXT_HANDLER = CommandHandler(
+SET_CLEAN_BLUE_TEXT_HANDLER = CommandHandler.ptb(
     "cleanblue", set_blue_text_must_click, run_async=True
 )
-ADD_CLEAN_BLUE_TEXT_HANDLER = CommandHandler(
+ADD_CLEAN_BLUE_TEXT_HANDLER = CommandHandler.ptb(
     "ignoreblue", add_bluetext_ignore, run_async=True
 )
-REMOVE_CLEAN_BLUE_TEXT_HANDLER = CommandHandler(
+REMOVE_CLEAN_BLUE_TEXT_HANDLER = CommandHandler.ptb(
     "unignoreblue", remove_bluetext_ignore, run_async=True
 )
-ADD_CLEAN_BLUE_TEXT_GLOBAL_HANDLER = CommandHandler(
+ADD_CLEAN_BLUE_TEXT_GLOBAL_HANDLER = CommandHandler.ptb(
     "gignoreblue",
     add_bluetext_ignore_global,
     run_async=True,
 )
-REMOVE_CLEAN_BLUE_TEXT_GLOBAL_HANDLER = CommandHandler(
+REMOVE_CLEAN_BLUE_TEXT_GLOBAL_HANDLER = CommandHandler.ptb(
     "ungignoreblue",
     remove_bluetext_ignore_global,
     run_async=True,
 )
-LIST_CLEAN_BLUE_TEXT_HANDLER = CommandHandler(
+LIST_CLEAN_BLUE_TEXT_HANDLER = CommandHandler.ptb(
     "listblue", bluetext_ignore_list, run_async=True
 )
-CLEAN_BLUE_TEXT_HANDLER = MessageHandler(
+CLEAN_BLUE_TEXT_HANDLER = MessageHandler.ptb(
     Filters.command & Filters.chat_type.groups,
     clean_blue_text_must_click,
     run_async=True,

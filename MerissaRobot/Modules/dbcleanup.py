@@ -2,12 +2,12 @@ from time import sleep
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.error import BadRequest, Unauthorized
-from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler
+from telegram.ext import CallbackContext, CallbackQueryHandler.ptb, CommandHandler.ptb
 
 import MerissaRobot.Database.sql.global_bans_sql as gban_sql
 import MerissaRobot.Database.sql.users_sql as user_sql
 from MerissaRobot import DEV_USERS, OWNER_ID, dispatcher
-from MerissaRobot.Handler.chat_status import dev_plus
+from MerissaRobot.Handler.ptb.chat_status import dev_plus
 
 
 def get_invalid_chats(update: Update, context: CallbackContext, remove: bool = False):
@@ -135,8 +135,8 @@ def callback_button(update: Update, context: CallbackContext):
             query.answer("You are not allowed to use this.")
 
 
-DB_CLEANUP_HANDLER = CommandHandler("dbcleanup", dbcleanup, run_async=True)
-BUTTON_HANDLER = CallbackQueryHandler(callback_button, pattern="db_.*", run_async=True)
+DB_CLEANUP_HANDLER = CommandHandler.ptb("dbcleanup", dbcleanup, run_async=True)
+BUTTON_HANDLER = CallbackQueryHandler.ptb(callback_button, pattern="db_.*", run_async=True)
 
 dispatcher.add_handler(DB_CLEANUP_HANDLER)
 dispatcher.add_handler(BUTTON_HANDLER)

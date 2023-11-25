@@ -1,12 +1,12 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.error import BadRequest
-from telegram.ext import CallbackContext, CommandHandler, Filters
+from telegram.ext import CallbackContext, CommandHandler.ptb, Filters
 from telegram.utils.helpers import escape_markdown
 
 import MerissaRobot.Database.sql.rules_sql as sql
 from MerissaRobot import dispatcher
-from MerissaRobot.Handler.chat_status import user_admin
-from MerissaRobot.Handler.string_handling import markdown_parser
+from MerissaRobot.Handler.ptb.chat_status import user_admin
+from MerissaRobot.Handler.ptb.string_handling import markdown_parser
 
 
 def get_rules(update: Update, context: CallbackContext):
@@ -128,13 +128,13 @@ def __chat_settings__(chat_id, user_id):
 
 __mod_name__ = "Rules"
 
-GET_RULES_HANDLER = CommandHandler(
+GET_RULES_HANDLER = CommandHandler.ptb(
     "rules", get_rules, filters=Filters.chat_type.groups, run_async=True
 )
-SET_RULES_HANDLER = CommandHandler(
+SET_RULES_HANDLER = CommandHandler.ptb(
     "setrules", set_rules, filters=Filters.chat_type.groups, run_async=True
 )
-RESET_RULES_HANDLER = CommandHandler(
+RESET_RULES_HANDLER = CommandHandler.ptb(
     "clearrules", clear_rules, filters=Filters.chat_type.groups, run_async=True
 )
 

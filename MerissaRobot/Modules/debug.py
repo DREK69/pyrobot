@@ -1,10 +1,10 @@
 import os
 
 from telegram import Update
-from telegram.ext import CallbackContext, CommandHandler
+from telegram.ext import CallbackContext, CommandHandler.ptb
 
 from MerissaRobot import dispatcher
-from MerissaRobot.Handler.chat_status import dev_plus
+from MerissaRobot.Handler.ptb.chat_status import dev_plus
 
 DEBUG_MODE = False
 
@@ -38,10 +38,10 @@ def logs(update: Update, context: CallbackContext):
         context.bot.send_document(document=f, filename=f.name, chat_id=user.id)
 
 
-LOG_HANDLER = CommandHandler("logs", logs, run_async=True)
+LOG_HANDLER = CommandHandler.ptb("logs", logs, run_async=True)
 dispatcher.add_handler(LOG_HANDLER)
 
-DEBUG_HANDLER = CommandHandler("debug", debug, run_async=True)
+DEBUG_HANDLER = CommandHandler.ptb("debug", debug, run_async=True)
 dispatcher.add_handler(DEBUG_HANDLER)
 
 __mod_name__ = "Debug"

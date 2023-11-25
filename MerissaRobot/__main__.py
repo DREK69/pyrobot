@@ -12,12 +12,12 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Upda
 from telegram.error import BadRequest
 from telegram.ext import (
     CallbackContext,
-    CallbackQueryHandler,
-    CommandHandler,
+    CallbackQueryHandler.ptb,
+    CommandHandler.ptb,
     Filters,
-    MessageHandler,
+    MessageHandler.ptb,
 )
-from telegram.ext.dispatcher import DispatcherHandlerStop
+from telegram.ext.dispatcher import DispatcherHandler.ptbStop
 from telegram.utils.helpers import escape_markdown
 from telethon.errors.rpcerrorlist import FloodWaitError
 
@@ -33,8 +33,8 @@ from MerissaRobot import (
     updater,
     user,
 )
-from MerissaRobot.Handler.chat_status import is_user_admin
-from MerissaRobot.Handler.misc import gpaginate_modules, paginate_modules
+from MerissaRobot.Handler.ptb.chat_status import is_user_admin
+from MerissaRobot.Handler.ptb.misc import gpaginate_modules, paginate_modules
 from MerissaRobot.Modules import ALL_MODULES
 from MerissaRobot.text import (
     GROUP_HELP_BUTTON,
@@ -757,36 +757,36 @@ def migrate_chats(update: Update, context: CallbackContext):
         mod.__migrate__(old_chat, new_chat)
 
     LOGGER.info("Successfully migrated!")
-    raise DispatcherHandlerStop
+    raise DispatcherHandler.ptbStop
 
 
 def main():
-    test_handler = CommandHandler("test", test, run_async=True)
-    start_handler = CommandHandler("start", start, run_async=True)
+    test_handler = CommandHandler.ptb("test", test, run_async=True)
+    start_handler = CommandHandler.ptb("start", start, run_async=True)
 
-    help_handler = CommandHandler("help", get_help, run_async=True)
-    help_callback_handler = CallbackQueryHandler(
+    help_handler = CommandHandler.ptb("help", get_help, run_async=True)
+    help_callback_handler = CallbackQueryHandler.ptb(
         help_button, pattern=r"help_.*", run_async=True
     )
 
-    ghelp_callback_handler = CallbackQueryHandler(
+    ghelp_callback_handler = CallbackQueryHandler.ptb(
         ghelp_button, pattern=r"ghelp_.*", run_async=True
     )
 
-    settings_handler = CommandHandler("settings", get_settings, run_async=True)
-    settings_callback_handler = CallbackQueryHandler(
+    settings_handler = CommandHandler.ptb("settings", get_settings, run_async=True)
+    settings_callback_handler = CallbackQueryHandler.ptb(
         settings_button, pattern=r"stngs_", run_async=True
     )
 
-    about_callback_handler = CallbackQueryHandler(
+    about_callback_handler = CallbackQueryHandler.ptb(
         merissa_about_callback, pattern=r"merissa_", run_async=True
     )
 
-    source_callback_handler = CallbackQueryHandler(
+    source_callback_handler = CallbackQueryHandler.ptb(
         Source_about_callback, pattern=r"source_", run_async=True
     )
 
-    migrate_handler = MessageHandler(
+    migrate_handler = MessageHandler.ptb(
         Filters.status_update.migrate, migrate_chats, run_async=True
     )
 

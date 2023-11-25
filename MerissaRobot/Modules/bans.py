@@ -9,7 +9,7 @@ from telegram import (
     Update,
 )
 from telegram.error import BadRequest
-from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler, Filters
+from telegram.ext import CallbackContext, CallbackQueryHandler.ptb, CommandHandler.ptb, Filters
 from telegram.utils.helpers import mention_html
 
 from MerissaRobot import (
@@ -22,7 +22,7 @@ from MerissaRobot import (
     WOLVES,
     dispatcher,
 )
-from MerissaRobot.Handler.chat_status import (
+from MerissaRobot.Handler.ptb.chat_status import (
     bot_admin,
     can_delete,
     can_restrict,
@@ -35,10 +35,10 @@ from MerissaRobot.Handler.chat_status import (
     user_admin_no_reply,
     user_can_ban,
 )
-from MerissaRobot.Handler.extraction import extract_user_and_text
-from MerissaRobot.Handler.filters import CustomFilters
-from MerissaRobot.Handler.string_handling import extract_time
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler
+from MerissaRobot.Handler.ptb.extraction import extract_user_and_text
+from MerissaRobot.Handler.ptb.filters import CustomFilters
+from MerissaRobot.Handler.ptb.string_handling import extract_time
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
 from MerissaRobot.Modules.log_channel import gloggable, loggable
 
 
@@ -776,21 +776,21 @@ __help__ = """
 
 __mod_name__ = "Bans 🚫"
 
-BAN_HANDLER = CommandHandler(["ban", "sban"], ban, run_async=True)
-TEMPBAN_HANDLER = CommandHandler(["tban"], temp_ban, run_async=True)
-KICK_HANDLER = CommandHandler(["kick", "punch"], punch, run_async=True)
-UNBAN_HANDLER = CommandHandler("unban", unban, run_async=True)
-ROAR_HANDLER = CommandHandler("roar", selfunban, run_async=True)
-UNBAN_BUTTON_HANDLER = CallbackQueryHandler(unbanb_btn, pattern=r"unbanb_")
-KICKME_HANDLER = DisableAbleCommandHandler(
+BAN_HANDLER = CommandHandler.ptb(["ban", "sban"], ban, run_async=True)
+TEMPBAN_HANDLER = CommandHandler.ptb(["tban"], temp_ban, run_async=True)
+KICK_HANDLER = CommandHandler.ptb(["kick", "punch"], punch, run_async=True)
+UNBAN_HANDLER = CommandHandler.ptb("unban", unban, run_async=True)
+ROAR_HANDLER = CommandHandler.ptb("roar", selfunban, run_async=True)
+UNBAN_BUTTON_HANDLER = CallbackQueryHandler.ptb(unbanb_btn, pattern=r"unbanb_")
+KICKME_HANDLER = DisableAbleCommandHandler.ptb(
     ["kickme", "punchme"], punchme, filters=Filters.chat_type.groups, run_async=True
 )
-SNIPE_HANDLER = CommandHandler(
+SNIPE_HANDLER = CommandHandler.ptb(
     "snipe", snipe, pass_args=True, filters=CustomFilters.sudo_filter, run_async=True
 )
-BANME_HANDLER = CommandHandler("banme", banme, run_async=True)
-DBAN_HANDLER = CommandHandler("dban", dban, run_async=True)
-DKICK_HANDLER = CommandHandler("dkick", dkick, run_async=True)
+BANME_HANDLER = CommandHandler.ptb("banme", banme, run_async=True)
+DBAN_HANDLER = CommandHandler.ptb("dban", dban, run_async=True)
+DKICK_HANDLER = CommandHandler.ptb("dkick", dkick, run_async=True)
 
 dispatcher.add_handler(BAN_HANDLER)
 dispatcher.add_handler(TEMPBAN_HANDLER)

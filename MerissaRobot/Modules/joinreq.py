@@ -5,8 +5,8 @@ from telegram.ext.callbackcontext import CallbackContext
 from telegram.update import Update
 from telegram.utils.helpers import mention_html
 
-from MerissaRobot.Handler.anonymous import AdminPerms, user_admin
-from MerissaRobot.Handler.decorators import merissacallback
+from MerissaRobot.Handler.ptb.anonymous import AdminPerms, user_admin
+from MerissaRobot.Handler.ptb.decorators import merissacallback
 from MerissaRobot.Modules.log_channel import loggable
 
 

@@ -2,7 +2,7 @@ from enum import IntEnum, unique
 
 from telegram import Message
 
-from MerissaRobot.Handler.string_handling import button_markdown_parser
+from MerissaRobot.Handler.ptb.string_handling import button_markdown_parser
 
 
 @unique

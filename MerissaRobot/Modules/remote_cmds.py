@@ -1,16 +1,16 @@
 from telegram import ChatPermissions, Update
 from telegram.error import BadRequest
-from telegram.ext import CallbackContext, CommandHandler
+from telegram.ext import CallbackContext, CommandHandler.ptb
 
 from MerissaRobot import LOGGER, dispatcher
-from MerissaRobot.Handler.chat_status import (
+from MerissaRobot.Handler.ptb.chat_status import (
     bot_admin,
     is_bot_admin,
     is_user_ban_protected,
     is_user_in_chat,
 )
-from MerissaRobot.Handler.extraction import extract_user_and_text
-from MerissaRobot.Handler.filters import CustomFilters
+from MerissaRobot.Handler.ptb.extraction import extract_user_and_text
+from MerissaRobot.Handler.ptb.filters import CustomFilters
 
 RBAN_ERRORS = {
     "User is an administrator of the chat",
@@ -504,19 +504,19 @@ def runmute(update: Update, context: CallbackContext):
             message.reply_text("Well damn, I can't unmute that user.")
 
 
-RBAN_HANDLER = CommandHandler(
+RBAN_HANDLER = CommandHandler.ptb(
     "rban", rban, filters=CustomFilters.sudo_filter, run_async=True
 )
-RUNBAN_HANDLER = CommandHandler(
+RUNBAN_HANDLER = CommandHandler.ptb(
     "runban", runban, filters=CustomFilters.sudo_filter, run_async=True
 )
-RKICK_HANDLER = CommandHandler(
+RKICK_HANDLER = CommandHandler.ptb(
     "rpunch", rkick, filters=CustomFilters.sudo_filter, run_async=True
 )
-RMUTE_HANDLER = CommandHandler(
+RMUTE_HANDLER = CommandHandler.ptb(
     "rmute", rmute, filters=CustomFilters.sudo_filter, run_async=True
 )
-RUNMUTE_HANDLER = CommandHandler(
+RUNMUTE_HANDLER = CommandHandler.ptb(
     "runmute", runmute, filters=CustomFilters.sudo_filter, run_async=True
 )
 

@@ -9,13 +9,13 @@ from telegram.utils.helpers import mention_html
 
 import MerissaRobot.Database.sql.welcome_sql as sql
 from MerissaRobot import LOGGER, updater
-from MerissaRobot.Handler.anonymous import AdminPerms, user_admin
-from MerissaRobot.Handler.chat_status import (
+from MerissaRobot.Handler.ptb.anonymous import AdminPerms, user_admin
+from MerissaRobot.Handler.ptb.chat_status import (
     bot_admin,
     connection_status,
     user_admin_no_reply,
 )
-from MerissaRobot.Handler.decorators import merissacallback, merissacmd
+from MerissaRobot.Handler.ptb.decorators import merissacallback, merissacmd
 from MerissaRobot.Modules.log_channel import loggable
 
 j = updater.job_queue

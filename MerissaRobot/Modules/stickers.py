@@ -16,11 +16,11 @@ from telegram import (
     TelegramError,
     Update,
 )
-from telegram.ext import CallbackContext, CallbackQueryHandler
+from telegram.ext import CallbackContext, CallbackQueryHandler.ptb
 from telegram.utils.helpers import mention_html
 
 from MerissaRobot import dispatcher
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
 
 combot_stickers_url = "https://combot.org/telegram/stickers?q="
 
@@ -823,18 +823,18 @@ __help__ = """
 
 __mod_name__ = "Stickers 😜"
 
-STICKERID_HANDLER = DisableAbleCommandHandler("stickerid", stickerid, run_async=True)
-GETSTICKER_HANDLER = DisableAbleCommandHandler("getsticker", getsticker, run_async=True)
-GETVIDSTICKER_HANDLER = DisableAbleCommandHandler(
+STICKERID_HANDLER = DisableAbleCommandHandler.ptb("stickerid", stickerid, run_async=True)
+GETSTICKER_HANDLER = DisableAbleCommandHandler.ptb("getsticker", getsticker, run_async=True)
+GETVIDSTICKER_HANDLER = DisableAbleCommandHandler.ptb(
     "getvidsticker", getvidsticker, run_async=True
 )
-KANG_HANDLER = DisableAbleCommandHandler(
+KANG_HANDLER = DisableAbleCommandHandler.ptb(
     ["kang", "steal"], kang, pass_args=True, run_async=True
 )
-DEL_HANDLER = DisableAbleCommandHandler("delsticker", delsticker, run_async=True)
-STICKERS_HANDLER = DisableAbleCommandHandler("stickers", cb_sticker, run_async=True)
-VIDEO_HANDLER = DisableAbleCommandHandler("getvideo", video, run_async=True)
-CBSCALLBACK_HANDLER = CallbackQueryHandler(cbs_callback, pattern="cbs_", run_async=True)
+DEL_HANDLER = DisableAbleCommandHandler.ptb("delsticker", delsticker, run_async=True)
+STICKERS_HANDLER = DisableAbleCommandHandler.ptb("stickers", cb_sticker, run_async=True)
+VIDEO_HANDLER = DisableAbleCommandHandler.ptb("getvideo", video, run_async=True)
+CBSCALLBACK_HANDLER = CallbackQueryHandler.ptb(cbs_callback, pattern="cbs_", run_async=True)
 
 dispatcher.add_handler(VIDEO_HANDLER)
 dispatcher.add_handler(CBSCALLBACK_HANDLER)

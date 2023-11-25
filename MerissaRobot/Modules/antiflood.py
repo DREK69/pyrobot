@@ -5,24 +5,24 @@ from telegram import ChatPermissions, Update
 from telegram.error import BadRequest
 from telegram.ext import (
     CallbackContext,
-    CallbackQueryHandler,
-    CommandHandler,
+    CallbackQueryHandler.ptb,
+    CommandHandler.ptb,
     Filters,
-    MessageHandler,
+    MessageHandler.ptb,
 )
 from telegram.utils.helpers import mention_html
 
 from MerissaRobot import TIGERS, WOLVES, dispatcher
 from MerissaRobot.Database.sql import antiflood_sql as sql
 from MerissaRobot.Database.sql.approve_sql import is_approved
-from MerissaRobot.Handler.alternate import send_message
-from MerissaRobot.Handler.chat_status import (
+from MerissaRobot.Handler.ptb.alternate import send_message
+from MerissaRobot.Handler.ptb.chat_status import (
     bot_admin,
     is_user_admin,
     user_admin,
     user_admin_no_reply,
 )
-from MerissaRobot.Handler.string_handling import extract_time
+from MerissaRobot.Handler.ptb.string_handling import extract_time
 from MerissaRobot.Modules.connection import connected
 from MerissaRobot.Modules.log_channel import loggable
 
@@ -399,24 +399,24 @@ def __chat_settings__(chat_id, user_id):
 
 __mod_name__ = "Anti-Flood"
 
-FLOOD_BAN_HANDLER = MessageHandler(
+FLOOD_BAN_HANDLER = MessageHandler.ptb(
     Filters.all & ~Filters.status_update & Filters.chat_type.groups,
     check_flood,
     run_async=True,
 )
-SET_FLOOD_HANDLER = CommandHandler(
+SET_FLOOD_HANDLER = CommandHandler.ptb(
     "setflood", set_flood, filters=Filters.chat_type.groups, run_async=True
 )
-SET_FLOOD_MODE_HANDLER = CommandHandler(
+SET_FLOOD_MODE_HANDLER = CommandHandler.ptb(
     "setfloodmode",
     set_flood_mode,
     pass_args=True,
     run_async=True,
 )  # , filters=Filters.chat_type.group)
-FLOOD_QUERY_HANDLER = CallbackQueryHandler(
+FLOOD_QUERY_HANDLER = CallbackQueryHandler.ptb(
     flood_button, pattern=r"unmute_flooder", run_async=True
 )
-FLOOD_HANDLER = CommandHandler(
+FLOOD_HANDLER = CommandHandler.ptb(
     "flood", flood, filters=Filters.chat_type.groups, run_async=True
 )
 

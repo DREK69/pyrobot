@@ -15,17 +15,17 @@ from telegram import (
 from telegram.error import BadRequest, RetryAfter, Unauthorized
 from telegram.ext import (
     CallbackContext,
-    CallbackQueryHandler,
-    CommandHandler,
+    CallbackQueryHandler.ptb,
+    CommandHandler.ptb,
     Filters,
-    MessageHandler,
+    MessageHandler.ptb,
 )
 from telegram.utils.helpers import mention_html
 
 import MerissaRobot.Database.sql.chatbot_sql as sql
 from MerissaRobot import dispatcher
-from MerissaRobot.Handler.chat_status import user_admin, user_admin_no_reply
-from MerissaRobot.Handler.filters import CustomFilters
+from MerissaRobot.Handler.ptb.chat_status import user_admin, user_admin_no_reply
+from MerissaRobot.Handler.ptb.filters import CustomFilters
 from MerissaRobot.Modules.log_channel import gloggable
 
 
@@ -168,15 +168,15 @@ For Asking Questions to ChatGPT:
 ❂ `/bard question` : To get answer from BardAI By Google.
 """
 
-CHATBOTK_HANDLER = CommandHandler("chatbot", merissa)
-ADD_CHAT_HANDLER = CallbackQueryHandler(merissaadd, pattern=r"add_chat")
-RM_CHAT_HANDLER = CallbackQueryHandler(merissarm, pattern=r"rm_chat")
-CHATBOT_HANDLER = MessageHandler(
+CHATBOTK_HANDLER = CommandHandler.ptb("chatbot", merissa)
+ADD_CHAT_HANDLER = CallbackQueryHandler.ptb(merissaadd, pattern=r"add_chat")
+RM_CHAT_HANDLER = CallbackQueryHandler.ptb(merissarm, pattern=r"rm_chat")
+CHATBOT_HANDLER = MessageHandler.ptb(
     Filters.text
     & (~Filters.regex(r"^#[^\s]+") & ~Filters.regex(r"^!") & ~Filters.regex(r"^\/")),
     chatbot,
 )
-LIST_ALL_CHATS_HANDLER = CommandHandler(
+LIST_ALL_CHATS_HANDLER = CommandHandler.ptb(
     "allchats", list_all_chats, filters=CustomFilters.dev_filter
 )
 

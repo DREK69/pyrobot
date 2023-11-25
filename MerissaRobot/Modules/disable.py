@@ -5,16 +5,16 @@ from future.utils import string_types
 from telegram import ParseMode, Update
 from telegram.ext import (
     CallbackContext,
-    CommandHandler,
+    CommandHandler.ptb,
     Filters,
-    MessageHandler,
-    RegexHandler,
+    MessageHandler.ptb,
+    RegexHandler.ptb,
 )
 from telegram.utils.helpers import escape_markdown
 
 from MerissaRobot import dispatcher
-from MerissaRobot.Handler.handlers import CMD_STARTERS, SpamChecker
-from MerissaRobot.Handler.misc import is_module_loaded
+from MerissaRobot.Handler.ptb.handlers import CMD_STARTERS, SpamChecker
+from MerissaRobot.Handler.ptb.misc import is_module_loaded
 
 CMD_STARTERS = tuple(CMD_STARTERS)
 
@@ -23,7 +23,7 @@ FILENAME = __name__.rsplit(".", 1)[-1]
 # If module is due to be loaded, then setup all the magical handlers
 if is_module_loaded(FILENAME):
     from MerissaRobot.Database.sql import disable_sql as sql
-    from MerissaRobot.Handler.chat_status import (
+    from MerissaRobot.Handler.ptb.chat_status import (
         connection_status,
         is_user_admin,
         user_admin,
@@ -33,7 +33,7 @@ if is_module_loaded(FILENAME):
     DISABLE_OTHER = []
     ADMIN_CMDS = []
 
-    class DisableAbleCommandHandler(CommandHandler):
+    class DisableAbleCommandHandler.ptb(CommandHandler.ptb):
         def __init__(self, command, callback, admin_ok=False, **kwargs):
             super().__init__(command, callback, **kwargs)
             self.admin_ok = admin_ok
@@ -87,7 +87,7 @@ if is_module_loaded(FILENAME):
                             return args, filter_result
                         return False
 
-    class DisableAbleMessageHandler(MessageHandler):
+    class DisableAbleMessageHandler.ptb(MessageHandler.ptb):
         def __init__(self, filters, callback, friendly, **kwargs):
             super().__init__(filters, callback, **kwargs)
             DISABLE_OTHER.append(friendly)
@@ -112,7 +112,7 @@ if is_module_loaded(FILENAME):
                     return False
                 return args, filter_result
 
-    class DisableAbleRegexHandler(RegexHandler):
+    class DisableAbleRegexHandler.ptb(RegexHandler.ptb):
         def __init__(self, pattern, callback, friendly="", filters=None, **kwargs):
             super().__init__(pattern, callback, filters, **kwargs)
             DISABLE_OTHER.append(friendly)
@@ -326,16 +326,16 @@ if is_module_loaded(FILENAME):
 ❂ /listcmds*:* list all possible toggleable commands
 """
 
-    DISABLE_HANDLER = CommandHandler("disable", disable, run_async=True)
-    DISABLE_MODULE_HANDLER = CommandHandler(
+    DISABLE_HANDLER = CommandHandler.ptb("disable", disable, run_async=True)
+    DISABLE_MODULE_HANDLER = CommandHandler.ptb(
         "disablemodule", disable_module, run_async=True
     )
-    ENABLE_HANDLER = CommandHandler("enable", enable, run_async=True)
-    ENABLE_MODULE_HANDLER = CommandHandler(
+    ENABLE_HANDLER = CommandHandler.ptb("enable", enable, run_async=True)
+    ENABLE_MODULE_HANDLER = CommandHandler.ptb(
         "enablemodule", enable_module, run_async=True
     )
-    COMMANDS_HANDLER = CommandHandler(["cmds", "disabled"], commands, run_async=True)
-    TOGGLE_HANDLER = CommandHandler("listcmds", list_cmds, run_async=True)
+    COMMANDS_HANDLER = CommandHandler.ptb(["cmds", "disabled"], commands, run_async=True)
+    TOGGLE_HANDLER = CommandHandler.ptb("listcmds", list_cmds, run_async=True)
 
     dispatcher.add_handler(DISABLE_HANDLER)
     dispatcher.add_handler(DISABLE_MODULE_HANDLER)
@@ -347,6 +347,6 @@ if is_module_loaded(FILENAME):
     __mod_name__ = "Disabling ⛔️"
 
 else:
-    DisableAbleCommandHandler = CommandHandler
-    DisableAbleRegexHandler = RegexHandler
-    DisableAbleMessageHandler = MessageHandler
+    DisableAbleCommandHandler.ptb = CommandHandler.ptb
+    DisableAbleRegexHandler.ptb = RegexHandler.ptb
+    DisableAbleMessageHandler.ptb = MessageHandler.ptb

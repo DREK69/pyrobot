@@ -6,10 +6,10 @@ import bs4
 import jikanpy
 import requests
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
-from telegram.ext import CallbackContext, CallbackQueryHandler
+from telegram.ext import CallbackContext, CallbackQueryHandler.ptb
 
 from MerissaRobot import DEV_USERS, DRAGONS, OWNER_ID, dispatcher
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
 
 info_btn = "More Information"
 kaizoku_btn = "Kaizoku ☠️"
@@ -588,15 +588,15 @@ __help__ = """
 ❂ /quote: send quotes randomly as text
  """
 
-ANIME_HANDLER = DisableAbleCommandHandler("anime", anime, run_async=True)
-AIRING_HANDLER = DisableAbleCommandHandler("airing", airing, run_async=True)
-CHARACTER_HANDLER = DisableAbleCommandHandler("character", character, run_async=True)
-MANGA_HANDLER = DisableAbleCommandHandler("manga", manga, run_async=True)
-USER_HANDLER = DisableAbleCommandHandler("user", user, run_async=True)
-UPCOMING_HANDLER = DisableAbleCommandHandler("upcoming", upcoming, run_async=True)
-KAIZOKU_SEARCH_HANDLER = DisableAbleCommandHandler("kaizoku", kaizoku, run_async=True)
-KAYO_SEARCH_HANDLER = DisableAbleCommandHandler("kayo", kayo, run_async=True)
-BUTTON_HANDLER = CallbackQueryHandler(button, pattern="anime_.*")
+ANIME_HANDLER = DisableAbleCommandHandler.ptb("anime", anime, run_async=True)
+AIRING_HANDLER = DisableAbleCommandHandler.ptb("airing", airing, run_async=True)
+CHARACTER_HANDLER = DisableAbleCommandHandler.ptb("character", character, run_async=True)
+MANGA_HANDLER = DisableAbleCommandHandler.ptb("manga", manga, run_async=True)
+USER_HANDLER = DisableAbleCommandHandler.ptb("user", user, run_async=True)
+UPCOMING_HANDLER = DisableAbleCommandHandler.ptb("upcoming", upcoming, run_async=True)
+KAIZOKU_SEARCH_HANDLER = DisableAbleCommandHandler.ptb("kaizoku", kaizoku, run_async=True)
+KAYO_SEARCH_HANDLER = DisableAbleCommandHandler.ptb("kayo", kayo, run_async=True)
+BUTTON_HANDLER = CallbackQueryHandler.ptb(button, pattern="anime_.*")
 
 dispatcher.add_handler(BUTTON_HANDLER)
 dispatcher.add_handler(ANIME_HANDLER)

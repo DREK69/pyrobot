@@ -1,10 +1,10 @@
 import speedtest
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
-from telegram.ext import CallbackContext, CallbackQueryHandler
+from telegram.ext import CallbackContext, CallbackQueryHandler.ptb
 
 from MerissaRobot import DEV_USERS, dispatcher
-from MerissaRobot.Handler.chat_status import dev_plus
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler
+from MerissaRobot.Handler.ptb.chat_status import dev_plus
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
 
 
 def convert(speed):
@@ -52,10 +52,10 @@ def speedtestxyz_callback(update: Update, context: CallbackContext):
         query.answer("You are required to join Heroes Association to use this command.")
 
 
-SPEED_TEST_HANDLER = DisableAbleCommandHandler(
+SPEED_TEST_HANDLER = DisableAbleCommandHandler.ptb(
     "speedtest", speedtestxyz, run_async=True
 )
-SPEED_TEST_CALLBACKHANDLER = CallbackQueryHandler(
+SPEED_TEST_CALLBACKHANDLER = CallbackQueryHandler.ptb(
     speedtestxyz_callback, pattern="speedtest_.*", run_async=True
 )
 

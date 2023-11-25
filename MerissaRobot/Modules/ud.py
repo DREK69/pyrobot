@@ -3,7 +3,7 @@ from telegram import ParseMode, Update
 from telegram.ext import CallbackContext
 
 from MerissaRobot import dispatcher
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
 
 
 def ud(update: Update, context: CallbackContext):
@@ -19,7 +19,7 @@ def ud(update: Update, context: CallbackContext):
     message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN)
 
 
-UD_HANDLER = DisableAbleCommandHandler(["ud"], ud, run_async=True)
+UD_HANDLER = DisableAbleCommandHandler.ptb(["ud"], ud, run_async=True)
 
 dispatcher.add_handler(UD_HANDLER)
 

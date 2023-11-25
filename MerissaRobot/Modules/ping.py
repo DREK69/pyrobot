@@ -6,8 +6,8 @@ from telegram import ParseMode, Update
 from telegram.ext import CallbackContext
 
 from MerissaRobot import StartTime, dispatcher
-from MerissaRobot.Handler.chat_status import sudo_plus
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler
+from MerissaRobot.Handler.ptb.chat_status import sudo_plus
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
 
 sites_list = {
     "Telegram": "https://api.telegram.org",
@@ -101,8 +101,8 @@ def pingall(update: Update, context: CallbackContext):
     )
 
 
-PING_HANDLER = DisableAbleCommandHandler("ping", ping, run_async=True)
-PINGALL_HANDLER = DisableAbleCommandHandler("pingall", pingall, run_async=True)
+PING_HANDLER = DisableAbleCommandHandler.ptb("ping", ping, run_async=True)
+PINGALL_HANDLER = DisableAbleCommandHandler.ptb("pingall", pingall, run_async=True)
 
 dispatcher.add_handler(PING_HANDLER)
 dispatcher.add_handler(PINGALL_HANDLER)

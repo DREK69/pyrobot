@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 from MerissaRobot import dispatcher
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
 
 TRUTH = (
     "Have you ghosted someone?" "Have you ever walked in on your parents doing 'it'?",
@@ -89,8 +89,8 @@ def dare(update: Update, context: CallbackContext):
     update.effective_message.reply_text(random.choice(DARE))
 
 
-TRUTH_HANDLER = DisableAbleCommandHandler("truth", truth, run_async=True)
-DARE_HANDLER = DisableAbleCommandHandler("dare", dare, run_async=True)
+TRUTH_HANDLER = DisableAbleCommandHandler.ptb("truth", truth, run_async=True)
+DARE_HANDLER = DisableAbleCommandHandler.ptb("dare", dare, run_async=True)
 
 dispatcher.add_handler(TRUTH_HANDLER)
 dispatcher.add_handler(DARE_HANDLER)

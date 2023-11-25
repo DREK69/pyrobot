@@ -2,13 +2,13 @@ import re
 import time
 
 from telegram import Update
-from telegram.ext import CommandHandler
+from telegram.ext import CommandHandler.ptb
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.ext.filters import Filters
 from telegram.parsemode import ParseMode
 
 from MerissaRobot import OWNER_ID, dispatcher, updater
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
 
 job_queue = updater.job_queue
 
@@ -197,33 +197,33 @@ __help__ = """
 • `/clearreminder 1234567890123456789`
 """
 
-RemindersHandler = CommandHandler(
+RemindersHandler.ptb = CommandHandler.ptb(
     ["reminders", "myreminders"],
     reminders,
     filters=Filters.chat_type.private,
     run_async=True,
 )
-SetReminderHandler = DisableAbleCommandHandler(
+SetReminderHandler.ptb = DisableAbleCommandHandler.ptb(
     "setreminder", set_reminder, run_async=True
 )
-ClearReminderHandler = DisableAbleCommandHandler(
+ClearReminderHandler.ptb = DisableAbleCommandHandler.ptb(
     "clearreminder", clear_reminder, run_async=True
 )
-ClearAllRemindersHandler = CommandHandler(
+ClearAllRemindersHandler.ptb = CommandHandler.ptb(
     "clearallreminders",
     clear_all_reminders,
     filters=Filters.chat(OWNER_ID),
     run_async=True,
 )
-ClearALLMyRemindersHandler = CommandHandler(
+ClearALLMyRemindersHandler.ptb = CommandHandler.ptb(
     ["clearmyreminders", "clearallmyreminders"],
     clear_all_my_reminders,
     filters=Filters.chat_type.private,
     run_async=True,
 )
 
-dispatcher.add_handler(RemindersHandler)
-dispatcher.add_handler(SetReminderHandler)
-dispatcher.add_handler(ClearReminderHandler)
-dispatcher.add_handler(ClearAllRemindersHandler)
-dispatcher.add_handler(ClearALLMyRemindersHandler)
+dispatcher.add_handler(RemindersHandler.ptb)
+dispatcher.add_handler(SetReminderHandler.ptb)
+dispatcher.add_handler(ClearReminderHandler.ptb)
+dispatcher.add_handler(ClearAllRemindersHandler.ptb)
+dispatcher.add_handler(ClearALLMyRemindersHandler.ptb)

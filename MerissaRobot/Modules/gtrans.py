@@ -3,7 +3,7 @@ from telegram import ParseMode, Update
 from telegram.ext import CallbackContext
 
 from MerissaRobot import dispatcher
-from MerissaRobot.Modules.disable import DisableAbleCommandHandler
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler.ptb
 
 trans = SyncTranslator()
 
@@ -61,7 +61,7 @@ vi,xh,yi,yo,zh,zh_CN,zh_TW,zu`
 """
 __mod_name__ = "Translator 🗣"
 
-TRANSLATE_HANDLER = DisableAbleCommandHandler(["tr", "tl"], totranslate)
+TRANSLATE_HANDLER = DisableAbleCommandHandler.ptb(["tr", "tl"], totranslate)
 
 dispatcher.add_handler(TRANSLATE_HANDLER)
 

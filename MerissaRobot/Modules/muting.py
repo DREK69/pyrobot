@@ -14,11 +14,11 @@ from telegram import (
     User,
 )
 from telegram.error import BadRequest
-from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler
+from telegram.ext import CallbackContext, CallbackQueryHandler.ptb, CommandHandler.ptb
 from telegram.utils.helpers import mention_html
 
 from MerissaRobot import LOGGER, TIGERS, dispatcher
-from MerissaRobot.Handler.chat_status import (
+from MerissaRobot.Handler.ptb.chat_status import (
     bot_admin,
     can_delete,
     can_restrict,
@@ -27,8 +27,8 @@ from MerissaRobot.Handler.chat_status import (
     user_admin,
     user_admin_no_reply,
 )
-from MerissaRobot.Handler.extraction import extract_user_and_text
-from MerissaRobot.Handler.string_handling import extract_time
+from MerissaRobot.Handler.ptb.extraction import extract_user_and_text
+from MerissaRobot.Handler.ptb.string_handling import extract_time
 from MerissaRobot.Modules.log_channel import loggable
 
 
@@ -375,11 +375,11 @@ Admins only:
  ❍ /unmute <userhandle>: unmutes a user. Can also be used as a reply, muting the replied to user.
 """
 
-MUTE_HANDLER = CommandHandler(["mute", "smute"], mute, run_async=True)
-DMUTE_HANDLER = CommandHandler("dmute", dmute, run_async=True)
-UNMUTE_HANDLER = CommandHandler("unmute", unmute, run_async=True)
-TEMPMUTE_HANDLER = CommandHandler(["tmute", "tempmute"], temp_mute, run_async=True)
-UNMUTE_BUTTON_HANDLER = CallbackQueryHandler(button, pattern=r"unmute_")
+MUTE_HANDLER = CommandHandler.ptb(["mute", "smute"], mute, run_async=True)
+DMUTE_HANDLER = CommandHandler.ptb("dmute", dmute, run_async=True)
+UNMUTE_HANDLER = CommandHandler.ptb("unmute", unmute, run_async=True)
+TEMPMUTE_HANDLER = CommandHandler.ptb(["tmute", "tempmute"], temp_mute, run_async=True)
+UNMUTE_BUTTON_HANDLER = CallbackQueryHandler.ptb(button, pattern=r"unmute_")
 
 dispatcher.add_handler(MUTE_HANDLER)
 dispatcher.add_handler(DMUTE_HANDLER)
