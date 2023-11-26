@@ -10,7 +10,6 @@ import aiohttp
 import requests
 import yt_dlp
 from bs4 import BeautifulSoup
-from fuzzysearch import find_near_matches
 from mutagen.mp4 import MP4
 from pornhub_api import PornhubApi
 from pornhub_api.backends.aiohttp import AioHttpBackend
@@ -1282,7 +1281,7 @@ async def execute_code(query):
         text = text.split()[1].strip()
         languages = list(
             filter(
-                lambda x: find_near_matches(text, x, max_l_dist=1),
+                lambda x: list(text, x, max_l_dist=1),
                 languages,
             )
         )
