@@ -269,36 +269,16 @@ async def gen_thumb(videoid):
             stroke_fill="rgb(82, 84, 80)",
             font=ImageFont.truetype("MerissaRobot/Resources/font/font2.ttf", 30),
         )
-        para = textwrap.wrap(title, width=30)
-        try:
-            if para[0]:
-                text_w, text_h = draw.textsize(f"{para[0]}", font=font)
-                draw.text(
-                    ((1280 - text_w) / 1.32, 180),
-                    f"{para[0]}",
-                    fill="white",
-                    stroke_width=1,
-                    stroke_fill="black",
-                    font=font,
-                )
-            if para[1]:
-                text_w, text_h = draw.textsize(f"{para[1]}", font=font)
-                draw.text(
-                    ((1280 - text_w) / 1.40, 230),
-                    f"{para[1]}",
-                    fill="white",
-                    stroke_width=1,
-                    stroke_fill="black",
-                    font=font,
-                )
-        except:
-            pass
-        text_w, text_h = draw.textsize(
-            f"{channel}",
-            font=ImageFont.truetype("MerissaRobot/Resources/font/font.ttf", 35),
+        draw.text(
+            (450, 210),
+            f"{title[:35]}",
+            fill="white",
+            stroke_width=1,
+            stroke_fill="black",
+            font=font,
         )
         draw.text(
-            ((1280 - text_w) / 1.45, 295),
+            (650, 280),
             f"{channel}",
             fill="white",
             stroke_width=1,
