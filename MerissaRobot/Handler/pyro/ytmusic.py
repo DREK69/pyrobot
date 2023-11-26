@@ -4,9 +4,12 @@ from ytmusicapi import YTMusic
 
 ytmusic = YTMusic()
 
+
 def getvideoid(link):
-    pattern = re.compile(r'(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})')
-    match = pattern.search(link)    
+    pattern = re.compile(
+        r"(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})"
+    )
+    match = pattern.search(link)
     videoid = match.group(1)
     return videoid
 
