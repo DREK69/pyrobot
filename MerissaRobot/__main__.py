@@ -834,6 +834,7 @@ def main():
     updater.start_polling(timeout=15, read_latency=4, drop_pending_updates=True)
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
+    telethn.run_until_disconnected()
     updater.idle()
 
 
