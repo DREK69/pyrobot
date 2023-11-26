@@ -1,7 +1,8 @@
 import ast
 import html
 
-from alphabet_detector import AlphabetDetector
+import unicodedata as ud
+
 from telegram import ChatPermissions, MessageEntity, ParseMode, TelegramError
 from telegram.error import BadRequest
 from telegram.ext import CommandHandler, Filters, MessageHandler
@@ -22,7 +23,9 @@ from MerissaRobot.Modules.connection import connected
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.log_channel import loggable
 
-ad = AlphabetDetector()
+def al_detect(unistr):
+    return set(ud.name(char).split(" ")[0] for char in unistr if char.isalpha())
+
 
 LOCK_TYPES = {
     "audio": Filters.audio,
@@ -347,7 +350,7 @@ def del_lockables(update, context):
         if lockable == "rtl":
             if sql.is_locked(chat.id, lockable) and can_delete(chat, context.bot.id):
                 if message.caption:
-                    check = ad.detect_alphabet("{}".format(message.caption))
+                    check = al_detect("{}".format(message.caption))
                     if "ARABIC" in check:
                         try:
                             message.delete()
