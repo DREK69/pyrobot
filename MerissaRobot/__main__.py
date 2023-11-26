@@ -832,11 +832,7 @@ def main():
     dispatcher.bot.sendMessage(2030709195, "Merissa Started")
 
     LOGGER.info("Using long polling.")
-    updater.start_polling(
-        timeout=30,
-        read_latency=4,
-        drop_pending_updates=False
-    )
+    updater.start_polling(timeout=30, read_latency=4, drop_pending_updates=False)
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
 
