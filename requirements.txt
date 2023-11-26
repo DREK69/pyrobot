@@ -3,6 +3,7 @@ aiohttp
 apscheduler
 asyncio
 beautifulsoup4
+bleach
 bs4==0.0.1
 captcha==0.4 
 dateparser
