@@ -1,4 +1,3 @@
-import re
 from random import randint
 
 import requests as r
@@ -9,7 +8,6 @@ from telegram import (
     ParseMode,
     Update,
 )
-from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CommandHandler, Filters
 
 from MerissaRobot import WALL_API, dispatcher
