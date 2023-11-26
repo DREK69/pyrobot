@@ -1,17 +1,11 @@
 aiofiles
 aiohttp
-alphabet_detector
 apscheduler
 asyncio
 beautifulsoup4
-bleach
 bs4==0.0.1
-cachetools
 captcha==0.4 
-countryinfo
-CurrencyConverter
 dateparser
-dnspython==2.3.0
 emoji==1.7.0
 envparse
 faker
