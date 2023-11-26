@@ -19,6 +19,8 @@ from youtubesearchpython import VideosSearch
 from MerissaRobot import pbot as Client
 from MerissaRobot.helpers import embed_album_art, get_ytthumb, getreq, subscribe
 
+from MerissaRobot.Handler.pyro.ytmusic import ytmsearch
+
 ytregex = r"^((?:https?:)?\/\/)?((?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$"
 
 
@@ -54,7 +56,7 @@ async def ytregex(client, message):
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     link = message.text
     if "music" in link:
-        resp = await getreq(f"https://api.princexd.tech/ytmsearch?query={link}")
+        resp = ytmsearch(link)
         yt = resp["results"]["videoDetails"]
         videoid = yt["videoId"]
         title = yt["title"]
@@ -167,7 +169,7 @@ async def song(client, message):
         return await message.reply_text("Give me some text to search on Youtube")
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     query = message.text.split(None, 1)[1]
-    search = await getreq(f"https://api.princexd.tech/ytmsearch?query={query}")
+    search = ytmsearch(query)
     yt = search["results"][0]
     title = yt["title"]
     dur = yt["duration"]
@@ -204,7 +206,7 @@ async def ymnext_query(client, callbackquery):
     callback = callback_data.split("|")
     query = callback[1]
     page = int(callback[2])
-    search = await getreq(f"https://api.princexd.tech/ytmsearch?query={query}")
+    search = ytmsearch(query)
     yt = search["results"][page]
     title = yt["title"]
     dur = yt["duration"]
