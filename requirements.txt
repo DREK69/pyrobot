@@ -7,7 +7,6 @@ bleach
 bs4==0.0.1
 captcha==0.4 
 dateparser
-dnspython==2.3.0
 emoji==1.7.0
 envparse
 faker
@@ -28,7 +27,7 @@ psycopg2-binary
 Pillow==9.4.0
 pornhub-api==0.2.0
 pykeyboard
-pymongo==3.12.1
+pymongo[srv]
 pynewtonmath
 pyrate-limiter==2.10.0
 pyrogram==2.0.106
