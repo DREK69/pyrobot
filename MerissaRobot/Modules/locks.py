@@ -359,7 +359,7 @@ def del_lockables(update, context):
                                 LOGGER.exception("ERROR in lockables")
                         break
                 if message.text:
-                    check = ad.detect_alphabet("{}".format(message.text))
+                    check = al_detect("{}".format(message.text))
                     if "ARABIC" in check:
                         try:
                             message.delete()
