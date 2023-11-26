@@ -1,6 +1,5 @@
 import ast
 import html
-
 import unicodedata as ud
 
 from telegram import ChatPermissions, MessageEntity, ParseMode, TelegramError
@@ -22,6 +21,7 @@ from MerissaRobot.Handler.ptb.chat_status import (
 from MerissaRobot.Modules.connection import connected
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.log_channel import loggable
+
 
 def al_detect(unistr):
     return set(ud.name(char).split(" ")[0] for char in unistr if char.isalpha())
