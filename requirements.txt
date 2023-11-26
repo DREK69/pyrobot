@@ -22,6 +22,7 @@ lxml==4.9.3
 motor
 markdown2==2.4.3
 mutagen
+multicolorcaptcha
 opencv-python-headless
 PeakPxApi
 psycopg2-binary
