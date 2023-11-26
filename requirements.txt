@@ -7,6 +7,7 @@ bleach
 bs4==0.0.1
 captcha==0.4 
 dateparser
+dnspython==2.3.0
 emoji==1.7.0
 envparse
 faker
@@ -17,7 +18,6 @@ heroku3
 html2text
 humanize
 img2pdf
-loguru
 lxml==4.9.3
 motor
 markdown2==2.4.3
