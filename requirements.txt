@@ -90,7 +90,7 @@ telegraph
 telethon==1.32.0
 pyshorteners
 textblob 
-tgcrypto==1.2.5
+tgcrypto
 tswift
 tzlocal
 ujson
@@ -99,5 +99,6 @@ wget
 wikipedia
 youtube_search
 youtube_search_python==1.4.9
+ytmusicapi
 yt-dlp
 zalgo-text
