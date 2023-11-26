@@ -41,6 +41,7 @@ python-telegram-bot==13.14
 pytimeparse
 pytube
 qrcode
+Random-Word-Generator
 redis
 regex
 requests 
