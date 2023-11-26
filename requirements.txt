@@ -13,14 +13,10 @@ CurrencyConverter
 dateparser
 dnspython==2.3.0
 emoji==1.7.0
-EmojiCaptcha==0.1.2
-emoji-country-flag
 envparse
 faker
 ffmpeg-python
-future
 googletrans==4.0.0rc1
-gpytranslate
 gtts
 heroku3
 html2text
