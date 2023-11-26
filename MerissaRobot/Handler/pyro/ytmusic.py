@@ -3,11 +3,11 @@ from ytmusicapi import YTMusic
 ytmusic = YTMusic()
 
 
-async def ytmusicapi(query):
+async def ytmsearch(query):
     result = ytmusic.search(query, filter="songs", limit=10)
     return {"results": result}
 
 
-def ytmusicapi(videoid):
+def ytmtrack(videoid):
     result = ytmusic.get_song(videoid)
     return {"results": result}
