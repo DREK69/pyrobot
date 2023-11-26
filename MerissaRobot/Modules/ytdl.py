@@ -485,8 +485,10 @@ async def audio_query(client, callbackquery):
         album = info_dict["album"]
     except:
         album = title
-    resp = await getreq(f"https://api.princexd.tech/ytmsearch?query={link}")
-    artist = resp["results"]["videoDetails"]["author"]
+    try:
+        artist = info_dict["results"]["videoDetails"]["author"]
+    except:
+        artist = "Unknown Artist"
     thumb = await callbackquery.message.download()
     audio_file = f"{videoid}.m4a"
     audio = MP4(audio_file)
