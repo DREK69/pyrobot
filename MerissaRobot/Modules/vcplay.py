@@ -23,6 +23,8 @@ from pytgcalls.types import (
 )
 from telegram import InlineKeyboardButton as IKB
 
+from youtubesearchpython import VideosSearch
+
 from MerissaRobot import (
     ASS_ID,
     ASS_MENTION,
@@ -171,7 +173,7 @@ async def play(_, message):
         if not "youtu" in url:
             return await merissa.edit_text("Only Youtube link Works")
         else:
-            results = VideoSearch(url, limit=1)
+            results = VideosSearch(url, limit=1)
             yt = vidinfo["result"][0]
             title = yt["title"]
             duration = yt["duration"]
@@ -198,7 +200,7 @@ async def play(_, message):
             return await merissa.edit_text("Please enter query to Play!")
         query = message.text.split(None, 1)[1]
         try:
-            vidinfo = VideoSearch(query, limit=1).result()
+            vidinfo = VideosSearch(query, limit=1).result()
             yt = vidinfo["result"][0]
             title = yt["title"]
             duration = yt["duration"]
