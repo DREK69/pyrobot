@@ -833,9 +833,9 @@ def main():
 
     LOGGER.info("Using long polling.")
     updater.start_polling(
-        timeout=5,
-        read_latency=10,
-        drop_pending_updates=True,
+        timeout=30,
+        read_latency=4,
+        drop_pending_updates=False
     )
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
