@@ -23,6 +23,7 @@ markdown2==2.4.3
 mutagen
 opencv-python-headless
 PeakPxApi
+psycopg2-binary
 Pillow==9.4.0
 pornhub-api==0.2.0
 pykeyboard
