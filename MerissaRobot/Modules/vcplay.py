@@ -173,7 +173,7 @@ async def play(_, message):
             return await merissa.edit_text("Only Youtube link Works")
         else:
             results = VideosSearch(url, limit=1)
-            yt = vidinfo["result"][0]
+            yt = results["result"][0]
             title = yt["title"]
             duration = yt["duration"]
             videoid = yt["id"]
