@@ -1,6 +1,6 @@
 import requests
 from telegram import Update
-from telegram.constants import ParseMode
+from telegram.parsemode import ParseMode
 from telegram.ext import CallbackContext
 
 from MerissaRobot import dispatcher

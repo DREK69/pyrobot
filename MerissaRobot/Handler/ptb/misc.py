@@ -5,7 +5,7 @@ from uuid import uuid4
 import cv2
 import ffmpeg
 from telegram import *
-from telegram.constants import ParseMode
+from telegram.parsemode import ParseMode
 from telegram.error import TelegramError
 
 from MerissaRobot import NO_LOAD

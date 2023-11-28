@@ -1,7 +1,7 @@
 import html
 
 from telegram import Update
-from telegram.constants import ParseMode
+from telegram.parsemode import ParseMode
 from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler
 
 from MerissaRobot import ALLOW_EXCL, CustomCommandHandler, dispatcher

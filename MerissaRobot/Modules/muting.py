@@ -12,7 +12,7 @@ from telegram import (
     Update,
     User,
 )
-from telegram.constants import ParseMode
+from telegram.parsemode import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler
 from telegram.utils.helpers import mention_html
