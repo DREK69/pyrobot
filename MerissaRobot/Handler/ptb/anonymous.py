@@ -2,7 +2,7 @@ import functools
 from enum import Enum
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.constants import ParseMode
+from telegram.parsemode import ParseMode
 from telegram.ext import CallbackContext
 
 from MerissaRobot import DEV_USERS, DRAGONS, dispatcher

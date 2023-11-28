@@ -1,7 +1,7 @@
 import html
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.constants import ParseMode
+from telegram.parsemode import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CallbackQueryHandler
 from telegram.utils.helpers import mention_html
