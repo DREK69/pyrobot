@@ -2,7 +2,8 @@ import random
 from datetime import datetime
 
 import humanize
-from telegram import MessageEntity, ParseMode, Update
+from telegram import MessageEntity, Update
+from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext, Filters, MessageHandler
 
