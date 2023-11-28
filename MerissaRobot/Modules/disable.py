@@ -2,7 +2,8 @@ import importlib
 from typing import Union
 
 from future.utils import string_types
-from telegram import ParseMode, Update
+from telegram import Update
+from telegram.constants import ParseMode
 from telegram.ext import (
     CallbackContext,
     CommandHandler,
