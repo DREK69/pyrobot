@@ -1,9 +1,9 @@
 import html
 
 from telegram import ChatPermissions, Update
-from telegram.parsemode import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler
+from telegram.parsemode import ParseMode
 from telegram.utils.helpers import mention_html, mention_markdown
 
 import MerissaRobot.Database.sql.blsticker_sql as sql

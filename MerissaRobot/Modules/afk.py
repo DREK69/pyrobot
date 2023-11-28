@@ -3,9 +3,9 @@ from datetime import datetime
 
 import humanize
 from telegram import MessageEntity, Update
-from telegram.parsemode import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext, Filters, MessageHandler
+from telegram.parsemode import ParseMode
 
 from MerissaRobot import dispatcher
 from MerissaRobot.Database.sql import afk_sql as sql

@@ -2,8 +2,7 @@ import re
 import time
 
 from telegram import Update
-from telegram.ext import CommandHandler
-from telegram.ext import CallbackContext
+from telegram.ext import CallbackContext, CommandHandler
 from telegram.ext.filters import Filters
 from telegram.parsemode import ParseMode
 

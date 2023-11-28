@@ -2,9 +2,9 @@ import re
 import time
 
 from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.parsemode import ParseMode
 from telegram.error import BadRequest, Unauthorized
 from telegram.ext import CallbackQueryHandler, CommandHandler
+from telegram.parsemode import ParseMode
 
 import MerissaRobot.Database.sql.connection_sql as sql
 from MerissaRobot import DEV_USERS, DRAGONS, dispatcher

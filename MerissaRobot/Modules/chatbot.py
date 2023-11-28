@@ -11,7 +11,6 @@ from telegram import (
     Update,
     User,
 )
-from telegram.parsemode import ParseMode
 from telegram.error import BadRequest, RetryAfter, Unauthorized
 from telegram.ext import (
     CallbackContext,
@@ -20,6 +19,7 @@ from telegram.ext import (
     Filters,
     MessageHandler,
 )
+from telegram.parsemode import ParseMode
 from telegram.utils.helpers import mention_html
 
 import MerissaRobot.Database.sql.chatbot_sql as sql

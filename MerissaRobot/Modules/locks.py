@@ -3,9 +3,9 @@ import html
 import unicodedata as ud
 
 from telegram import ChatPermissions, MessageEntity, TelegramError
-from telegram.parsemode import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CommandHandler, Filters, MessageHandler
+from telegram.parsemode import ParseMode
 from telegram.utils.helpers import mention_html
 
 import MerissaRobot.Database.sql.locks_sql as sql

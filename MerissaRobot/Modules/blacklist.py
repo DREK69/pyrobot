@@ -2,9 +2,9 @@ import html
 import re
 
 from telegram import ChatPermissions
-from telegram.parsemode import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CommandHandler, Filters, MessageHandler
+from telegram.parsemode import ParseMode
 from telegram.utils.helpers import mention_html
 
 import MerissaRobot.Database.sql.blacklist_sql as sql

@@ -3,7 +3,6 @@ from typing import Union
 
 from future.utils import string_types
 from telegram import Update
-from telegram.parsemode import ParseMode
 from telegram.ext import (
     CallbackContext,
     CommandHandler,
@@ -11,6 +10,7 @@ from telegram.ext import (
     MessageHandler,
     RegexHandler,
 )
+from telegram.parsemode import ParseMode
 from telegram.utils.helpers import escape_markdown
 
 from MerissaRobot import dispatcher

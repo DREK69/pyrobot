@@ -4,8 +4,8 @@ from time import perf_counter
 
 from cachetools import TTLCache
 from telegram import Chat, ChatMember, Update
-from telegram.parsemode import ParseMode
 from telegram.ext import CallbackContext
+from telegram.parsemode import ParseMode
 
 from MerissaRobot import (
     DEL_CMDS,

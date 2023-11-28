@@ -1,7 +1,7 @@
 import requests
 from telegram import Update
-from telegram.parsemode import ParseMode
 from telegram.ext import CallbackContext
+from telegram.parsemode import ParseMode
 
 from MerissaRobot import dispatcher
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
