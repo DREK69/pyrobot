@@ -1,7 +1,7 @@
 import html
 
 from telegram import ChatPermissions, Update
-from telegram.parsemode import ParseMode
+from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler
 from telegram.utils.helpers import mention_html, mention_markdown
