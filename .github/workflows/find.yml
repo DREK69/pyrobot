@@ -8,8 +8,8 @@ jobs:
       - name: Find and Replace
         uses: nguyenvanuyn96/str-find-and-replace-action@master
         with:
-          find: "from telegram.constants"
-          replace: "from telegram.parsemode"
+          find: "from telegram.parsemode"
+          replace: "from telegram.constants"
       - name: Pull All Updates
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
