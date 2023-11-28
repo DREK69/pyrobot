@@ -5,9 +5,9 @@ from telegram import (
     ChatAction,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    ParseMode,
     Update,
 )
+from telegram.constants import ParseMode
 from telegram.ext import CallbackContext, CommandHandler, Filters
 
 from MerissaRobot import WALL_API, dispatcher
