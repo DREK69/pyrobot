@@ -1,7 +1,8 @@
 import html
 import re
 
-from telegram import ChatPermissions, ParseMode
+from telegram.constants import ParseMode
+from telegram import ChatPermissions
 from telegram.error import BadRequest
 from telegram.ext import CommandHandler, Filters, MessageHandler
 from telegram.utils.helpers import mention_html
