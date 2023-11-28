@@ -3,7 +3,7 @@ import os
 import time
 from io import BytesIO
 
-from telegram import ParseMode
+from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CommandHandler
 
