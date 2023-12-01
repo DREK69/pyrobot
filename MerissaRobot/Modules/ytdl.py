@@ -489,7 +489,10 @@ async def audio_query(client, callbackquery):
     try:
         artist = info_dict["artist"]
     except:
-        artist = "Unknown Artist"
+        try: 
+            artist = info_dict["uploader"]
+        except:
+            artist = "Unknown Artist"
     thumb = await callbackquery.message.download()
     audio_file = f"{videoid}.m4a"
     audio = MP4(audio_file)
