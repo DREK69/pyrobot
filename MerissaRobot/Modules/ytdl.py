@@ -489,7 +489,7 @@ async def audio_query(client, callbackquery):
     try:
         artist = info_dict["artist"]
     except:
-        try: 
+        try:
             artist = info_dict["uploader"]
         except:
             artist = "Unknown Artist"
