@@ -131,7 +131,7 @@ def chatbot(update: Update, context: CallbackContext):
             return
         bot.send_chat_action(chat_id, action="typing")
         results = requests.get(
-            f"https://chat.merissabot.me/api/apikey=2030709195-MERISSAWk8XcW9hM3/query={message.text}"
+            f"https://chat.merissabot.me/api/apikey=2030709195-MERISSAWk8XcW9hM3/message={message.text}"
         ).json()
         message.reply_text(results["reply"])
 
