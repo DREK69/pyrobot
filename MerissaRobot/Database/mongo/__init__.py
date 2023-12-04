@@ -9,5 +9,5 @@ client = MongoClient(MONGO_DB_URI)
 leveldb = MongoClient(MONGO_DB)
 
 mongo = MongoCli(MONGO_DB)
-afkdb = mongo.MerissaRobot
+mongodb = mongo.MerissaRobot
 db = client["MerissaRobot"]
