@@ -1,4 +1,5 @@
-from typing import Dict, Union, List
+from typing import Dict, List, Union
+
 from MerissaRobot.Database.mongo import mongodb as db
 
 playlistdb = db.playlist
