@@ -1,36 +1,10 @@
-import html
-import re
-from time import sleep
-
-import requests
-from telegram import (
-    CallbackQuery,
-    Chat,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Update,
-    User,
-)
-from telegram.error import BadRequest, RetryAfter, Unauthorized
-from telegram.ext import (
-    CallbackContext,
-    CallbackQueryHandler,
-    CommandHandler,
-    Filters,
-    MessageHandler,
-)
-from telegram.parsemode import ParseMode
-from telegram.utils.helpers import mention_html
+from pyrogram import filters
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup 
 
 import MerissaRobot.Database.sql.chatbot_sql as sql
-from MerissaRobot import dispatcher
-from MerissaRobot.Handler.ptb.chat_status import user_admin, user_admin_no_reply
-from MerissaRobot.Handler.ptb.filters import CustomFilters
-from MerissaRobot.Modules.log_channel import gloggable
+from MerissaRobot import pbot
 
 
-@user_admin_no_reply
-@gloggable
 def merissarm(update: Update, context: CallbackContext) -> str:
     query: Optional[CallbackQuery] = update.callback_query
     user: Optional[User] = update.effective_user
@@ -57,8 +31,6 @@ def merissarm(update: Update, context: CallbackContext) -> str:
     return ""
 
 
-@user_admin_no_reply
-@gloggable
 def merissaadd(update: Update, context: CallbackContext) -> str:
     query: Optional[CallbackQuery] = update.callback_query
     user: Optional[User] = update.effective_user
@@ -84,24 +56,21 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
 
     return ""
 
-
-@user_admin
-@gloggable
-def merissa(update: Update, context: CallbackContext):
-    update.effective_user
-    message = update.effective_message
+@pbot.on_message(filters.command("chatbot"))
+async def merissa(_, message):
+    chatid = message.chat.id
     msg = """**Welcome To Control Panal Of Merissa ChatBot**
 
 **Here You Will Find Two Buttons Select AnyOne Of Them**"""
     keyboard = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton(text="On", callback_data="add_chat({})"),
-                InlineKeyboardButton(text="Off", callback_data="rm_chat({})"),
+                InlineKeyboardButton(text="On", callback_data=f"merissa add|{chatid}"),
+                InlineKeyboardButton(text="Off", callback_data=f"merissa rm|{chatid}"),
             ]
         ]
     )
-    message.reply_text(
+    await message.reply_text(
         msg,
         reply_markup=keyboard,
         parse_mode=ParseMode.MARKDOWN,
