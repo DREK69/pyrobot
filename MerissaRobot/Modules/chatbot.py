@@ -1,5 +1,5 @@
 from pyrogram import filters
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup 
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 import MerissaRobot.Database.sql.chatbot_sql as sql
 from MerissaRobot import pbot
@@ -55,6 +55,7 @@ def merissaadd(update: Update, context: CallbackContext) -> str:
             )
 
     return ""
+
 
 @pbot.on_message(filters.command("chatbot"))
 async def merissa(_, message):
