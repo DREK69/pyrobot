@@ -1,8 +1,10 @@
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.enums import ChatAction
 
 import MerissaRobot.Database.sql.chatbot_sql as sql
 from MerissaRobot import pbot
+from MerissaRobot.helpers import getreq
 
 
 @pbot.on_callback_query(filters.regex("^merissa"))
@@ -77,10 +79,10 @@ async def chatbot(bot, message):
     if message.text and not message.document:
         if not merissa_message(bot, message):
             return
-        await bot.send_chat_action(chat_id, "typing")
-        results = requests.get(
+        await bot.send_chat_action(chat_id, ChatAction.TYPING)
+        results = await getreq(
             f"https://chat.merissabot.me/api/apikey=2030709195:Ofe_G5n4DZMPxnTgTXaSwvRqPXHhqpVMFqzWRNQ/message={message.text}"
-        ).json()
+        )
         await message.reply_text(results["reply"])
 
 
