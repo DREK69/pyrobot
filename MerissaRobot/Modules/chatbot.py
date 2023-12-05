@@ -69,7 +69,7 @@ def merissa_message(bot, message):
     filters.text & filters.reply & ~filters.bot & ~filters.via_bot & ~filters.forwarded,
     group=2,
 )
-async def chatbot(_, message):
+async def chatbot(bot, message):
     chat_id = message.chat.id
     is_merissa = sql.is_merissa(chat_id)
     if not is_merissa:
@@ -79,7 +79,7 @@ async def chatbot(_, message):
             return
         await bot.send_chat_action(chat_id, "typing")
         results = requests.get(
-            f"https://chat.merissabot.me/api/apikey=2030709195-MERISSAWk8XcW9hM3/message={message.text}"
+            f"https://chat.merissabot.me/api/apikey=2030709195:Ofe_G5n4DZMPxnTgTXaSwvRqPXHhqpVMFqzWRNQ/message={message.text}"
         ).json()
         await message.reply_text(results["reply"])
 
