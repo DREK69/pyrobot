@@ -66,11 +66,7 @@ def merissa_message(bot, message):
 
 
 @pbot.on_message(
-    filters.text
-    & filters.reply
-    & ~filters.bot
-    & ~filters.via_bot
-    & ~filters.forwarded,
+    filters.text & filters.reply & ~filters.bot & ~filters.via_bot & ~filters.forwarded,
     group=2,
 )
 async def chatbot(_, message):
