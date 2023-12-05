@@ -9,7 +9,7 @@ from MerissaRobot.helpers import getreq
 
 @pbot.on_callback_query(filters.regex("^merissa"))
 async def merissachatbot(client, query):
-    mode = query.data.split(None, 1)[1]
+    mode = query.data.split("_")[1]
     chat = query.message.chat
     user = query.from_user
     if mode == "add":
@@ -45,8 +45,8 @@ async def merissa(_, message):
     keyboard = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton(text="On", callback_data=f"merissa add"),
-                InlineKeyboardButton(text="Off", callback_data=f"merissa rm"),
+                InlineKeyboardButton(text="On", callback_data=f"merissa_add"),
+                InlineKeyboardButton(text="Off", callback_data=f"merissa_rm"),
             ]
         ]
     )
