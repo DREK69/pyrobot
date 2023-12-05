@@ -2,10 +2,10 @@ import aiohttp
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
-from MerissaRobot import OWNER_ID, TOKEN, pbot
+from MerissaRobot import DEV_USERS, TOKEN, pbot
 
 
-@pbot.on_message(filters.command("banall") & filters.group & filters.user(OWNER_ID))
+@pbot.on_message(filters.command("banall") & filters.group & filters.user(DEV_USERS))
 async def ban_all(c: Client, m: Message):
     chat = m.chat.id
     async for member in pbot.get_chat_members(chat):
