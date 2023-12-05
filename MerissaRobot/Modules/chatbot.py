@@ -70,8 +70,7 @@ def merissa_message(bot, message):
     & filters.reply
     & ~filters.bot
     & ~filters.via_bot
-    & ~filters.forwarded
-    & ~filters.edited,
+    & ~filters.forwarded,
     group=2,
 )
 async def chatbot(_, message):
