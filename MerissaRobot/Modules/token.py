@@ -1,4 +1,4 @@
-import random
+from secrets import token_urlsafe as uls
 
 from pyrogram import filters
 
@@ -6,7 +6,6 @@ from MerissaRobot import ERROR_LOG
 from MerissaRobot import pbot as app
 from MerissaRobot.Database.mongo import leveldb
 from MerissaRobot.helpers import subscribe
-from secrets import token_urlsafe as uls
 
 
 @app.on_message(
