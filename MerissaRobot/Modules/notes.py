@@ -181,6 +181,12 @@ def get(update, context, notename, show_none=True, no_format=False):
                         disable_web_page_preview=True,
                         reply_markup=keyboard,
                     )
+                if note.msgtype == sql.Types.STICKER:
+                    bot.send_sticker(
+                        chat_id,
+                        note.file,
+                        reply_to_message_id=reply_id,
+                    )
                 else:
                     ENUM_FUNC_MAP[note.msgtype](
                         chat_id,
