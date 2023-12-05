@@ -13,7 +13,7 @@ emoji==1.7.0
 envparse
 faker
 ffmpeg-python
-gpytranslate
+gpytranslate==1.5.1
 gtts
 heroku3
 html2text
