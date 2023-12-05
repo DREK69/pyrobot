@@ -460,11 +460,15 @@ def merissa_about_callback(update, context):
         )
     elif query.data == "merissa_private":
         userid = query.from_user.id
-        query.answer("Help Menu Sent in Private Chat", show_alert=True)
-        send_help(
-            userid,
-            text=HELP_STRINGS,
-        )
+        try:
+            send_help(
+              userid,
+              text=HELP_STRINGS,
+            )
+            query.answer("Help Menu Sent in Private Chat", show_alert=True)
+        except:
+            query.answer("Unblock MerissaRobot and Try Again", show_alert=True)
+        
 
     elif query.data == "merissa_donate":
         query.message.edit_text(
