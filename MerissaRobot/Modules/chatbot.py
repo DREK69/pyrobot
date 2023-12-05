@@ -1,8 +1,9 @@
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from MerissaRobot import pbot
 import MerissaRobot.Database.sql.chatbot_sql as sql
+from MerissaRobot import pbot
+
 
 @pbot.on_callback_query(filters.regex("^merissa"))
 async def merissachatbot(client, query):
@@ -19,9 +20,7 @@ async def merissachatbot(client, query):
                 f"<b>Admin:</b> {user.mention}\n"
             )
         else:
-            await query.edit_message_text(
-                f"Merissa Chatbot enable by {user.mention}."
-            )
+            await query.edit_message_text(f"Merissa Chatbot enable by {user.mention}.")
     else:
         is_merissa = sql.rem_merissa(chat.id)
         if is_merissa:
@@ -32,14 +31,12 @@ async def merissachatbot(client, query):
                 f"<b>Admin:</b> {user.mention}\n"
             )
         else:
-            await query.edit_message_text(
-                f"Merissa Chatbot disable by {user.mention}."
-            )
+            await query.edit_message_text(f"Merissa Chatbot disable by {user.mention}.")
 
 
 @pbot.on_message(filters.command("chatbot"))
 async def merissa(_, message):
-    chatid = message.chat.id
+    message.chat.id
     msg = """**Welcome To Control Panal Of Merissa ChatBot**
 
 **Here You Will Find Two Buttons Select AnyOne Of Them**"""
@@ -67,6 +64,7 @@ def merissa_message(bot, message):
     else:
         return False
 
+
 @pbot.on_message(
     filters.text
     & filters.reply
@@ -74,7 +72,7 @@ def merissa_message(bot, message):
     & ~filters.via_bot
     & ~filters.forwarded
     & ~filters.edited,
-    group=2,  
+    group=2,
 )
 async def chatbot(_, message):
     chat_id = message.chat.id
