@@ -157,11 +157,10 @@ async def play(_, message):
             title = file_name
             duration = round(video.duration / 60)
         videoid = "videoidhotitodedeta"
-        file_path = (
-            await message.reply_to_message.download(file_name)
-            if not os.path.isfile(os.path.join("downloads", file_name))
-            else f"downloads/{file_name}"
-        )
+        if not os.path.isfile(os.path.join("downloads", title))
+            file_path = await message.reply_to_message.download(title)
+        else:
+            file_path = f"downloads/{title}"
         thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
         if "v" in message.command[0]:
             stream_type += "video"
