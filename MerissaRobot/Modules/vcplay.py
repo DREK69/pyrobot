@@ -157,7 +157,7 @@ async def play(_, message):
             title = file_name
             duration = round(video.duration / 60)
         videoid = "videoidhotitodedeta"
-        if not os.path.isfile(os.path.join("downloads", title))
+        if not os.path.isfile(os.path.join("downloads", title)):
             file_path = await message.reply_to_message.download(title)
         else:
             file_path = f"downloads/{title}"
