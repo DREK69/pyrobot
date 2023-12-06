@@ -762,6 +762,7 @@ def migrate_chats(update: Update, context: CallbackContext):
     LOGGER.info("Successfully migrated!")
     raise DispatcherHandlerStop
 
+
 async def initiate_bot():
     try:
         await pbot.start()
@@ -779,6 +780,7 @@ async def initiate_bot():
     LOGGER.info("Userbot Started")
     await pytgcalls.start()
     LOGGER.info("Pytgcalls Started")
+
 
 def main():
     LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
