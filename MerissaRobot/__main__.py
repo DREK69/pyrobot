@@ -762,27 +762,27 @@ def migrate_chats(update: Update, context: CallbackContext):
     LOGGER.info("Successfully migrated!")
     raise DispatcherHandlerStop
 
-
-def main():
-    LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+async def initiate_bot():
     try:
-        pbot.start()
+        await pbot.start()
     except FloodWait as e:
         LOGGER.info(
             f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
         )
         time.sleep(e.value)
-        pbot.start()
+        await pbot.start()
 
-    pbot.send_message(-1001446814207, "Bot Started")
+    await pbot.send_message(-1001446814207, "Bot Started")
     LOGGER.info("Pyrogram Started")
-    user.start()
-    user.send_message(-1001446814207, "Assistant Started")
+    await user.start()
+    await user.send_message(-1001446814207, "Assistant Started")
     LOGGER.info("Userbot Started")
-
-    pytgcalls.start()
+    await pytgcalls.start()
     LOGGER.info("Pytgcalls Started")
 
+def main():
+    LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+    loop.run_until_complete(initiate_bot())
     try:
         telethn.start(bot_token=TOKEN)
         LOGGER.info("Telethon Started")
