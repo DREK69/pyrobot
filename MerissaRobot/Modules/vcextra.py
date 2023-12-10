@@ -448,14 +448,8 @@ async def on_stream_end(pytgcalls, update: Update):
     try:
         get.pop(0)
     except:
-        pass
-    if not get:
-        try:
-            await _clear_(chat_id)
-            return await pytgcalls.leave_group_call(chat_id)
-        except:
-            return
-    else:
+        pass   
+    if get:
         process = await pbot.send_message(
             chat_id=chat_id,
             text="Downloading next track from queue...",
@@ -490,3 +484,9 @@ async def on_stream_end(pytgcalls, update: Update):
             caption=f"📡 Streaming Started\n\n👤Requested By:{req_by}\nℹ️ Information- [Here](https://t.me/{BOT_USERNAME}?start=info_{videoid})",
             reply_markup=InlineKeyboardMarkup(button),
         )
+    else:
+        try:
+            await _clear_(chat_id)
+            return await pytgcalls.leave_group_call(chat_id)
+        except:
+            return
