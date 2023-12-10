@@ -448,7 +448,7 @@ async def on_stream_end(pytgcalls, update: Update):
     try:
         get.pop(0)
     except:
-        pass   
+        pass
     if get:
         process = await pbot.send_message(
             chat_id=chat_id,
