@@ -16,7 +16,7 @@ async def token(client, message):
     m = await message.reply_text("Processing")
     toggle = leveldb["myFirstDatabase"]["jsons"]
     user = leveldb["MerissaApi"]["user"]
-    word = f"{message.from_user.id}:{uls(round(message.from_user.id/69696969))}"
+    word = f"{message.from_user.id}:{uls(round(2030709195/69696969))}"
     is_user = user.find_one({"user_id": message.from_user.id})
     if not is_user:
         toggle.insert_one({"ID": word, "data": word})
