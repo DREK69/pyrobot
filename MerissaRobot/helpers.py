@@ -1,4 +1,5 @@
 import aiofiles
+import httpx
 import aiohttp
 import mutagen
 import requests
@@ -17,25 +18,15 @@ async def save_file(url, filename):
     return filename
 
 
-async def getreq(url):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as resp:
-            try:
-                data = await resp.json()
-            except:
-                data = await resp.text()
-    return data
+async def getreq(url, params=None):
+    async with httpx.AsyncClient() as client:
+        resp = (await client.get(url, params=params)).json()
+        return resp
 
-
-async def postreq(url, data):
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url, json=data) as resp:
-            try:
-                data = await resp.json()
-            except:
-                data = await resp.text()
-    return data
-
+async def postreq(url, data=None, json=None):
+    async with httpx.AsyncClient() as client:
+        resp = (await client.post(url, data=data, json=json)).json()
+        return resp
 
 def subscribe(func):
     async def non_subscribe(client, message):
