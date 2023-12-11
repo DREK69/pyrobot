@@ -310,8 +310,8 @@ async def autoapproveg(client, message: ChatJoinRequest):
     keyboard = InlineKeyboardMarkup(
         [
             [
-                Keyboard("✅ Approve", callback_data="cb_approve={}".format(user.id)),
-                Keyboard("❌ Decline", callback_data="cb_decline={}".format(user.id)),
+                Keyboard("✅ Approve", callback_data="req_approve={}".format(user.id)),
+                Keyboard("❌ Decline", callback_data="req_decline={}".format(user.id)),
             ]
         ]
     )
