@@ -10,7 +10,7 @@ from MerissaRobot.Handler.ptb.decorators import merissacallback
 from MerissaRobot.Modules.log_channel import loggable
 
 
-@merissacallback(pattern=r"cb_approve=")
+@merissacallback(pattern=r"req_approve=")
 @user_admin(AdminPerms.CAN_INVITE_USERS)
 @loggable
 def approve_joinReq(update: Update, context: CallbackContext) -> str:
@@ -18,7 +18,7 @@ def approve_joinReq(update: Update, context: CallbackContext) -> str:
     query = update.callback_query
     user = update.effective_user
     chat = update.effective_chat
-    match = re.match(r"cb_approve=(.+)", query.data)
+    match = re.match(r"req_approve=(.+)", query.data)
 
     user_id = match.group(1)
     try:
@@ -42,7 +42,7 @@ def approve_joinReq(update: Update, context: CallbackContext) -> str:
         update.effective_message.edit_text(str(e))
 
 
-@merissacallback(pattern=r"cb_decline=")
+@merissacallback(pattern=r"req_decline=")
 @user_admin(AdminPerms.CAN_INVITE_USERS)
 @loggable
 def decline_joinReq(update: Update, context: CallbackContext) -> str:
@@ -50,7 +50,7 @@ def decline_joinReq(update: Update, context: CallbackContext) -> str:
     query = update.callback_query
     user = update.effective_user
     chat = update.effective_chat
-    match = re.match(r"cb_decline=(.+)", query.data)
+    match = re.match(r"req_decline=(.+)", query.data)
 
     user_id = match.group(1)
     try:
