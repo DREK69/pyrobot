@@ -3,7 +3,7 @@ from pyrogram.enums import ChatAction
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 import MerissaRobot.Database.sql.chatbot_sql as sql
-from MerissaRobot import pbot
+from MerissaRobot import pbot, BOT_ID
 from MerissaRobot.helpers import getreq
 
 
@@ -61,7 +61,7 @@ def merissa_message(bot, message):
     if message.text.lower() == "merissa":
         return True
     if reply_message:
-        if reply_message.from_user.id == bot.me.id:
+        if reply_message.from_user.id == BOT_ID:
             return True
     else:
         return False
