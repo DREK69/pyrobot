@@ -9,10 +9,7 @@ from telegram.parsemode import ParseMode
 
 from MerissaRobot import dispatcher
 from MerissaRobot.Database.sql import afk_sql as sql
-from MerissaRobot.Modules.disable import (
-    DisableAbleCommandHandler,
-    DisableAbleMessageHandler,
-)
+from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 from MerissaRobot.Modules.users import get_user_id
 
 AFK_GROUP = 7
