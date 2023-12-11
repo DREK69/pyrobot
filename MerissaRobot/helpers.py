@@ -1,6 +1,6 @@
 import aiofiles
-import httpx
 import aiohttp
+import httpx
 import mutagen
 import requests
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
@@ -23,10 +23,12 @@ async def getreq(url, params=None):
         resp = (await client.get(url, params=params)).json()
         return resp
 
+
 async def postreq(url, data=None, json=None):
     async with httpx.AsyncClient() as client:
         resp = (await client.post(url, data=data, json=json)).json()
         return resp
+
 
 def subscribe(func):
     async def non_subscribe(client, message):
