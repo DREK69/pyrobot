@@ -480,10 +480,7 @@ async def cbgames(_, cq):
         album = info_dict["album"]
     except:
         album = title
-    yt = await getreq(f"https://api.princexd.tech/ytmsearch?query={link}").json()[
-        "results"
-    ]["videoDetails"]
-    artist = yt["author"]
+    artist = info_dict["author"]
     thumb = info_dict["thumbnails"][0]["url"]
     thumb.replace("60-", "1080-")
     thumbnail = save_file(thumb, "thumbnail.png")
@@ -539,10 +536,13 @@ async def cbgames(_, cq):
         album = info_dict["album"]
     except:
         album = title
-    yt = await getreq(f"https://api.princexd.tech/ytmsearch?query={link}").json()[
-        "results"
-    ]["videoDetails"]
-    artist = yt["author"]
+    try:
+        artist = (info_dict["artist"]).split(",")[0]
+    except:
+        try:
+            artist = info_dict["uploader"]
+        except:
+            artist = "Unknown Artist"
     thumb = info_dict["thumbnails"][0]["url"]
     thumb.replace("60-", "1080-")
     thumbnail = save_file(thumb, "thumbnail.png")
