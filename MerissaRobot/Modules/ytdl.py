@@ -487,7 +487,7 @@ async def audio_query(client, callbackquery):
     except:
         album = title
     try:
-        artist = info_dict["artist"]
+        artist = (info_dict["artist"]).split(",")[0]
     except:
         try:
             artist = info_dict["uploader"]
