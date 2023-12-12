@@ -1,4 +1,6 @@
 import asyncio
+import base64
+import string
 
 from pyrogram import filters
 from pyrogram.errors import ListenerCanceled
@@ -7,6 +9,19 @@ from youtubesearchpython.__future__ import VideosSearch
 
 from MerissaRobot import BOT_NAME, pbot
 from MerissaRobot.helpers import postreq, subscribe
+
+async def encode(string):
+    string_bytes = string.encode("ascii")
+    base64_bytes = base64.urlsafe_b64encode(string_bytes)
+    base64_string = (base64_bytes.decode("ascii")).strip("=")
+    return base64_string
+
+async def decode(base64_string):
+    base64_string = base64_string.strip("=") # links generated before this commit will be having = sign, hence striping them to handle padding errors.
+    base64_bytes = (base64_string + "=" * (-len(base64_string) % 4)).encode("ascii")
+    string_bytes = base64.urlsafe_b64decode(base64_bytes) 
+    string = string_bytes.decode("ascii")
+    return string
 
 TRACK_CHANNEL = int("-1001900195958")
 media_group_id = 0
@@ -64,89 +79,87 @@ async def _startfile(bot, update):
             caption=searched_text,
             reply_markup=key,
         )
-    elif "store_" in code:
-        ok = await update.reply_text("Uploading Media...")
-        cmd, unique_id, msg_id = code.split("_")
-
-        if not msg_id.isdigit():
-            return
-        try:  # If message not belong to media group raise exception
-            check_media_group = await bot.get_media_group(TRACK_CHANNEL, int(msg_id))
-            check = check_media_group[0]  # Because func return`s list obj
-        except Exception:
-            check = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
-
-        if check.empty:
-            await update.reply_text(
-                "Error: [Message does not exist]\n/help for more details..."
-            )
-            return
-        if check.video:
-            unique_idx = check.video.file_unique_id
-        elif check.photo:
-            unique_idx = check.photo.file_unique_id
-        elif check.audio:
-            unique_idx = check.audio.file_unique_id
-        elif check.document:
-            unique_idx = check.document.file_unique_id
-        elif check.sticker:
-            unique_idx = check.sticker.file_unique_id
-        elif check.animation:
-            unique_idx = check.animation.file_unique_id
-        elif check.voice:
-            unique_idx = check.voice.file_unique_id
-        elif check.video_note:
-            unique_idx = check.video_note.file_unique_id
-        if unique_id != unique_idx.lower():
-            return
-        try:  # If message not belong to media group raise exception
-            await bot.copy_media_group(update.from_user.id, TRACK_CHANNEL, int(msg_id))
-            await ok.delete()
-        except Exception:
-            await check.copy(update.from_user.id)
-            await ok.delete()
-
-    elif "batch_" in code:
-        send_msg = await update.reply_text("Uploading Media...")
-        cmd, chat_id, message = code.split("_")
-        string = await bot.get_messages(TRACK_CHANNEL, int(message))
-        message_ids = string.text.split("-")
-        for msg_id in message_ids:
-            msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
-            if msg.empty:
-                return await update.reply_text(
-                    "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner"
-                )
-
-            await msg.copy(update.from_user.id)
-        return await asyncio.sleep(1)
-
-        chat_id, msg_id = code.split("_")
-        msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
-
-        if msg.empty:
-            return await send_msg.edit(
-                "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner."
-            )
-        caption = f"{msg.caption}" if msg.caption else ""
-        await msg.copy(update.from_user.id, caption=caption)
-        await send_msg.delete()
-
     elif "verify_" in code:
         chat_id = code.split("_")[1]
         button = [
             [
                 InlineKeyboardButton(text="VERIFY", callback_data=f"verify {chat_id}"),
             ],
-        ]
+         ]
         await update.reply_photo(
             photo="https://te.legra.ph/file/90b1aa10cf8b77d5b781b.jpg",
             caption=f"Hello Dear,\n\nClick 'VERIFY' Button to Verify you're human.",
             reply_markup=InlineKeyboardMarkup(button),
         )
-
     else:
-        return
+        code = await encode(code)
+        if "store_" in code:
+            ok = await update.reply_text("Uploading Media...")
+            cmd, unique_id, msg_id = code.split("_")
+
+            if not msg_id.isdigit():
+                return
+            try:  # If message not belong to media group raise exception
+                check_media_group = await bot.get_media_group(TRACK_CHANNEL, int(msg_id))
+                check = check_media_group[0]  # Because func return`s list obj
+            except Exception:
+                check = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
+
+            if check.empty:
+                await update.reply_text(
+                    "Error: [Message does not exist]\n/help for more details..."
+                )
+                return
+            if check.video:
+                unique_idx = check.video.file_unique_id
+            elif check.photo:
+                unique_idx = check.photo.file_unique_id
+            elif check.audio:
+                unique_idx = check.audio.file_unique_id
+            elif check.document:
+                unique_idx = check.document.file_unique_id
+            elif check.sticker:
+                unique_idx = check.sticker.file_unique_id
+            elif check.animation:
+                unique_idx = check.animation.file_unique_id
+            elif check.voice:
+                unique_idx = check.voice.file_unique_id
+            elif check.video_note:
+                unique_idx = check.video_note.file_unique_id
+            if unique_id != unique_idx.lower():
+                return
+            try:  # If message not belong to media group raise exception
+                await bot.copy_media_group(update.from_user.id, TRACK_CHANNEL, int(msg_id))
+                await ok.delete()
+            except Exception:
+                await check.copy(update.from_user.id)
+                await ok.delete()
+
+        elif "batch_" in code:
+            send_msg = await update.reply_text("Uploading Media...")
+            cmd, chat_id, message = code.split("_")
+            string = await bot.get_messages(TRACK_CHANNEL, int(message))
+            message_ids = string.text.split("-")
+            for msg_id in message_ids:
+                 msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
+                 if msg.empty:
+                    return await update.reply_text(
+                       "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner"
+                    )
+
+                await msg.copy(update.from_user.id)
+            return await asyncio.sleep(1)
+
+            chat_id, msg_id = code.split("_")
+            msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
+
+            if msg.empty:
+                return await send_msg.edit(
+                  "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner."
+                )
+            caption = f"{msg.caption}" if msg.caption else ""
+            await msg.copy(update.from_user.id, caption=caption)
+            await send_msg.delete()
 
 
 async def __reply(update, copied):
@@ -171,31 +184,22 @@ async def __reply(update, copied):
     else:
         await copied.delete()
         return
-
-    botlink = f"https://telegram.me/MerissaRobot?start=store_{unique_idx.lower()}_{str(msg_id)}"
-
-    data = {"url": botlink}
-    x = await postreq("https://drive.merissabot.me/shorten", data)
-
+    base64_string = await encode(f"store_{unique_idx.lower()}_{str(msg_id)}")
+    botlink = f"https://telegram.me/MerissaRobot?start={base64_string}"
+    
     await ok.edit_text(
         "Link Generated Successfully, Link Is Permanent and will not Expired\n\nShare Link with Your Friends:",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
-                        "Bot Url",
+                        "Share Url",
                         url=f"https://t.me/share/url?url={botlink}",
-                    ),
-                    InlineKeyboardButton(
-                        "Short Url",
-                        url=f"https://t.me/share/url?url=https://drive.merissabot.me/{x['hash']}",
-                    ),
+                    )
                 ]
             ]
         ),
     )
-    await asyncio.sleep(0.5)  # Wait do to avoid 5 sec flood ban
-
 
 @pbot.on_message(~filters.media & filters.private & filters.media_group)
 async def _main_grop(bot, update):
@@ -262,10 +266,8 @@ async def batch(c, m):
 
     string_base64 = string[:-1]
     send = await c.send_message(TRACK_CHANNEL, string_base64)
-    base64_string = f"batch_{m.chat.id}_{send.id}"
-    url = f"https://telegram.me/MerissaRobot?start={base64_string}"
-    data = {"url": url}
-    x = await postreq("https://drive.merissabot.me/shorten", data)
+    base64_string = await encode(f"batch_{m.chat.id}_{send.id}")
+    botlink = f"https://telegram.me/MerissaRobot?start={base64_string}"
 
     await ok.edit_text(
         "Link Generated Successfully, Link Is Permanent and will not Expired\n\nShare Link with Your Friends:",
@@ -273,13 +275,9 @@ async def batch(c, m):
             [
                 [
                     InlineKeyboardButton(
-                        "Bot Url",
-                        url=f"https://t.me/share/url?url={url}",
-                    ),
-                    InlineKeyboardButton(
-                        "Short Url",
-                        url=f"https://t.me/share/url?url=https://drive.merissabot.me/{x['hash']}",
-                    ),
+                        "Share URL",
+                        url=f"https://t.me/share/url?url={botlink}",
+                    )
                 ]
             ]
         ),
