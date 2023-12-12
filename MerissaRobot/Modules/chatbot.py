@@ -61,7 +61,7 @@ def merissa_message(bot, message):
     if message.text.lower() == "merissa":
         return True
     if reply_message:
-        if reply_message.from_user.id == BOT_ID:
+        if message.from_user.id == BOT_ID:
             return True
     else:
         return False
