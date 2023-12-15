@@ -1,6 +1,5 @@
 import asyncio
 import base64
-import string
 
 from pyrogram import filters
 from pyrogram.errors import ListenerCanceled
@@ -8,7 +7,8 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from youtubesearchpython.__future__ import VideosSearch
 
 from MerissaRobot import BOT_NAME, pbot
-from MerissaRobot.helpers import postreq, subscribe
+from MerissaRobot.helpers import subscribe
+
 
 async def encode(string):
     string_bytes = string.encode("ascii")
@@ -16,12 +16,16 @@ async def encode(string):
     base64_string = (base64_bytes.decode("ascii")).strip("=")
     return base64_string
 
+
 async def decode(base64_string):
-    base64_string = base64_string.strip("=") # links generated before this commit will be having = sign, hence striping them to handle padding errors.
+    base64_string = base64_string.strip(
+        "="
+    )  # links generated before this commit will be having = sign, hence striping them to handle padding errors.
     base64_bytes = (base64_string + "=" * (-len(base64_string) % 4)).encode("ascii")
-    string_bytes = base64.urlsafe_b64decode(base64_bytes) 
+    string_bytes = base64.urlsafe_b64decode(base64_bytes)
     string = string_bytes.decode("ascii")
     return string
+
 
 TRACK_CHANNEL = int("-1001900195958")
 media_group_id = 0
@@ -85,7 +89,7 @@ async def _startfile(bot, update):
             [
                 InlineKeyboardButton(text="VERIFY", callback_data=f"verify {chat_id}"),
             ],
-         ]
+        ]
         await update.reply_photo(
             photo="https://te.legra.ph/file/90b1aa10cf8b77d5b781b.jpg",
             caption=f"Hello Dear,\n\nClick 'VERIFY' Button to Verify you're human.",
@@ -100,7 +104,9 @@ async def _startfile(bot, update):
             if not msg_id.isdigit():
                 return
             try:  # If message not belong to media group raise exception
-                check_media_group = await bot.get_media_group(TRACK_CHANNEL, int(msg_id))
+                check_media_group = await bot.get_media_group(
+                    TRACK_CHANNEL, int(msg_id)
+                )
                 check = check_media_group[0]  # Because func return`s list obj
             except Exception:
                 check = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
@@ -129,7 +135,9 @@ async def _startfile(bot, update):
             if unique_id != unique_idx.lower():
                 return
             try:  # If message not belong to media group raise exception
-                await bot.copy_media_group(update.from_user.id, TRACK_CHANNEL, int(msg_id))
+                await bot.copy_media_group(
+                    update.from_user.id, TRACK_CHANNEL, int(msg_id)
+                )
                 await ok.delete()
             except Exception:
                 await check.copy(update.from_user.id)
@@ -144,7 +152,7 @@ async def _startfile(bot, update):
                 msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
                 if msg.empty:
                     return await update.reply_text(
-                       "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner"
+                        "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner"
                     )
                 await msg.copy(update.from_user.id)
             return await asyncio.sleep(1)
@@ -154,7 +162,7 @@ async def _startfile(bot, update):
 
             if msg.empty:
                 return await send_msg.edit(
-                  "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner."
+                    "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner."
                 )
             caption = f"{msg.caption}" if msg.caption else ""
             await msg.copy(update.from_user.id, caption=caption)
@@ -185,7 +193,7 @@ async def __reply(update, copied):
         return
     base64_string = await encode(f"store_{unique_idx.lower()}_{str(msg_id)}")
     botlink = f"https://telegram.me/MerissaRobot?start={base64_string}"
-    
+
     await ok.edit_text(
         "Link Generated Successfully, Link Is Permanent and will not Expired\n\nShare Link with Your Friends:",
         reply_markup=InlineKeyboardMarkup(
@@ -199,6 +207,7 @@ async def __reply(update, copied):
             ]
         ),
     )
+
 
 @pbot.on_message(~filters.media & filters.private & filters.media_group)
 async def _main_grop(bot, update):
