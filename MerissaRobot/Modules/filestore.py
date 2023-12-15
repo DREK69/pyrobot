@@ -141,12 +141,11 @@ async def _startfile(bot, update):
             string = await bot.get_messages(TRACK_CHANNEL, int(message))
             message_ids = string.text.split("-")
             for msg_id in message_ids:
-                 msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
-                 if msg.empty:
+                msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
+                if msg.empty:
                     return await update.reply_text(
                        "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner"
                     )
-
                 await msg.copy(update.from_user.id)
             return await asyncio.sleep(1)
 
