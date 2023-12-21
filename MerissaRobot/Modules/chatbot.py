@@ -38,7 +38,6 @@ async def merissachatbot(client, query):
 
 @pbot.on_message(filters.command("chatbot"))
 async def merissa(_, message):
-    message.chat.id
     msg = """**Welcome To Control Panal Of Merissa ChatBot**
 
 **Here You Will Find Two Buttons Select AnyOne Of Them**"""
@@ -56,20 +55,9 @@ async def merissa(_, message):
     )
 
 
-def merissa_message(bot, message):
-    reply_message = message.reply_to_message
-    if message.text.lower() == "merissa":
-        return True
-    if reply_message:
-        if message.from_user.id == BOT_ID:
-            return True
-    else:
-        return False
-
-
 @pbot.on_message(
     filters.text & filters.reply & ~filters.bot & ~filters.via_bot & ~filters.forwarded,
-    group=2,
+    group=9,
 )
 async def chatbot(bot, message):
     chat_id = message.chat.id
@@ -77,8 +65,6 @@ async def chatbot(bot, message):
     if not is_merissa:
         return
     if message.text and not message.document:
-        if not merissa_message(bot, message):
-            return
         await bot.send_chat_action(chat_id, ChatAction.TYPING)
         results = await getreq(
             f"https://chat.merissabot.me/api/apikey=2030709195:Ofe_G5n4DZMPxnTgTXaSwvRqPXHhqpVMFqzWRNQ/message={message.text}"
