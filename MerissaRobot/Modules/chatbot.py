@@ -3,7 +3,7 @@ from pyrogram.enums import ChatAction
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 import MerissaRobot.Database.sql.chatbot_sql as sql
-from MerissaRobot import BOT_ID, pbot
+from MerissaRobot import pbot
 from MerissaRobot.helpers import getreq
 
 
