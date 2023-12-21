@@ -95,11 +95,11 @@ async def ytregex(client, message):
         )
         await m.delete()
     else:
-        yt = await getreq(f"https://api.princexd.tech/ytinfo?link={link}")
-        videoid = yt["id"]
+        results = VideosSearch(link, limit=1).result()
+        yt = results["result"][0]
         title = yt["title"]
-        duration = yt["duration"]
-        dur = await convertmin(duration)
+        dur = yt["duration"]
+        videoid = yt["id"]
         thumbnail = await get_ytthumb(videoid)
         await message.reply_photo(
             thumbnail,
