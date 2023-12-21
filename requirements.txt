@@ -17,6 +17,7 @@ gpytranslate==1.5.1
 gtts
 heroku3
 html2text
+httpx[http2]
 humanize
 img2pdf
 lxml==4.9.3
