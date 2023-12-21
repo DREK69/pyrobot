@@ -14,8 +14,8 @@ ERROR_LOG = os.environ.get("ERROR_LOG", "-1001446814207")
 API_HASH = os.environ.get("API_HASH", "bab0eb3130eb4930cc40112635b2dc4d")
 STRING_SESSION = getenv(
     "STRING_SESSION",
-    "AQDUFcUAh8ucv-_a0uHS9KhL5Odm2wIxq8PYBs7NzZOovQDE5rC3jWXkHe7Fv0nmof0omzzKda-gNfeupx0kVYI5B8abFThzOhosyfzSMA13hXRYnIPF7Qf2e0vHae07NTbLS7vgc-6pXHQlZmc6ctKCylAN7CKKnQXJft0xtek7YV2yuWOAmGxihIfWpAFMZ3WN4KJzogtHfkcTZ8ogKySPMksOVs9oWcEb7GXsGfesndtynpK3eBE6bEAfyjSMr8vp-9rIUmVqLmgT_r5SSb4GPcROQKpB_vN_tTBdUWAvPv45Gv2OTjhyElNbPG3Pvv-43KmCgkkVYsVQiLDWmV2D-V47JgAAAAE46AF6AA"    
-)    
+    "AQDUFcUAh8ucv-_a0uHS9KhL5Odm2wIxq8PYBs7NzZOovQDE5rC3jWXkHe7Fv0nmof0omzzKda-gNfeupx0kVYI5B8abFThzOhosyfzSMA13hXRYnIPF7Qf2e0vHae07NTbLS7vgc-6pXHQlZmc6ctKCylAN7CKKnQXJft0xtek7YV2yuWOAmGxihIfWpAFMZ3WN4KJzogtHfkcTZ8ogKySPMksOVs9oWcEb7GXsGfesndtynpK3eBE6bEAfyjSMr8vp-9rIUmVqLmgT_r5SSb4GPcROQKpB_vN_tTBdUWAvPv45Gv2OTjhyElNbPG3Pvv-43KmCgkkVYsVQiLDWmV2D-V47JgAAAAE46AF6AA",
+)
 MERISSA_TOKEN = os.environ.get("MERISSA_TOKEN", "nZWMiKdkDvSJMmSm")
 OWNER_ID = int(os.environ.get("OWNER_ID", "2030709195"))
 BL_CHATS = set(int(x) for x in os.environ.get("BL_CHATS", "").split())
