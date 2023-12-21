@@ -19,13 +19,17 @@ async def save_file(url, filename):
 
 
 async def getreq(url, params=None):
-    async with httpx.AsyncClient(http2=True, verify=False, timeout=httpx.Timeout(40)) as client:
+    async with httpx.AsyncClient(
+        http2=True, verify=False, timeout=httpx.Timeout(40)
+    ) as client:
         resp = (await client.get(url, params=params)).json()
         return resp
 
 
 async def postreq(url, data=None, json=None):
-    async with httpx.AsyncClient(http2=True, verify=False, timeout=httpx.Timeout(40)) as client:
+    async with httpx.AsyncClient(
+        http2=True, verify=False, timeout=httpx.Timeout(40)
+    ) as client:
         resp = (await client.post(url, data=data, json=json)).json()
         return resp
 
