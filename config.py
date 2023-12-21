@@ -1,7 +1,7 @@
 import os
 from os import getenv
 
-TOKEN = os.environ.get("TOKEN", "5294959338:AAEBv6octIEMyur600xd30oldHUiQWJiKsM")
+TOKEN = os.environ.get("TOKEN", "5294959338:AAFdlTe4B6o7lrvCgH1qkxFZAUTqXAMMYeI")
 INFOPIC = bool(os.environ.get("INFOPIC", True))
 BOT_USERNAME = os.environ.get("BOT_USERNAME", "MerissaRobot")
 EVENT_LOGS = os.environ.get("EVENT_LOGS", "-1001325865052")
@@ -14,8 +14,8 @@ ERROR_LOG = os.environ.get("ERROR_LOG", "-1001446814207")
 API_HASH = os.environ.get("API_HASH", "bab0eb3130eb4930cc40112635b2dc4d")
 STRING_SESSION = getenv(
     "STRING_SESSION",
-    "AQDUFcUAPPYGBWbuEzV8aEmB82EG3bJ7Na4eeaYhPTVoTLjHyITD7f74q1KVsz3F0OOqZCHLhCvysD7XN5MEbnLqvp10hxRi1zIDa1Xzu5oSeAGPEGtugO62CPQHd8s_hhvlSsXCrth7EsJxPI51MJtbB6UT1Lj0qnxthyu6d1qMnvp9-hZCMGKO6E2Gh5OaITcFK3blbOgQJ5uUFWoievax0n9S7rGvQ-IODj7AkHZvaf_smJlooxR-tLXGOWXz6CrF9FgoDH9Pr9gs4zqOfdJEMjx7UgbwH9tx8F3L3dAhJjGmKAgyEVev__6KqxC6TysqpEMPiLEZtaucTfRQ1SS1ugm_pgAAAAE46AF6AA",
-)
+    "AQDUFcUAh8ucv-_a0uHS9KhL5Odm2wIxq8PYBs7NzZOovQDE5rC3jWXkHe7Fv0nmof0omzzKda-gNfeupx0kVYI5B8abFThzOhosyfzSMA13hXRYnIPF7Qf2e0vHae07NTbLS7vgc-6pXHQlZmc6ctKCylAN7CKKnQXJft0xtek7YV2yuWOAmGxihIfWpAFMZ3WN4KJzogtHfkcTZ8ogKySPMksOVs9oWcEb7GXsGfesndtynpK3eBE6bEAfyjSMr8vp-9rIUmVqLmgT_r5SSb4GPcROQKpB_vN_tTBdUWAvPv45Gv2OTjhyElNbPG3Pvv-43KmCgkkVYsVQiLDWmV2D-V47JgAAAAE46AF6AA"    
+)    
 MERISSA_TOKEN = os.environ.get("MERISSA_TOKEN", "nZWMiKdkDvSJMmSm")
 OWNER_ID = int(os.environ.get("OWNER_ID", "2030709195"))
 BL_CHATS = set(int(x) for x in os.environ.get("BL_CHATS", "").split())
