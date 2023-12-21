@@ -18,8 +18,7 @@ async def telegrapher(c, m):
         await tg.edit("`This command needs reply to work..`")
         return
     if m.reply_to_message.media:
-        if m.reply_to_message.photo:
-            m_d = await m.reply_to_message.download()
+        m_d = await m.reply_to_message.download()
         try:
             media_url = upload_file(m_d)
         except exceptions.TelegraphException as exc:
