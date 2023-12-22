@@ -38,7 +38,7 @@ def convert_bytes(size: float) -> str:
 
 async def run_async(func, *args, **kwargs):
     loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(None, func, *args, **kwargs)
+    return await loop.create_task(None, func, *args, **kwargs)
 
 
 async def convertmin(duration):
