@@ -54,6 +54,8 @@ async def convertmin(duration):
 async def ytregex(client, message):
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     link = message.text
+    if "?si" in link:
+        link = link.split("?si")[0]
     if "music" in link:
         resp = ytmsearch(link)
         yt = resp["results"]["videoDetails"]
