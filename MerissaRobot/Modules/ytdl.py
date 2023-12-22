@@ -36,9 +36,9 @@ def convert_bytes(size: float) -> str:
     return "{:.2f} {}B".format(size, power_dict[t_n])
 
 
-async def run_async(func, *args, **kwargs):
+async def run_async(func, args):
     loop = asyncio.get_running_loop()
-    return await loop.create_task(None, func, *args, **kwargs)
+    return await loop.create_task(func, args)
 
 
 async def convertmin(duration):
