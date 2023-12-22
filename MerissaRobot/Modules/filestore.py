@@ -18,9 +18,7 @@ async def encode(string):
 
 
 async def decode(base64_string):
-    base64_string = base64_string.strip(
-        "="
-    )  # links generated before this commit will be having = sign, hence striping them to handle padding errors.
+    base64_string = base64_string.strip("=")  # links generated before this commit will be having = sign, hence striping them to handle padding errors.
     base64_bytes = (base64_string + "=" * (-len(base64_string) % 4)).encode("ascii")
     string_bytes = base64.urlsafe_b64decode(base64_bytes)
     string = string_bytes.decode("ascii")
@@ -96,7 +94,7 @@ async def _startfile(bot, update):
             reply_markup=InlineKeyboardMarkup(button),
         )
     else:
-        code = await encode(code)
+        code = await decode(code)
         if "store_" in code:
             ok = await update.reply_text("Uploading Media...")
             cmd, unique_id, msg_id = code.split("_")
