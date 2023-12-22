@@ -6,11 +6,10 @@ from random import sample
 from typing import Dict, List
 
 import httpx
-from somnium import Somnium as som
-from somnium.sync import Somnium
-
 from pyrogram import enums, filters
 from pyrogram.types import *
+from somnium import Somnium as som
+from somnium.sync import Somnium
 
 from MerissaRobot import pbot
 from MerissaRobot.helpers import getreq
