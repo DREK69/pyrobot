@@ -97,10 +97,9 @@ async def _startfile(bot, update):
         )
     else:
         code = await decode(code)
+        send_msg = await update.reply_text("Uploading Media...")
         if "store_" in code:
-            ok = await update.reply_text("Uploading Media...")
             cmd, unique_id, msg_id = code.split("_")
-
             if not msg_id.isdigit():
                 return
             try:  # If message not belong to media group raise exception
@@ -144,7 +143,6 @@ async def _startfile(bot, update):
                 await ok.delete()
 
         elif "batch_" in code:
-            send_msg = await update.reply_text("Uploading Media...")
             cmd, chat_id, message = code.split("_")
             string = await bot.get_messages(TRACK_CHANNEL, int(message))
             message_ids = string.text.split("-")
@@ -166,7 +164,7 @@ async def _startfile(bot, update):
                 )
             caption = f"{msg.caption}" if msg.caption else ""
             await msg.copy(update.from_user.id, caption=caption)
-            await send_msg.delete()
+        return await send_msg.delete()
 
 
 async def __reply(update, copied):
