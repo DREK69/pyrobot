@@ -1,16 +1,14 @@
-import re
 import random
+import re
 import string
+from math import ceil
 from random import sample
+from typing import Dict, List
 
 import httpx
 from pyrogram import enums, filters
-
-from math import ceil
-from typing import Dict, List
-
-from somnium.sync import Somnium
 from somnium import Somnium as som
+from somnium.sync import Somnium
 
 from MerissaRobot import pbot
 from MerissaRobot.helpers import getreq
@@ -119,6 +117,7 @@ async def ai_img_search(c, m):
     except:
         await x.edit("`Failed to get images`")
 
+
 styles = som.Styles()
 revstyle = {str(v): k for k, v in styles.items()}
 ROWS = 6
@@ -148,7 +147,9 @@ async def somni_callback(bot, query):
         if style_match:
             style = style_match.group(1)
             stylename = revstyle[str(style)]
-            m = await query.message.edit_text(f"Processing the image with style {stylename}... Have Patience..")
+            m = await query.message.edit_text(
+                f"Processing the image with style {stylename}... Have Patience.."
+            )
             try:
                 img = await Somnium.Generate(dream, style)
                 await query.message.reply_document(
