@@ -67,7 +67,7 @@ async def chatbot(bot, message):
     if message.text and not message.document:
         await bot.send_chat_action(chat_id, ChatAction.TYPING)
         results = await getreq(
-            f"https://chat.merissabot.me/api/apikey=2030709195:Ofe_G5n4DZMPxnTgTXaSwvRqPXHhqpVMFqzWRNQ/message={message.text}"
+            f"https://chat.merissabot.me/api/apikey=2030709195:TqrHroMxAjfMI_JWvZtK4_FS8hUDTi7cx1QeZgk/message={message.text}"
         )
         await message.reply_text(results["reply"])
 
