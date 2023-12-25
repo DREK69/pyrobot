@@ -13,7 +13,7 @@ from MerissaRobot.helpers import subscribe
 )
 @subscribe
 async def token(client, message):
-    m = await message.reply_text("Processing")
+    m = await message.reply_text("Generating Token...")
     toggle = leveldb["myFirstDatabase"]["jsons"]
     user = leveldb["MerissaApi"]["user"]
     word = f"{message.from_user.id}:{uls(round(message.from_user.id/6969))[:35]}"
@@ -31,7 +31,7 @@ async def token(client, message):
     else:
         MerissaAPI = is_user["API"]
         await m.edit_text(
-            f"Your Merissa Token: `{MerissaAPI}` Do not give this token to anyone else!\n Join @MerissaxSupport"
+            f"Your Merissa Token: `{MerissaAPI}`.\n\nDo not give this token to anyone else!\nKnow More - @MerissaChatbotApi"
         )
 
 
