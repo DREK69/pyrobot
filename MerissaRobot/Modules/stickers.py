@@ -829,7 +829,7 @@ GETVIDSTICKER_HANDLER = DisableAbleCommandHandler(
     "getvidsticker", getvidsticker, run_async=True
 )
 KANG_HANDLER = DisableAbleCommandHandler(
-    ["kang", "steal"], kang, pass_args=True, run_async=True
+    "kang", kang, pass_args=True, run_async=True
 )
 DEL_HANDLER = DisableAbleCommandHandler("delsticker", delsticker, run_async=True)
 STICKERS_HANDLER = DisableAbleCommandHandler("stickers", cb_sticker, run_async=True)
