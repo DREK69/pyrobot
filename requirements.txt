@@ -57,5 +57,5 @@ tgcrypto
 wget
 youtube_search_python==1.4.9
 ytmusicapi
-git+https://github.com/yt-dlp/yt-dlp.git
+https://github.com/yt-dlp/yt-dlp@master
 zalgo-text
