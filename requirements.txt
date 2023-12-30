@@ -42,7 +42,6 @@ pytimeparse
 pytube
 qrcode
 Random-Word-Generator
-redis
 regex
 requests 
 shazamio==0.0.2
@@ -57,5 +56,5 @@ tgcrypto
 wget
 youtube_search_python==1.4.9
 ytmusicapi
-https://github.com/yt-dlp/yt-dlp@master
+git+https://github.com/yt-dlp/yt-dlp@master
 zalgo-text
