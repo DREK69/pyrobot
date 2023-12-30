@@ -5,8 +5,7 @@ from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
 from pytgcalls.types import (
-    AudioPiped,
-    AudioVideoPiped,
+    MediaStream,
     HighQualityAudio,
     HighQualityVideo,
     Update,
@@ -130,9 +129,9 @@ async def vc_controls(_, message):
             thumb = get[0]["thumb"]
 
             if stream_type == "audio":
-                stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+                stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
             else:
-                stream = AudioVideoPiped(
+                stream = MediaStream(
                     file_path, HighQualityAudio(), HighQualityVideo()
                 )
             try:
@@ -300,9 +299,9 @@ async def admin_cbs(_, query: CallbackQuery):
             thumb = get[0]["thumb"]
 
             if stream_type == "audio":
-                stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+                stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
             else:
-                stream = AudioVideoPiped(
+                stream = MediaStream(
                     file_path, HighQualityAudio(), HighQualityVideo()
                 )
             try:
@@ -344,9 +343,9 @@ async def admin_quecb(_, query: CallbackQuery):
             get.insert(0, element_to_move)
 
             if stream_type == "audio":
-                stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+                stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
             else:
-                stream = AudioVideoPiped(
+                stream = MediaStream(
                     file_path, HighQualityAudio(), HighQualityVideo()
                 )
             try:
@@ -464,9 +463,9 @@ async def on_stream_end(pytgcalls, update: Update):
         thumb = get[0]["thumb"]
 
         if stream_type == "audio":
-            stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
+            stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
         else:
-            stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
+            stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
 
         try:
             await pytgcalls.change_stream(
