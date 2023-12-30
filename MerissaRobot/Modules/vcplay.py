@@ -16,8 +16,7 @@ from pytgcalls.exceptions import (
     UnMuteNeeded,
 )
 from pytgcalls.types import (
-    AudioPiped,
-    AudioVideoPiped,
+    MediaStream,
     HighQualityAudio,
     HighQualityVideo,
 )
@@ -263,9 +262,9 @@ async def play(_, message):
         )
     else:
         if stream_type == "audio":
-            stream = AudioPiped(file_path, HighQualityAudio())
+            stream = MediaStream(file_path, HighQualityAudio())
         else:
-            stream = AudioVideoPiped(file_path, HighQualityAudio(), HighQualityVideo())
+            stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
         await merissa.edit_text("🎧 VideoChat Joining...")
         try:
             await pytgcalls.join_group_call(
