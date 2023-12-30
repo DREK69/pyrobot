@@ -4,12 +4,7 @@ from typing import Callable
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
-from pytgcalls.types import (
-    MediaStream,
-    HighQualityAudio,
-    HighQualityVideo,
-    Update,
-)
+from pytgcalls.types import HighQualityAudio, HighQualityVideo, MediaStream, Update
 
 from MerissaRobot import BOT_ID, BOT_USERNAME, OWNER_ID, pbot, pytgcalls, user
 from MerissaRobot.Handler.pyro.filter_groups import (
@@ -131,9 +126,7 @@ async def vc_controls(_, message):
             if stream_type == "audio":
                 stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
             else:
-                stream = MediaStream(
-                    file_path, HighQualityAudio(), HighQualityVideo()
-                )
+                stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
             try:
                 await pytgcalls.change_stream(
                     message.chat.id,
@@ -301,9 +294,7 @@ async def admin_cbs(_, query: CallbackQuery):
             if stream_type == "audio":
                 stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
             else:
-                stream = MediaStream(
-                    file_path, HighQualityAudio(), HighQualityVideo()
-                )
+                stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
             try:
                 await pytgcalls.change_stream(
                     query.message.chat.id,
@@ -345,9 +336,7 @@ async def admin_quecb(_, query: CallbackQuery):
             if stream_type == "audio":
                 stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
             else:
-                stream = MediaStream(
-                    file_path, HighQualityAudio(), HighQualityVideo()
-                )
+                stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
             try:
                 await pytgcalls.change_stream(
                     query.message.chat.id,
