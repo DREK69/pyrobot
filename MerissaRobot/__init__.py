@@ -60,11 +60,7 @@ ASS_USERNAME = "MerissaAssistant"
 ASS_MENTION = "https://t.me/merissaassistant"
 
 pbot = Client(
-    "MerissaRobot",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    bot_token=TOKEN,
-    workers=100
+    "MerissaRobot", api_id=API_ID, api_hash=API_HASH, bot_token=TOKEN, workers=100
 )
 
 user = Client(
