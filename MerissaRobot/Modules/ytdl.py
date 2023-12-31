@@ -95,7 +95,7 @@ async def ytregex(client, message):
         )
         await m.delete()
     else:
-        results = YouTube(link)
+        YouTube(link)
         title = yt.title
         dur = yt.duration
         videoid = yt.video_id
