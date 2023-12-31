@@ -95,9 +95,10 @@ async def ytregex(client, message):
         )
         await m.delete()
     else:
-        YouTube(link)
+        yt = YouTube(link)
         title = yt.title
-        dur = yt.duration
+        duration = yt.length
+        dur = await convertmin(duration)
         videoid = yt.video_id
         thumbnail = yt.thumbnail_url
         await message.reply_photo(
