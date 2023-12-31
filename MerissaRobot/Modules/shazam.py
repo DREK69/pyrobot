@@ -4,8 +4,8 @@ from pyrogram import filters, types
 from shazamio import Shazam
 
 from MerissaRobot import pbot
-from MerissaRobot.helpers import getreq, subscribe
 from MerissaRobot.Handler.pyro.ytmusic import ytmsearch
+from MerissaRobot.helpers import subscribe
 
 shazam = Shazam()
 
