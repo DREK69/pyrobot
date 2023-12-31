@@ -13,7 +13,7 @@ from pyrogram.types import (
     InputMediaPhoto,
     InputMediaVideo,
 )
-from pytube import Playlist
+from pytube import Playlist, YouTube
 from youtubesearchpython import VideosSearch
 
 from MerissaRobot import pbot as Client
