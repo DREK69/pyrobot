@@ -5,6 +5,7 @@ from shazamio import Shazam
 
 from MerissaRobot import pbot
 from MerissaRobot.helpers import getreq, subscribe
+from MerissaRobot.Handler.pyro.ytmusic import ytmsearch
 
 shazam = Shazam()
 
@@ -36,7 +37,7 @@ async def voice_handler(client, message):
     out = f'**Title**: `{r["title"]}`\n'
     out += f'**Artist**: `{r["subtitle"]}`\n'
     query = f"{r['title']} - {r['subtitle']}"
-    search = await getreq(f"https://api.princexd.tech/ytmsearch?query={query}")
+    search = ytmsearch(query)
     videoid = search["results"][0]["videoId"]
     buttons = [
         [
