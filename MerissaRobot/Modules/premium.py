@@ -68,14 +68,14 @@ async def instadown(client, message):
                     response = await getreq(
                         f"https://editor-choice-api.vercel.app/instadown?link={link}"
                     )
-                    video = response["media"][0]
+                    video = response["media"][0]["url"]
                     try:
                         await message.reply_video(
                             video, caption="Downloaded By @MerissaRobot"
                         )
                         await msg.delete()
                     except:
-                        x = await save_file(response, "video.mp4")
+                        x = await save_file(video, "video.mp4")
                         await message.reply_video(
                             x, caption="Uploaded By @MerissaRobot"
                         )
@@ -143,16 +143,16 @@ async def instadown(client, message):
                 resp = await getreq(
                     f"https://editor-choice-api.vercel.app/instadown?link={link}"
                 )
-                post = resp["media"]
+                posts = resp["media"]
                 singlelink = posts[0]
                 if len(posts) == 1:
                     if "jpg" in singlelink:
                         await message.reply_photo(
-                            singlelink, caption="Downloaded By @MerissaRobot"
+                            singlelink["url"], caption="Downloaded By @MerissaRobot"
                         )
                     else:
                         await message.reply_video(
-                            singlelink, caption="Downloaded By @MerissaRobot"
+                            singlelink["url"], caption="Downloaded By @MerissaRobot"
                         )
                 else:
                     mg = []
@@ -162,7 +162,7 @@ async def instadown(client, message):
                         else:
                             mg.append(
                                 InputMediaVideo(
-                                    post, caption="Uploaded By @MerissaRobot"
+                                    post["url"], caption="Uploaded By @MerissaRobot"
                                 )
                             )
                     await message.reply_media_group(mg)
