@@ -54,8 +54,6 @@ async def convertmin(duration):
 async def ytregex(client, message):
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     link = message.text
-    if "?si" in link:
-        link = link.split("?si")[0]
     if "music" in link:
         resp = ytmsearch(link)
         yt = resp["results"]["videoDetails"]
@@ -97,12 +95,11 @@ async def ytregex(client, message):
         )
         await m.delete()
     else:
-        results = VideosSearch(link, limit=1).result()
-        yt = results["result"][0]
-        title = yt["title"]
-        dur = yt["duration"]
-        videoid = yt["id"]
-        thumbnail = await get_ytthumb(videoid)
+        results = YouTube(link)
+        title = yt.title
+        dur = yt.duration
+        videoid = yt.video_id
+        thumbnail = yt.thumbnail_url
         await message.reply_photo(
             thumbnail,
             caption=f"**Title**: {title}\n**Duration**: {dur}\n\n**Select Your Preferred Format from Below**:",
