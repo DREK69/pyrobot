@@ -3,7 +3,7 @@ from pyrogram.enums import ChatAction
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 import MerissaRobot.Database.sql.chatbot_sql as sql
-from MerissaRobot import pbot
+from MerissaRobot import pbot, BOT_ID
 from MerissaRobot.helpers import getreq
 
 
@@ -63,6 +63,12 @@ async def chatbot(bot, message):
     chat_id = message.chat.id
     is_merissa = sql.is_merissa(chat_id)
     if not is_merissa:
+        return
+    if not message.reply_to_message:
+        return
+    if not message.reply_to_message.from_user:
+        return
+    if message.reply_to_message.from_user.id != BOT_ID:
         return
     if message.text and not message.document:
         await bot.send_chat_action(chat_id, ChatAction.TYPING)
