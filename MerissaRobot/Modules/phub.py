@@ -70,9 +70,9 @@ async def get_video(c: Client, q: CallbackQuery):
     callback_data = q.data.strip()
     ran_hash = callback_data.split("_")[1]
     link = y.get(ran_hash)
-    formats = requests.get(f"https://api.princexd.vercel.app/ytinfo?link={link}").json()[
-        "formats"
-    ]
+    formats = requests.get(
+        f"https://api.princexd.vercel.app/ytinfo?link={link}"
+    ).json()["formats"]
     keyboards = []
     col = []
     for i in formats:
