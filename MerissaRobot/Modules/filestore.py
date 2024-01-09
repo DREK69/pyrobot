@@ -137,10 +137,10 @@ async def _startfile(bot, update):
                 await bot.copy_media_group(
                     update.from_user.id, TRACK_CHANNEL, int(msg_id)
                 )
-                await ok.delete()
+                await send_msg.delete()
             except Exception:
                 await check.copy(update.from_user.id)
-                await ok.delete()
+                await send_msg.delete()
 
         elif "batch_" in code:
             cmd, chat_id, message = code.split("_")
@@ -154,7 +154,7 @@ async def _startfile(bot, update):
                     )
                 await msg.copy(update.from_user.id)
                 await send_msg.delete()
-            return await asyncio.sleep(1)
+                return
 
             chat_id, msg_id = code.split("_")
             msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
@@ -165,8 +165,7 @@ async def _startfile(bot, update):
                 )
             caption = f"{msg.caption}" if msg.caption else ""
             await msg.copy(update.from_user.id, caption=caption)
-        return await send_msg.delete()
-
+            await send_msg.delete()
 
 async def __reply(update, copied):
     ok = await update.reply_text("Downloading Media...")
