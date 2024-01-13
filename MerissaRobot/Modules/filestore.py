@@ -153,8 +153,8 @@ async def _startfile(bot, update):
                         "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner"
                     )
                 await msg.copy(update.from_user.id)
-                await send_msg.delete()
-                return
+                return await send_msg.delete()
+                
 
             chat_id, msg_id = code.split("_")
             msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
