@@ -146,7 +146,7 @@ async def play(_, message):
                 file_path = await message.reply_to_message.download(title)
             else:
                 file_path = f"downloads/{title}"
-                
+
         if video:
             if round(video.duration / 60) > DURATION_LIMIT:
                 raise DurationLimitError(
@@ -161,7 +161,7 @@ async def play(_, message):
                 file_path = await message.reply_to_message.download(title)
             else:
                 file_path = f"downloads/{title}"
-                
+
         thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
         if "v" in message.command[0]:
             stream_type += "video"
