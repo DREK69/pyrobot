@@ -141,7 +141,12 @@ async def play(_, message):
             file_name = get_file_name(audio)
             title = file_name
             duration = round(audio.duration / 60)
-
+            videoid = "videoidhotitodedeta"
+            if not os.path.isfile(os.path.join("downloads", title)):
+                file_path = await message.reply_to_message.download(title)
+            else:
+                file_path = f"downloads/{title}"
+                
         if video:
             if round(video.duration / 60) > DURATION_LIMIT:
                 raise DurationLimitError(
@@ -151,11 +156,12 @@ async def play(_, message):
             file_name = get_file_name(video)
             title = file_name
             duration = round(video.duration / 60)
-        videoid = "videoidhotitodedeta"
-        if not os.path.isfile(os.path.join("downloads", title)):
-            file_path = await message.reply_to_message.download(title)
-        else:
-            file_path = f"downloads/{title}"
+            videoid = "videoidhotitodedeta"
+            if not os.path.isfile(os.path.join("downloads", title)):
+                file_path = await message.reply_to_message.download(title)
+            else:
+                file_path = f"downloads/{title}"
+                
         thumb = "https://te.legra.ph/file/3e40a408286d4eda24191.jpg"
         if "v" in message.command[0]:
             stream_type += "video"
