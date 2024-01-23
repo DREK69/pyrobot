@@ -58,3 +58,4 @@ youtube_search_python==1.4.9
 ytmusicapi
 git+https://github.com/NotReallyPrince/yt-dlp@master
 zalgo-text
+
