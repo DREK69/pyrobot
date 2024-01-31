@@ -14,7 +14,7 @@ async def animedl(_, message):
     search_results = await message.reply_text("Processing...")
     animeinput = message.text.split(None, 1)[1]
     anime = requests.get(
-        f"https://animeapi.princexd.tech/search?keyw={animeinput}&page=1"
+        f"https://animeapi.princexd.vercel.app/search?keyw={animeinput}&page=1"
     ).json()
     keyboards = []
     if anime:
@@ -42,7 +42,7 @@ async def anime_result(_, CallbackQuery):
     search_results = await CallbackQuery.message.reply_text("Processing...")
     await CallbackQuery.message.delete()
     anime = requests.get(
-        f"https://animeapi.princexd.tech/search?keyw={animeinput}&page=1"
+        f"https://animeapi.princexd.vercel.app/search?keyw={animeinput}&page=1"
     ).json()
     keyboards = []
     if anime:
@@ -72,7 +72,7 @@ async def movie_result(_, CallbackQuery):
         text="Please Wait Fetching Movie/Series Details",
         reply_markup=None,
     )
-    search = requests.get(f"https://animeapi.princexd.tech/getAnime/{id}").json()
+    search = requests.get(f"https://animeapi.princexd.vercel.app/getAnime/{id}").json()
     name = search["name"]
     oname = search["othername"]
     animetype = search["type"]
@@ -84,7 +84,7 @@ async def movie_result(_, CallbackQuery):
     for episodeId in episodeid:
         episodeid = episodeId["episodeId"]
         episodenum = episodeId["episodeNum"]
-        link = f"https://api.princexd.tech/anime/watch/{episodeid}"
+        link = f"https://api.princexd.vercel.app/anime/watch/{episodeid}"
         text += f"Anime Episode {episodenum}: [Click Here]({link})<br>──────────────────────────────────<br>"
     if animetype == "Movie":
         button = InlineKeyboardMarkup(
