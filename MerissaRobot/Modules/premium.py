@@ -282,7 +282,8 @@ async def snapdown(client, message):
         await message.reply_document(post, caption="By: @MerissaRobot")
     except KeyError:
         await message.reply_text(
-            text="No Public Stories for past 24Hrs\n\n❌ OR INVALID USERNAME", quote=True
+            text="No Public Stories for past 24Hrs\n\n❌ OR INVALID USERNAME",
+            quote=True,
         )
 
 

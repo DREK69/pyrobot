@@ -388,7 +388,9 @@ async def ytdown_query(client, callbackquery):
                         "🔊 Audio",
                         callback_data=f"audio {videoid}",
                     ),
-                    InlineKeyboardButton("🎥 Video", callback_data=f"formats {videoid}"),
+                    InlineKeyboardButton(
+                        "🎥 Video", callback_data=f"formats {videoid}"
+                    ),
                 ],
                 [
                     InlineKeyboardButton("🗑️ Close", callback_data="cb_close"),

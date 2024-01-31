@@ -253,11 +253,7 @@ async def play(_, message):
                             text="❌ Delete", callback_data=f"vcque_del {position}"
                         ),
                     ],
-                    [
-                        InlineKeyboardButton(
-                            text="🗑️ Close", callback_data=f"vccb_close"
-                        )
-                    ],
+                    [InlineKeyboardButton(text="🗑️ Close", callback_data=f"vccb_close")],
                 ]
             ),
             disable_web_page_preview=True,

@@ -147,7 +147,11 @@ def gpaginate_modules(page_n: int, module_dict: Dict, prefix, chat=None) -> List
                     "Next ➡️", callback_data="{}_next({})".format(prefix, modulo_page)
                 ),
             ),
-            (EqInlineKeyboardButton("Return Home 🏠", callback_data="merissa_setting"),),
+            (
+                EqInlineKeyboardButton(
+                    "Return Home 🏠", callback_data="merissa_setting"
+                ),
+            ),
         ]
 
     else:

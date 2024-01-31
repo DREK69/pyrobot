@@ -51,7 +51,11 @@ def change_quote(update: Update, context: CallbackContext):
 
 def animequotes(update: Update, context: CallbackContext):
     message = update.effective_message
-    message.reply_to_message.from_user.first_name if message.reply_to_message else message.from_user.first_name
+    (
+        message.reply_to_message.from_user.first_name
+        if message.reply_to_message
+        else message.from_user.first_name
+    )
     reply_photo = (
         message.reply_to_message.reply_photo
         if message.reply_to_message

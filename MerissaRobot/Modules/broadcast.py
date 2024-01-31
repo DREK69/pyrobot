@@ -38,10 +38,10 @@ async def broadcast(_, message):
             for chat in chats:
                 try:
                     chat_id = int(chat.chat_id)
-                    await pbot.forward_messages(
-                        chat_id, y, x
-                    ) if message.reply_to_message else await pbot.send_message(
-                        chat_id, text=query
+                    (
+                        await pbot.forward_messages(chat_id, y, x)
+                        if message.reply_to_message
+                        else await pbot.send_message(chat_id, text=query)
                     )
                     sent_group += 1
                 except FloodWait as e:
@@ -55,10 +55,10 @@ async def broadcast(_, message):
             for user in users:
                 try:
                     chat_id = int(user.user_id)
-                    await pbot.forward_messages(
-                        chat_id, y, x
-                    ) if message.reply_to_message else await pbot.send_message(
-                        chat_id, text=query
+                    (
+                        await pbot.forward_messages(chat_id, y, x)
+                        if message.reply_to_message
+                        else await pbot.send_message(chat_id, text=query)
                     )
                 except FloodWait as e:
                     flood_time = int(e.x)

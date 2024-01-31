@@ -135,25 +135,34 @@ def get(update, context, notename, show_none=True, no_format=False):
                     ),
                     fullname=escape_markdown(
                         " ".join(
-                            [message.from_user.first_name, message.from_user.last_name]
-                            if message.from_user.last_name
-                            else [message.from_user.first_name],
+                            (
+                                [
+                                    message.from_user.first_name,
+                                    message.from_user.last_name,
+                                ]
+                                if message.from_user.last_name
+                                else [message.from_user.first_name]
+                            ),
                         ),
                     ),
-                    username="@" + message.from_user.username
-                    if message.from_user.username
-                    else mention_markdown(
-                        message.from_user.id,
-                        message.from_user.first_name,
+                    username=(
+                        "@" + message.from_user.username
+                        if message.from_user.username
+                        else mention_markdown(
+                            message.from_user.id,
+                            message.from_user.first_name,
+                        )
                     ),
                     mention=mention_markdown(
                         message.from_user.id,
                         message.from_user.first_name,
                     ),
                     chatname=escape_markdown(
-                        message.chat.title
-                        if message.chat.type != "private"
-                        else message.from_user.first_name,
+                        (
+                            message.chat.title
+                            if message.chat.type != "private"
+                            else message.from_user.first_name
+                        ),
                     ),
                     id=message.from_user.id,
                 )

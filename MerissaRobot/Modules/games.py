@@ -132,7 +132,9 @@ async def games(_, message: Message):
     button = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("Play Game 🎮", url="https://poki.com/en/g/swingo"),
+                InlineKeyboardButton(
+                    "Play Game 🎮", url="https://poki.com/en/g/swingo"
+                ),
             ],
         ]
     )
@@ -181,7 +183,9 @@ async def games(_, message: Message):
     button = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("Play Game 🎮", url="https://poki.com/en/g/boxrob"),
+                InlineKeyboardButton(
+                    "Play Game 🎮", url="https://poki.com/en/g/boxrob"
+                ),
             ],
         ]
     )
@@ -230,7 +234,9 @@ async def games(_, message: Message):
     button = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("Play Game 🎮", url="https://poki.com/en/g/energy"),
+                InlineKeyboardButton(
+                    "Play Game 🎮", url="https://poki.com/en/g/energy"
+                ),
             ],
         ]
     )
@@ -262,7 +268,9 @@ async def games(_, message: Message):
     button = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("Play Game 🎮", url="https://poki.com/en/g/murder"),
+                InlineKeyboardButton(
+                    "Play Game 🎮", url="https://poki.com/en/g/murder"
+                ),
             ],
         ]
     )
