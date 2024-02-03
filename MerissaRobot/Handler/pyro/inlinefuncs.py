@@ -490,7 +490,7 @@ async def cbgames(_, cq):
     audio["\xa9alb"] = album
     audio["\xa9ART"] = artist
     audio.save()
-    embed_album_art(thumb, audio_file)
+    embed_album_art(thumbnail, audio_file)
     med = InputMediaAudio(
         audio_file,
         caption=str(info_dict["title"]),
