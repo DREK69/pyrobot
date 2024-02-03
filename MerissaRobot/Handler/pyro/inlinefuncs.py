@@ -543,9 +543,8 @@ async def cbgames(_, cq):
             artist = info_dict["uploader"]
         except:
             artist = "Unknown Artist"
-    thumb = info_dict["thumbnails"][0]["url"]
-    thumb.replace("60-", "1080-")
-    thumbnail = await save_file(thumb, "thumbnail.png")
+    thumb = await get_ytthumb(info_dict["id"])
+    thumbnail = await save_file(thumb, "thumb.jpg")
     audio_file = f"{videoid}.m4a"
     audio = MP4(audio_file)
     audio["\xa9nam"] = title
