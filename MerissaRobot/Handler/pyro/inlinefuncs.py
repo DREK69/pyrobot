@@ -426,7 +426,7 @@ async def cbgames(_, cq):
         "quiet": True,
     }
     try:
-        with yt_dlp.YoutubeDL(opts) as ytdl:
+        with yt_dlp.YoutubeDL(opts) as ydl:
             await run_async(ydl.download, [link])
             info_dict = ydl.extract_info(link, download=False)
     except Exception as e:
