@@ -545,14 +545,14 @@ async def cbgames(_, cq):
             artist = "Unknown Artist"
     thumb = info_dict["thumbnails"][0]["url"]
     thumb.replace("60-", "1080-")
-    thumbnail = save_file(thumb, "thumbnail.png")
+    thumbnail = await save_file(thumb, "thumbnail.png")
     audio_file = f"{videoid}.m4a"
     audio = MP4(audio_file)
     audio["\xa9nam"] = title
     audio["\xa9alb"] = album
     audio["\xa9ART"] = artist
     audio.save()
-    embed_album_art(thumb, audio_file)
+    embed_album_art(thumbnail, audio_file)
     med = InputMediaAudio(
         audio_file,
         caption=str(info_dict["title"]),
