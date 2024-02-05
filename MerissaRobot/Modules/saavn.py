@@ -64,7 +64,9 @@ async def saavn(client, message):
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     query = message.text.split(None, 1)[1]
     try:
-        search = await getreq(f"https://saavn.princexd.vercel.app/search/songs?query={query}")
+        search = await getreq(
+            f"https://saavn.princexd.vercel.app/search/songs?query={query}"
+        )
     except Exception as e:
         await m.edit(str(e))
         return
@@ -105,7 +107,9 @@ async def callback_query(client, CallbackQuery):
     callback = callback_data.split("|")
     query = str(callback[1])
     page = int(callback[2])
-    search = await getreq(f"https://saavn.princexd.vercel.app/search/songs?query={query}")
+    search = await getreq(
+        f"https://saavn.princexd.vercel.app/search/songs?query={query}"
+    )
     result = search["data"]["results"][page]
     title = result["name"]
     id = result["id"]
