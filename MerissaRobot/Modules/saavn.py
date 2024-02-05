@@ -27,10 +27,9 @@ async def convertmin(duration):
 @pbot.on_message(filters.regex(spregex) & filters.incoming & filters.private)
 @subscribe
 async def song(client, message):
-    message.from_user.id
     link = message.text
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
-    search = await getreq(f"https://saavn.princexd.tech/songs?link={link}")
+    search = await getreq(f"https://saavn.princexd.vercel.app/songs?link={link}")
     result = search["data"][0]
     title = result["name"]
     duration = result["duration"]
@@ -65,7 +64,7 @@ async def saavn(client, message):
     m = await message.reply_text("🔄 Processing Query... Please Wait!")
     query = message.text.split(None, 1)[1]
     try:
-        search = await getreq(f"https://saavn.me/search/songs?query={query}")
+        search = await getreq(f"https://saavn.princexd.vercel.app/search/songs?query={query}")
     except Exception as e:
         await m.edit(str(e))
         return
@@ -106,7 +105,7 @@ async def callback_query(client, CallbackQuery):
     callback = callback_data.split("|")
     query = str(callback[1])
     page = int(callback[2])
-    search = await getreq(f"https://saavn.me/search/songs?query={query}")
+    search = await getreq(f"https://saavn.princexd.vercel.app/search/songs?query={query}")
     result = search["data"]["results"][page]
     title = result["name"]
     id = result["id"]
@@ -205,7 +204,7 @@ async def callback_query(client, query):
     )
     callback_data = query.data.strip()
     id = callback_data.split(None, 1)[1]
-    search = await getreq(f"https://saavn.princexd.tech/songs?id={id}")
+    search = await getreq(f"https://saavn.princexd.vercel.app/songs?id={id}")
     result = search["data"][0]
     title = result["name"]
     dur = result["duration"]
