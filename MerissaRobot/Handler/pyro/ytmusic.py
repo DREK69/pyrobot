@@ -16,7 +16,7 @@ def getvideoid(link):
 
 def ytmsearch(query):
     if "https" in query:
-        videoid = getvideoid(link)
+        videoid = getvideoid(query)
         result = ytmusic.get_song(videoid)
     else:
         result = ytmusic.search(query, filter="songs", limit=10)
