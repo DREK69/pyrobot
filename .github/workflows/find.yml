@@ -8,7 +8,7 @@ jobs:
       - name: Find and Replace
         uses: nguyenvanuyn96/str-find-and-replace-action@master
         with:
-          find: "join_group_call"
+          find: "change_stream"
           replace: "play"
       - name: Pull All Updates
         uses: stefanzweifel/git-auto-commit-action@v4
