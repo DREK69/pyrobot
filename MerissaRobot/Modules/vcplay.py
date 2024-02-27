@@ -265,7 +265,7 @@ async def play(_, message):
             stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
         await merissa.edit_text("🎧 VideoChat Joining...")
         try:
-            await pytgcalls.join_group_call(
+            await pytgcalls.play(
                 chat_id,
                 stream,
             )
