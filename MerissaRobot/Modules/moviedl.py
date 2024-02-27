@@ -13,7 +13,7 @@ def search_movies(query):
     movies_list = []
     movies_details = {}
     website = BeautifulSoup(
-        requests.get(f"https://mkvcinemas.boo/?s={query.replace(' ', '+')}").text,
+        requests.get(f"https://mkvcinemas.rsvp/?s={query.replace(' ', '+')}").text,
         "html.parser",
     )
     movies = website.find_all("a", {"class": "ml-mask jt"})
@@ -93,7 +93,7 @@ async def movie_result(Client, CallbackQuery):
         )
     caption = f"📥 Download Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
     data = {"content": caption, "ext": "md"}
-    response = requests.post("https://api.princexd.tech/nekobin", json=data).json()[
+    response = requests.post("https://nekobin.com/api/documents", json=data).json()[
         "link"
     ]
     button = InlineKeyboardMarkup(
@@ -122,11 +122,10 @@ async def find_streammovie(_, message):
             link += f"🎬Movie: {movie['judul']}<br>└  <a href={movie['dl']}>Download</a>  |  <a href={movie['link']}>Stream</a><br><br>"
         caption = f"📥 Download/Stream Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
         data = {"content": caption, "ext": "md"}
-        response = requests.post("https://api.princexd.tech/nekobin", json=data).json()[
-            "link"
-        ]
+        response = requests.post("https://nekobin.com/api/documents", json=data).json()["result"]["key"]
+        link = f"https://nekobin.com/{key}.md"
         button = InlineKeyboardMarkup(
-            [[InlineKeyboardButton(f"{query}", url=response)]]
+            [[InlineKeyboardButton(f"{query}", url=link)]]
         )
         await search_results.edit_text(
             text="Your Movie Downloading/Streaming Link", reply_markup=button
@@ -219,11 +218,10 @@ async def anime_result(Client, CallbackQuery):
         )
     caption = f"📥 Download Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
     data = {"content": caption, "ext": "md"}
-    response = requests.post("https://api.princexd.tech/nekobin", json=data).json()[
-        "link"
-    ]
+    response = requests.post("https://nekobin.com/api/documents", json=data).json()["result"]["key"]
+    link = f"https://nekobin.com/{key}.md"
     button = InlineKeyboardMarkup(
-        [[InlineKeyboardButton("Download Links", url=response)]]
+        [[InlineKeyboardButton("Download Links", url=link)]]
     )
     await m.edit_text(
         text="Your Movie/Series Downloading Link is in Button", reply_markup=button
