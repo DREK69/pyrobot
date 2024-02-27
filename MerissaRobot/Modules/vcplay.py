@@ -12,9 +12,9 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pytgcalls.exceptions import (
     NoActiveGroupCall,
     NoAudioSourceFound,
-    TelegramServerError,
     UnMuteNeeded,
 )
+from ntgcalls import TelegramServerError
 from pytgcalls.types import HighQualityAudio, HighQualityVideo, MediaStream
 from telegram import InlineKeyboardButton as IKB
 from youtubesearchpython import VideosSearch
