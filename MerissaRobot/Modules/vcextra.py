@@ -419,17 +419,7 @@ async def ub_leave(_, message: Message):
             pass
 
 
-@pytgcalls.on_left()
-@pytgcalls.on_kicked()
-@pytgcalls.on_closed_voice_chat()
-async def swr_handler(_, chat_id: int):
-    try:
-        await _clear_(chat_id)
-    except:
-        pass
-
-
-@pytgcalls.on_stream_end()
+@pytgcalls.on_update()
 async def on_stream_end(pytgcalls, update: Update):
     chat_id = update.chat_id
     get = merissadb.get(chat_id)
