@@ -4,7 +4,7 @@ from typing import Callable
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
-from pytgcalls.types import HighQualityAudio, HighQualityVideo, MediaStream, Update
+from pytgcalls.types import MediaStream, Update
 
 from MerissaRobot import BOT_ID, BOT_USERNAME, OWNER_ID, pbot, pytgcalls, user
 from MerissaRobot.Handler.pyro.filter_groups import (
@@ -440,12 +440,7 @@ async def on_stream_end(pytgcalls, update: Update):
         get[0]["user_id"]
         stream_type = get[0]["stream_type"]
         thumb = get[0]["thumb"]
-
-        if stream_type == "audio":
-            stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
-        else:
-            stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
-
+        stream = MediaStream(file_path)
         try:
             await pytgcalls.play(
                 chat_id,
