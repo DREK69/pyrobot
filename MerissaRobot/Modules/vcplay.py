@@ -11,7 +11,7 @@ from pyrogram.errors import (
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pytgcalls.exceptions import NoActiveGroupCall, NoAudioSourceFound, UnMuteNeeded
-from pytgcalls.types import HighQualityAudio, HighQualityVideo, MediaStream
+from pytgcalls.types import MediaStream
 from telegram import InlineKeyboardButton as IKB
 from youtubesearchpython import VideosSearch
 
