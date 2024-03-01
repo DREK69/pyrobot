@@ -438,7 +438,7 @@ async def on_stream_end(pytgcalls, update: Update):
         videoid = get[0]["videoid"]
         req_by = get[0]["req"]
         get[0]["user_id"]
-        stream_type = get[0]["stream_type"]
+        get[0]["stream_type"]
         thumb = get[0]["thumb"]
         stream = MediaStream(file_path)
         try:
