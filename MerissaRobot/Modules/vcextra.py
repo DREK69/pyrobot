@@ -122,11 +122,7 @@ async def vc_controls(_, message):
             req_by = get[0]["req"]
             stream_type = get[0]["stream_type"]
             thumb = get[0]["thumb"]
-
-            if stream_type == "audio":
-                stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
-            else:
-                stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
+            stream = MediaStream(file_path)
             try:
                 await pytgcalls.play(
                     message.chat.id,
@@ -290,11 +286,7 @@ async def admin_cbs(_, query: CallbackQuery):
             req_by = get[0]["req"]
             stream_type = get[0]["stream_type"]
             thumb = get[0]["thumb"]
-
-            if stream_type == "audio":
-                stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
-            else:
-                stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
+            stream = MediaStream(file_path)
             try:
                 await pytgcalls.play(
                     query.message.chat.id,
@@ -332,11 +324,7 @@ async def admin_quecb(_, query: CallbackQuery):
             thumb = get[track]["thumb"]
             element_to_move = get.pop(track)
             get.insert(0, element_to_move)
-
-            if stream_type == "audio":
-                stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
-            else:
-                stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
+            stream = MediaStream(file_path)
             try:
                 await pytgcalls.play(
                     query.message.chat.id,
@@ -438,7 +426,7 @@ async def on_stream_end(pytgcalls, update: Update):
         videoid = get[0]["videoid"]
         req_by = get[0]["req"]
         get[0]["user_id"]
-        get[0]["stream_type"]
+        stream_type = get[0]["stream_type"]
         thumb = get[0]["thumb"]
         stream = MediaStream(file_path)
         try:
