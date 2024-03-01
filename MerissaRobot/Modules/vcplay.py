@@ -255,10 +255,7 @@ async def play(_, message):
             disable_web_page_preview=True,
         )
     else:
-        if stream_type == "audio":
-            stream = MediaStream(file_path, HighQualityAudio())
-        else:
-            stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
+        stream = MediaStream(file_path)
         await merissa.edit_text("🎧 VideoChat Joining...")
         try:
             await pytgcalls.play(
