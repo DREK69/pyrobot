@@ -284,7 +284,7 @@ async def admin_cbs(_, query: CallbackQuery):
             videoid = get[0]["videoid"]
             file_path = get[0]["file_path"]
             req_by = get[0]["req"]
-            stream_type = get[0]["stream_type"]
+            get[0]["stream_type"]
             thumb = get[0]["thumb"]
             stream = MediaStream(file_path)
             try:
@@ -320,7 +320,7 @@ async def admin_quecb(_, query: CallbackQuery):
             videoid = get[track]["videoid"]
             file_path = get[track]["file_path"]
             req_by = get[track]["req"]
-            stream_type = get[track]["stream_type"]
+            get[track]["stream_type"]
             thumb = get[track]["thumb"]
             element_to_move = get.pop(track)
             get.insert(0, element_to_move)
@@ -426,7 +426,7 @@ async def on_stream_end(pytgcalls, update: Update):
         videoid = get[0]["videoid"]
         req_by = get[0]["req"]
         get[0]["user_id"]
-        stream_type = get[0]["stream_type"]
+        get[0]["stream_type"]
         thumb = get[0]["thumb"]
         stream = MediaStream(file_path)
         try:
