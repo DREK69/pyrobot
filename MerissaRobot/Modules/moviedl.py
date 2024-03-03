@@ -92,12 +92,10 @@ async def movie_result(Client, CallbackQuery):
             f"🎬{i}<br>         └ <a href={links[i]}>Click Here To Download</a><br><br>"
         )
     caption = f"📥 Download Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
-    data = {"content": caption, "ext": "md"}
-    response = requests.post("https://nekobin.com/api/documents", json=data).json()[
-        "link"
-    ]
+    key = requests.post("https://nekobin.com/api/documents", json=data).json()["result"]["key"]
+    link = f"https://nekobin.com/{key}.md"
     button = InlineKeyboardMarkup(
-        [[InlineKeyboardButton("Download Links", url=response)]]
+        [[InlineKeyboardButton("Download Links", url=link)]]
     )
     await m.edit_text(
         text="Your Movie/Series Downloading Link is in Button", reply_markup=button
@@ -218,9 +216,7 @@ async def anime_result(Client, CallbackQuery):
         )
     caption = f"📥 Download Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
     data = {"content": caption, "ext": "md"}
-    response = requests.post("https://nekobin.com/api/documents", json=data).json()[
-        "result"
-    ]["key"]
+    key = requests.post("https://nekobin.com/api/documents", json=data).json()["result"]["key"]
     link = f"https://nekobin.com/{key}.md"
     button = InlineKeyboardMarkup([[InlineKeyboardButton("Download Links", url=link)]])
     await m.edit_text(
