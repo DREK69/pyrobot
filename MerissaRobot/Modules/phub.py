@@ -3,7 +3,6 @@ import os
 import random
 import string
 
-import requests
 import wget
 import yt_dlp
 from pyrogram import filters
@@ -23,10 +22,12 @@ queues = []
 
 y = {}
 
+
 def ytdl(link):
-    with yt_dlp.YoutubeDL({'quiet': True}) as ydl:
+    with yt_dlp.YoutubeDL({"quiet": True}) as ydl:
         info = ydl.extract_info(link, download=False)
     return info
+
 
 async def run_async(func, *args, **kwargs):
     loop = asyncio.get_running_loop()
