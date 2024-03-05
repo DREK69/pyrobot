@@ -15,7 +15,7 @@ from pytgcalls.exceptions import (
     TelegramServerError,
     UnMuteNeeded,
 )
-from pytgcalls.types import HighQualityAudio, HighQualityVideo, MediaStream
+from pytgcalls.types import MediaStream, AudioQuality, VideoQuality
 from telegram import InlineKeyboardButton as IKB
 from youtubesearchpython import VideosSearch
 
@@ -260,9 +260,9 @@ async def play(_, message):
         )
     else:
         if stream_type == "audio":
-            stream = MediaStream(file_path, HighQualityAudio())
+            stream = MediaStream(file_path, AudioQuality.STUDIO)
         else:
-            stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
+            stream = MediaStream(file_path, AudioQuality.STUDIO, VideoQuality.UHD_4K)
         await merissa.edit_text("🎧 VideoChat Joining...")
         try:
             await pytgcalls.join_group_call(
