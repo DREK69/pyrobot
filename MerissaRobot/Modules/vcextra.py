@@ -4,7 +4,7 @@ from typing import Callable
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
-from pytgcalls.types import MediaStream, Update
+from pytgcalls.types import MediaStream, Update, HighQualityAudio, HighQualityVideo
 
 from MerissaRobot import BOT_ID, BOT_USERNAME, OWNER_ID, pbot, pytgcalls, user
 from MerissaRobot.Handler.pyro.filter_groups import (
@@ -122,9 +122,13 @@ async def vc_controls(_, message):
             req_by = get[0]["req"]
             stream_type = get[0]["stream_type"]
             thumb = get[0]["thumb"]
-            stream = MediaStream(file_path)
+
+            if stream_type == "audio":
+                stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
+            else:
+                stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
             try:
-                await pytgcalls.play(
+                await pytgcalls.change_stream(
                     message.chat.id,
                     stream,
                 )
@@ -284,11 +288,15 @@ async def admin_cbs(_, query: CallbackQuery):
             videoid = get[0]["videoid"]
             file_path = get[0]["file_path"]
             req_by = get[0]["req"]
-            get[0]["stream_type"]
+            stream_type = get[0]["stream_type"]
             thumb = get[0]["thumb"]
-            stream = MediaStream(file_path)
+
+            if stream_type == "audio":
+                stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
+            else:
+                stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
             try:
-                await pytgcalls.play(
+                await pytgcalls.change_stream(
                     query.message.chat.id,
                     stream,
                 )
@@ -320,13 +328,17 @@ async def admin_quecb(_, query: CallbackQuery):
             videoid = get[track]["videoid"]
             file_path = get[track]["file_path"]
             req_by = get[track]["req"]
-            get[track]["stream_type"]
+            stream_type = get[track]["stream_type"]
             thumb = get[track]["thumb"]
             element_to_move = get.pop(track)
             get.insert(0, element_to_move)
-            stream = MediaStream(file_path)
+
+            if stream_type == "audio":
+                stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
+            else:
+                stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
             try:
-                await pytgcalls.play(
+                await pytgcalls.change_stream(
                     query.message.chat.id,
                     stream,
                 )
@@ -407,7 +419,17 @@ async def ub_leave(_, message: Message):
             pass
 
 
-@pytgcalls.on_update()
+@pytgcalls.on_left()
+@pytgcalls.on_kicked()
+@pytgcalls.on_closed_voice_chat()
+async def swr_handler(_, chat_id: int):
+    try:
+        await _clear_(chat_id)
+    except:
+        pass
+
+
+@pytgcalls.on_stream_end()
 async def on_stream_end(pytgcalls, update: Update):
     chat_id = update.chat_id
     get = merissadb.get(chat_id)
@@ -426,11 +448,16 @@ async def on_stream_end(pytgcalls, update: Update):
         videoid = get[0]["videoid"]
         req_by = get[0]["req"]
         get[0]["user_id"]
-        get[0]["stream_type"]
+        stream_type = get[0]["stream_type"]
         thumb = get[0]["thumb"]
-        stream = MediaStream(file_path)
+
+        if stream_type == "audio":
+            stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
+        else:
+            stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
+
         try:
-            await pytgcalls.play(
+            await pytgcalls.change_stream(
                 chat_id,
                 stream,
             )
