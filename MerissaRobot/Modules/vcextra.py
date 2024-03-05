@@ -128,7 +128,7 @@ async def vc_controls(_, message):
             else:
                 stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
             try:
-                await pytgcalls.change_stream(
+                await pytgcalls.play(
                     message.chat.id,
                     stream,
                 )
@@ -296,7 +296,7 @@ async def admin_cbs(_, query: CallbackQuery):
             else:
                 stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
             try:
-                await pytgcalls.change_stream(
+                await pytgcalls.play(
                     query.message.chat.id,
                     stream,
                 )
@@ -338,7 +338,7 @@ async def admin_quecb(_, query: CallbackQuery):
             else:
                 stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
             try:
-                await pytgcalls.change_stream(
+                await pytgcalls.play(
                     query.message.chat.id,
                     stream,
                 )
@@ -457,7 +457,7 @@ async def on_stream_end(pytgcalls, update: Update):
             stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
 
         try:
-            await pytgcalls.change_stream(
+            await pytgcalls.play(
                 chat_id,
                 stream,
             )
