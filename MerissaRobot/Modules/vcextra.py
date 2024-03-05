@@ -130,7 +130,7 @@ async def vc_controls(_, message):
                     file_path, AudioQuality.STUDIO, VideoQuality.UHD_4K
                 )
             try:
-                await pytgcalls.change_stream(
+                await pytgcalls.play(
                     message.chat.id,
                     stream,
                 )
