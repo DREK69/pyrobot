@@ -8,11 +8,11 @@ from pyrogram.errors import (
     UserAlreadyParticipant,
     UserNotParticipant,
 )
+from ntgcalls import TelegramServerError
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pytgcalls.exceptions import (
     NoActiveGroupCall,
     NoAudioSourceFound,
-    TelegramServerError,
     UnMuteNeeded,
 )
 from pytgcalls.types import AudioQuality, MediaStream, VideoQuality
