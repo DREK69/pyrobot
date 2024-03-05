@@ -4,7 +4,7 @@ from typing import Callable
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
-from pytgcalls.types import HighQualityAudio, HighQualityVideo, MediaStream, Update
+from pytgcalls.types import AudioQuality, VideoQuality, MediaStream, Update
 
 from MerissaRobot import BOT_ID, BOT_USERNAME, OWNER_ID, pbot, pytgcalls, user
 from MerissaRobot.Handler.pyro.filter_groups import (
@@ -23,7 +23,6 @@ from MerissaRobot.Handler.pyro.vcfunction import (
     stream_off,
     stream_on,
 )
-
 
 def admin_check_cb(func: Callable) -> Callable:
     async def cb_non_admin(_, query: CallbackQuery):
@@ -124,9 +123,9 @@ async def vc_controls(_, message):
             thumb = get[0]["thumb"]
 
             if stream_type == "audio":
-                stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
+                stream = MediaStream(file_path, AudioQuality.STUDIO)
             else:
-                stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
+                stream = MediaStream(file_path, AudioQuality.STUDIO, VideoQuality.UHD_4K)
             try:
                 await pytgcalls.play(
                     message.chat.id,
@@ -292,9 +291,9 @@ async def admin_cbs(_, query: CallbackQuery):
             thumb = get[0]["thumb"]
 
             if stream_type == "audio":
-                stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
+                stream = MediaStream(file_path, AudioQuality.STUDIO)
             else:
-                stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
+                stream = MediaStream(file_path, AudioQuality.STUDIO, VideoQuality.UHD_4K)
             try:
                 await pytgcalls.play(
                     query.message.chat.id,
@@ -452,9 +451,9 @@ async def on_stream_end(pytgcalls, update: Update):
         thumb = get[0]["thumb"]
 
         if stream_type == "audio":
-            stream = MediaStream(file_path, audio_parameters=HighQualityAudio())
+            stream = MediaStream(file_path, AudioQuality.STUDIO)
         else:
-            stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
+            stream = MediaStream(file_path, AudioQuality.STUDIO, VideoQuality.UHD_4K)
 
         try:
             await pytgcalls.play(
