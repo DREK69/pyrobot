@@ -15,7 +15,7 @@ from pytgcalls.exceptions import (
     TelegramServerError,
     UnMuteNeeded,
 )
-from pytgcalls.types import MediaStream, AudioQuality, VideoQuality
+from pytgcalls.types import AudioQuality, MediaStream, VideoQuality
 from telegram import InlineKeyboardButton as IKB
 from youtubesearchpython import VideosSearch
 
