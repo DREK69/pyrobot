@@ -1,7 +1,6 @@
 import asyncio
 import os
 
-from ntgcalls import TelegramServerError
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.errors import (
@@ -10,8 +9,13 @@ from pyrogram.errors import (
     UserNotParticipant,
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from pytgcalls.exceptions import NoActiveGroupCall, NoAudioSourceFound, UnMuteNeeded
-from pytgcalls.types import MediaStream
+from pytgcalls.exceptions import (
+    NoActiveGroupCall,
+    NoAudioSourceFound,
+    TelegramServerError,
+    UnMuteNeeded,
+)
+from pytgcalls.types import HighQualityAudio, HighQualityVideo, MediaStream
 from telegram import InlineKeyboardButton as IKB
 from youtubesearchpython import VideosSearch
 
@@ -255,10 +259,13 @@ async def play(_, message):
             disable_web_page_preview=True,
         )
     else:
-        stream = MediaStream(file_path)
+        if stream_type == "audio":
+            stream = MediaStream(file_path, HighQualityAudio())
+        else:
+            stream = MediaStream(file_path, HighQualityAudio(), HighQualityVideo())
         await merissa.edit_text("🎧 VideoChat Joining...")
         try:
-            await pytgcalls.play(
+            await pytgcalls.join_group_call(
                 chat_id,
                 stream,
             )
