@@ -4,7 +4,7 @@ from typing import Callable
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, Message
-from pytgcalls.types import MediaStream, Update, HighQualityAudio, HighQualityVideo
+from pytgcalls.types import HighQualityAudio, HighQualityVideo, MediaStream, Update
 
 from MerissaRobot import BOT_ID, BOT_USERNAME, OWNER_ID, pbot, pytgcalls, user
 from MerissaRobot.Handler.pyro.filter_groups import (
