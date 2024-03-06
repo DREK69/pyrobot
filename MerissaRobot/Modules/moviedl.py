@@ -92,6 +92,7 @@ async def movie_result(Client, CallbackQuery):
             f"🎬{i}<br>         └ <a href={links[i]}>Click Here To Download</a><br><br>"
         )
     caption = f"📥 Download Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
+    data = {"content": caption}
     key = requests.post("https://nekobin.com/api/documents", json=data).json()[
         "result"
     ]["key"]
@@ -119,8 +120,8 @@ async def find_streammovie(_, message):
         for movie in movies_list:
             link += f"🎬Movie: {movie['judul']}<br>└  <a href={movie['dl']}>Download</a>  |  <a href={movie['link']}>Stream</a><br><br>"
         caption = f"📥 Download/Stream Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
-        data = {"content": caption, "ext": "md"}
-        response = requests.post("https://nekobin.com/api/documents", json=data).json()[
+        data = {"content": caption}
+        key = requests.post("https://nekobin.com/api/documents", json=data).json()[
             "result"
         ]["key"]
         link = f"https://nekobin.com/{key}.md"
@@ -215,7 +216,7 @@ async def anime_result(Client, CallbackQuery):
             f"🎬{i}<br>         └ <a href={links[i]}>Click Here To Download</a><br><br>"
         )
     caption = f"📥 Download Links is Here:-<br><br>{link}Powered By <a href='https://telegram.dog/MerissaRobot'>@MerissaRobot</a>"
-    data = {"content": caption, "ext": "md"}
+    data = {"content": caption}
     key = requests.post("https://nekobin.com/api/documents", json=data).json()[
         "result"
     ]["key"]
