@@ -340,7 +340,9 @@ async def admin_quecb(_, query: CallbackQuery):
             if stream_type == "audio":
                 stream = MediaStream(file_path, AudioQuality.STUDIO)
             else:
-                stream = MediaStream(file_path, AudioQuality.STUDIO, VideoQuality.UHD_4K)
+                stream = MediaStream(
+                    file_path, AudioQuality.STUDIO, VideoQuality.UHD_4K
+                )
             try:
                 await pytgcalls.change_stream(
                     query.message.chat.id,
