@@ -448,8 +448,6 @@ async def on_stream_end(pytgcalls, update: Update):
             chat_id=chat_id,
             text="Downloading next track from queue...",
         )
-        get[0]["title"]
-        get[0]["duration"]
         file_path = get[0]["file_path"]
         videoid = get[0]["videoid"]
         req_by = get[0]["req"]
