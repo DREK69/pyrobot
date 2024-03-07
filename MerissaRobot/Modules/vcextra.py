@@ -443,13 +443,7 @@ async def on_stream_end(pytgcalls, update: Update):
         get.pop(0)
     except:
         pass
-    if not get:
-        try:
-            await _clear_(chat_id)
-            return await pytgcalls.leave_group_call(chat_id)
-        except:
-            return
-    else:
+    if get:
         process = await pbot.send_message(
             chat_id=chat_id,
             text="Downloading next track from queue...",
