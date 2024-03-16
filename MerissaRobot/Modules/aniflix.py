@@ -97,12 +97,13 @@ async def movie_result(_, CallbackQuery):
         )
     else:
         episodes = f"<center><h2>Anime Links of<br>{name}<br>By [@MerissaRobot](https://telegram.dog/MerissaRobot)</center></h2>──────────────────────────────────<br>{text}"
-        data = {"content": episodes, "ext": "md"}
-        response = requests.post("https://api.princexd.tech/nekobin", json=data).json()[
-            "link"
-        ]
+        data = {"content": caption}
+        key = requests.post("https://nekobin.com/api/documents", json=data).json()[
+            "result"
+        ]["key"]
+        link = f"https://nekobin.com/{key}.md"
         button = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("Stream/Download", url=response)]]
+            [[InlineKeyboardButton("Stream/Download", url=link)]]
         )
         await CallbackQuery.message.reply_photo(
             image,
