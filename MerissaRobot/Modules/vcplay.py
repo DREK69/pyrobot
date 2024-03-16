@@ -27,6 +27,7 @@ from MerissaRobot import (
     pytgcalls,
     user,
 )
+from MerissaRobot.helpers import subscribe
 from MerissaRobot.Handler.pyro.filter_groups import play_group
 from MerissaRobot.Handler.pyro.vcfunction import (
     DURATION_LIMIT,
@@ -51,6 +52,7 @@ from MerissaRobot.Handler.pyro.vcfunction import (
     & ~filters.via_bot,
     group=play_group,
 )
+@subscribe
 async def play(_, message):
     merissa = await message.reply_text("🔎 Searching...")
     chat = message.chat
