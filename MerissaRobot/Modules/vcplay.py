@@ -27,7 +27,6 @@ from MerissaRobot import (
     pytgcalls,
     user,
 )
-from MerissaRobot.helpers import subscribe
 from MerissaRobot.Handler.pyro.filter_groups import play_group
 from MerissaRobot.Handler.pyro.vcfunction import (
     DURATION_LIMIT,
@@ -43,6 +42,7 @@ from MerissaRobot.Handler.pyro.vcfunction import (
     ytaudio,
     ytvideo,
 )
+from MerissaRobot.helpers import subscribe
 
 
 @pbot.on_message(
