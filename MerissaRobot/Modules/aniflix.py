@@ -80,9 +80,8 @@ async def movie_result(_, CallbackQuery):
     image = search["imageUrl"]
     episodeid = search["episode_id"]
     data = {"search": name}
-    text = ""
-    link = f"https://api.princexd.vercel.app/anime/watch/{episodeid[0]['episodeId']}"
     if animetype == "Movie":
+        link = f"https://api.princexd.vercel.app/anime/watch/{episodeid[0]['episodeId']}"
         button = InlineKeyboardMarkup(
             [[InlineKeyboardButton("Stream/Download", url=link)]]
         )
@@ -92,13 +91,14 @@ async def movie_result(_, CallbackQuery):
             reply_markup=button,
         )
     else:
+        text = ""
         for episodeId in episodeid:
             episodeid = episodeId["episodeId"]
             episodenum = episodeId["episodeNum"]
             link = f"https://api.princexd.vercel.app/anime/watch/{episodeid}"
             text += f"Anime Episode {episodenum}: [Click Here]({link})<br>──────────────────────────────────<br>"
         episodes = f"<center><h2>Anime Links of<br>{name}<br>By [@MerissaRobot](https://telegram.dog/MerissaRobot)</center></h2>──────────────────────────────────<br>{text}"
-        data = {"content": caption}
+        data = {"content": episodes}
         key = requests.post("https://nekobin.com/api/documents", json=data).json()[
             "result"
         ]["key"]
