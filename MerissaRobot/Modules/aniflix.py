@@ -81,7 +81,9 @@ async def movie_result(_, CallbackQuery):
     episodeid = search["episode_id"]
     data = {"search": name}
     if animetype == "Movie":
-        link = f"https://api.princexd.vercel.app/anime/watch/{episodeid[0]['episodeId']}"
+        link = (
+            f"https://api.princexd.vercel.app/anime/watch/{episodeid[0]['episodeId']}"
+        )
         button = InlineKeyboardMarkup(
             [[InlineKeyboardButton("Stream/Download", url=link)]]
         )
