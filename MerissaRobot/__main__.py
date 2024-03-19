@@ -14,7 +14,6 @@ from telegram.error import (
     NetworkError,
     TelegramError,
     TimedOut,
-    Forbidden,
 )
 from telegram.ext import (
     CallbackContext,
@@ -242,10 +241,11 @@ def error_handler(update, context):
     # Finally, send the message
     context.bot.send_message(chat_id=OWNER_ID, text=message, parse_mode=ParseMode.HTML)
 
+
 def error_callback(_, context: CallbackContext):
     try:
         raise context.error
-    except (BadRequest):
+    except BadRequest:
         pass
         # remove update.message.chat_id from conversation list
     except TimedOut:
@@ -848,7 +848,7 @@ def main():
     migrate_handler = MessageHandler(
         Filters.status_update.migrate, migrate_chats, run_async=True
     )
-    
+
     dispatcher.add_handler(error_callback)
     dispatcher.add_handler(test_handler)
     dispatcher.add_handler(start_handler)
