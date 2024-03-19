@@ -8,7 +8,14 @@ import traceback
 
 from pyrogram.errors.exceptions.flood_420 import FloodWait
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.error import BadRequest
+from telegram.error import (
+    BadRequest,
+    ChatMigrated,
+    NetworkError,
+    TelegramError,
+    TimedOut,
+    Forbidden,
+)
 from telegram.ext import (
     CallbackContext,
     CallbackQueryHandler,
