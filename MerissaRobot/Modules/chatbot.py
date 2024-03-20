@@ -4,7 +4,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 import MerissaRobot.Database.sql.chatbot_sql as sql
 from MerissaRobot import BOT_ID, pbot
-from MerissaRobot.helpers import getreq
+from MerissaRobot.helpers import getpost
 
 
 @pbot.on_callback_query(filters.regex("^chatmode"))
@@ -72,10 +72,12 @@ async def chatbot(bot, message):
         return
     if message.text and not message.document:
         await bot.send_chat_action(chat_id, ChatAction.TYPING)
-        results = await getreq(
-            f"https://merissabot.vercel.app/api/apikey=2030709195:TqrHroMxAjfMI_JWvZtK4_FS8hUDTi7cx1QeZgk/message={message.text}"
-        )
-        await message.reply_text(results["reply"])
+        data = {
+            "model_id": 18,
+            "prompt": f"imagine you are Merissa, a large language model, Created by @NotreallyPrince. Now tell me {prompt}",
+        }
+        msg = await getpost("https://lexica.qewertyy.dev/models", params=data)
+        await message.reply_text(msg["content"])
 
 
 __mod_name__ = "Chatbot 🤖"
