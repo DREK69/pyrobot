@@ -74,7 +74,7 @@ async def chatbot(bot, message):
         await bot.send_chat_action(chat_id, ChatAction.TYPING)
         data = {
             "model_id": 18,
-            "prompt": f"imagine you are Merissa, a large language model, Created by @NotreallyPrince. Now tell me {prompt}",
+            "prompt": f"imagine you are Merissa, a large language model, Created by @NotreallyPrince. Now tell me {message.text}",
         }
         msg = await postreq("https://lexica.qewertyy.dev/models", params=data)
         await message.reply_text(msg["content"])
