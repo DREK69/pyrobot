@@ -4,7 +4,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 import MerissaRobot.Database.sql.chatbot_sql as sql
 from MerissaRobot import BOT_ID, pbot
-from MerissaRobot.helpers import getpost
+from MerissaRobot.helpers import postreq
 
 
 @pbot.on_callback_query(filters.regex("^chatmode"))
@@ -76,7 +76,7 @@ async def chatbot(bot, message):
             "model_id": 18,
             "prompt": f"imagine you are Merissa, a large language model, Created by @NotreallyPrince. Now tell me {prompt}",
         }
-        msg = await getpost("https://lexica.qewertyy.dev/models", params=data)
+        msg = await postreq("https://lexica.qewertyy.dev/models", params=data)
         await message.reply_text(msg["content"])
 
 
