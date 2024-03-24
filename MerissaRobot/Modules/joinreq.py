@@ -11,7 +11,7 @@ from MerissaRobot.Modules.log_channel import loggable
 
 
 @merissacallback(pattern=r"req_approve=")
-@user_admin(AdminPerms.CAN_INVITE_USERS)
+@user_admin(AdminPerms.CAN_RESTRICT_MEMBERS)
 @loggable
 def approve_joinReq(update: Update, context: CallbackContext) -> str:
     bot = context.bot
@@ -43,7 +43,7 @@ def approve_joinReq(update: Update, context: CallbackContext) -> str:
 
 
 @merissacallback(pattern=r"req_decline=")
-@user_admin(AdminPerms.CAN_INVITE_USERS)
+@user_admin(AdminPerms.CAN_RESTRICT_MEMBERS)
 @loggable
 def decline_joinReq(update: Update, context: CallbackContext) -> str:
     bot = context.bot
