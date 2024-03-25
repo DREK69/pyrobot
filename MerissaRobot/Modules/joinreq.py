@@ -5,12 +5,13 @@ from telegram.ext.callbackcontext import CallbackContext
 from telegram.update import Update
 from telegram.utils.helpers import mention_html
 
-from MerissaRobot.Handler.ptb.anonymous import AdminPerms, user_admin
+from MerissaRobot.Handler.ptb import chat_status
+from MerissaRobot.Handler.ptb.anonymous import user_admin
 from MerissaRobot.Handler.ptb.decorators import merissacallback
 from MerissaRobot.Modules.log_channel import loggable
-from MerissaRobot.Handler.ptb import chat_status
 
 user_admin = chat_status.user_admin
+
 
 @merissacallback(pattern=r"req_approve=")
 @user_admin
