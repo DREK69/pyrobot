@@ -4,7 +4,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from MerissaRobot import LOGGER, pbot
 
 
-@pbot.on_message(filters.command("verify") & ~filters.private)
+@pbot.on_message(filters.command("verify") & ~filters.private, group=7)
 async def verifylink(bot, update):
     chat = update.chat
     uid = update.from_user.id
@@ -41,7 +41,7 @@ async def verifylink(bot, update):
 
 
 @pbot.on_callback_query(filters.regex("^verify"))
-async def howtoaap_cb(bot, query):
+async def verify_cb(bot, query):
     await query.answer(
         "Verifying You are Human 🗣️",
         show_alert=True,
