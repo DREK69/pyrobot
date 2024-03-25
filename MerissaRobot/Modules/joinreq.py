@@ -8,10 +8,12 @@ from telegram.utils.helpers import mention_html
 from MerissaRobot.Handler.ptb.anonymous import AdminPerms, user_admin
 from MerissaRobot.Handler.ptb.decorators import merissacallback
 from MerissaRobot.Modules.log_channel import loggable
+from MerissaRobot.Handler.ptb import chat_status
 
+user_admin = chat_status.user_admin
 
 @merissacallback(pattern=r"req_approve=")
-@user_admin(AdminPerms.CAN_RESTRICT_MEMBERS)
+@user_admin
 @loggable
 def approve_joinReq(update: Update, context: CallbackContext) -> str:
     bot = context.bot
@@ -43,7 +45,7 @@ def approve_joinReq(update: Update, context: CallbackContext) -> str:
 
 
 @merissacallback(pattern=r"req_decline=")
-@user_admin(AdminPerms.CAN_RESTRICT_MEMBERS)
+@user_admin
 @loggable
 def decline_joinReq(update: Update, context: CallbackContext) -> str:
     bot = context.bot
