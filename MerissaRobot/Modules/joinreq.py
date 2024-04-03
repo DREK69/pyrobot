@@ -6,7 +6,6 @@ from telegram.update import Update
 from telegram.utils.helpers import mention_html
 
 from MerissaRobot.Handler.ptb.chat_status import cuser_admin
-from MerissaRobot.Handler.ptb.anonymous import user_admin
 from MerissaRobot.Handler.ptb.decorators import merissacallback
 from MerissaRobot.Modules.log_channel import loggable
 
