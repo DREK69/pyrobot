@@ -209,6 +209,7 @@ def user_admin(func):
 
     return is_admin
 
+
 def cuser_admin(func):
     @wraps(func)
     def is_admin(update: Update, context: CallbackContext, *args, **kwargs):
