@@ -28,7 +28,7 @@ multicolorcaptcha
 opencv-python-headless
 psycopg2-binary
 Pillow==9.4.0
-pornhub-api==0.2.0
+pornhub-api
 pykeyboard
 pymongo==3.12.1
 pynewtonmath
