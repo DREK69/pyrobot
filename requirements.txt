@@ -50,7 +50,7 @@ spamwatch
 speedtest-cli
 sqlalchemy==1.4.46
 telegraph
-telethon==1.32.0
+telethon
 pyshorteners 
 tgcrypto
 wget
@@ -58,4 +58,3 @@ youtube_search_python==1.4.9
 ytmusicapi
 yt-dlp==2023.12.30
 zalgo-text
-
