@@ -1,5 +1,6 @@
 import math
 import os
+from io import BytesIO
 import urllib.request as urllib
 from html import escape
 from urllib.parse import quote as urlquote
