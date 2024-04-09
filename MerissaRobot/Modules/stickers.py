@@ -195,7 +195,6 @@ def kang(update, context):
 
     while packname_found == 0:
         try:
-            context.bot.get_sticker_set(packname)
             if sticker_count(context.bot, packname) >= max_stickers:
                 packnum += 1
                 packname = (
@@ -376,7 +375,6 @@ def kang(update, context):
             max_stickers = 50
             while packname_found == 0:
                 try:
-                    context.bot.get_sticker_set(packname)
                     if sticker_count(context.bot, packname) >= max_stickers:
                         packnum += 1
                         packname = (
@@ -453,7 +451,6 @@ def kang(update, context):
             max_stickers = 50
             while packname_found == 0:
                 try:
-                    context.bot.get_sticker_set(packname)
                     if sticker_count(context.bot, packname) >= max_stickers:
                         packnum += 1
                         packname = (
