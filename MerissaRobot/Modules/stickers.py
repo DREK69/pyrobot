@@ -1,8 +1,8 @@
 import math
 import os
-from io import BytesIO
 import urllib.request as urllib
 from html import escape
+from io import BytesIO
 from urllib.parse import quote as urlquote
 
 import cv2
@@ -26,6 +26,7 @@ from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 combot_stickers_url = "https://combot.org/telegram/stickers?q="
 
+
 def sticker_count(bot: Bot, pname: str) -> int:
     resp = bot._request.post(
         f"{bot.base_url}/getStickerSet",
@@ -34,6 +35,7 @@ def sticker_count(bot: Bot, pname: str) -> int:
         },
     )
     return len(resp["stickers"])
+
 
 def convert_gif(input):
     """Function to convert mp4 to webm(vp9)"""
@@ -164,7 +166,7 @@ def cbs_callback(update: Update, context: CallbackContext):
 def getsticker(update: Update, context: CallbackContext):
     bot = context.bot
     msg = update.effective_message
-    chat_id = update.effective_chat.id
+    update.effective_chat.id
     if msg.reply_to_message and msg.reply_to_message.sticker:
         file_id = msg.reply_to_message.sticker.file_id
         is_anim = msg.reply_to_message.sticker.is_animated
@@ -193,7 +195,7 @@ def kang(update, context):
 
     while packname_found == 0:
         try:
-            stickerset = context.bot.get_sticker_set(packname)
+            context.bot.get_sticker_set(packname)
             if sticker_count(context.bot, packname) >= max_stickers:
                 packnum += 1
                 packname = (
@@ -374,7 +376,7 @@ def kang(update, context):
             max_stickers = 50
             while packname_found == 0:
                 try:
-                    stickerset = context.bot.get_sticker_set(packname)
+                    context.bot.get_sticker_set(packname)
                     if sticker_count(context.bot, packname) >= max_stickers:
                         packnum += 1
                         packname = (
@@ -451,7 +453,7 @@ def kang(update, context):
             max_stickers = 50
             while packname_found == 0:
                 try:
-                    stickerset = context.bot.get_sticker_set(packname)
+                    context.bot.get_sticker_set(packname)
                     if sticker_count(context.bot, packname) >= max_stickers:
                         packnum += 1
                         packname = (
