@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 from cloudscraper import CloudScraper
 from PIL import Image
 from telegram import (
+    Bot,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     ParseMode,
@@ -24,6 +25,14 @@ from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 combot_stickers_url = "https://combot.org/telegram/stickers?q="
 
+def sticker_count(bot: Bot, pname: str) -> int:
+    resp = bot._request.post(
+        f"{bot.base_url}/getStickerSet",
+        {
+            "name": pname,
+        },
+    )
+    return len(resp["stickers"])
 
 def convert_gif(input):
     """Function to convert mp4 to webm(vp9)"""
@@ -157,12 +166,15 @@ def getsticker(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     if msg.reply_to_message and msg.reply_to_message.sticker:
         file_id = msg.reply_to_message.sticker.file_id
-        with BytesIO() as file:
-            file.name = "sticker.png"
-            new_file = bot.get_file(file_id)
-            new_file.download(out=file)
-            file.seek(0)
-            bot.send_document(chat_id, document=file)
+        is_anim = msg.reply_to_message.sticker.is_animated
+        sticker_data = bot.get_file(file_id).download(out=BytesIO())
+        sticker_data.seek(0)
+        filename = "animated_sticker.tgs.hmm_" if is_anim else "sticker.png"
+        bot.send_document(
+            update.effective_chat.id,
+            document=sticker_data,
+            filename=filename,
+        )
     else:
         update.effective_message.reply_text(
             "Please reply to a sticker for me to upload its PNG.",
@@ -181,7 +193,7 @@ def kang(update, context):
     while packname_found == 0:
         try:
             stickerset = context.bot.get_sticker_set(packname)
-            if len(stickerset.stickers) >= max_stickers:
+            if sticker_count(context.bot, packname) >= max_stickers:
                 packnum += 1
                 packname = (
                     "a"
@@ -362,7 +374,7 @@ def kang(update, context):
             while packname_found == 0:
                 try:
                     stickerset = context.bot.get_sticker_set(packname)
-                    if len(stickerset.stickers) >= max_stickers:
+                    if sticker_count(context.bot, packname) >= max_stickers:
                         packnum += 1
                         packname = (
                             "animated"
@@ -439,7 +451,7 @@ def kang(update, context):
             while packname_found == 0:
                 try:
                     stickerset = context.bot.get_sticker_set(packname)
-                    if len(stickerset.stickers) >= max_stickers:
+                    if sticker_count(context.bot, packname) >= max_stickers:
                         packnum += 1
                         packname = (
                             "video"
