@@ -43,9 +43,18 @@ def subscribe(func):
             )
             return await func(client, message)
         except UserNotParticipant:
-            return await message.reply_photo(
-                photo="https://te.legra.ph/file/2b3a7af1d01513c032739.jpg",
-                caption="Join our Telegram Update Channel @MerissaxUpdates to get this Premium Feature for Free or @PrincexDonatebot Pay here for Merissa Premium",
+            return await message.reply_text(
+                text= "🤖 To use the bot, it is necessary to subscribe to our channel @MerissaxUpdates. We have done this to prevent bots and so that you can receive messages about updates and news through the channel.",,
+                reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            text="🔔 Subscribe Now",
+                            url="https://telegram.me/MerissaxUpdates",
+                        )
+                    ]
+                  ]
+                ),
             )
 
     return non_subscribe
