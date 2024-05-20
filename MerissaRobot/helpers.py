@@ -4,6 +4,7 @@ import httpx
 import mutagen
 import requests
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from MerissaRobot import FORCE_CHANNEL
 
