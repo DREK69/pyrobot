@@ -44,16 +44,16 @@ def subscribe(func):
             return await func(client, message)
         except UserNotParticipant:
             return await message.reply_text(
-                text= "🤖 To use the bot, it is necessary to subscribe to our channel @MerissaxUpdates. We have done this to prevent bots and so that you can receive messages about updates and news through the channel.",
+                text="🤖 To use the bot, it is necessary to subscribe to our channel @MerissaxUpdates. We have done this to prevent bots and so that you can receive messages about updates and news through the channel.",
                 reply_markup=InlineKeyboardMarkup(
-                [
                     [
-                        InlineKeyboardButton(
-                            text="🔔 Subscribe Now",
-                            url="https://telegram.me/MerissaxUpdates",
-                        )
+                        [
+                            InlineKeyboardButton(
+                                text="🔔 Subscribe Now",
+                                url="https://telegram.me/MerissaxUpdates",
+                            )
+                        ]
                     ]
-                  ]
                 ),
             )
 
