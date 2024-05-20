@@ -30,7 +30,9 @@ async def postreq(url, data=None, json=None, params=None, headers=None):
     async with httpx.AsyncClient(
         http2=True, verify=False, timeout=httpx.Timeout(40)
     ) as client:
-        resp = (await client.post(url, data=data, json=json, params=params, headers=headers)).json()
+        resp = (
+            await client.post(url, data=data, json=json, params=params, headers=headers)
+        ).json()
         return resp
 
 
