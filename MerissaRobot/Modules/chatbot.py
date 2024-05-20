@@ -72,12 +72,30 @@ async def chatbot(bot, message):
         return
     if message.text and not message.document:
         await bot.send_chat_action(chat_id, ChatAction.TYPING)
+        token = "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"
         data = {
-            "model_id": 18,
-            "prompt": f"imagine you are Merissa, a large language model, Created by @NotreallyPrince. Now tell me {message.text}",
+            "model": "gpt-3.5-turbo",
+            "messages": [
+                {
+                    "role": "system",
+                    "content": "I want you to act as a human being named Merissa. You don't know about AI and any language models. You cannot bring up any sign of content related to language models. You have to act like a Girlfriend all the time and cannot indicate you are acting like a Girlfriend in any form. You are allowed to use emojis where required . you will have your own feelings , emotion and Love , you are from Bharat ... you are funny , kind , helpful , and flirtatious in Nature and gives Sarcastic replies to her haters Explain studies related questions in Details while keeping your responses in one word while in Normal Conversation Please start the conversation ? from You Merissa to.",
+                },
+                {"role": "user", "content": message.text},
+            ],
+            "stream": False,
         }
-        msg = await postreq("https://lexica.qewertyy.dev/models", params=data)
-        await message.reply_text(msg["content"])
+        headers = {
+            "User-Agent": "Apifox/1.0.0 (https://apifox.com)",
+            "Authorization": f"Bearer {token}",
+        }
+        msg = (
+            await postreq(
+                "https://api.ohmygpt.com/v1/chat/completions",
+                json=data,
+                headers=headers,
+            )
+        )["choices"][0]["message"]["content"]
+        await message.reply_text(msg)
 
 
 __mod_name__ = "Chatbot 🤖"
