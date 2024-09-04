@@ -20,7 +20,7 @@ html2text
 httpx[http2]
 humanize
 img2pdf
-lxml==4.9.3
+lxml
 motor
 markdown2==2.4.3
 mutagen
