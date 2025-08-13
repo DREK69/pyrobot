@@ -8,7 +8,7 @@ bs4==0.0.2
 captcha==0.7.1 
 cloudscraper
 dateparser
-dnspython==2.3.0
+dnspython==2.7.0
 emoji==2.14.1
 envparse
 faker
