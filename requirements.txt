@@ -48,7 +48,7 @@ shazamio==0.0.2
 somnium
 spamwatch
 speedtest-cli
-sqlalchemy==1.4.46
+sqlalchemy==2.0.43
 telegraph
 telethon
 pyshorteners 
