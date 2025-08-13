@@ -22,7 +22,7 @@ humanize
 img2pdf
 lxml
 motor
-markdown2==2.4.3
+markdown2==2.5.4
 mutagen
 multicolorcaptcha
 opencv-python-headless
