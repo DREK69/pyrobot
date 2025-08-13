@@ -1,39 +1,43 @@
 from functools import wraps
+from telegram.constants import ChatAction
+from telegram import error, Message
+from telegram.ext import ContextTypes
+from typing import Callable, Any, Coroutine
 
-from telegram import ChatAction, error
 
-
-def send_message(message, text, *args, **kwargs):
+async def send_message(message: Message, text: str, *args, **kwargs):
     try:
-        return message.reply_text(text, *args, **kwargs)
+        return await message.reply_text(text, *args, **kwargs)
     except error.BadRequest as err:
         if str(err) == "Reply message not found":
-            return message.reply_text(text, quote=False, *args, **kwargs)
+            return await message.reply_text(text, quote=False, *args, **kwargs)
 
 
-def typing_action(func):
+def typing_action(func: Callable[..., Coroutine[Any, Any, Any]]):
     """Sends typing action while processing func command."""
 
     @wraps(func)
-    def command_func(update, context, *args, **kwargs):
-        context.bot.send_chat_action(
-            chat_id=update.effective_chat.id, action=ChatAction.TYPING
+    async def command_func(update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
+        await context.bot.send_chat_action(
+            chat_id=update.effective_chat.id,
+            action=ChatAction.TYPING
         )
-        return func(update, context, *args, **kwargs)
+        return await func(update, context, *args, **kwargs)
 
     return command_func
 
 
-def send_action(action):
+def send_action(action: ChatAction):
     """Sends `action` while processing func command."""
 
-    def decorator(func):
+    def decorator(func: Callable[..., Coroutine[Any, Any, Any]]):
         @wraps(func)
-        def command_func(update, context, *args, **kwargs):
-            context.bot.send_chat_action(
-                chat_id=update.effective_chat.id, action=action
+        async def command_func(update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
+            await context.bot.send_chat_action(
+                chat_id=update.effective_chat.id,
+                action=action
             )
-            return func(update, context, *args, **kwargs)
+            return await func(update, context, *args, **kwargs)
 
         return command_func
 
