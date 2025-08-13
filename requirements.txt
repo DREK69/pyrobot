@@ -4,7 +4,7 @@ apscheduler
 asyncio
 beautifulsoup4
 bleach
-bs4==0.0.1
+bs4==0.0.2
 captcha==0.4 
 cloudscraper
 dateparser
