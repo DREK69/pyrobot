@@ -9,7 +9,7 @@ captcha==0.4
 cloudscraper
 dateparser
 dnspython==2.3.0
-emoji==1.7.0
+emoji==2.14.1
 envparse
 faker
 ffmpeg-python
