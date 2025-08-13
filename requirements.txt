@@ -30,7 +30,7 @@ psycopg2-binary
 Pillow==9.4.0
 pornhub-api==0.2.0
 pykeyboard
-pymongo==3.12.1
+pymongo==4.14.0
 pynewtonmath
 pyrate-limiter==2.10.0
 pyrogram==2.0.106
