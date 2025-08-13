@@ -47,7 +47,7 @@ qrcode
 Random-Word-Generator
 regex
 requests 
-shazamio==0.0.2
+shazamio==0.8.1
 somnium
 spamwatch
 speedtest-cli
