@@ -27,7 +27,7 @@ mutagen
 multicolorcaptcha
 opencv-python-headless
 psycopg2-binary
-Pillow==9.4.0
+Pillow==11.3.0
 pornhub-api==0.2.0
 pykeyboard
 pymongo==4.14.0
