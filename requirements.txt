@@ -34,7 +34,7 @@ pymongo==4.14.0
 pynewtonmath
 pyrate-limiter==3.9.0
 pyrogram==2.0.106
-pyromod==1.5.0
+pyromod==3.1.6
 py-tgcalls==2.2.5
 python-dotenv==1.1.1
 python-telegram-bot==22.3
