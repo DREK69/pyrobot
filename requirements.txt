@@ -27,6 +27,9 @@ mutagen
 multicolorcaptcha
 opencv-python-headless
 psycopg2-binary
+dependabot/pip/pillow-11.3.0
+Pillow==11.3.0
+pornhub-api==0.2.0
 Pillow==9.4.0
 pornhub-api==0.4.0
 pykeyboard
