@@ -3,12 +3,13 @@ from datetime import timedelta
 from typing import Optional
 
 from pytimeparse.timeparse import timeparse
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
-from telegram.ext import CallbackContext
-from telegram.utils.helpers import mention_html
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.ext import ContextTypes
+from telegram.helpers import mention_html
+from telegram.constants import ParseMode
 
 import MerissaRobot.Database.sql.welcome_sql as sql
-from MerissaRobot import LOGGER, updater
+from MerissaRobot import LOGGER, application
 from MerissaRobot.Handler.ptb.anonymous import AdminPerms, user_admin
 from MerissaRobot.Handler.ptb.chat_status import (
     bot_admin,
@@ -18,7 +19,8 @@ from MerissaRobot.Handler.ptb.chat_status import (
 from MerissaRobot.Handler.ptb.decorators import merissacallback, merissacmd
 from MerissaRobot.Modules.log_channel import loggable
 
-j = updater.job_queue
+# Get job queue from application
+j = application.job_queue
 
 # store job id in a dict to be able to cancel them later
 RUNNING_RAIDS = {}  # {chat_id:job_id, ...}
@@ -43,16 +45,19 @@ def get_readable_time(time: int) -> str:
 @connection_status
 @loggable
 @user_admin(AdminPerms.CAN_CHANGE_INFO)
-def setRaid(update: Update, context: CallbackContext) -> Optional[str]:
+async def setRaid(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Optional[str]:
     args = context.args
     chat = update.effective_chat
     msg = update.effective_message
     user = update.effective_user
+    
     if chat.type == "private":
-        context.bot.sendMessage(chat.id, "This command is not available in PMs.")
+        await context.bot.send_message(chat.id, "This command is not available in PMs.")
         return
+        
     stat, time, acttime = sql.getRaidStatus(chat.id)
     readable_time = get_readable_time(time)
+    
     if len(args) == 0:
         if stat:
             text = "Raid mode is currently <code>Enabled</code>\nWould you like to <code>Disable</code> raid?"
@@ -84,14 +89,19 @@ def setRaid(update: Update, context: CallbackContext) -> Optional[str]:
                 ]
             ]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        msg.reply_text(text, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
+        await msg.reply_text(text, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
 
     elif args[0] == "off":
         if stat:
             sql.setRaidStatus(chat.id, False, time, acttime)
-            j.scheduler.remove_job(RUNNING_RAIDS.pop(chat.id))
+            try:
+                job_id = RUNNING_RAIDS.pop(chat.id)
+                # Remove job using job_queue.scheduler
+                j.scheduler.remove_job(job_id)
+            except (KeyError, Exception):
+                pass
             text = "Raid mode has been <code>Disabled</code>, members that join will no longer be kicked."
-            msg.reply_text(text, parse_mode=ParseMode.HTML)
+            await msg.reply_text(text, parse_mode=ParseMode.HTML)
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"#RAID\n"
@@ -120,17 +130,17 @@ def setRaid(update: Update, context: CallbackContext) -> Optional[str]:
                     ]
                 ]
                 reply_markup = InlineKeyboardMarkup(keyboard)
-                msg.reply_text(
+                await msg.reply_text(
                     text, parse_mode=ParseMode.HTML, reply_markup=reply_markup
                 )
             else:
-                msg.reply_text(
+                await msg.reply_text(
                     "You can only set time between 5 minutes and 1 day",
                     parse_mode=ParseMode.HTML,
                 )
 
         else:
-            msg.reply_text(
+            await msg.reply_text(
                 "Unknown time given, give me something like 5m or 1h",
                 parse_mode=ParseMode.HTML,
             )
@@ -140,7 +150,7 @@ def setRaid(update: Update, context: CallbackContext) -> Optional[str]:
 @connection_status
 @user_admin_no_reply
 @loggable
-def enable_raid_cb(update: Update, ctx: CallbackContext) -> Optional[str]:
+async def enable_raid_cb(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Optional[str]:
     args = update.callback_query.data.replace("enable_raid=", "").split("=")
     chat = update.effective_chat
     user = update.effective_user
@@ -149,24 +159,28 @@ def enable_raid_cb(update: Update, ctx: CallbackContext) -> Optional[str]:
     readable_time = get_readable_time(time)
     _, t, acttime = sql.getRaidStatus(chat_id)
     sql.setRaidStatus(chat_id, True, time, acttime)
-    update.effective_message.edit_text(
+    
+    await update.effective_message.edit_text(
         f"Raid mode has been <code>Enabled</code> for {readable_time}.",
         parse_mode=ParseMode.HTML,
     )
     LOGGER.info("enabled raid mode in {} for {}".format(chat_id, readable_time))
+    
     try:
         oldRaid = RUNNING_RAIDS.pop(int(chat_id))
         j.scheduler.remove_job(oldRaid)  # check if there was an old job
     except KeyError:
         pass
 
-    def disable_raid(_):
+    async def disable_raid(context_job):
         sql.setRaidStatus(chat_id, False, t, acttime)
-        LOGGER.info("disbled raid mode in {}".format(chat_id))
-        ctx.bot.send_message(chat_id, "Raid mode has been automatically disabled!")
+        LOGGER.info("disabled raid mode in {}".format(chat_id))
+        await context.bot.send_message(chat_id, "Raid mode has been automatically disabled!")
 
+    # Use run_once with the new async callback
     raid = j.run_once(disable_raid, time)
     RUNNING_RAIDS[int(chat_id)] = raid.job.id
+    
     return (
         f"<b>{html.escape(chat.title)}:</b>\n"
         f"#RAID\n"
@@ -179,7 +193,7 @@ def enable_raid_cb(update: Update, ctx: CallbackContext) -> Optional[str]:
 @connection_status
 @user_admin_no_reply
 @loggable
-def disable_raid_cb(update: Update, _: CallbackContext) -> Optional[str]:
+async def disable_raid_cb(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Optional[str]:
     args = update.callback_query.data.replace("disable_raid=", "").split("=")
     chat = update.effective_chat
     user = update.effective_user
@@ -187,8 +201,14 @@ def disable_raid_cb(update: Update, _: CallbackContext) -> Optional[str]:
     time = args[1]
     _, _, acttime = sql.getRaidStatus(chat_id)
     sql.setRaidStatus(chat_id, False, time, acttime)
-    j.scheduler.remove_job(RUNNING_RAIDS.pop(int(chat_id)))
-    update.effective_message.edit_text(
+    
+    try:
+        job_id = RUNNING_RAIDS.pop(int(chat_id))
+        j.scheduler.remove_job(job_id)
+    except (KeyError, Exception):
+        pass
+        
+    await update.effective_message.edit_text(
         "Raid mode has been <code>Disabled</code>, newly joining members will no longer be kicked.",
         parse_mode=ParseMode.HTML,
     )
@@ -204,11 +224,11 @@ def disable_raid_cb(update: Update, _: CallbackContext) -> Optional[str]:
 @merissacallback(pattern="cancel_raid=")
 @connection_status
 @user_admin_no_reply
-def disable_raid_cb(update: Update, _: CallbackContext):
+async def cancel_raid_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
     args = update.callback_query.data.split("=")
-    what = args[0]
-    update.effective_message.edit_text(
-        f"Action cancelled, Raid mode will stay <code>{'Enabled' if what == 1 else 'Disabled'}</code>.",
+    what = args[1]  # Fixed index
+    await update.effective_message.edit_text(
+        f"Action cancelled, Raid mode will stay <code>{'Enabled' if what == '1' else 'Disabled'}</code>.",
         parse_mode=ParseMode.HTML,
     )
 
@@ -217,19 +237,21 @@ def disable_raid_cb(update: Update, _: CallbackContext):
 @connection_status
 @loggable
 @user_admin(AdminPerms.CAN_CHANGE_INFO)
-def raidtime(update: Update, context: CallbackContext) -> Optional[str]:
+async def raidtime(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Optional[str]:
     what, time, acttime = sql.getRaidStatus(update.effective_chat.id)
     args = context.args
     msg = update.effective_message
     user = update.effective_user
     chat = update.effective_chat
+    
     if not args:
-        msg.reply_text(
+        await msg.reply_text(
             f"Raid mode is currently set to {get_readable_time(time)}\nWhen toggled, the raid mode will last "
             f"for {get_readable_time(time)} then turn off automatically",
             parse_mode=ParseMode.HTML,
         )
         return
+        
     args_time = args[0].lower()
     if time := get_time(args_time):
         readable_time = get_readable_time(time)
@@ -238,7 +260,7 @@ def raidtime(update: Update, context: CallbackContext) -> Optional[str]:
                 f"Raid mode is currently set to {readable_time}\nWhen toggled, the raid mode will last for "
                 f"{readable_time} then turn off automatically"
             )
-            msg.reply_text(text, parse_mode=ParseMode.HTML)
+            await msg.reply_text(text, parse_mode=ParseMode.HTML)
             sql.setRaidStatus(chat.id, what, time, acttime)
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
@@ -247,12 +269,12 @@ def raidtime(update: Update, context: CallbackContext) -> Optional[str]:
                 f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
             )
         else:
-            msg.reply_text(
+            await msg.reply_text(
                 "You can only set time between 5 minutes and 1 day",
                 parse_mode=ParseMode.HTML,
             )
     else:
-        msg.reply_text(
+        await msg.reply_text(
             "Unknown time given, give me something like 5m or 1h",
             parse_mode=ParseMode.HTML,
         )
@@ -262,19 +284,21 @@ def raidtime(update: Update, context: CallbackContext) -> Optional[str]:
 @connection_status
 @user_admin(AdminPerms.CAN_CHANGE_INFO)
 @loggable
-def raidtime(update: Update, context: CallbackContext) -> Optional[str]:
+async def raid_action_time(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Optional[str]:
     what, t, time = sql.getRaidStatus(update.effective_chat.id)
     args = context.args
     msg = update.effective_message
     user = update.effective_user
     chat = update.effective_chat
+    
     if not args:
-        msg.reply_text(
+        await msg.reply_text(
             f"Raid action time is currently set to {get_readable_time(time)}\nWhen toggled, the members that "
             f"join will be temp banned for {get_readable_time(time)}",
             parse_mode=ParseMode.HTML,
         )
         return
+        
     args_time = args[0].lower()
     if time := get_time(args_time):
         readable_time = get_readable_time(time)
@@ -283,7 +307,7 @@ def raidtime(update: Update, context: CallbackContext) -> Optional[str]:
                 f"Raid action time is currently set to {get_readable_time(time)}\nWhen toggled, the members that"
                 f" join will be temp banned for {readable_time}"
             )
-            msg.reply_text(text, parse_mode=ParseMode.HTML)
+            await msg.reply_text(text, parse_mode=ParseMode.HTML)
             sql.setRaidStatus(chat.id, what, t, time)
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
@@ -292,12 +316,12 @@ def raidtime(update: Update, context: CallbackContext) -> Optional[str]:
                 f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
             )
         else:
-            msg.reply_text(
+            await msg.reply_text(
                 "You can only set time between 5 minutes and 1 day",
                 parse_mode=ParseMode.HTML,
             )
     else:
-        msg.reply_text(
+        await msg.reply_text(
             "Unknown time given, give me something like 5m or 1h",
             parse_mode=ParseMode.HTML,
         )
