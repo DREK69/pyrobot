@@ -1,12 +1,13 @@
 import re
 import time
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import bleach
 import emoji
 import markdown2
-from telegram import MessageEntity
-from telegram.utils.helpers import escape_markdown
+from telegram import MessageEntity, Update
+from telegram.ext import ContextTypes
+from telegram.helpers import escape_markdown
 
 """
  NOTE: the url \ escape may cause double escapes
@@ -48,13 +49,25 @@ def _selective_escape(to_parse: str) -> str:
     return to_parse
 
 
-async def extract_time_seconds(message, time_val):
+async def extract_time_seconds(
+    update: Update, 
+    context: ContextTypes.DEFAULT_TYPE, 
+    time_val: str
+) -> Optional[int]:
+    """
+    Extract time in seconds from a time string.
+    
+    :param update: Telegram update object
+    :param context: Bot context
+    :param time_val: Time string (e.g., "5m", "2h", "1d", "1w", "30s")
+    :return: Time in seconds or None if invalid
+    """
     if any(time_val.endswith(unit) for unit in ("m", "h", "d", "w", "s")):
         unit = time_val[-1]
         time_num = time_val[:-1]  # type: str
         if not time_num.isdigit():
-            await message.reply_text("Invalid time amount specified.")
-            return ""
+            await update.message.reply_text("Invalid time amount specified.")
+            return None
 
         if unit == "s":
             bantime = int(time_num)
@@ -68,32 +81,46 @@ async def extract_time_seconds(message, time_val):
             bantime = int(int(time_num) * 24 * 60 * 60 * 7)
         else:
             # how even...?
-            return ""
+            return None
         return bantime
-    await message.reply_text(
+    
+    await update.message.reply_text(
         f"That isn't a valid time - {time_val[-1]} is not a valid number"
     )
-    return ""
+    return None
 
 
 # This is a fun one.
-def _calc_emoji_offset(to_calc) -> int:
+def _calc_emoji_offset(to_calc: str) -> int:
+    """Calculate the offset caused by emojis in the text."""
     # Get all emoji in text.
-    emoticons = emoji.get_emoji_regexp().finditer(to_calc)
+    emoticons = emoji.emoji_list(to_calc)
     # Check the utf16 length of the emoji to determine the offset it caused.
     # Normal, 1 character emoji don't affect; hence sub 1.
     # special, eg with two emoji characters (eg face, and skin col) will have length 2, so by subbing one we
     # know we'll get one extra offset,
-    return sum(len(e.group(0).encode("utf-16-le")) // 2 - 1 for e in emoticons)
+    return sum(len(e['emoji'].encode("utf-16-le")) // 2 - 1 for e in emoticons)
 
 
-async def extract_time(message, time_val):
+async def extract_time(
+    update: Update, 
+    context: ContextTypes.DEFAULT_TYPE, 
+    time_val: str
+) -> Optional[int]:
+    """
+    Extract absolute timestamp from a time string.
+    
+    :param update: Telegram update object
+    :param context: Bot context
+    :param time_val: Time string (e.g., "5m", "2h", "1d")
+    :return: Unix timestamp or None if invalid
+    """
     if any(time_val.endswith(unit) for unit in ("m", "h", "d")):
         unit = time_val[-1]
         time_num = time_val[:-1]  # type: str
         if not time_num.isdigit():
-            await message.reply_text("Invalid time amount specified.")
-            return ""
+            await update.message.reply_text("Invalid time amount specified.")
+            return None
 
         if unit == "m":
             bantime = int(time.time() + int(time_num) * 60)
@@ -103,18 +130,18 @@ async def extract_time(message, time_val):
             bantime = int(time.time() + int(time_num) * 24 * 60 * 60)
         else:
             # how even...?
-            return ""
+            return None
         return bantime
-    await message.reply_text(
+    
+    await update.message.reply_text(
         f"Invalid time type specified. Expected m,h, or d, got: {time_val[-1]}"
     )
-
-    return ""
+    return None
 
 
 def markdown_parser(
     txt: str,
-    entities: Dict[MessageEntity, str] = None,
+    entities: Optional[Dict[MessageEntity, str]] = None,
     offset: int = 0,
 ) -> str:
     """
@@ -162,6 +189,7 @@ def markdown_parser(
                 # TODO: investigate possible offset bug when lots of emoji are present
                 res += _selective_escape(txt[prev:start] or "") + escape_markdown(
                     ent_text,
+                    version=2,  # PTB v20+ uses version 2 by default
                 )
 
             # code handling
@@ -189,9 +217,17 @@ def markdown_parser(
 
 def button_markdown_parser(
     txt: str,
-    entities: Dict[MessageEntity, str] = None,
+    entities: Optional[Dict[MessageEntity, str]] = None,
     offset: int = 0,
-) -> (str, List):
+) -> tuple[str, List]:
+    """
+    Parse markdown text and extract button information.
+    
+    :param txt: text to parse
+    :param entities: dict of message entities in text
+    :param offset: message offset
+    :return: tuple of (parsed_text, buttons_list)
+    """
     markdown_note = markdown_parser(txt, entities, offset)
     prev = 0
     note_data = ""
@@ -206,7 +242,7 @@ def button_markdown_parser(
 
         # if even, not escaped -> create button
         if n_escapes % 2 == 0:
-            # create a thruple with button label, url, and newline status
+            # create a tuple with button label, url, and newline status
             buttons.append((match.group(2), match.group(3), bool(match.group(4))))
             note_data += markdown_note[prev : match.start(1)]
             prev = match.end(1)
@@ -221,6 +257,13 @@ def button_markdown_parser(
 
 
 def escape_invalid_curly_brackets(text: str, valids: List[str]) -> str:
+    """
+    Escape invalid curly brackets in text, keeping valid ones.
+    
+    :param text: text to process
+    :param valids: list of valid bracket contents
+    :return: processed text with escaped invalid brackets
+    """
     new_text = ""
     idx = 0
     while idx < len(text):
@@ -254,12 +297,18 @@ def escape_invalid_curly_brackets(text: str, valids: List[str]) -> str:
     return new_text
 
 
-SMART_OPEN = "“"
-SMART_CLOSE = "”"
+SMART_OPEN = """
+SMART_CLOSE = """
 START_CHAR = ("'", '"', SMART_OPEN)
 
 
-def split_quotes(text: str) -> List:
+def split_quotes(text: str) -> List[str]:
+    """
+    Split text on quotes, handling escaped quotes properly.
+    
+    :param text: text to split
+    :return: list of split parts
+    """
     if not any(text.startswith(char) for char in START_CHAR):
         return text.split(None, 1)
     counter = 1  # ignore first char -> is some kind of quote
@@ -284,6 +333,12 @@ def split_quotes(text: str) -> List:
 
 
 def remove_escapes(text: str) -> str:
+    """
+    Remove escape characters from text.
+    
+    :param text: text to process
+    :return: text with escapes removed
+    """
     res = ""
     is_escaped = False
     for counter in range(len(text)):
@@ -298,6 +353,14 @@ def remove_escapes(text: str) -> str:
 
 
 def escape_chars(text: str, to_escape: List[str]) -> str:
+    """
+    Escape specified characters in text.
+    
+    :param text: text to process
+    :param to_escape: list of characters to escape
+    :return: text with escaped characters
+    """
+    to_escape = to_escape.copy()  # Don't modify the original list
     to_escape.append("\\")
     new_text = ""
     for x in text:
@@ -307,13 +370,28 @@ def escape_chars(text: str, to_escape: List[str]) -> str:
     return new_text
 
 
-def extract_time(message, time_val):
+def extract_time_sync(message, time_val: str) -> Optional[int]:
+    """
+    Synchronous version of extract_time for backward compatibility.
+    Note: This should be replaced with the async version where possible.
+    
+    :param message: message object (legacy parameter)
+    :param time_val: time string
+    :return: Unix timestamp or None if invalid
+    """
     if any(time_val.endswith(unit) for unit in ("m", "h", "d")):
         unit = time_val[-1]
         time_num = time_val[:-1]  # type: str
         if not time_num.isdigit():
-            message.reply_text("Invalid time amount specified.")
-            return ""
+            # Note: In PTB v22, you should use async methods
+            # This is kept for backward compatibility
+            if hasattr(message, 'reply_text'):
+                try:
+                    import asyncio
+                    asyncio.create_task(message.reply_text("Invalid time amount specified."))
+                except:
+                    pass
+            return None
 
         if unit == "m":
             bantime = int(time.time() + int(time_num) * 60)
@@ -322,18 +400,27 @@ def extract_time(message, time_val):
         elif unit == "d":
             bantime = int(time.time() + int(time_num) * 24 * 60 * 60)
         else:
-            # how even...?
-            return ""
+            return None
         return bantime
-    message.reply_text(
-        "Invalid time type specified. Expected m,h, or d, got: {}".format(
-            time_val[-1],
-        ),
-    )
-    return ""
+    
+    if hasattr(message, 'reply_text'):
+        try:
+            import asyncio
+            asyncio.create_task(message.reply_text(
+                f"Invalid time type specified. Expected m,h, or d, got: {time_val[-1]}"
+            ))
+        except:
+            pass
+    return None
 
 
-def markdown_to_html(text):
+def markdown_to_html(text: str) -> str:
+    """
+    Convert markdown text to HTML.
+    
+    :param text: markdown text
+    :return: cleaned HTML text
+    """
     text = text.replace("*", "**")
     text = text.replace("`", "```")
     text = text.replace("~", "~~")
