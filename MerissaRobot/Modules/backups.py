@@ -4,20 +4,15 @@ import time
 from io import BytesIO
 
 from telegram.error import BadRequest
-from telegram.ext import CommandHandler
-from telegram.parsemode import ParseMode
+from telegram.ext import CommandHandler, ContextTypes
+from telegram.constants import ParseMode, ChatAction
+from telegram import Update
 
-# from MerissaRobot.Database.sql import warns_sql as warnssql
 import MerissaRobot.Database.sql.blacklist_sql as blacklistsql
-
-# from MerissaRobot.Database.sql import cust_filters_sql as filtersql
-# import MerissaRobot.Database.sql.welcome_sql as welcsql
 import MerissaRobot.Database.sql.locks_sql as locksql
 import MerissaRobot.Database.sql.notes_sql as sql
-
-# from MerissaRobot.Modules.rules import get_rules
 import MerissaRobot.Database.sql.rules_sql as rulessql
-from MerissaRobot import JOIN_LOGGER, LOGGER, OWNER_ID, SUPPORT_CHAT, dispatcher
+from MerissaRobot import JOIN_LOGGER, LOGGER, OWNER_ID, SUPPORT_CHAT, application
 from MerissaRobot.__main__ import DATA_IMPORT
 from MerissaRobot.Database.sql import disable_sql as disabledsql
 from MerissaRobot.Handler.ptb.alternate import typing_action
@@ -27,20 +22,19 @@ from MerissaRobot.Modules.connection import connected
 
 @user_admin
 @typing_action
-def import_data(update, context):
+async def import_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     msg = update.effective_message
     chat = update.effective_chat
     user = update.effective_user
-    # TODO: allow uploading doc with command, not just as reply
-    # only work with a doc
-
-    conn = connected(context.bot, update, chat, user.id, need_admin=True)
+    
+    conn = await connected(context.bot, update, chat, user.id, need_admin=True)
     if conn:
-        chat = dispatcher.bot.getChat(conn)
-        chat_name = dispatcher.bot.getChat(conn).title
+        chat_obj = await context.bot.get_chat(conn)
+        chat = chat_obj
+        chat_name = chat_obj.title
     else:
         if update.effective_message.chat.type == "private":
-            update.effective_message.reply_text("This is a group only command!")
+            await update.effective_message.reply_text("This is a group only command!")
             return ""
 
         chat = update.effective_chat
@@ -48,21 +42,21 @@ def import_data(update, context):
 
     if msg.reply_to_message and msg.reply_to_message.document:
         try:
-            file_info = context.bot.get_file(msg.reply_to_message.document.file_id)
+            file_info = await context.bot.get_file(msg.reply_to_message.document.file_id)
         except BadRequest:
-            msg.reply_text(
+            await msg.reply_text(
                 "Try downloading and uploading the file yourself again, This one seem broken to me!",
             )
             return
 
         with BytesIO() as file:
-            file_info.download(out=file)
+            await file_info.download_to_memory(file)
             file.seek(0)
             data = json.load(file)
 
         # only import one group
         if len(data) > 1 and str(chat.id) not in data:
-            msg.reply_text(
+            await msg.reply_text(
                 "There are more than one group in this file and the chat.id is not same! How am i supposed to import it?",
             )
             return
@@ -71,22 +65,22 @@ def import_data(update, context):
         try:
             if data.get(str(chat.id)) is None:
                 if conn:
-                    text = "Backup comes from another chat, I can't return another chat to chat *{}*".format(
-                        chat_name,
-                    )
+                    text = f"Backup comes from another chat, I can't return another chat to chat *{chat_name}*"
                 else:
                     text = "Backup comes from another chat, I can't return another chat to this chat"
-                return msg.reply_text(text, parse_mode="markdown")
+                return await msg.reply_text(text, parse_mode="markdown")
         except Exception:
-            return msg.reply_text("There was a problem while importing the data!")
+            return await msg.reply_text("There was a problem while importing the data!")
+            
         # Check if backup is from self
         try:
             if str(context.bot.id) != str(data[str(chat.id)]["bot"]):
-                return msg.reply_text(
+                return await msg.reply_text(
                     "Backup from another bot that is not suggested might cause the problem, documents, photos, videos, audios, records might not work as it should be.",
                 )
         except Exception:
             pass
+            
         # Select data source
         if str(chat.id) in data:
             data = data[str(chat.id)]["hashes"]
@@ -97,60 +91,57 @@ def import_data(update, context):
             for mod in DATA_IMPORT:
                 mod.__import_data__(str(chat.id), data)
         except Exception:
-            msg.reply_text(
+            await msg.reply_text(
                 f"An error occurred while recovering your data. The process failed. If you experience a problem with this, please take it to @{SUPPORT_CHAT}",
             )
 
             LOGGER.exception(
-                "Imprt for the chat %s with the name %s failed.",
+                "Import for the chat %s with the name %s failed.",
                 str(chat.id),
                 str(chat.title),
             )
             return
 
-        # TODO: some of that link logic
-        # NOTE: consider default permissions stuff?
         if conn:
-            text = "Backup fully restored on *{}*.".format(chat_name)
+            text = f"Backup fully restored on *{chat_name}*."
         else:
             text = "Backup fully restored"
-        msg.reply_text(text, parse_mode="markdown")
+        await msg.reply_text(text, parse_mode="markdown")
 
 
 @user_admin
-def export_data(update, context):
+async def export_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_data = context.chat_data
-    msg = update.effective_message  # type: Optional[Message]
-    user = update.effective_user  # type: Optional[User]
+    msg = update.effective_message
+    user = update.effective_user
     chat_id = update.effective_chat.id
     chat = update.effective_chat
     current_chat_id = update.effective_chat.id
-    conn = connected(context.bot, update, chat, user.id, need_admin=True)
+    
+    conn = await connected(context.bot, update, chat, user.id, need_admin=True)
     if conn:
-        chat = dispatcher.bot.getChat(conn)
+        chat_obj = await context.bot.get_chat(conn)
+        chat = chat_obj
         chat_id = conn
-        # chat_name = dispatcher.bot.getChat(conn).title
     else:
         if update.effective_message.chat.type == "private":
-            update.effective_message.reply_text("This is a group only command!")
+            await update.effective_message.reply_text("This is a group only command!")
             return ""
         chat = update.effective_chat
         chat_id = update.effective_chat.id
-        # chat_name = update.effective_message.chat.title
 
     jam = time.time()
     new_jam = jam + 10800
     checkchat = get_chat(chat_id, chat_data)
+    
     if checkchat.get("status"):
         if jam <= int(checkchat.get("value")):
             timeformatt = time.strftime(
                 "%H:%M:%S %d/%m/%Y",
                 time.localtime(checkchat.get("value")),
             )
-            update.effective_message.reply_text(
-                "You can only backup once a day!\nYou can backup again in about `{}`".format(
-                    timeformatt,
-                ),
+            await update.effective_message.reply_text(
+                f"You can only backup once a day!\nYou can backup again in about `{timeformatt}`",
                 parse_mode=ParseMode.MARKDOWN,
             )
             return
@@ -162,117 +153,62 @@ def export_data(update, context):
 
     note_list = sql.get_all_chat_notes(chat_id)
     backup = {}
-    # button = ""
     buttonlist = []
     namacat = ""
     isicat = ""
     rules = ""
     count = 0
     countbtn = 0
+    
     # Notes
     for note in note_list:
         count += 1
-        # getnote = sql.get_note(chat_id, note.name)
-        namacat += "{}<###splitter###>".format(note.name)
+        namacat += f"{note.name}<###splitter###>"
         if note.msgtype == 1:
             tombol = sql.get_buttons(chat_id, note.name)
-            # keyb = []
             for btn in tombol:
                 countbtn += 1
                 if btn.same_line:
                     buttonlist.append(
-                        ("{}".format(btn.name), "{}".format(btn.url), True),
+                        (f"{btn.name}", f"{btn.url}", True),
                     )
                 else:
                     buttonlist.append(
-                        ("{}".format(btn.name), "{}".format(btn.url), False),
+                        (f"{btn.name}", f"{btn.url}", False),
                     )
-            isicat += "###button###: {}<###button###>{}<###splitter###>".format(
-                note.value,
-                str(buttonlist),
-            )
+            isicat += f"###button###: {note.value}<###button###>{str(buttonlist)}<###splitter###>"
             buttonlist.clear()
         elif note.msgtype == 2:
-            isicat += "###sticker###:{}<###splitter###>".format(note.file)
+            isicat += f"###sticker###:{note.file}<###splitter###>"
         elif note.msgtype == 3:
-            isicat += "###file###:{}<###TYPESPLIT###>{}<###splitter###>".format(
-                note.file,
-                note.value,
-            )
+            isicat += f"###file###:{note.file}<###TYPESPLIT###>{note.value}<###splitter###>"
         elif note.msgtype == 4:
-            isicat += "###photo###:{}<###TYPESPLIT###>{}<###splitter###>".format(
-                note.file,
-                note.value,
-            )
+            isicat += f"###photo###:{note.file}<###TYPESPLIT###>{note.value}<###splitter###>"
         elif note.msgtype == 5:
-            isicat += "###audio###:{}<###TYPESPLIT###>{}<###splitter###>".format(
-                note.file,
-                note.value,
-            )
+            isicat += f"###audio###:{note.file}<###TYPESPLIT###>{note.value}<###splitter###>"
         elif note.msgtype == 6:
-            isicat += "###voice###:{}<###TYPESPLIT###>{}<###splitter###>".format(
-                note.file,
-                note.value,
-            )
+            isicat += f"###voice###:{note.file}<###TYPESPLIT###>{note.value}<###splitter###>"
         elif note.msgtype == 7:
-            isicat += "###video###:{}<###TYPESPLIT###>{}<###splitter###>".format(
-                note.file,
-                note.value,
-            )
+            isicat += f"###video###:{note.file}<###TYPESPLIT###>{note.value}<###splitter###>"
         elif note.msgtype == 8:
-            isicat += "###video_note###:{}<###TYPESPLIT###>{}<###splitter###>".format(
-                note.file,
-                note.value,
-            )
+            isicat += f"###video_note###:{note.file}<###TYPESPLIT###>{note.value}<###splitter###>"
         else:
-            isicat += "{}<###splitter###>".format(note.value)
+            isicat += f"{note.value}<###splitter###>"
+            
     notes = {
-        "#{}".format(namacat.split("<###splitter###>")[x]): "{}".format(
-            isicat.split("<###splitter###>")[x],
-        )
+        f"#{namacat.split('<###splitter###>')[x]}": f"{isicat.split('<###splitter###>')[x]}"
         for x in range(count)
     }
+    
     # Rules
     rules = rulessql.get_rules(chat_id)
+    
     # Blacklist
     bl = list(blacklistsql.get_chat_blacklist(chat_id))
+    
     # Disabled command
     disabledcmd = list(disabledsql.get_all_disabled(chat_id))
-    # Filters (TODO)
-    """
-	all_filters = list(filtersql.get_chat_triggers(chat_id))
-	export_filters = {}
-	for filters in all_filters:
-		filt = filtersql.get_filter(chat_id, filters)
-		# print(vars(filt))
-		if filt.is_sticker:
-			tipefilt = "sticker"
-		elif filt.is_document:
-			tipefilt = "doc"
-		elif filt.is_image:
-			tipefilt = "img"
-		elif filt.is_audio:
-			tipefilt = "audio"
-		elif filt.is_voice:
-			tipefilt = "voice"
-		elif filt.is_video:
-			tipefilt = "video"
-		elif filt.has_buttons:
-			tipefilt = "button"
-			buttons = filtersql.get_buttons(chat.id, filt.keyword)
-			print(vars(buttons))
-		elif filt.has_markdown:
-			tipefilt = "text"
-		if tipefilt == "button":
-			content = "{}#=#{}|btn|{}".format(tipefilt, filt.reply, buttons)
-		else:
-			content = "{}#=#{}".format(tipefilt, filt.reply)
-		print(content)
-		export_filters[filters] = content
-	print(export_filters)
-	"""
-    # Welcome (TODO)
-    # welc = welcsql.get_welc_pref(chat_id)
+    
     # Locked
     curr_locks = locksql.get_locks(chat_id)
     curr_restr = locksql.get_restr(chat_id)
@@ -316,8 +252,7 @@ def export_data(update, context):
         locked_restr = {}
 
     locks = {"locks": locked_lock, "restrict": locked_restr}
-    # Warns (TODO)
-    # warns = warnssql.get_warns(chat_id)
+    
     # Backing up
     backup[chat_id] = {
         "bot": context.bot.id,
@@ -329,47 +264,41 @@ def export_data(update, context):
             "locks": locks,
         },
     }
+    
     baccinfo = json.dumps(backup, indent=4)
-    with open("MerissaRobot{}.txt".format(chat_id), "w") as f:
+    with open(f"MerissaRobot{chat_id}.txt", "w") as f:
         f.write(str(baccinfo))
-    context.bot.sendChatAction(current_chat_id, "upload_document")
+        
+    await context.bot.send_chat_action(current_chat_id, ChatAction.UPLOAD_DOCUMENT)
     tgl = time.strftime("%H:%M:%S - %d/%m/%Y", time.localtime(time.time()))
+    
     try:
-        context.bot.sendMessage(
+        await context.bot.send_message(
             JOIN_LOGGER,
-            "*Successfully imported backup:*\nChat: `{}`\nChat ID: `{}`\nOn: `{}`".format(
-                chat.title,
-                chat_id,
-                tgl,
-            ),
+            f"*Successfully exported backup:*\nChat: `{chat.title}`\nChat ID: `{chat_id}`\nOn: `{tgl}`",
             parse_mode=ParseMode.MARKDOWN,
         )
     except BadRequest:
         pass
-    context.bot.sendDocument(
-        current_chat_id,
-        document=open("MerissaRobot{}.txt".format(chat_id), "rb"),
-        caption="*Successfully Exported backup:*\nChat: `{}`\nChat ID: `{}`\nOn: `{}`\n\nNote: This `MerissaRobot-Backup` was specially made for notes.".format(
-            chat.title,
-            chat_id,
-            tgl,
-        ),
-        timeout=360,
-        reply_to_message_id=msg.message_id,
-        parse_mode=ParseMode.MARKDOWN,
-    )
-    os.remove("MerissaRobot{}.txt".format(chat_id))  # Cleaning file
+        
+    with open(f"MerissaRobot{chat_id}.txt", "rb") as doc:
+        await context.bot.send_document(
+            current_chat_id,
+            document=doc,
+            caption=f"*Successfully Exported backup:*\nChat: `{chat.title}`\nChat ID: `{chat_id}`\nOn: `{tgl}`\n\nNote: This `MerissaRobot-Backup` was specially made for notes.",
+            reply_to_message_id=msg.message_id,
+            parse_mode=ParseMode.MARKDOWN,
+        )
+    os.remove(f"MerissaRobot{chat_id}.txt")  # Cleaning file
 
 
 # Temporary data
 def put_chat(chat_id, value, chat_data):
-    # print(chat_data)
     status = value is not False
     chat_data[chat_id] = {"backups": {"status": status, "value": value}}
 
 
 def get_chat(chat_id, chat_data):
-    # print(chat_data)
     try:
         return chat_data[chat_id]["backups"]
     except KeyError:
@@ -378,10 +307,11 @@ def get_chat(chat_id, chat_data):
 
 __mod_name__ = "Backups"
 
-IMPORT_HANDLER = CommandHandler("import", import_data, run_async=True)
-EXPORT_HANDLER = CommandHandler(
-    "export", export_data, pass_chat_data=True, run_async=True
-)
+IMPORT_HANDLER = CommandHandler("import", import_data)
+EXPORT_HANDLER = CommandHandler("export", export_data)
 
-dispatcher.add_handler(IMPORT_HANDLER)
-dispatcher.add_handler(EXPORT_HANDLER)
+application.add_handler(IMPORT_HANDLER)
+application.add_handler(EXPORT_HANDLER)
+
+__command_list__ = ["import", "export"]
+__handlers__ = [IMPORT_HANDLER, EXPORT_HANDLER]
