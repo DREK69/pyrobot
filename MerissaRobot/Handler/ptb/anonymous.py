@@ -5,7 +5,7 @@ from telegram.ext import ContextTypes
 from telegram.constants import ParseMode, ChatMemberStatus
 from telegram.error import BadRequest
 
-from MerissaRobot import DEV_USERS, DRAGONS, dispatcher
+from MerissaRobot import DEV_USERS, DRAGONS
 from MerissaRobot.Handler.ptb.decorators import merissacallback
 
 
@@ -93,8 +93,8 @@ async def anon_callback_handler1(upd: Update, context: ContextTypes.DEFAULT_TYPE
         await callback.answer("You're not an admin.", show_alert=True)
         msg_id = anon_callback_messages.pop((chat_id, message_id), None)
         if msg_id is not None:
-            await dispatcher.bot.delete_message(chat_id, msg_id)
-        return await dispatcher.bot.send_message(
+            await context.bot.delete_message(chat_id, msg_id)
+        return await context.bot.send_message(
             chat_id, "You lack the permissions required for this command"
         )
 
@@ -107,27 +107,27 @@ async def anon_callback_handler1(upd: Update, context: ContextTypes.DEFAULT_TYPE
         if cb:
             msg_id = anon_callback_messages.pop((chat_id, message_id), None)
             if msg_id is not None:
-                await dispatcher.bot.delete_message(chat_id, msg_id)
+                await context.bot.delete_message(chat_id, msg_id)
             return await cb[1](cb[0][0], cb[0][1])
 
     else:
         return await callback.answer("This isn't for you.", show_alert=True)
 
 
-async def resolve_user(user: User, message_id: int, chat: Chat):
+async def resolve_user(user: User, message_id: int, chat: Chat, context: ContextTypes.DEFAULT_TYPE):
     """Resolve anonymous user to real user when sender_chat is anonymous."""
     if user.id == 1087968824:  # PTB's Anonymous admin system user
         try:
             uid = anon_users.pop((chat.id, message_id))
             user = (await chat.get_member(uid)).user
         except KeyError:
-            return await dispatcher.bot.edit_message_text(
+            return await context.bot.edit_message_text(
                 chat_id=chat.id,
                 message_id=message_id,
                 text=f"You're now identified as: {user.first_name}",
             )
         except Exception as e:
-            return await dispatcher.bot.edit_message_text(
+            return await context.bot.edit_message_text(
                 chat_id=chat.id, message_id=message_id, text=f"Error: {e}"
             )
 
