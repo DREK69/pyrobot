@@ -1,18 +1,22 @@
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
-from telegram.ext import CallbackContext, CallbackQueryHandler
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.constants import ParseMode
+from telegram.ext import ContextTypes, CallbackQueryHandler
 
-from MerissaRobot import dispatcher
+from MerissaRobot import application
 from MerissaRobot.Modules.misc import MARKDOWN_HELP
 from MerissaRobot.Modules.welcome import WELC_HELP_TXT
 
 
-def cb_callback(update: Update, context: CallbackContext):
+async def cb_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle callback queries from inline keyboards"""
     query = update.callback_query
-    update.effective_chat
+    await query.answer()
+    
     if query.data == "cb_":
-        query.message.edit_text(text="hi", parse_mode=ParseMode.MARKDOWN)
+        await query.message.edit_text(text="hi", parse_mode=ParseMode.MARKDOWN)
+        
     elif query.data == "cb_howtouse":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""Welcome to the Merissa Configuration Tutorial.
 
 The first thing to do is to add Merissa to your group! For doing that, press the under button and select your group, then press "Done" to continue the tutorial.""",
@@ -38,8 +42,9 @@ The first thing to do is to add Merissa to your group! For doing that, press the
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_done":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""Ok, well done!
 
 Now for let me work correctly, you need to make me Admin of your Group!
@@ -69,17 +74,19 @@ To do that, follow this easy steps:
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_tutorial":
-        query.message.reply_video(
+        await query.message.reply_video(
             video="https://te.legra.ph/file/fe561673c9f58e2a9889a.mp4",
             caption="""To add MerissaRobot in your chat, follow the steps shown in the video.""",
             reply_markup=InlineKeyboardMarkup(
                 [[InlineKeyboardButton("Done ✅", callback_data="cb_donet")]]
             ),
         )
-        query.message.delete()
+        await query.message.delete()
+    
     elif query.data == "cb_done1":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""Excellent! 
 Now the Bot is ready to use!
 
@@ -90,8 +97,9 @@ If You Need More Help Click on Below Button""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_donet":
-        query.message.reply_text(
+        await query.message.reply_text(
             text="""Excellent! 
 Now the Bot is ready to use!
 
@@ -102,9 +110,10 @@ If You Need More Help Click on Below Button""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
-        query.message.delete()
+        await query.message.delete()
+    
     elif query.data == "cb_setup":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Setup Assistant 」──
             
 ▫️ First, Add me to your group.
@@ -119,8 +128,9 @@ Lets Enjoy The Merissa Music And Join Support Group @MerissaxSupport""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_disable":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Disabling ⛔️ Module 」── 
 
 ❂ /cmds: check the current status of disabled commands
@@ -137,8 +147,9 @@ Admins only:
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_filling":
-        query.message.edit_text(
+        await query.message.edit_text(
             text=WELC_HELP_TXT,
             reply_markup=InlineKeyboardMarkup(
                 [[InlineKeyboardButton("🔙 Back", callback_data="cb_format")]]
@@ -146,8 +157,9 @@ Admins only:
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_format":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Formatting 📑 Module 」── 
 
 Merissa supports a large number of formatting options to make your messages more expressive. Take a look!""",
@@ -163,16 +175,18 @@ Merissa supports a large number of formatting options to make your messages more
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_markdown":
-        query.message.edit_text(
+        await query.message.edit_text(
             text=MARKDOWN_HELP,
             reply_markup=InlineKeyboardMarkup(
                 [[InlineKeyboardButton("🔙 Back", callback_data="cb_format")]]
             ),
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_lock":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Locks 🔐 Module 」── 
 
 Do stickers annoy you? or want to avoid people sharing links? or pictures? You're in the right place!
@@ -200,8 +214,9 @@ Note:
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_approve":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Approve Module 」── 
 
 Sometimes, you might trust a user not to send unwanted content.
@@ -220,8 +235,9 @@ Admin commands:
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_log":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Log-Channel Module 」──
 
 ❂ /logchannel*:* Get log channel info
@@ -238,8 +254,9 @@ Admin commands:
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_pin":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Pin Module 」──
 
 ❂ /pin*:* silently pins the message replied to - add `'loud'` or `'notify'` to give notifs to users
@@ -251,8 +268,9 @@ Admin commands:
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_promote":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Promote Module 」──
 
 ❂ /promote*:* promotes the replied to User
@@ -264,8 +282,9 @@ Admin commands:
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
-    elif query.data == "cb_group":
-        query.message.edit_text(
+
+elif query.data == "cb_group":
+        await query.message.edit_text(
             text="""──「 Help of Group Commands 」──
 
 ❂ /title <title here>*:* sets a custom title for an admin that the bot promoted
@@ -283,8 +302,9 @@ Admin commands:
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_rules":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Rules Module 」──
 
 ❂ /rules*:* get the rules for this chat.
@@ -296,8 +316,9 @@ Admin commands:
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_antichannel":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Anti-Channel Module 」──
 
 Your groups to stop anonymous channels sending messages into your chats.
@@ -320,8 +341,9 @@ Your groups to stop anonymous channels sending messages into your chats.
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_flood":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Anti-Spam Module 」──
 
 ❂ /antispam <on/off/yes/no>: Will toggle our antispam tech or return your current settings.
@@ -339,8 +361,9 @@ Note: Users can appeal gbans or report spammers at @MerissaxSupport""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_antilang":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Anti-Language 」──
 
 Delete messages containing characters from one of the following automatically
@@ -368,8 +391,9 @@ it will delete and user send 3 warn and after ban him""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_service":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Anti-Service Module 」──
 
 I Can Remove Service Message In Groups 
@@ -383,8 +407,9 @@ Voice Chat Invite Members Allerts ETC..
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_fed":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""Ah, group management. It's all fun and games, until you start getting spammers in, and you need to ban them. Then you need to start banning more, and more, and it gets painful.
 But then you have multiple groups, and you don't want these spammers in any of your groups - how can you deal? Do you have to ban them manually, in all your groups?
 No more! With federations, you can make a ban in one chat overlap to all your other chats.
@@ -411,8 +436,9 @@ Commands:
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_fsub":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of F-Sub Module 」── 
  
 ❂ /fsub {channel username} - To turn on and setup the channel.
@@ -435,8 +461,9 @@ Only creator
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_string":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of String-Gen Module 」──
 
 ❂ /start - Start the Bot
@@ -451,8 +478,9 @@ Only creator
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_extra":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Extra Module 」──
 
 ❂ /markdownhelp: quick summary of how markdown works in telegram - can only be called in private chats
@@ -474,8 +502,9 @@ Only creator
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_font":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Font Module 」──
 
 - Here is the help for the Styletext module:
@@ -493,8 +522,9 @@ Only creator
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_toolb":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Tools 🛠️ Module 」──
 
 Here is the help for the tools module:
@@ -523,8 +553,9 @@ Click on below buttons and check amazing tools for users.""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_tool":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Tools 🛠️ Module 」──
 
 Here is the help for the tools module:
@@ -553,8 +584,9 @@ Click on below buttons and check amazing tools for users.""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_admin":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Admin Module 」──
 
 Here is the help for the Admin module:
@@ -583,8 +615,9 @@ Click on below buttons and check Amazing Admin commands for Users""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_adminb":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Admin Module 」──
 
 Here is the help for the Admin module:
@@ -611,19 +644,21 @@ Click on below buttons and check Amazing Admin commands for Users.""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
-    elif query.data == "cb_sg":
-        query.message.edit_text(
+
+elif query.data == "cb_sg":
+        await query.message.edit_text(
             text="""──「 Help of Name History Module 」──
 
 ❂ /sg <reply>*:* To check Name History Of any Telegram User.""",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("🔙 Back", callback_data="cb_tool")]]
+                [[InlineKeyboardButton("🔙 Back", callback_data="cb_toolb")]]
             ),
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_search":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Search Module 」──
 
 ❂ /google <query>*:* Perform a google search
@@ -638,13 +673,27 @@ Click on below buttons and check Amazing Admin commands for Users.""",
 
 💡Ex: `Merissa where is Japan?`""",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("🔙 Back", callback_data="cb_tool")]]
+                [[InlineKeyboardButton("🔙 Back", callback_data="cb_toolb")]]
             ),
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
+    elif query.data == "cb_couple":
+        await query.message.edit_text(
+            text="""──「 Help of Shippering Module 」──
+
+- Shippering
+❂ /couples - get couples of today""",
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("🔙 Back", callback_data="cb_toolb")]]
+            ),
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=False,
+        )
+    
     elif query.data == "cb_tagall":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Tagall Module 」──
 
 Merissa Can Be a Mention Bot for your group.
@@ -654,27 +703,29 @@ Only admins can tag all.  Here is a list of commands
 ❂ /tagall or @all (reply to message or add another message) To mention all members in your group, without exception.
 ❂ /cancel for canceling the mention-all.""",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("🔙 Back", callback_data="cb_tool")]]
+                [[InlineKeyboardButton("🔙 Back", callback_data="cb_toolb")]]
             ),
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_weather":
-        query.message.edit_text(
-            text="""──「 Help of Whether Module 」──
+        await query.message.edit_text(
+            text="""──「 Help of Weather Module 」──
 
 ❂ /time <country code>*:* Gives information about a timezone.
 ❂ /weather <city>*:* Get weather info in a particular place.
 ❂ /wttr <city>*:* Advanced weather module, usage same as /weather
 ❂ /wttr moon*:* Get the current status of moon""",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("🔙 Back", callback_data="cb_tool")]]
+                [[InlineKeyboardButton("🔙 Back", callback_data="cb_toolb")]]
             ),
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_anime":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Anime search 」──    
                        
 ❂ /anime <anime>: returns information about the anime.
@@ -697,8 +748,9 @@ Only admins can tag all.  Here is a list of commands
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_convert":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Convert Module 」──
 
 • Encrypt
@@ -725,8 +777,9 @@ Only admins can tag all.  Here is a list of commands
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_captcha":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Captcha Module 」──
            
 Some chats get a lot of users joining just to spam. This could be because they're trolls, or part of a spam network.
@@ -757,8 +810,9 @@ not finsihed writing.""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_afk":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Afk Module 」──
 
 When marked as AFK, any mentions will be replied to with a message stating that you're not available!
@@ -771,8 +825,9 @@ When marked as AFK, any mentions will be replied to with a message stating that 
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_animation":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Animation Module 」──
 
 - Animation
@@ -785,20 +840,9 @@ When marked as AFK, any mentions will be replied to with a message stating that 
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
-    elif query.data == "cb_couple":
-        query.message.edit_text(
-            text="""──「 Help of Shippering Module 」──
-
-- Shippering
-❂ /couples - get couples of today""",
-            reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("🔙 Back", callback_data="cb_tool")]]
-            ),
-            parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=False,
-        )
+    
     elif query.data == "cb_fun":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Fun Module 」──
 
 - Fun commands
@@ -826,8 +870,9 @@ When marked as AFK, any mentions will be replied to with a message stating that 
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_translate":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""──「 Help of Translate Module 」──
 
 Use this module to translate stuff!
@@ -850,14 +895,16 @@ ml,mn,mr,ms,mt,my,ne,nl,no,ny,pa,pl,ps,pt,ro,ru,sd,si,sk,sl,
 sm,sn,so,sq,sr,st,su,sv,sw,ta,te,tg,th,tl,tr,uk,ur,uz,
 vi,xh,yi,yo,zh,zh_CN,zh_TW,zu`""",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("🔙 Back", callback_data="cb_tool")]]
+                [[InlineKeyboardButton("🔙 Back", callback_data="cb_toolb")]]
             ),
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=False,
         )
+    
     elif query.data == "cb_close":
-        query.message.delete()
+        await query.message.delete()
 
 
-CB_HANDLER = CallbackQueryHandler(cb_callback, pattern="^cb_", run_async=True)
-dispatcher.add_handler(CB_HANDLER)
+# Handler registration - PTB v22 Compatible
+CB_HANDLER = CallbackQueryHandler(cb_callback, pattern="^cb_")
+application.add_handler(CB_HANDLER)
