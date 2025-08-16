@@ -4,8 +4,8 @@ from time import perf_counter
 from typing import Optional, Callable, Any, Coroutine
 
 from cachetools import TTLCache
-from telegram import Chat, ChatMember, Update
-from telegram.constants import ParseMode
+from telegram import Chat, ChatMember, Update, Message
+from telegram.constants import ParseMode, ChatMemberStatus
 from telegram.ext import ContextTypes
 
 from MerissaRobot import (
@@ -16,13 +16,12 @@ from MerissaRobot import (
     SUPPORT_CHAT,
     TIGERS,
     WOLVES,
-    dispatcher,  # keeping dispatcher reference if your project still exposes it
+    dispatcher,  # keeping dispatcher reference if still exposed
 )
 
 # stores admins in memory for 10 min.
 ADMIN_CACHE = TTLCache(maxsize=512, ttl=60 * 10, timer=perf_counter)
 THREAD_LOCK = RLock()
-
 
 # ───────────────────────────────
 # Simple ID-list privilege checks
@@ -47,7 +46,6 @@ async def is_user_admin(chat: Chat, user_id: int, member: Optional[ChatMember] =
         chat.type == "private"
         or user_id in DRAGONS
         or user_id in DEV_USERS
-        or chat.all_members_are_administrators
         or user_id in [777000, 1087968824]  # Telegram & Anonymous Admin
     ):
         return True
@@ -63,22 +61,21 @@ async def is_user_admin(chat: Chat, user_id: int, member: Optional[ChatMember] =
                 ADMIN_CACHE[chat.id] = admin_list
                 return user_id in admin_list
     else:
-        return member.status in ("administrator", "creator")
+        return member.status in {ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER}
 
 
 async def is_bot_admin(chat: Chat, bot_id: int, bot_member: Optional[ChatMember] = None) -> bool:
-    if chat.type == "private" or chat.all_members_are_administrators:
+    if chat.type == "private":
         return True
 
     if bot_member is None:
         bot_member = await chat.get_member(bot_id)
 
-    return bot_member.status in ("administrator", "creator")
+    return bot_member.status in {ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER}
 
 
 async def can_delete(chat: Chat, bot_id: int) -> bool:
     member = await chat.get_member(bot_id)
-    # Some ChatMember variants may not have the attribute; use getattr safely.
     return getattr(member, "can_delete_messages", False)
 
 
@@ -89,7 +86,6 @@ async def is_user_ban_protected(chat: Chat, user_id: int, member: Optional[ChatM
         or user_id in DEV_USERS
         or user_id in WOLVES
         or user_id in TIGERS
-        or chat.all_members_are_administrators
         or user_id in [777000, 1087968824]  # Telegram & Anonymous Admin
     ):
         return True
@@ -97,12 +93,12 @@ async def is_user_ban_protected(chat: Chat, user_id: int, member: Optional[ChatM
     if member is None:
         member = await chat.get_member(user_id)
 
-    return member.status in ("administrator", "creator")
+    return member.status in {ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER}
 
 
 async def is_user_in_chat(chat: Chat, user_id: int) -> bool:
     member = await chat.get_member(user_id)
-    return member.status not in ("left", "kicked")
+    return member.status not in {ChatMemberStatus.LEFT, ChatMemberStatus.BANNED}
 
 
 # ───────────────────────────────
@@ -372,7 +368,7 @@ def user_can_ban(func):
         member = await update.effective_chat.get_member(user_id)
 
         if (
-            not (getattr(member, "can_restrict_members", False) or member.status == "creator")
+            not (getattr(member, "can_restrict_members", False) or member.status == ChatMemberStatus.OWNER)
             and user_id not in DRAGONS
             and user_id not in [777000, 1087968824]
         ):
@@ -387,7 +383,7 @@ def user_can_ban(func):
 def connection_status(func):
     @wraps(func)
     async def connected_status(update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
-        # connected(...) is imported below; if it’s sync in your codebase, call directly.
+        # connected(...) is imported below
         conn = connected(
             context.bot,
             update,
@@ -397,9 +393,7 @@ def connection_status(func):
         )
 
         if conn:
-            # get_chat is async in v22
             chat = await dispatcher.bot.get_chat(conn)
-            # monkey-patch effective_chat for downstream handlers
             setattr(update, "_effective_chat", chat)
             return await func(update, context, *args, **kwargs)
 
