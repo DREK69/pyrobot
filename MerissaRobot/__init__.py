@@ -2,34 +2,31 @@ import asyncio
 import os
 import sys
 import time
-from inspect import getfullargspec
 from logging import (
-    CRITICAL,
-    DEBUG,
-    ERROR,
     INFO,
-    WARNING,
+    ERROR,
     StreamHandler,
     basicConfig,
-    disable,
     getLogger,
     handlers,
 )
 
 import spamwatch
-import telegram.ext as tg
 from aiohttp import ClientSession
-from pyrogram import Client, errors, idle
+from pyrogram import Client
 from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 from pyrogram.errors.exceptions.flood_420 import FloodWait
 from pyrogram.types import Message
 from pyromod import listen  # ignore
 from pytgcalls import PyTgCalls
 from telethon import TelegramClient
-from telethon.sessions import MemorySession, StringSession
+from telethon.sessions import MemorySession
+
+from telegram.ext import Application
 
 from config import *
 
+# ───────────────────────────────
 StartTime = time.time()
 
 LOGGER = getLogger("[MerissaRobot]")
@@ -43,24 +40,49 @@ basicConfig(
         StreamHandler(),
     ],
 )
+
 getLogger("pyrogram").setLevel(ERROR)
 getLogger("telethon").setLevel(ERROR)
 getLogger("telegram").setLevel(ERROR)
 
-updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
-dispatcher = updater.dispatcher
+# ───────────────────────────────
+# PTB v22 Application
+# ───────────────────────────────
+application = (
+    Application.builder()
+    .token(TOKEN)
+    .concurrent_updates(True)  # multi update processing
+    .build()
+)
 
-BOT_ID = dispatcher.bot.id
-BOT_USERNAME = dispatcher.bot.username
-BOT_NAME = dispatcher.bot.first_name
+BOT = application.bot  # bot instance after build()
+
+BOT_ID = None
+BOT_USERNAME = None
+BOT_NAME = None
 BOT_MENTION = "https://t.me/MerissaRobot"
+
+async def init_bot():
+    global BOT_ID, BOT_USERNAME, BOT_NAME
+    me = await application.bot.get_me()
+    BOT_ID = me.id
+    BOT_USERNAME = me.username
+    BOT_NAME = me.first_name
+
 ASS_ID = "5249696122"
 ASS_NAME = "Merissa Assistant"
 ASS_USERNAME = "MerissaAssistant"
 ASS_MENTION = "https://t.me/merissaassistant"
 
+# ───────────────────────────────
+# Pyrogram + Telethon
+# ───────────────────────────────
 pbot = Client(
-    "MerissaRobot", api_id=API_ID, api_hash=API_HASH, bot_token=TOKEN, workers=100
+    "MerissaRobot",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=TOKEN,
+    workers=100,
 )
 
 user = Client(
@@ -73,20 +95,18 @@ pytgcalls = PyTgCalls(user)
 
 telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
 
+# ───────────────────────────────
 DEV_USERS.add(OWNER_ID)
 sw = None
 
 
 def dirr():
     for file in os.listdir():
-        if file.endswith(".jpg"):
-            os.remove(file)
-    for file in os.listdir():
-        if file.endswith(".jpeg"):
+        if file.endswith((".jpg", ".jpeg")):
             os.remove(file)
     if "downloads" not in os.listdir():
         os.mkdir("downloads")
-    LOGGER(__name__).info("Directories Updated.")
+    LOGGER.info("Directories Updated.")
 
 
 DRAGONS = list(DRAGONS) + list(DEV_USERS)
@@ -95,14 +115,18 @@ WOLVES = list(WOLVES)
 DEMONS = list(DEMONS)
 TIGERS = list(TIGERS)
 
-# Load at end to ensure all prev variables have been set
+# ───────────────────────────────
+# Custom Handlers
+# ───────────────────────────────
 from MerissaRobot.Handler.ptb.handlers import (
     CustomCommandHandler,
     CustomMessageHandler,
     CustomRegexHandler,
 )
 
-# make sure the regex handler can take extra kwargs
-tg.RegexHandler = CustomRegexHandler
-tg.CommandHandler = CustomCommandHandler
-tg.MessageHandler = CustomMessageHandler
+# overwrite defaults
+from telegram.ext import CommandHandler, MessageHandler
+
+CommandHandler = CustomCommandHandler
+MessageHandler = CustomMessageHandler
+RegexHandler = CustomRegexHandler
