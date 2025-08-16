@@ -116,17 +116,159 @@ DEMONS = list(DEMONS)
 TIGERS = list(TIGERS)
 
 # ───────────────────────────────
-# Custom Handlers
+# Custom Handlers - PTB v22 Compatible
 # ───────────────────────────────
-from MerissaRobot.Handler.ptb.handlers import (
-    CustomCommandHandler,
-    CustomMessageHandler,
-    CustomRegexHandler,
+from telegram.ext import (
+    CommandHandler,
+    MessageHandler,
+    filters,
+    ContextTypes,
+    CallbackContext
 )
+from telegram import Update
+from typing import List, Optional, Union
+import re
 
-# overwrite defaults
-from telegram.ext import CommandHandler, MessageHandler
+class CustomCommandHandler(CommandHandler):
+    """Custom Command Handler compatible with PTB v22"""
+    
+    def __init__(
+        self,
+        command: Union[str, List[str]],
+        callback,
+        filters=None,
+        block: bool = True,
+        has_args: Optional[int] = None,
+        **kwargs
+    ):
+        # Convert old filter system to new filters
+        if filters is None:
+            filters = ~filters.UpdateType.EDITED_MESSAGE
+        
+        super().__init__(
+            command=command,
+            callback=callback,
+            filters=filters,
+            block=block,
+            **kwargs
+        )
+        self.has_args = has_args
 
-CommandHandler = CustomCommandHandler
-MessageHandler = CustomMessageHandler
-RegexHandler = CustomRegexHandler
+    def check_update(self, update: object) -> Optional[bool]:
+        """Override check_update for custom logic"""
+        if not super().check_update(update):
+            return None
+            
+        if self.has_args is not None:
+            message = update.effective_message
+            if message and message.text:
+                args = message.text.split()[1:]  # Remove command
+                if len(args) < self.has_args:
+                    return None
+                    
+        return True
+
+
+class CustomMessageHandler(MessageHandler):
+    """Custom Message Handler compatible with PTB v22"""
+    
+    def __init__(
+        self,
+        filters,
+        callback,
+        block: bool = True,
+        **kwargs
+    ):
+        # Ensure filters is properly converted
+        if filters is None:
+            filters = filters.ALL
+            
+        super().__init__(
+            filters=filters,
+            callback=callback,
+            block=block,
+            **kwargs
+        )
+
+
+class CustomRegexHandler(MessageHandler):
+    """Custom Regex Handler compatible with PTB v22"""
+    
+    def __init__(
+        self,
+        pattern: Union[str, re.Pattern],
+        callback,
+        block: bool = True,
+        **kwargs
+    ):
+        # Use filters.Regex for pattern matching in PTB v22
+        if isinstance(pattern, str):
+            pattern = re.compile(pattern)
+            
+        super().__init__(
+            filters=filters.Regex(pattern),
+            callback=callback,
+            block=block,
+            **kwargs
+        )
+
+
+# ───────────────────────────────
+# Application startup function
+# ───────────────────────────────
+async def start_bot():
+    """Initialize and start the bot"""
+    try:
+        # Initialize bot info
+        await init_bot()
+        
+        # Start pyrogram clients
+        await pbot.start()
+        await user.start()
+        
+        # Start pytgcalls
+        await pytgcalls.start()
+        
+        # Start telethon
+        await telethn.start(bot_token=TOKEN)
+        
+        # Clean directories
+        dirr()
+        
+        LOGGER.info("Bot started successfully!")
+        
+        # Start PTB application
+        await application.initialize()
+        await application.start()
+        await application.updater.start_polling(
+            drop_pending_updates=True,
+            allowed_updates=Update.ALL_TYPES
+        )
+        
+        # Keep running
+        await application.updater.idle()
+        
+    except Exception as e:
+        LOGGER.error(f"Error starting bot: {e}")
+        raise
+    finally:
+        # Cleanup
+        await application.updater.stop()
+        await application.stop()
+        await application.shutdown()
+        
+        await pbot.stop()
+        await user.stop()
+        await pytgcalls.stop()
+        await telethn.disconnect()
+
+
+if __name__ == "__main__":
+    # Run the bot
+    try:
+        asyncio.run(start_bot())
+    except KeyboardInterrupt:
+        LOGGER.info("Bot stopped by user")
+    except Exception as e:
+        LOGGER.error(f"Fatal error: {e}")
+        sys.exit(1)
