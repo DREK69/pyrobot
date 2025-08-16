@@ -1,8 +1,8 @@
 import functools
 from enum import Enum
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, Message, User
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, Message, User, Chat
 from telegram.ext import ContextTypes
-from telegram.constants import ParseMode
+from telegram.constants import ParseMode, ChatMemberStatus
 from telegram.error import BadRequest
 
 from MerissaRobot import DEV_USERS, DRAGONS, dispatcher
@@ -19,8 +19,8 @@ class AdminPerms(Enum):
 
 
 class ChatStatus(Enum):
-    CREATOR = "creator"
-    ADMIN = "administrator"
+    CREATOR = ChatMemberStatus.OWNER        # ✅ use PTB v22 constants
+    ADMIN = ChatMemberStatus.ADMINISTRATOR
 
 
 anon_callbacks = {}
@@ -30,18 +30,22 @@ anon_users = {}
 
 def user_admin(permission: AdminPerms):
     """Decorator to ensure the user has the required admin permission."""
+
     def wrapper(func):
         @functools.wraps(func)
         async def awrapper(update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
-            if update.effective_chat.type == "private":
+            chat = update.effective_chat
+            message: Message = update.effective_message
+
+            # private chat → skip check
+            if chat.type == "private":
                 return await func(update, context, *args, **kwargs)
 
-            message: Message = update.effective_message
             is_anon = message.sender_chat
-
             if is_anon:
-                callback_id = f"anoncb/{message.chat.id}/{message.message_id}/{permission.value}"
-                anon_callbacks[(message.chat.id, message.message_id)] = ((update, context), func)
+                # Anonymous admin → request verification via button
+                callback_id = f"anoncb/{chat.id}/{message.message_id}/{permission.value}"
+                anon_callbacks[(chat.id, message.message_id)] = ((update, context), func)
 
                 sent_msg = await message.reply_text(
                     "Seems like you're anonymous, click the button below to prove your identity",
@@ -49,16 +53,15 @@ def user_admin(permission: AdminPerms):
                         [[InlineKeyboardButton(text="Prove identity", callback_data=callback_id)]]
                     ),
                 )
-                anon_callback_messages[(message.chat.id, message.message_id)] = sent_msg.message_id
+                anon_callback_messages[(chat.id, message.message_id)] = sent_msg.message_id
 
             else:
                 user_id = message.from_user.id
-                chat_id = message.chat.id
-                mem = await context.bot.get_chat_member(chat_id=chat_id, user_id=user_id)
+                mem = await context.bot.get_chat_member(chat_id=chat.id, user_id=user_id)
 
                 if (
                     getattr(mem, permission.value, False)
-                    or mem.status == "creator"
+                    or mem.status == ChatMemberStatus.OWNER
                     or user_id in DRAGONS
                 ):
                     return await func(update, context, *args, **kwargs)
@@ -69,6 +72,7 @@ def user_admin(permission: AdminPerms):
                     )
 
         return awrapper
+
     return wrapper
 
 
@@ -76,16 +80,16 @@ def user_admin(permission: AdminPerms):
 async def anon_callback_handler1(upd: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle anonymous admin verification callback."""
     callback = upd.callback_query
-    perm = callback.data.split("/")[3]
-    chat_id = int(callback.data.split("/")[1])
-    message_id = int(callback.data.split("/")[2])
+    _, chat_id, message_id, perm = callback.data.split("/")
+    chat_id = int(chat_id)
+    message_id = int(message_id)
 
     try:
         mem = await upd.effective_chat.get_member(user_id=callback.from_user.id)
     except Exception as e:
         return await callback.answer(f"Error: {e}", show_alert=True)
 
-    if mem.status not in [ChatStatus.ADMIN.value, ChatStatus.CREATOR.value]:
+    if mem.status not in [ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]:
         await callback.answer("You're not an admin.", show_alert=True)
         msg_id = anon_callback_messages.pop((chat_id, message_id), None)
         if msg_id is not None:
@@ -96,7 +100,7 @@ async def anon_callback_handler1(upd: Update, context: ContextTypes.DEFAULT_TYPE
 
     elif (
         getattr(mem, perm, False)
-        or mem.status == "creator"
+        or mem.status == ChatMemberStatus.OWNER
         or mem.user.id in DEV_USERS
     ):
         cb = anon_callbacks.pop((chat_id, message_id), None)
@@ -110,9 +114,9 @@ async def anon_callback_handler1(upd: Update, context: ContextTypes.DEFAULT_TYPE
         return await callback.answer("This isn't for you.", show_alert=True)
 
 
-async def resolve_user(user: User, message_id: int, chat):
+async def resolve_user(user: User, message_id: int, chat: Chat):
     """Resolve anonymous user to real user when sender_chat is anonymous."""
-    if user.id == 1087968824:  # Anonymous admin system user
+    if user.id == 1087968824:  # PTB's Anonymous admin system user
         try:
             uid = anon_users.pop((chat.id, message_id))
             user = (await chat.get_member(uid)).user
