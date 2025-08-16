@@ -16,7 +16,7 @@ from MerissaRobot import (
     SUPPORT_CHAT,
     TIGERS,
     WOLVES,
-    dispatcher,  # keeping dispatcher reference if still exposed
+    application,  # Changed from dispatcher
 )
 
 # stores admins in memory for 10 min.
@@ -56,7 +56,7 @@ async def is_user_admin(chat: Chat, user_id: int, member: Optional[ChatMember] =
                 return user_id in ADMIN_CACHE[chat.id]
             except KeyError:
                 # refresh cache
-                chat_admins = await dispatcher.bot.get_chat_administrators(chat.id)
+                chat_admins = await application.bot.get_chat_administrators(chat.id)  # Changed from dispatcher
                 admin_list = [x.user.id for x in chat_admins]
                 ADMIN_CACHE[chat.id] = admin_list
                 return user_id in admin_list
@@ -393,7 +393,7 @@ def connection_status(func):
         )
 
         if conn:
-            chat = await dispatcher.bot.get_chat(conn)
+            chat = await application.bot.get_chat(conn)  # Changed from dispatcher
             setattr(update, "_effective_chat", chat)
             return await func(update, context, *args, **kwargs)
 
