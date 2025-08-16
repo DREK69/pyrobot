@@ -4,6 +4,7 @@ PM_START_TEXT = """Hi Dear! My name is Merissa 👱‍♀[ ](https://te.legra.ph
 ──────────────────────
 I can help to manage your groups with useful features, feel free to add me to your groups!
 """
+
 PM_START_BUTTON = InlineKeyboardMarkup(
     [
         [
@@ -40,6 +41,7 @@ PM_START_BUTTON = InlineKeyboardMarkup(
         ],
     ]
 )
+
 PM_ABOUT_TEXT = """@MerissaRobot is one of the most powerful group management bot exist in telegram trusted by 100k+ of users & one thousands of groups all over the world
 
 MerissaRobot project is developed by @NotReallyPrince with the help of many Open Source Projects.
@@ -119,6 +121,7 @@ HELP_MODULE_TEXT = "──「 Help of {} 」── \n"
 HELP_STRINGS = "Click on the button bellow to get description about specifics command."
 
 GROUP_START_TEXT = "👋 Hi, I'm Merissa. Nice to meet You."
+
 GROUP_START_BUTTON = InlineKeyboardMarkup(
     [
         [
@@ -147,6 +150,7 @@ GROUP_HELP_BUTTON = InlineKeyboardMarkup(
 )
 
 MERISSA_VID = "https://telegra.ph/file/50a69f6e684653fd626f4.mp4"
+
 MERISSA_UPDATE_TEXT = """──「 Merissa v3.0 Update 」──
 
 - New Profile Picture
