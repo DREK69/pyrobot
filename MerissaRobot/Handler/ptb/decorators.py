@@ -49,13 +49,36 @@ class MerissaHandler:
     ):
         def _message(func):
             handler_cls = DisableAbleMessageHandler if can_disable else MessageHandler
-            self._application.add_handler(
-                handler_cls(pattern, func, friendly=friendly),
-                group=group,
-            )
-            LOGGER.debug(
-                f"[MERISSAMSG] Loaded filter pattern {pattern} for function {func.__name__} in group {group}"
-            )
+            
+            try:
+                # Try with group parameter first
+                if can_disable:
+                    self._application.add_handler(
+                        handler_cls(pattern, func, friendly=friendly),
+                        group=group,
+                    )
+                else:
+                    self._application.add_handler(
+                        MessageHandler(pattern, func),
+                        group=group,
+                    )
+                LOGGER.debug(
+                    f"[MERISSAMSG] Loaded filter pattern {pattern} for function {func.__name__} in group {group}"
+                )
+            except TypeError:
+                # Fallback without group parameter
+                if can_disable:
+                    self._application.add_handler(
+                        handler_cls(pattern, func, friendly=friendly)
+                    )
+                else:
+                    self._application.add_handler(
+                        MessageHandler(pattern, func)
+                    )
+                LOGGER.debug(
+                    f"[MERISSAMSG] Loaded filter pattern {pattern} for function {func.__name__}"
+                )
+
             return func
 
         return _message
@@ -89,81 +112,8 @@ class MerissaHandler:
         return _inlinequery
 
 
+# Create handler instances
 merissacmd = MerissaHandler(application).command
 merissamsg = MerissaHandler(application).message
 merissacallback = MerissaHandler(application).callbackquery
-merissainline = MerissaHandler(application).inlinequery                            pattern, func, friendly=friendly, run_async=run_async
-                        ),
-                        group,
-                    )
-                else:
-                    self._dispatcher.add_handler(
-                        MessageHandler(pattern, func, run_async=run_async), group
-                    )
-                LOGGER.debug(
-                    f"[INNEXIAMSG] Loaded filter pattern {pattern} for function {func.__name__} in group {group}"
-                )
-            except TypeError:
-                if can_disable:
-                    self._dispatcher.add_handler(
-                        DisableAbleMessageHandler(
-                            pattern, func, friendly=friendly, run_async=run_async
-                        )
-                    )
-                else:
-                    self._dispatcher.add_handler(
-                        MessageHandler(pattern, func, run_async=run_async)
-                    )
-                LOGGER.debug(
-                    f"[INNEXIAMSG] Loaded filter pattern {pattern} for function {func.__name__}"
-                )
-
-            return func
-
-        return _message
-
-    def callbackquery(self, pattern: str = None, run_async: bool = True):
-        def _callbackquery(func):
-            self._dispatcher.add_handler(
-                CallbackQueryHandler(
-                    pattern=pattern, callback=func, run_async=run_async
-                )
-            )
-            LOGGER.debug(
-                f"[INNEXIACALLBACK] Loaded callbackquery handler with pattern {pattern} for function {func.__name__}"
-            )
-            return func
-
-        return _callbackquery
-
-    def inlinequery(
-        self,
-        pattern: Optional[str] = None,
-        run_async: bool = True,
-        pass_user_data: bool = True,
-        pass_chat_data: bool = True,
-        chat_types: List[str] = None,
-    ):
-        def _inlinequery(func):
-            self._dispatcher.add_handler(
-                InlineQueryHandler(
-                    pattern=pattern,
-                    callback=func,
-                    run_async=run_async,
-                    pass_user_data=pass_user_data,
-                    pass_chat_data=pass_chat_data,
-                    chat_types=chat_types,
-                )
-            )
-            LOGGER.debug(
-                f"[INNEXIAINLINE] Loaded inlinequery handler with pattern {pattern} for function {func.__name__} | PASSES USER DATA: {pass_user_data} | PASSES CHAT DATA: {pass_chat_data} | CHAT TYPES: {chat_types}"
-            )
-            return func
-
-        return _inlinequery
-
-
-merissacmd = MerissaHandler(d).command
-merissamsg = MerissaHandler(d).message
-merissacallback = MerissaHandler(d).callbackquery
-merissainline = MerissaHandler(d).inlinequery
+merissainline = MerissaHandler(application).inlinequery
