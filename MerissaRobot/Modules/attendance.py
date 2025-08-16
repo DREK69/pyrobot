@@ -1,16 +1,17 @@
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
-from telegram.ext import CallbackQueryHandler, Filters
-from telegram.utils.helpers import escape_markdown, mention_markdown
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.ext import CallbackQueryHandler, filters, ContextTypes
+from telegram.helpers import escape_markdown, mention_markdown
+from telegram.constants import ParseMode
 
-from MerissaRobot import dispatcher
+from MerissaRobot import application
 from MerissaRobot.Handler.ptb.chat_status import user_admin, user_admin_no_reply
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 
 @user_admin
-def start_attendance(update, context):
+async def start_attendance(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if ("flag" in context.chat_data) and (context.chat_data["flag"] == 1):
-        update.message.reply_text(
+        await update.message.reply_text(
             "Please close the current attendance first",
         )
     elif ("flag" not in context.chat_data) or (context.chat_data["flag"] == 0):
@@ -32,36 +33,36 @@ def start_attendance(update, context):
             ],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        context.chat_data["message"] = update.message.reply_text(
+        context.chat_data["message"] = await update.message.reply_text(
             "Please mark your Attendance, It's Compulsory 👮‍♀️",
             reply_markup=reply_markup,
         )
 
 
-def mark_attendance(update, context):
+async def mark_attendance(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     if str(update.effective_user.id) not in context.chat_data["attendees"].keys():
         context.chat_data["attendees"][
             update.effective_user.id
         ] = f"{escape_markdown(update.effective_user.full_name)}"
-        context.bot.answer_callback_query(
+        await context.bot.answer_callback_query(
             callback_query_id=query.id,
             text="Your attendance has been Marked 📝",
             show_alert=True,
         )
     else:
-        context.bot.answer_callback_query(
+        await context.bot.answer_callback_query(
             callback_query_id=query.id,
             text="Your Attendance is already Marked 🔐",
             show_alert=True,
         )
-    query.answer()
+    await query.answer()
 
 
 @user_admin_no_reply
-def end_attendance(update, context):
+async def end_attendance(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    query.answer()
+    await query.answer()
     if context.chat_data["id"] != update.effective_chat.id:
         return
     if len(context.chat_data["attendees"].items()) > 0:
@@ -71,7 +72,7 @@ def end_attendance(update, context):
                 for id, name in context.chat_data["attendees"].items()
             ]
         )
-        context.bot.edit_message_text(
+        await context.bot.edit_message_text(
             text="Attendance is over. "
             + str(len(context.chat_data["attendees"]))
             + " member(s) marked attendance.\n"
@@ -82,7 +83,7 @@ def end_attendance(update, context):
             parse_mode=ParseMode.MARKDOWN,
         )
     else:
-        context.bot.edit_message_text(
+        await context.bot.edit_message_text(
             text="Attendance is over. No one was present.",
             chat_id=context.chat_data["message"].chat_id,
             message_id=context.chat_data["message"].message_id,
@@ -92,10 +93,10 @@ def end_attendance(update, context):
 
 
 @user_admin
-def end_attendance_cmd(update, context):
-    if ("flag" not in context.chat_data) and (context.chat_data["flag"] != 1):
-        update.message.reply_text(
-            "No Attendance is goind on.",
+async def end_attendance_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if ("flag" not in context.chat_data) or (context.chat_data["flag"] != 1):
+        await update.message.reply_text(
+            "No Attendance is going on.",
         )
     else:
         if context.chat_data["id"] != update.effective_chat.id:
@@ -107,10 +108,10 @@ def end_attendance_cmd(update, context):
                     for id, name in context.chat_data["attendees"].items()
                 ]
             )
-            context.bot.edit_message_text(
+            await context.bot.edit_message_text(
                 text="Attendance is over. "
                 + str(len(context.chat_data["attendees"]))
-                + " members  marked attendance.\n"
+                + " members marked attendance.\n"
                 + "Here is the list:\n- "
                 + attendee_list,
                 chat_id=context.chat_data["message"].chat_id,
@@ -118,7 +119,7 @@ def end_attendance_cmd(update, context):
                 parse_mode=ParseMode.MARKDOWN,
             )
         else:
-            context.bot.edit_message_text(
+            await context.bot.edit_message_text(
                 text="Attendance is over. No one was present.",
                 chat_id=context.chat_data["message"].chat_id,
                 message_id=context.chat_data["message"].message_id,
@@ -128,21 +129,21 @@ def end_attendance_cmd(update, context):
 
 
 START_ATTENDANCE_CMD = DisableAbleCommandHandler(
-    "attendance", start_attendance, filters=Filters.chat_type.groups
+    "attendance", start_attendance, filters=filters.ChatType.GROUPS
 )
 MARK_ATTENDANCE = CallbackQueryHandler(mark_attendance, pattern="present")
 END_ATTENDANCE = CallbackQueryHandler(end_attendance, pattern="end_attendance")
 END_ATTENDANCE_CMD = DisableAbleCommandHandler(
-    "attendancestop", end_attendance_cmd, filters=Filters.chat_type.groups
+    "attendancestop", end_attendance_cmd, filters=filters.ChatType.GROUPS
 )
 
-dispatcher.add_handler(START_ATTENDANCE_CMD)
-dispatcher.add_handler(MARK_ATTENDANCE)
-dispatcher.add_handler(END_ATTENDANCE)
-dispatcher.add_handler(END_ATTENDANCE_CMD)
+application.add_handler(START_ATTENDANCE_CMD)
+application.add_handler(MARK_ATTENDANCE)
+application.add_handler(END_ATTENDANCE)
+application.add_handler(END_ATTENDANCE_CMD)
 
 
-__command_list__ = ["attendance", "end_attendance"]
+__command_list__ = ["attendance", "attendancestop"]
 __handlers__ = [
     START_ATTENDANCE_CMD,
     MARK_ATTENDANCE,
