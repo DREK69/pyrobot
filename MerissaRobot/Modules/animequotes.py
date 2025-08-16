@@ -1,69 +1,118 @@
 import json
 import random
+from typing import Tuple, Optional
 
 import requests
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
-from telegram.ext import CallbackContext, CallbackQueryHandler
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.constants import ParseMode
+from telegram.ext import ContextTypes, CallbackQueryHandler
 
-from MerissaRobot import dispatcher
+from MerissaRobot import application
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 
-def anime_quote():
+async def anime_quote() -> Tuple[str, str, str]:
+    """
+    Fetch a random anime quote from AnimeChan API.
+    
+    Returns:
+        Tuple of (quote, character, anime) or fallback values if API fails
+    """
     url = "https://animechan.vercel.app/api/random"
-    # since text attribute returns dictionary like string
-    response = requests.get(url)
+    
     try:
-        dic = json.loads(response.text)
-    except Exception:
-        pass
-    quote = dic["quote"]
-    character = dic["character"]
-    anime = dic["anime"]
-    return quote, character, anime
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        
+        dic = response.json()  # Use .json() instead of json.loads(response.text)
+        quote = dic.get("quote", "Life is not a game of luck. If you wanna win, work hard.")
+        character = dic.get("character", "Sora")
+        anime = dic.get("anime", "No Game No Life")
+        
+        return quote, character, anime
+        
+    except (requests.RequestException, json.JSONDecodeError, KeyError) as e:
+        # Fallback quote if API fails
+        return (
+            "Life is not a game of luck. If you wanna win, work hard.",
+            "Sora",
+            "No Game No Life"
+        )
 
 
-def quotes(update: Update, context: CallbackContext):
+async def quotes(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Send a random anime quote with a refresh button"""
     message = update.effective_message
-    quote, character, anime = anime_quote()
+    quote, character, anime = await anime_quote()
+    
     msg = f"<i>❝{quote}❞</i>\n\n<b>{character} from {anime}</b>"
     keyboard = InlineKeyboardMarkup(
         [[InlineKeyboardButton(text="Change🔁", callback_data="change_quote")]]
     )
-    message.reply_text(
+    
+    await message.reply_text(
         msg,
         reply_markup=keyboard,
         parse_mode=ParseMode.HTML,
     )
 
 
-def change_quote(update: Update, context: CallbackContext):
-    update.callback_query
-    update.effective_chat
+async def change_quote(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle callback query to change the quote"""
+    query = update.callback_query
+    chat = update.effective_chat
     message = update.effective_message
-    quote, character, anime = anime_quote()
+    
+    # Answer the callback query to remove loading state
+    await query.answer()
+    
+    quote, character, anime = await anime_quote()
     msg = f"<i>❝{quote}❞</i>\n\n<b>{character} from {anime}</b>"
+    
     keyboard = InlineKeyboardMarkup(
-        [[InlineKeyboardButton(text="Change🔁", callback_data="quote_change")]]
+        [[InlineKeyboardButton(text="Change🔁", callback_data="change_quote")]]
     )
-    message.edit_text(msg, reply_markup=keyboard, parse_mode=ParseMode.HTML)
+    
+    try:
+        await message.edit_text(
+            msg, 
+            reply_markup=keyboard, 
+            parse_mode=ParseMode.HTML
+        )
+    except Exception:
+        # If editing fails, send a new message
+        await message.reply_text(
+            msg,
+            reply_markup=keyboard,
+            parse_mode=ParseMode.HTML,
+        )
 
 
-def animequotes(update: Update, context: CallbackContext):
+async def animequotes(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Send a random anime quote image"""
     message = update.effective_message
-    (
+    
+    # Get user name for mention (though not used in current implementation)
+    user_name = (
         message.reply_to_message.from_user.first_name
         if message.reply_to_message
         else message.from_user.first_name
     )
-    reply_photo = (
-        message.reply_to_message.reply_photo
-        if message.reply_to_message
-        else message.reply_photo
-    )
-    reply_photo(random.choice(QUOTES_IMG))
+    
+    try:
+        # Send a random anime quote image
+        await message.reply_photo(
+            photo=random.choice(QUOTES_IMG),
+            caption=f"Here's an anime quote for you, {user_name}! 🌸"
+        )
+    except Exception as e:
+        # If sending photo fails, send a text message instead
+        await message.reply_text(
+            "Sorry, I couldn't send the anime quote image right now. Please try again later!"
+        )
 
 
+# Collection of anime quote images
 QUOTES_IMG = (
     "https://i.imgur.com/Iub4RYj.jpg",
     "https://i.imgur.com/uvNMdIl.jpg",
@@ -132,18 +181,19 @@ QUOTES_IMG = (
     "https://i.imgur.com/6lG4tsO.jpg",
 )
 
-ANIMEQUOTES_HANDLER = DisableAbleCommandHandler(
-    "animequotes", animequotes, run_async=True
-)
-QUOTES_HANDLER = DisableAbleCommandHandler("quote", quotes, run_async=True)
+# Handler definitions for PTB v22
+ANIMEQUOTES_HANDLER = DisableAbleCommandHandler("animequotes", animequotes)
+QUOTES_HANDLER = DisableAbleCommandHandler("quote", quotes)
 
+# Callback query handlers with updated patterns
 CHANGE_QUOTE = CallbackQueryHandler(change_quote, pattern=r"change_.*")
 QUOTE_CHANGE = CallbackQueryHandler(change_quote, pattern=r"quote_.*")
 
-dispatcher.add_handler(CHANGE_QUOTE)
-dispatcher.add_handler(QUOTE_CHANGE)
-dispatcher.add_handler(ANIMEQUOTES_HANDLER)
-dispatcher.add_handler(QUOTES_HANDLER)
+# Add handlers to application
+application.add_handler(CHANGE_QUOTE)
+application.add_handler(QUOTE_CHANGE)
+application.add_handler(ANIMEQUOTES_HANDLER)
+application.add_handler(QUOTES_HANDLER)
 
 __command_list__ = [
     "animequotes",
@@ -153,4 +203,6 @@ __command_list__ = [
 __handlers__ = [
     ANIMEQUOTES_HANDLER,
     QUOTES_HANDLER,
+    CHANGE_QUOTE,
+    QUOTE_CHANGE,
 ]
