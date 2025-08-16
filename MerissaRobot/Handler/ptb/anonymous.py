@@ -1,8 +1,10 @@
 import functools
 from enum import Enum
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, Message
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, Message, User
 from telegram.ext import ContextTypes
 from telegram.constants import ParseMode
+from telegram.error import BadRequest
+
 from MerissaRobot import DEV_USERS, DRAGONS, dispatcher
 from MerissaRobot.Handler.ptb.decorators import merissacallback
 
@@ -27,10 +29,10 @@ anon_users = {}
 
 
 def user_admin(permission: AdminPerms):
+    """Decorator to ensure the user has the required admin permission."""
     def wrapper(func):
         @functools.wraps(func)
         async def awrapper(update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
-            nonlocal permission
             if update.effective_chat.type == "private":
                 return await func(update, context, *args, **kwargs)
 
@@ -55,7 +57,7 @@ def user_admin(permission: AdminPerms):
                 mem = await context.bot.get_chat_member(chat_id=chat_id, user_id=user_id)
 
                 if (
-                    getattr(mem, permission.value, False) is True
+                    getattr(mem, permission.value, False)
                     or mem.status == "creator"
                     or user_id in DRAGONS
                 ):
@@ -67,12 +69,12 @@ def user_admin(permission: AdminPerms):
                     )
 
         return awrapper
-
     return wrapper
 
 
 @merissacallback(pattern="anoncb")
 async def anon_callback_handler1(upd: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle anonymous admin verification callback."""
     callback = upd.callback_query
     perm = callback.data.split("/")[3]
     chat_id = int(callback.data.split("/")[1])
@@ -80,21 +82,20 @@ async def anon_callback_handler1(upd: Update, context: ContextTypes.DEFAULT_TYPE
 
     try:
         mem = await upd.effective_chat.get_member(user_id=callback.from_user.id)
-    except BaseException as e:
-        await callback.answer(f"Error: {e}", show_alert=True)
-        return
+    except Exception as e:
+        return await callback.answer(f"Error: {e}", show_alert=True)
 
     if mem.status not in [ChatStatus.ADMIN.value, ChatStatus.CREATOR.value]:
-        await callback.answer("You're aren't admin.")
+        await callback.answer("You're not an admin.", show_alert=True)
         msg_id = anon_callback_messages.pop((chat_id, message_id), None)
         if msg_id is not None:
             await dispatcher.bot.delete_message(chat_id, msg_id)
-        await dispatcher.bot.send_message(
+        return await dispatcher.bot.send_message(
             chat_id, "You lack the permissions required for this command"
         )
 
     elif (
-        getattr(mem, perm, False) is True
+        getattr(mem, perm, False)
         or mem.status == "creator"
         or mem.user.id in DEV_USERS
     ):
@@ -104,12 +105,14 @@ async def anon_callback_handler1(upd: Update, context: ContextTypes.DEFAULT_TYPE
             if msg_id is not None:
                 await dispatcher.bot.delete_message(chat_id, msg_id)
             return await cb[1](cb[0][0], cb[0][1])
+
     else:
-        await callback.answer("This isn't for ya")
+        return await callback.answer("This isn't for you.", show_alert=True)
 
 
-async def resolve_user(user, message_id, chat):
-    if user.id == 1087968824:
+async def resolve_user(user: User, message_id: int, chat):
+    """Resolve anonymous user to real user when sender_chat is anonymous."""
+    if user.id == 1087968824:  # Anonymous admin system user
         try:
             uid = anon_users.pop((chat.id, message_id))
             user = (await chat.get_member(uid)).user
@@ -117,39 +120,11 @@ async def resolve_user(user, message_id, chat):
             return await dispatcher.bot.edit_message_text(
                 chat_id=chat.id,
                 message_id=message_id,
-                text="You're now identified as: {}".format(user.first_name),
+                text=f"You're now identified as: {user.first_name}",
             )
-        except BaseException as e:
+        except Exception as e:
             return await dispatcher.bot.edit_message_text(
                 chat_id=chat.id, message_id=message_id, text=f"Error: {e}"
             )
 
-    return user        or mem.user.id in DEV_USERS
-    ):
-        cb = anon_callbacks.pop((chat_id, message_id), None)
-        if cb:
-            message_id = anon_callback_messages.pop((chat_id, message_id), None)
-            if message_id is not None:
-                dispatcher.bot.delete_message(chat_id, message_id)
-            return cb[1](cb[0][0], cb[0][1])
-    else:
-        callback.answer("This isn't for ya")
-
-
-def resolve_user(user, message_id, chat):
-    if user.id == 1087968824:
-        try:
-            uid = anon_users.pop((chat.id, message_id))
-            user = chat.get_member(uid).user
-        except KeyError:
-            return dispatcher.bot.edit_message_text(
-                chat.id,
-                message_id,
-                "You're now identified as: {}".format(user.first_name),
-            )
-        except BaseException as e:
-            return dispatcher.bot.edit_message_text(chat.id, message_id, f"Error: {e}")
-
-    else:
-        user = user
     return user
