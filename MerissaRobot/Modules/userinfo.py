@@ -5,13 +5,15 @@ import platform
 import re
 import time
 from platform import python_version
+from typing import Optional
 
 import requests
 from psutil import boot_time, cpu_percent, disk_usage, virtual_memory
-from telegram import MAX_MESSAGE_LENGTH, MessageEntity, ParseMode, Update, __version__
+from telegram import MessageEntity, Update
+from telegram.constants import MessageLimit, ParseMode
 from telegram.error import BadRequest
-from telegram.ext import CallbackContext, CommandHandler
-from telegram.utils.helpers import escape_markdown, mention_html
+from telegram.ext import ContextTypes, CommandHandler
+from telegram.helpers import escape_markdown, mention_html
 
 import MerissaRobot.Database.sql.userinfo_sql as sql
 from MerissaRobot import (
@@ -24,7 +26,7 @@ from MerissaRobot import (
     TOKEN,
     WOLVES,
     StartTime,
-    dispatcher,
+    application,
     sw,
 )
 from MerissaRobot.__main__ import STATS, USER_INFO
@@ -36,20 +38,31 @@ from MerissaRobot.Handler.ptb.extraction import extract_user
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 
-def no_by_per(totalhp, percentage):
+def no_by_per(totalhp: int, percentage: int) -> float:
     """
-    rtype: num of `percentage` from total
-    eg: 1000, 10 -> 10% of 1000 (100)
+    Calculate percentage of total value.
+    
+    Args:
+        totalhp: Total value
+        percentage: Percentage to calculate
+        
+    Returns:
+        Calculated percentage value
     """
     return totalhp * percentage / 100
 
 
-def get_percentage(totalhp, earnedhp):
+def get_percentage(totalhp: int, earnedhp: int) -> str:
     """
-    rtype: percentage of `totalhp` num
-    eg: (1000, 100) will return 10%
+    Calculate percentage of earned HP from total HP.
+    
+    Args:
+        totalhp: Total HP
+        earnedhp: Earned HP
+        
+    Returns:
+        Percentage as string
     """
-
     matched_less = totalhp - earnedhp
     per_of_totalhp = 100 - matched_less * 100.0 / totalhp
     per_of_totalhp = str(int(per_of_totalhp))
@@ -57,6 +70,15 @@ def get_percentage(totalhp, earnedhp):
 
 
 def get_readable_time(seconds: int) -> str:
+    """
+    Convert seconds to readable time format.
+    
+    Args:
+        seconds: Time in seconds
+        
+    Returns:
+        Formatted time string
+    """
     count = 0
     ping_time = ""
     time_list = []
@@ -81,7 +103,17 @@ def get_readable_time(seconds: int) -> str:
     return ping_time
 
 
-def hpmanager(user):
+async def hpmanager(user, bot) -> dict:
+    """
+    Calculate user's health points based on various factors.
+    
+    Args:
+        user: Telegram user object
+        bot: Bot instance
+        
+    Returns:
+        Dictionary with HP information
+    """
     total_hp = (get_user_num_chats(user.id) + 10) * 10
 
     if not is_user_gbanned(user.id):
@@ -92,15 +124,21 @@ def hpmanager(user):
         # if no username decrease 25% of hp.
         if not user.username:
             new_hp -= no_by_per(total_hp, 25)
+        
         try:
-            dispatcher.bot.get_user_profile_photos(user.id).photos[0][-1]
-        except IndexError:
+            photos = await bot.get_user_profile_photos(user.id)
+            if not photos.photos:
+                # no profile photo ==> -25% of hp
+                new_hp -= no_by_per(total_hp, 25)
+        except (IndexError, BadRequest):
             # no profile photo ==> -25% of hp
             new_hp -= no_by_per(total_hp, 25)
+            
         # if no /setme exist ==> -20% of hp
         if not sql.get_user_me_info(user.id):
             new_hp -= no_by_per(total_hp, 20)
-        # if no bio exsit ==> -10% of hp
+            
+        # if no bio exist ==> -10% of hp
         if not sql.get_user_bio(user.id):
             new_hp -= no_by_per(total_hp, 10)
 
@@ -109,10 +147,6 @@ def hpmanager(user):
             # if user is afk and no reason then decrease 7%
             # else if reason exist decrease 5%
             new_hp -= no_by_per(total_hp, 7) if not afkst else no_by_per(total_hp, 5)
-            # fbanned users will have (2*number of fbans) less from max HP
-            # Example: if HP is 100 but user has 5 diff fbans
-            # Available HP is (2*5) = 10% less than Max HP
-            # So.. 10% of 100HP = 90HP
 
     else:
         new_hp = no_by_per(total_hp, 5)
@@ -124,12 +158,22 @@ def hpmanager(user):
     }
 
 
-def make_bar(per):
+def make_bar(per: int) -> str:
+    """
+    Create a visual progress bar.
+    
+    Args:
+        per: Percentage value
+        
+    Returns:
+        Visual bar string
+    """
     done = min(round(per / 10), 10)
     return "■" * done + "□" * (10 - done)
 
 
-def get_id(update: Update, context: CallbackContext):
+async def get_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Get user or chat ID."""
     bot, args = context.bot, context.args
     message = update.effective_message
     chat = update.effective_chat
@@ -141,7 +185,7 @@ def get_id(update: Update, context: CallbackContext):
             user1 = message.reply_to_message.from_user
             user2 = message.reply_to_message.forward_from
 
-            msg.reply_text(
+            await msg.reply_text(
                 f"<b>Telegram ID:</b>\n"
                 f"• {html.escape(user2.first_name)} - <code>{user2.id}</code>.\n"
                 f"• {html.escape(user1.first_name)} - <code>{user1.id}</code>.",
@@ -149,44 +193,46 @@ def get_id(update: Update, context: CallbackContext):
             )
 
         else:
-            user = bot.get_chat(user_id)
-            msg.reply_text(
+            user = await bot.get_chat(user_id)
+            await msg.reply_text(
                 f"{html.escape(user.first_name)}'s id is <code>{user.id}</code>.",
                 parse_mode=ParseMode.HTML,
             )
 
     elif chat.type == "private":
-        msg.reply_text(
+        await msg.reply_text(
             f"Your id is <code>{chat.id}</code>.",
             parse_mode=ParseMode.HTML,
         )
 
     else:
-        msg.reply_text(
+        await msg.reply_text(
             f"This group's id is <code>{chat.id}</code>.",
             parse_mode=ParseMode.HTML,
         )
 
 
-def gifid(update: Update, context: CallbackContext):
+async def gifid(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Get GIF file ID."""
     msg = update.effective_message
     if msg.reply_to_message and msg.reply_to_message.animation:
-        update.effective_message.reply_text(
+        await update.effective_message.reply_text(
             f"Gif ID:\n<code>{msg.reply_to_message.animation.file_id}</code>",
             parse_mode=ParseMode.HTML,
         )
     else:
-        update.effective_message.reply_text("Please reply to a gif to get its ID.")
+        await update.effective_message.reply_text("Please reply to a gif to get its ID.")
 
 
-def info(update: Update, context: CallbackContext):
+async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Get comprehensive user information."""
     bot, args = context.bot, context.args
     message = update.effective_message
     chat = update.effective_chat
     user_id = extract_user(update.effective_message, args)
 
     if user_id:
-        user = bot.get_chat(user_id)
+        user = await bot.get_chat(user_id)
 
     elif not message.reply_to_message and not args:
         user = message.from_user
@@ -197,16 +243,16 @@ def info(update: Update, context: CallbackContext):
             len(args) >= 1
             and not args[0].startswith("@")
             and not args[0].isdigit()
-            and not message.parse_entities([MessageEntity.TEXT_MENTION])
+            and not message.entities
         )
     ):
-        message.reply_text("I can't extract a user from this.")
+        await message.reply_text("I can't extract a user from this.")
         return
 
     else:
         return
 
-    rep = message.reply_text("<code>Getting info...</code>", parse_mode=ParseMode.HTML)
+    rep = await message.reply_text("<code>Getting info...</code>", parse_mode=ParseMode.HTML)
 
     text = (
         f"╔═━「<b> Appraisal results:</b> 」\n"
@@ -229,27 +275,33 @@ def info(update: Update, context: CallbackContext):
         if afk_st:
             text += _stext.format("AFK")
         else:
-            status = status = bot.get_chat_member(chat.id, user.id).status
-            if status:
-                if status in {"left", "kicked"}:
-                    text += _stext.format("Not here")
-                elif status == "member":
-                    text += _stext.format("Detected")
-                elif status in {"administrator", "creator"}:
-                    text += _stext.format("Admin")
+            try:
+                status = await bot.get_chat_member(chat.id, user.id)
+                if status:
+                    if status.status in {"left", "kicked"}:
+                        text += _stext.format("Not here")
+                    elif status.status == "member":
+                        text += _stext.format("Detected")
+                    elif status.status in {"administrator", "creator"}:
+                        text += _stext.format("Admin")
+            except BadRequest:
+                pass
+                
     if user_id not in [bot.id, 777000, 1087968824]:
-        userhp = hpmanager(user)
+        userhp = await hpmanager(user, bot)
         text += f"\n\n<b>Health:</b> <code>{userhp['earnedhp']}/{userhp['totalhp']}</code>\n[<i>{make_bar(int(userhp['percentage']))} </i>{userhp['percentage']}%]"
 
     try:
-        spamwtc = sw.get_ban(int(user.id))
-        if spamwtc:
-            text += "\n\n<b>This person is Spamwatched!</b>"
-            text += f"\nReason: <pre>{spamwtc.reason}</pre>"
-            text += "\nAppeal at @SpamWatchSupport"
-    except:
+        if sw:
+            spamwtc = sw.get_ban(int(user.id))
+            if spamwtc:
+                text += "\n\n<b>This person is Spamwatched!</b>"
+                text += f"\nReason: <pre>{spamwtc.reason}</pre>"
+                text += "\nAppeal at @SpamWatchSupport"
+    except Exception:
         pass  # don't crash if api is down somehow...
 
+    # Add disaster level information
     if user.id == OWNER_ID:
         text += "\n\nThe Disaster level of this person is 'King'."
     elif user.id in DEV_USERS:
@@ -267,19 +319,22 @@ def info(update: Update, context: CallbackContext):
             "\n\nOwner Of A Bot. Queen Of @excrybaby. Bot Name Inspired From 'JoJo'."
         )
 
+    # Get custom title for administrators
     try:
-        user_member = chat.get_member(user.id)
+        user_member = await chat.get_member(user.id)
         if user_member.status == "administrator":
             result = requests.post(
                 f"https://api.telegram.org/bot{TOKEN}/getChatMember?chat_id={chat.id}&user_id={user.id}",
+                timeout=10
             )
             result = result.json()["result"]
             if "custom_title" in result.keys():
                 custom_title = result["custom_title"]
                 text += f"\n\nTitle:\n<b>{custom_title}</b>"
-    except BadRequest:
+    except (BadRequest, requests.RequestException):
         pass
 
+    # Add module-specific user information
     for mod in USER_INFO:
         try:
             mod_info = mod.__user_info__(user.id).strip()
@@ -288,98 +343,112 @@ def info(update: Update, context: CallbackContext):
         if mod_info:
             text += "\n\n" + mod_info
 
+    # Handle profile picture
     if INFOPIC:
         try:
-            profile = context.bot.get_user_profile_photos(user.id).photos[0][-1]
-            _file = bot.get_file(profile["file_id"])
-            _file.download(f"{user.id}.png")
+            profile_photos = await context.bot.get_user_profile_photos(user.id)
+            if profile_photos.photos:
+                profile = profile_photos.photos[0][-1]
+                _file = await bot.get_file(profile.file_id)
+                await _file.download_to_drive(f"{user.id}.png")
 
-            message.reply_document(
-                document=open(f"{user.id}.png", "rb"),
-                caption=(text),
-                parse_mode=ParseMode.HTML,
-            )
+                with open(f"{user.id}.png", "rb") as photo_file:
+                    await message.reply_document(
+                        document=photo_file,
+                        caption=text,
+                        parse_mode=ParseMode.HTML,
+                    )
 
-            os.remove(f"{user.id}.png")
-        # Incase user don't have profile pic, send normal text
-        except IndexError:
-            message.reply_text(
+                os.remove(f"{user.id}.png")
+            else:
+                # User doesn't have profile pic, send normal text
+                await message.reply_text(
+                    text, parse_mode=ParseMode.HTML, disable_web_page_preview=True
+                )
+        except (IndexError, BadRequest):
+            await message.reply_text(
                 text, parse_mode=ParseMode.HTML, disable_web_page_preview=True
             )
-
     else:
-        message.reply_text(
+        await message.reply_text(
             text,
             parse_mode=ParseMode.HTML,
         )
 
-    rep.delete()
+    await rep.delete()
 
 
-def about_me(update: Update, context: CallbackContext):
+async def about_me(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Get user's self-description."""
     bot, args = context.bot, context.args
     message = update.effective_message
     user_id = extract_user(message, args)
 
-    user = bot.get_chat(user_id) if user_id else message.from_user
+    user = await bot.get_chat(user_id) if user_id else message.from_user
     info = sql.get_user_me_info(user.id)
 
     if info:
-        update.effective_message.reply_text(
+        await update.effective_message.reply_text(
             f"*{user.first_name}*:\n{escape_markdown(info)}",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         )
     elif message.reply_to_message:
         username = message.reply_to_message.from_user.first_name
-        update.effective_message.reply_text(
+        await update.effective_message.reply_text(
             f"{username} hasn't set an info message about themselves yet!",
         )
     else:
-        update.effective_message.reply_text("There isnt one, use /setme to set one.")
+        await update.effective_message.reply_text("There isn't one, use /setme to set one.")
 
 
-def set_about_me(update: Update, context: CallbackContext):
+async def set_about_me(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Set user's self-description."""
     message = update.effective_message
     user_id = message.from_user.id
+    
     if user_id in [777000, 1087968824]:
-        message.reply_text("Error! Unauthorized")
+        await message.reply_text("Error! Unauthorized")
         return
+        
     bot = context.bot
     if message.reply_to_message:
         repl_message = message.reply_to_message
         repl_user_id = repl_message.from_user.id
         if repl_user_id in [bot.id, 777000, 1087968824] and (user_id in DEV_USERS):
             user_id = repl_user_id
+            
     text = message.text
     info = text.split(None, 1)
     if len(info) == 2:
-        if len(info[1]) < MAX_MESSAGE_LENGTH // 4:
+        if len(info[1]) < MessageLimit.MAX_TEXT_LENGTH // 4:
             sql.set_user_me_info(user_id, info[1])
             if user_id in [777000, 1087968824]:
-                message.reply_text("Authorized...Information updated!")
+                await message.reply_text("Authorized...Information updated!")
             elif user_id == bot.id:
-                message.reply_text("I have updated my info with the one you provided!")
+                await message.reply_text("I have updated my info with the one you provided!")
             else:
-                message.reply_text("Information updated!")
+                await message.reply_text("Information updated!")
         else:
-            message.reply_text(
+            await message.reply_text(
                 "The info needs to be under {} characters! You have {}.".format(
-                    MAX_MESSAGE_LENGTH // 4,
+                    MessageLimit.MAX_TEXT_LENGTH // 4,
                     len(info[1]),
                 ),
             )
 
 
 @sudo_plus
-def stats(update: Update, context: CallbackContext):
-    m = update.effective_message.reply_text("Getting Stats...")
+async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Get system and bot statistics."""
+    m = await update.effective_message.reply_text("Getting Stats...")
     uptime = datetime.datetime.fromtimestamp(boot_time()).strftime("%Y-%m-%d %H:%M:%S")
     botuptime = get_readable_time((time.time() - StartTime))
     mem = virtual_memory()
     cpu = cpu_percent()
     disk = disk_usage("/")
     uname = platform.uname()
+    
     status = "<b>╔═━「 System Statistics 」</b>\n"
     status += "<b>• System uptime:</b> " + str(uptime) + "\n"
     status += "<b>• System:</b> " + str(uname.system) + "\n"
@@ -397,38 +466,41 @@ def stats(update: Update, context: CallbackContext):
     )
     result = re.sub(r"(\d+)", r"<code>\1</code>", status)
     result += "\n<b>╘═━「 Powered By @MerissaRobot 」</b>"
-    update.effective_message.reply_text(
+    
+    await update.effective_message.reply_text(
         result, parse_mode=ParseMode.HTML, disable_web_page_preview=True
     )
-    m.delete()
+    await m.delete()
 
 
-def about_bio(update: Update, context: CallbackContext):
+async def about_bio(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Get user's bio set by others."""
     bot, args = context.bot, context.args
     message = update.effective_message
 
     user_id = extract_user(message, args)
-    user = bot.get_chat(user_id) if user_id else message.from_user
+    user = await bot.get_chat(user_id) if user_id else message.from_user
     info = sql.get_user_bio(user.id)
 
     if info:
-        update.effective_message.reply_text(
+        await update.effective_message.reply_text(
             "*{}*:\n{}".format(user.first_name, escape_markdown(info)),
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         )
     elif message.reply_to_message:
         username = user.first_name
-        update.effective_message.reply_text(
+        await update.effective_message.reply_text(
             f"{username} hasn't had a message set about themselves yet!\nSet one using /setbio",
         )
     else:
-        update.effective_message.reply_text(
+        await update.effective_message.reply_text(
             "You haven't had a bio set about yourself yet!",
         )
 
 
-def set_about_bio(update: Update, context: CallbackContext):
+async def set_about_bio(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Set bio for another user."""
     message = update.effective_message
     sender_id = update.effective_user.id
     bot = context.bot
@@ -438,17 +510,17 @@ def set_about_bio(update: Update, context: CallbackContext):
         user_id = repl_message.from_user.id
 
         if user_id == message.from_user.id:
-            message.reply_text(
+            await message.reply_text(
                 "Ha, you can't set your own bio! You're at the mercy of others here...",
             )
             return
 
         if user_id in [777000, 1087968824] and sender_id not in DEV_USERS:
-            message.reply_text("You are not authorised")
+            await message.reply_text("You are not authorised")
             return
 
         if user_id == bot.id and sender_id not in DEV_USERS:
-            message.reply_text(
+            await message.reply_text(
                 "Erm... yeah, I only trust the Ackermans to set my bio.",
             )
             return
@@ -460,23 +532,32 @@ def set_about_bio(update: Update, context: CallbackContext):
         )  # use python's maxsplit to only remove the cmd, hence keeping newlines.
 
         if len(bio) == 2:
-            if len(bio[1]) < MAX_MESSAGE_LENGTH // 4:
+            if len(bio[1]) < MessageLimit.MAX_TEXT_LENGTH // 4:
                 sql.set_user_bio(user_id, bio[1])
-                message.reply_text(
+                await message.reply_text(
                     "Updated {}'s bio!".format(repl_message.from_user.first_name),
                 )
             else:
-                message.reply_text(
+                await message.reply_text(
                     "Bio needs to be under {} characters! You tried to set {}.".format(
-                        MAX_MESSAGE_LENGTH // 4,
+                        MessageLimit.MAX_TEXT_LENGTH // 4,
                         len(bio[1]),
                     ),
                 )
     else:
-        message.reply_text("Reply to someone to set their bio!")
+        await message.reply_text("Reply to someone to set their bio!")
 
 
-def __user_info__(user_id):
+def __user_info__(user_id: int) -> str:
+    """
+    Get formatted user info for display in info command.
+    
+    Args:
+        user_id: Telegram user ID
+        
+    Returns:
+        Formatted user info string
+    """
     bio = html.escape(sql.get_user_bio(user_id) or "")
     me = html.escape(sql.get_user_me_info(user_id) or "")
     result = ""
@@ -493,7 +574,7 @@ __help__ = """
 ❂ /id*:* get the current group id. If used by replying to a message, gets that user's id.
 ❂ /gifid*:* reply to a gif to me to tell you its file ID.
  
-*Self addded information:* 
+*Self added information:* 
 ❂ /setme <text>*:* will set your info
 ❂ /me*:* will get your or another user's info.
 Examples:
@@ -514,27 +595,29 @@ Examples:
 ❂ /json*:* Get Detailed info about any message.
 """
 
-SET_BIO_HANDLER = DisableAbleCommandHandler("setbio", set_about_bio, run_async=True)
-GET_BIO_HANDLER = DisableAbleCommandHandler("bio", about_bio, run_async=True)
+# Handler definitions for PTB v22
+SET_BIO_HANDLER = DisableAbleCommandHandler("setbio", set_about_bio)
+GET_BIO_HANDLER = DisableAbleCommandHandler("bio", about_bio)
 
-STATS_HANDLER = CommandHandler(["stats", "statistics"], stats, run_async=True)
-ID_HANDLER = DisableAbleCommandHandler("id", get_id, run_async=True)
-GIFID_HANDLER = DisableAbleCommandHandler("gifid", gifid, run_async=True)
-INFO_HANDLER = DisableAbleCommandHandler("info", info, run_async=True)
-SET_ABOUT_HANDLER = DisableAbleCommandHandler("setme", set_about_me, run_async=True)
-GET_ABOUT_HANDLER = DisableAbleCommandHandler("me", about_me, run_async=True)
+STATS_HANDLER = CommandHandler(["stats", "statistics"], stats)
+ID_HANDLER = DisableAbleCommandHandler("id", get_id)
+GIFID_HANDLER = DisableAbleCommandHandler("gifid", gifid)
+INFO_HANDLER = DisableAbleCommandHandler("info", info)
+SET_ABOUT_HANDLER = DisableAbleCommandHandler("setme", set_about_me)
+GET_ABOUT_HANDLER = DisableAbleCommandHandler("me", about_me)
 
-dispatcher.add_handler(STATS_HANDLER)
-dispatcher.add_handler(ID_HANDLER)
-dispatcher.add_handler(GIFID_HANDLER)
-dispatcher.add_handler(INFO_HANDLER)
-dispatcher.add_handler(SET_BIO_HANDLER)
-dispatcher.add_handler(GET_BIO_HANDLER)
-dispatcher.add_handler(SET_ABOUT_HANDLER)
-dispatcher.add_handler(GET_ABOUT_HANDLER)
+# Add handlers to application
+application.add_handler(STATS_HANDLER)
+application.add_handler(ID_HANDLER)
+application.add_handler(GIFID_HANDLER)
+application.add_handler(INFO_HANDLER)
+application.add_handler(SET_BIO_HANDLER)
+application.add_handler(GET_BIO_HANDLER)
+application.add_handler(SET_ABOUT_HANDLER)
+application.add_handler(GET_ABOUT_HANDLER)
 
 __mod_name__ = "UserInfo 👩‍💻"
-__command_list__ = ["setbio", "bio", "setme", "me", "info"]
+__command_list__ = ["setbio", "bio", "setme", "me", "info", "id", "gifid", "stats"]
 __handlers__ = [
     ID_HANDLER,
     GIFID_HANDLER,
