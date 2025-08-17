@@ -1,5 +1,4 @@
 from asyncio import sleep
-
 from pyrogram import filters
 from pyrogram.enums import ChatType
 from pyrogram.errors import MessageDeleteForbidden, RPCError
@@ -9,91 +8,51 @@ from MerissaRobot import SUPPORT_CHAT, pbot
 from MerissaRobot.Handler.pyro.permissions import adminsOnly
 
 
+async def _purge(c: pbot, m: Message, secure: bool = False):
+    if m.chat.type != ChatType.SUPERGROUP:
+        return await m.reply_text("❌ Purge only works in supergroups.")
+
+    if not m.reply_to_message:
+        return await m.reply_text("⚡ Reply to a message to start purging!")
+
+    # Collect all messages from replied msg to command msg
+    message_ids = list(range(m.reply_to_message.id, m.id + 1))
+
+    # Split into chunks of 100 (API limit)
+    def chunks(seq, size=100):
+        for i in range(0, len(seq), size):
+            yield seq[i : i + size]
+
+    try:
+        for part in chunks(message_ids):
+            await c.delete_messages(m.chat.id, part, revoke=True)
+
+        if not secure:  # /purge sends a confirmation
+            z = await m.reply_text(f"✅ Deleted <i>{len(message_ids)}</i> messages")
+            await sleep(5)
+            await z.delete()
+
+    except MessageDeleteForbidden:
+        return await m.reply_text(
+            "⚠️ Cannot delete all messages. They might be too old, "
+            "I might not have delete rights, or this chat is not a supergroup."
+        )
+    except RPCError as e:
+        return await m.reply_text(
+            f"⚠️ Error occurred, please report to @{SUPPORT_CHAT}\n\n"
+            f"<b>Error:</b> <code>{e}</code>"
+        )
+
+
 @pbot.on_message(filters.command("purge"))
 async def purge(c: pbot, m: Message):
-    if m.chat.type != ChatType.SUPERGROUP:
-        await m.reply_text(text="ᴄᴀɴɴᴏᴛ ᴘᴜʀɢᴇ ᴍᴇssᴀɢᴇs ɪɴ ᴀ ʙᴀsɪᴄ ɢʀᴏᴜᴘ")
-        return
-
-    if m.reply_to_message:
-        message_ids = list(range(m.reply_to_message.id, m.id))
-
-        def divide_chunks(l: list, n: int = 100):
-            for i in range(0, len(l), n):
-                yield l[i : i + n]
-
-        # Dielete messages in chunks of 100 messages
-        m_list = list(divide_chunks(message_ids))
-
-        try:
-            for plist in m_list:
-                await c.delete_messages(
-                    chat_id=m.chat.id,
-                    message_ids=plist,
-                    revoke=True,
-                )
-            await m.delete()
-        except MessageDeleteForbidden:
-            await m.reply_text(
-                text="ᴄᴀɴɴᴏᴛ ᴅᴇʟᴇᴛᴇ ᴀʟʟ ᴍᴇssᴀɢᴇs. ᴛʜᴇ ᴍᴇssᴀɢᴇs ᴍᴀʏ ʙᴇ ᴛᴏᴏ ᴏʟᴅ, I ᴍɪɢʜᴛ ɴᴏᴛ ʜᴀᴠᴇ ᴅᴇʟᴇᴛᴇ ʀɪɢʜᴛs, ᴏʀ ᴛʜɪs ᴍɪɢʜᴛ ɴᴏᴛ ʙᴇ ᴀ sᴜᴘᴇʀɢʀᴏᴜᴘ."
-            )
-            return
-        except RPCError as ef:
-            await m.reply_text(
-                text=f"""sᴏᴍᴇ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀᴇᴅ, ʀᴇᴘᴏʀᴛ ᴛᴏ @{SUPPORT_CHAT}
-
-      <b>ᴇʀʀᴏʀ:</b> <code>{ef}</code>"""
-            )
-
-        count_del_msg = len(message_ids)
-
-        z = await m.reply_text(text=f"ᴅᴇʟᴇᴛᴇᴅ <i>{count_del_msg}</i> messages")
-        await sleep(3)
-        await z.delete()
-        return
-    await m.reply_text("ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ sᴛᴀʀᴛ ᴘᴜʀɢᴇ !")
-    return
+    await _purge(c, m, secure=False)
 
 
 @pbot.on_message(filters.command("spurge"))
 @adminsOnly("can_delete_messages")
 async def spurge(c: pbot, m: Message):
-    if m.chat.type != ChatType.SUPERGROUP:
-        await m.reply_text(text="ᴄᴀɴɴᴏᴛ ᴘᴜʀɢᴇ ᴍᴇssᴀɢᴇs ɪɴ ᴀ ʙᴀsɪᴄ ɢʀᴏᴜᴘ")
-        return
-
-    if m.reply_to_message:
-        message_ids = list(range(m.reply_to_message.id, m.id))
-
-        def divide_chunks(l: list, n: int = 100):
-            for i in range(0, len(l), n):
-                yield l[i : i + n]
-
-        # Dielete messages in chunks of 100 messages
-        m_list = list(divide_chunks(message_ids))
-
-        try:
-            for plist in m_list:
-                await c.delete_messages(
-                    chat_id=m.chat.id,
-                    message_ids=plist,
-                    revoke=True,
-                )
-            await m.delete()
-        except MessageDeleteForbidden:
-            await m.reply_text(
-                text="ᴄᴀɴɴᴏᴛ ᴅᴇʟᴇᴛᴇ ᴀʟʟ ᴍᴇssᴀɢᴇs. ᴛʜᴇ ᴍᴇssᴀɢᴇs ᴍᴀʏ ʙᴇ ᴛᴏᴏ ᴏʟᴅ, I ᴍɪɢʜᴛ ɴᴏᴛ ʜᴀᴠᴇ ᴅᴇʟᴇᴛᴇ ʀɪɢʜᴛs, ᴏʀ ᴛʜɪs ᴍɪɢʜᴛ ɴᴏᴛ ʙᴇ ᴀ sᴜᴘᴇʀɢʀᴏᴜᴘ."
-            )
-            return
-        except RPCError as ef:
-            await m.reply_text(
-                text=f"""sᴏᴍᴇ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀᴇᴅ, ʀᴇᴘᴏʀᴛ ᴛᴏ @{SUPPORT_CHAT}
-
-      <b>ᴇʀʀᴏʀ:</b> <code>{ef}</code>"""
-            )
-        return
-    await m.reply_text("ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ sᴛᴀʀᴛ sᴘᴜʀɢᴇ !")
-    return
+    await _purge(c, m, secure=True)
 
 
 @pbot.on_message(filters.command("del") & ~filters.private)
@@ -101,12 +60,11 @@ async def del_msg(c: pbot, m: Message):
     if m.chat.type != ChatType.SUPERGROUP:
         return
 
-    if m.reply_to_message:
+    if not m.reply_to_message:
+        return await m.reply_text("❓ What do you want me to delete?")
+
+    try:
         await m.delete()
-        await c.delete_messages(
-            chat_id=m.chat.id,
-            message_ids=m.reply_to_message.id,
-        )
-    else:
-        await m.reply_text(text="ᴡʜᴀᴛ ᴅᴏ ʏᴏᴜ ᴡᴀɴɴᴀ ᴅᴇʟᴇᴛᴇ?")
-    return
+        await c.delete_messages(m.chat.id, m.reply_to_message.id)
+    except MessageDeleteForbidden:
+        await m.reply_text("⚠️ Cannot delete that message (maybe too old or no rights).")
