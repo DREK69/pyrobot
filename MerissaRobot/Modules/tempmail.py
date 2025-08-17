@@ -1,200 +1,160 @@
 import random
-
+import aiohttp
 import bs4
-import requests
 from pykeyboard import InlineKeyboard
-from pyrogram import *
-from pyrogram.errors import *
+from pyrogram import filters
 from pyrogram.types import *
 from RandomWordGenerator import RandomWord
 
 from MerissaRobot import pbot as app
 from MerissaRobot.helpers import subscribe
 
-# ********************************************************************************
-
 API1 = "https://www.1secmail.com/api/v1/?action=getDomainList"
 API2 = "https://www.1secmail.com/api/v1/?action=getMessages&login="
 API3 = "https://www.1secmail.com/api/v1/?action=readMessage&login="
 
-# ********************************************************************************
+
+async def fetch_json(url, params=None):
+    """Helper to fetch JSON asynchronously."""
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, params=params) as resp:
+            return await resp.json()
 
 
 @app.on_message(filters.command("genmail"))
 @subscribe
 async def fakemailgen(client, message: Message):
-    name = message.from_user.id
+    user_id = message.from_user.id
     rp = RandomWord(max_word_size=8, include_digits=True)
     email = rp.generate()
-    xx = requests.get(API1).json()
-    domain = random.choice(xx)
-    # print(email)
-    mes = await app.send_message(
-        name,
+
+    domains = await fetch_json(API1)
+    domain = random.choice(domains)
+
+    await app.send_message(
+        user_id,
         text=f"""
-**📬 Done,Your Email Address Created!**
+**📬 Temp-Mail Created!**
 📧 **Email** : `{email}@{domain}`
 📨 **Mail BOX** : `empty`
-♨️ **Powered by** : @MerissaRobot """,
+♨️ Powered by : @MerissaRobot
+""",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton(
-                        "🔁 Refresh", callback_data=f"mailbox |{email}|{domain}"
-                    ),
+                    InlineKeyboardButton("🔁 Refresh", callback_data=f"mailbox|{email}|{domain}"),
                     InlineKeyboardButton("🗑️ Delete", callback_data="cb_close"),
                 ]
             ]
         ),
     )
-    pi = await mes.pin(disable_notification=True, both_sides=True)
-    await pi.delete()
 
 
 @app.on_message(filters.command("set"))
 @subscribe
 async def setmailgen(client, message: Message):
-    name = message.from_user.id
+    user_id = message.from_user.id
     if len(message.command) < 2:
-        return await message.reply_text(
-            "Give me some text to make Tempmail\n\nEx. /set Merissarobot"
-        )
+        return await message.reply_text("❌ Usage: `/set username`")
+
     email = message.text.split(None, 1)[1]
-    xx = requests.get(API1).json()
-    domain = random.choice(xx)
-    # print(email)
-    mes = await app.send_message(
-        name,
+    domains = await fetch_json(API1)
+    domain = random.choice(domains)
+
+    await app.send_message(
+        user_id,
         text=f"""
-**📬 Done,Your Email Address Created!**
+**📬 Temp-Mail Created!**
 📧 **Email** : `{email}@{domain}`
 📨 **Mail BOX** : `empty`
-♨️ **Powered by** : @MerissaRobot """,
+♨️ Powered by : @MerissaRobot
+""",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton(
-                        "🔁 Refresh", callback_data=f"mailbox |{email}|{domain}"
-                    ),
+                    InlineKeyboardButton("🔁 Refresh", callback_data=f"mailbox|{email}|{domain}"),
                     InlineKeyboardButton("🗑️ Delete", callback_data="cb_close"),
                 ]
             ]
         ),
     )
-    pi = await mes.pin(disable_notification=True, both_sides=True)
-    await pi.delete()
 
 
 async def gen_keyboard(mails, email, domain):
-    num = 0
-    i_kbd = InlineKeyboard(row_width=1)
-    data = []
-    for mail in mails:
-        id = mail["id"]
-        data.append(
-            InlineKeyboardButton(f"{mail['subject']}", f"mail {email}|{domain}|{id}")
-        )
-        num += 1
-    data.append(InlineKeyboardButton("🔁 Refresh", f"mailbox {email}|{domain}"))
-    i_kbd.add(*data)
-    return i_kbd
-
-
-# ********************************************************************************
+    """Generate inline keyboard for available mails."""
+    buttons = [
+        [InlineKeyboardButton(f"{mail['subject'] or 'No Subject'}", callback_data=f"mail|{email}|{domain}|{mail['id']}")]
+        for mail in mails
+    ]
+    buttons.append([InlineKeyboardButton("🔁 Refresh", callback_data=f"mailbox|{email}|{domain}")])
+    return InlineKeyboardMarkup(buttons)
 
 
 @app.on_callback_query(filters.regex("^mailbox"))
-async def mail_box(_, query: CallbackQuery):
-    Data = query.data
-    callback_request = Data.split(None, 1)[1]
-    email, domain = callback_request.split("|")
-    mails = requests.get(f"{API2}{email}&domain={domain}").json()
-    if mails == []:
-        await query.answer("🤷‍♂️ No Mails found!")
-    else:
-        try:
-            smail = f"{email}@{domain}"
-            mbutton = await gen_keyboard(mails, email, domain)
-            await query.message.edit(
-                f""" 
-**📬 Done,Your Email Address Created!**
-📧 **Email** : `{smail}`
-📨 **Mail BOX** : ✅
-**♨️ Powered by** : @MerissaRobot""",
-                reply_markup=mbutton,
-            )
-        except bad_request_400.MessageNotModified as e:
-            await query.answer("🤷‍♂️ No New Mails found!")
+async def show_mailbox(_, query: CallbackQuery):
+    _, email, domain = query.data.split("|")
+    mails = await fetch_json(f"{API2}{email}&domain={domain}")
 
+    if not mails:
+        return await query.answer("📭 No new mails found!")
 
-# ********************************************************************************
+    keyboard = await gen_keyboard(mails, email, domain)
+    await query.message.edit_text(
+        f"""
+📧 **Email**: `{email}@{domain}`
+📨 **Mail BOX**: {len(mails)} message(s)
+♨️ Powered by : @MerissaRobot
+""",
+        reply_markup=keyboard,
+    )
 
 
 @app.on_callback_query(filters.regex("^mail"))
-async def mail_box(_, query: CallbackQuery):
-    Data = query.data
-    callback_request = Data.split(None, 1)[1]
-    email, domain, id = callback_request.split("|")
-    mail = requests.get(f"{API3}{email}&domain={domain}&id={id}").json()
-    froms = mail["from"]
-    subject = mail["subject"]
-    date = mail["date"]
-    if mail["textBody"] == "":
-        kk = mail["htmlBody"]
-        body = bs4.BeautifulSoup(kk, "lxml")
-        txt = body.get_text()
-        text = " ".join(txt.split())
-        url_part = body.find("a")
-        link = url_part["href"]
-        mbutton = InlineKeyboardMarkup(
-            [
-                [InlineKeyboardButton("🔗 Open Link", url=link)],
-                [InlineKeyboardButton("🔙 Back", f"mailbox |{email}|{domain}")],
-            ]
-        )
-        await query.message.edit(
-            f""" 
-**From:** `{froms}`
-**Subject:** `{subject}`   
-**Date**: `{date}`
-{text}
-""",
-            reply_markup=mbutton,
-            disable_web_page_preview=True,
-        )
+async def show_mail(_, query: CallbackQuery):
+    _, email, domain, mail_id = query.data.split("|")
+    mail = await fetch_json(f"{API3}{email}&domain={domain}&id={mail_id}")
+
+    froms = mail.get("from", "Unknown")
+    subject = mail.get("subject", "No Subject")
+    date = mail.get("date", "Unknown")
+    body = mail.get("textBody", "")
+
+    if not body:
+        # Parse HTML body
+        html = mail.get("htmlBody", "")
+        soup = bs4.BeautifulSoup(html, "lxml")
+        text = " ".join(soup.get_text().split())
+        links = soup.find_all("a")
+
+        buttons = [[InlineKeyboardButton("🔙 Back", callback_data=f"mailbox|{email}|{domain}")]]
+        if links:
+            for i, link in enumerate(links[:3], start=1):  # show max 3 links
+                buttons.insert(0, [InlineKeyboardButton(f"🔗 Link {i}", url=link.get("href"))])
+
+        reply_markup = InlineKeyboardMarkup(buttons)
+        body = text
     else:
-        body = mail["textBody"]
-        mbutton = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("🔙 Back", f"mailbox |{email}|{domain}")]]
+        reply_markup = InlineKeyboardMarkup(
+            [[InlineKeyboardButton("🔙 Back", callback_data=f"mailbox|{email}|{domain}")]]
         )
-        await query.message.edit(
-            f""" 
+
+    await query.message.edit_text(
+        f"""
 **From:** `{froms}`
-**Subject:** `{subject}`   
-**Date**: `{date}`
+**Subject:** `{subject}`
+**Date:** `{date}`
+
 {body}
 """,
-            reply_markup=mbutton,
-            disable_web_page_preview=True,
-        )
-
-
-# ********************************************************************************
+        reply_markup=reply_markup,
+        disable_web_page_preview=True,
+    )
 
 
 @app.on_message(filters.command("domains"))
-async def fakemailgen(_, message: Message):
-    name = message.from_user.id
-    x = requests.get(f"https://www.1secmail.com/api/v1/?action=getDomainList").json()
-    xx = str(",".join(x))
-    email = xx.replace(",", "\n")
-    await app.send_message(
-        name,
-        text=f"""
-**{email}**
-""",
-    )
-
+async def list_domains(_, message: Message):
+    domains = await fetch_json(API1)
+    await message.reply_text("📋 Available Domains:\n\n" + "\n".join(domains))
 
 __help__ = """
 You can generate Temp-Mail from MerissaRobot 
