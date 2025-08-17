@@ -1,9 +1,21 @@
 import base64
-
 import requests
 from pyrogram import filters
-
 from MerissaRobot import pbot
+
+
+# Available colors (add aur bhi kar sakte ho)
+COLOR_MAP = {
+    "red": "#FF0000",
+    "blue": "#0000FF",
+    "green": "#008000",
+    "yellow": "#FFFF00",
+    "black": "#000000",
+    "white": "#FFFFFF",
+    "purple": "#800080",
+    "orange": "#FFA500",
+    "pink": "#FFC0CB",
+}
 
 
 @pbot.on_message(filters.command(["q", "qu", "qt", "quote"]))
@@ -11,95 +23,52 @@ async def quote(client, m):
     qse = await m.reply_text("`Quoting..`")
     messages = []
 
+    # --- User dict banane ka helper
     def create_user_dict(user):
         if user is None:
             return {}
-
-        if not user.first_name:
-            first_name = ""
-        else:
-            first_name = user.first_name
-
-        if not user.last_name:
-            last_name = ""
-        else:
-            last_name = user.last_name
-
-        if user.photo:
-            small_id = user.photo.small_file_id
-            small_unique = user.photo.small_photo_unique_id
-            big_id = user.photo.big_file_id
-            big_unique = user.photo.big_photo_unique_id
-        else:
-            small_id = small_unique = big_id = big_unique = None
-
         return {
             "id": user.id,
-            "first_name": first_name,
-            "last_name": last_name,
+            "first_name": user.first_name or "",
+            "last_name": user.last_name or "",
             "username": user.username,
-            "language_code": "eu",
-            "title": f"{first_name} {last_name}",
+            "language_code": "en",
+            "title": f"{user.first_name or ''} {user.last_name or ''}",
             "photo": {
-                "small_file_id": small_id,
-                "small_file_unique_id": small_unique,
-                "big_file_id": big_id,
-                "big_file_unique_id": big_unique,
-            },
+                "small_file_id": getattr(user.photo, "small_file_id", None),
+                "small_file_unique_id": getattr(user.photo, "small_photo_unique_id", None),
+                "big_file_id": getattr(user.photo, "big_file_id", None),
+                "big_file_unique_id": getattr(user.photo, "big_photo_unique_id", None),
+            } if user.photo else {},
             "type": "private",
-            "name": f"{first_name} {last_name}",
+            "name": f"{user.first_name or ''} {user.last_name or ''}",
         }
 
-    if m.reply_to_message and len(m.command) > 1:
-        num = m.reply_to_message.id
-        if m.command[1].isdigit():
-            for i in range(int(m.command[1])):
-                mes = await client.get_messages(m.chat.id, num + i)
-                u = mes.from_user
-                if not u.first_name:
-                    first_name = ""
-                else:
-                    first_name = u.first_name
-                if not u.last_name:
-                    last_name = ""
-                else:
-                    last_name = u.last_name
-                if u.photo:
-                    small_id = u.photo.small_file_id
-                    small_unique = u.photo.small_photo_unique_id
-                    big_id = u.photo.big_file_id
-                    big_unique = u.photo.big_photo_unique_id
-                else:
-                    small_id = small_unique = big_id = big_unique = None
-                uu = {
-                    "id": u.id,
-                    "first_name": first_name,
-                    "last_name": last_name,
-                    "username": u.username,
-                    "language_code": "eu",
-                    "title": f"{first_name} {last_name}",
-                    "photo": {
-                        "small_file_id": small_id,
-                        "small_file_unique_id": small_unique,
-                        "big_file_id": big_id,
-                        "big_file_unique_id": big_unique,
-                    },
-                    "type": "private",
-                    "name": f"{first_name} {last_name}",
-                }
-                me = {
-                    "entities": [],
-                    "chatId": m.chat.id,
-                    "avatar": True,
-                    "from": uu,
-                    "text": mes.text,
-                    "replyMessage": {},
-                }
-                messages.append(me)
+    # --- Background color detect karna
+    bg_color = "#1b1429"  # default
+    if len(m.command) > 1:
+        col = m.command[1].lower()
+        if col in COLOR_MAP:
+            bg_color = COLOR_MAP[col]
 
-    elif (m.text.startswith(("/q ", "/qu ", "/qt ", "/quote "))) and (
-        not m.reply_to_message
-    ):
+    # --- Case 1: Reply + number of msgs
+    if m.reply_to_message and len(m.command) > 1 and m.command[1].isdigit():
+        num = m.reply_to_message.id
+        for i in range(int(m.command[1])):
+            mes = await client.get_messages(m.chat.id, num + i)
+            uu = create_user_dict(mes.from_user)
+            me = {
+                "entities": [],
+                "chatId": m.chat.id,
+                "avatar": True,
+                "from": uu,
+                "text": mes.text,
+                "replyMessage": {},
+            }
+            messages.append(me)
+
+    # --- Case 2: Direct /q text
+    elif (m.text.startswith(("/q ", "/qu ", "/qt ", "/quote "))) and (not m.reply_to_message):
         text_input = m.text.split(maxsplit=1)[1]
         me = {
             "entities": [],
@@ -110,21 +79,11 @@ async def quote(client, m):
         }
         messages.append(me)
 
-    elif (
-        m.text == "/q" or m.text == "/qu" or m.text == "/qt" or m.text == "/quote"
-    ) and (m.reply_to_message):
+    # --- Case 3: Reply to message only
+    elif (m.text in ["/q", "/qu", "/qt", "/quote"]) and (m.reply_to_message):
         mes = m.reply_to_message
-        u = mes.from_user
-        if not u.first_name:
-            first_name = ""
-        else:
-            first_name = u.first_name
-        if not u.last_name:
-            last_name = ""
-        else:
-            last_name = u.last_name
-        if mes.reply_to_message:
-            uu = create_user_dict(u)
+        uu = create_user_dict(mes.from_user)
+        if mes.reply_to_message:  # quoted reply
             reply_message = {
                 "text": mes.reply_to_message.text,
                 "name": mes.reply_to_message.from_user.first_name,
@@ -138,9 +97,7 @@ async def quote(client, m):
                 "text": mes.text,
                 "replyMessage": reply_message,
             }
-            messages.append(me)
-        elif mes:
-            uu = create_user_dict(u)
+        else:
             me = {
                 "entities": [],
                 "chatId": m.chat.id,
@@ -148,24 +105,24 @@ async def quote(client, m):
                 "from": uu,
                 "text": mes.text,
             }
-            messages.append(me)
+        messages.append(me)
 
     else:
-        await qse.edit(
-            "`Invalid usage. Reply to a text message or provide text along with the command.`"
-        )
+        await qse.edit("`Invalid usage. Reply to a text message or provide text with the command.`")
         return
 
+    # --- API payload
     text = {
         "type": "quote",
         "format": "png",
-        "backgroundColor": "#1b1429",
+        "backgroundColor": bg_color,
         "width": 512,
         "height": 768,
         "scale": 4,
         "messages": messages,
     }
 
+    # --- Request to API
     try:
         r = requests.post("https://bot.lyo.su/quote/generate", json=text)
         response_data = r.json()
@@ -174,5 +131,5 @@ async def quote(client, m):
         open("qt.webp", "wb").write(im)
         await m.reply_sticker("qt.webp")
         await qse.delete()
-    except KeyError:
-        await qse.edit("`Error occurred while generating the quote. Please try again.`")
+    except Exception as e:
+        await qse.edit(f"`Error occurred: {e}`")
