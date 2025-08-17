@@ -10,6 +10,7 @@ from MerissaRobot.helpers import postreq
 
 
 async def take_screenshot(url: str, full: bool = False):
+    """Fetch screenshot from external API"""
     url = "https://" + url if not url.startswith("http") else url
     payload = {
         "url": url,
@@ -20,60 +21,56 @@ async def take_screenshot(url: str, full: bool = False):
     }
     if full:
         payload["full"] = True
-    data = await postreq(
-        "https://webscreenshot.vercel.app/api",
-        data=payload,
-    )
-    if "image" not in data:
-        return None
-    b = data["image"].replace("data:image/jpeg;base64,", "")
-    file = BytesIO(b64decode(b))
-    file.name = "webss.jpg"
-    return file
+
+    try:
+        data = await postreq("https://webscreenshot.vercel.app/api", data=payload)
+    except Exception as e:
+        return None, f"API request failed: {e}"
+
+    if not isinstance(data, dict) or "image" not in data:
+        return None, "Invalid response from screenshot API."
+
+    try:
+        b = data["image"].replace("data:image/jpeg;base64,", "")
+        file = BytesIO(b64decode(b))
+        file.name = "screenshot.jpg"
+        return file, None
+    except Exception as e:
+        return None, f"Failed to decode image: {e}"
 
 
 async def eor(msg: Message, **kwargs):
-    func = (
-        (msg.edit_text if msg.from_user.is_self else msg.reply)
-        if msg.from_user
-        else msg.reply
-    )
-    spec = getfullargspec(func.__wrapped__).args
+    """Smart edit-or-reply"""
+    func = msg.edit_text if msg.from_user and msg.from_user.is_self else msg.reply
+    spec = getfullargspec(func).args
     return await func(**{k: v for k, v in kwargs.items() if k in spec})
 
 
 @app.on_message(filters.command(["webss", "ss", "webshot"]))
 async def take_ss(_, message: Message):
+    """Capture website screenshot"""
     if len(message.command) < 2:
-        return await eor(message, text="Give Url to fetch Screenshot.")
+        return await eor(message, text="❌ Please provide a URL.\n\nExample: `/webss github.com`")
 
-    if len(message.command) == 2:
-        url = message.text.split(None, 1)[1]
-        full = False
-    elif len(message.command) == 3:
-        url = message.text.split(None, 2)[1]
-        full = message.text.split(None, 2)[2].lower().strip() in [
-            "yes",
-            "y",
-            "1",
-            "true",
-        ]
-    else:
-        return await eor(message, text="Invalid Command.")
+    url = message.command[1]
+    full = False
+    if len(message.command) > 2:
+        full = message.command[2].lower().strip() in ["yes", "y", "1", "true", "full"]
 
-    m = await eor(message, text="Capturing Screenshot...")
+    status = await eor(message, text="📸 Capturing screenshot...")
+
+    photo, error = await take_screenshot(url, full)
+    if error:
+        return await status.edit(f"❌ {error}")
+
+    if not photo:
+        return await status.edit("⚠️ Failed to capture screenshot.")
 
     try:
-        photo = await take_screenshot(url, full)
-        if not photo:
-            return await m.edit("Failed to take Screenshot.")
-
-        m = await m.edit("Uploading...")
-
-        if not full:
-            await message.reply_document(photo)
+        if full:
+            await message.reply_document(photo, caption=f"🌐 Screenshot of: `{url}`\n(Full Page)")
         else:
-            await message.reply_document(photo)
-        await m.delete()
+            await message.reply_photo(photo, caption=f"🌐 Screenshot of: `{url}`")
+        await status.delete()
     except Exception as e:
-        await m.edit(str(e))
+        await status.edit(f"❌ Upload failed: `{e}`")
