@@ -1,23 +1,23 @@
 import os
 from os import getenv
 
-TOKEN = os.environ.get("TOKEN", "5294959338:AAFdlTe4B6o7lrvCgH1qkxFZAUTqXAMMYeI")
+TOKEN = os.environ.get("TOKEN", "8343128787:AAETq0rin1nmlnX34BISdoWjJ_MhtO8EREc")
 INFOPIC = bool(os.environ.get("INFOPIC", True))
 BOT_USERNAME = os.environ.get("BOT_USERNAME", "MerissaRobot")
-EVENT_LOGS = os.environ.get("EVENT_LOGS", "-1001325865052")
+EVENT_LOGS = os.environ.get("EVENT_LOGS", "-1002846516370")
 WEBHOOK = bool(os.environ.get("WEBHOOK", False))
 URL = os.environ.get("URL", "")  # Does not contain token
 PORT = int(os.environ.get("PORT", 5000))
 CERT_PATH = os.environ.get("CERT_PATH")
-API_ID = os.environ.get("API_ID", "8673250")
-ERROR_LOG = os.environ.get("ERROR_LOG", "-1001446814207")
-API_HASH = os.environ.get("API_HASH", "bab0eb3130eb4930cc40112635b2dc4d")
+API_ID = os.environ.get("API_ID", "25723056")
+ERROR_LOG = os.environ.get("ERROR_LOG", "-1002846516370")
+API_HASH = os.environ.get("API_HASH", "cbda56fac135e92b755e1243aefe9697")
 STRING_SESSION = getenv(
     "STRING_SESSION",
-    "AQDUFcUAh8ucv-_a0uHS9KhL5Odm2wIxq8PYBs7NzZOovQDE5rC3jWXkHe7Fv0nmof0omzzKda-gNfeupx0kVYI5B8abFThzOhosyfzSMA13hXRYnIPF7Qf2e0vHae07NTbLS7vgc-6pXHQlZmc6ctKCylAN7CKKnQXJft0xtek7YV2yuWOAmGxihIfWpAFMZ3WN4KJzogtHfkcTZ8ogKySPMksOVs9oWcEb7GXsGfesndtynpK3eBE6bEAfyjSMr8vp-9rIUmVqLmgT_r5SSb4GPcROQKpB_vN_tTBdUWAvPv45Gv2OTjhyElNbPG3Pvv-43KmCgkkVYsVQiLDWmV2D-V47JgAAAAE46AF6AA",
+    "BQE7GRoAqfxmUYdhxMKjl2ZqWVSy9rAcc3Y_I-5CA6Tvr-3AS-3P3DhFDlCG8e_-WU5thTWIHjL6Z9EBvMmMkXOD9w0BzBIJRvc1DLAeGBsPFW03ddq4vOMMjR98mkDIb5070IiJ7JhitH-2YFxHqCOcT53f9TYzgKGmb1HM_SSUI4k01swCjki8ROzhC3S2bBQSZi2GgbMfsGHCzPl-v0UTU6yV4H7nDe5JE6cnzyw9mkw_V5zs1z0qsipg48dzMV09Dwb3Pidc17-XW2G7YfS3wErIzZ0Mar0-4Pzl4aEK3zW-QInDWDDymAq5WgpWqdypzXk6qSKuf_1LkC1G2IUHS-xB_AAAAAHZqc2lAA",
 )
 MERISSA_TOKEN = os.environ.get("MERISSA_TOKEN", "nZWMiKdkDvSJMmSm")
-OWNER_ID = int(os.environ.get("OWNER_ID", "2030709195"))
+OWNER_ID = int(os.environ.get("OWNER_ID", "7110457701"))
 BL_CHATS = set(int(x) for x in os.environ.get("BL_CHATS", "").split())
 DEMONS = set(int(x) for x in os.environ.get("DEMONS", "").split())
 DRAGONS = set(int(x) for x in os.environ.get("DRAGONS", "").split())
@@ -25,7 +25,7 @@ DEV_USERS = set(int(x) for x in os.environ.get("DEV_USERS", "2030709195").split(
 WOLVES = set(int(x) for x in os.environ.get("WOLVES", "").split())
 TIGERS = set(int(x) for x in os.environ.get("TIGERS", "").split())
 JOIN_LOGGER = os.environ.get("JOIN_LOGGER", "-1001325865052")
-OWNER_USERNAME = os.environ.get("OWNER_USERNAME", "NoobxCoder")
+OWNER_USERNAME = os.environ.get("OWNER_USERNAME", "DEPSTEY")
 FORCE_CHANNEL = int(os.environ.get("FORCE_CHANNEL", "-1001703270696"))
 DB_URL = os.environ.get(
     "DATABASE_URL",
