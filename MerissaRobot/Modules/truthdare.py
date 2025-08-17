@@ -1,41 +1,42 @@
 import random
 
 from telegram import Update
-from telegram.ext import CallbackContext
+from telegram.ext import ContextTypes
 
-from MerissaRobot import dispatcher
+from MerissaRobot import application
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 TRUTH = (
-    "Have you ghosted someone?" "Have you ever walked in on your parents doing 'it'?",
+    "Have you ghosted someone?",
+    "Have you ever walked in on your parents doing 'it'?",
     "Who was the last person you liked the most? Why?",
     "Have you ever been suspended from school?",
     "If you had to choose between going naked or having your thoughts appear in thought bubbles above your head for everyone to read, which would you choose?",
-    "What’s the one thing you’re afraid to lose?",
+    "What's the one thing you're afraid to lose?",
     "Do you like someone as of the moment?",
     "One thing about your best friend you are jealous of?",
     "Would you cheat on your boyfriend for a rich guy?",
     "What is your biggest turn on?",
-    "When’s the last time you lied to your parents and why?",
+    "When's the last time you lied to your parents and why?",
     "Describe your ideal partner.",
-    "What’s the scariest thing you’ve ever done?",
+    "What's the scariest thing you've ever done?",
     "Have you ever picked your nose and eaten it?",
-    "When’s the last time you lied to your parents and why?",
+    "When's the last time you lied to your parents and why?",
     "Have you ever lied about your age to participate in a contest?",
     "Have you ever been caught checking someone out?",
 )
 
 DARE = (
-    "Show the most embarrassing photo on your phone"
+    "Show the most embarrassing photo on your phone",
     "Show the last five people you texted and what the messages said",
     "Let the rest of the group DM someone from your Instagram account",
     "Eat a raw piece of garlic",
     "Do 100 squats",
     "Keep three ice cubes in your mouth until they melt",
-    "Say something dirty to the person on your leftYou've got company!",
+    "Say something dirty to the person on your left",
     "Give a foot massage to the person on your right",
     "Put 10 different available liquids into a cup and drink it",
-    "*Yell out the first word that comes to your mind",
+    "Yell out the first word that comes to your mind",
     "Give a lap dance to someone of your choice",
     "Remove four items of clothing",
     "Like the first 15 posts on your Facebook newsfeed",
@@ -74,23 +75,24 @@ DARE = (
     "Confess to your current crush. ❤️",
     "Declare who is your true love.",
     "Send a screenshot of your gallery.",
-    "Set your crush’s picture as your dp.",
+    "Set your crush's picture as your dp.",
     "Suggest me more dares.",
 )
 
 
-def truth(update: Update, context: CallbackContext):
-    context.args
-    update.effective_message.reply_text(random.choice(TRUTH))
+async def truth(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.effective_message.reply_text(random.choice(TRUTH))
 
 
-def dare(update: Update, context: CallbackContext):
-    context.args
-    update.effective_message.reply_text(random.choice(DARE))
+async def dare(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.effective_message.reply_text(random.choice(DARE))
 
 
-TRUTH_HANDLER = DisableAbleCommandHandler("truth", truth, run_async=True)
-DARE_HANDLER = DisableAbleCommandHandler("dare", dare, run_async=True)
+TRUTH_HANDLER = DisableAbleCommandHandler("truth", truth)
+DARE_HANDLER = DisableAbleCommandHandler("dare", dare)
 
-dispatcher.add_handler(TRUTH_HANDLER)
-dispatcher.add_handler(DARE_HANDLER)
+application.add_handler(TRUTH_HANDLER)
+application.add_handler(DARE_HANDLER)
+
+__command_list__ = ["truth", "dare"]
+__handlers__ = [TRUTH_HANDLER, DARE_HANDLER]
