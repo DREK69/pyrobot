@@ -12,12 +12,12 @@ from telegram import (
     Update,
     User,
 )
+from telegram.constants import ParseMode
 from telegram.error import BadRequest
-from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler
-from telegram.parsemode import ParseMode
-from telegram.utils.helpers import mention_html
+from telegram.ext import ContextTypes, CallbackQueryHandler, CommandHandler
+from telegram.helpers import mention_html
 
-from MerissaRobot import LOGGER, TIGERS, dispatcher
+from MerissaRobot import LOGGER, TIGERS, application
 from MerissaRobot.Handler.ptb.chat_status import (
     bot_admin,
     can_delete,
@@ -32,13 +32,13 @@ from MerissaRobot.Handler.ptb.string_handling import extract_time
 from MerissaRobot.Modules.log_channel import loggable
 
 
-def check_user(user_id: int, bot: Bot, chat: Chat) -> Optional[str]:
+async def check_user(user_id: int, bot: Bot, chat: Chat) -> Optional[str]:
     if not user_id:
         reply = "⚠️ User not found"
         return reply
 
     try:
-        member = chat.get_member(user_id)
+        member = await chat.get_member(user_id)
     except BadRequest as excp:
         if excp.message == "User not found":
             reply = "I can't seem to find this user"
@@ -60,24 +60,25 @@ def check_user(user_id: int, bot: Bot, chat: Chat) -> Optional[str]:
 @bot_admin
 @user_admin
 @loggable
-def mute(update: Update, context: CallbackContext) -> str:
+async def mute(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     bot, args = context.bot, context.args
     chat = update.effective_chat
     user = update.effective_user
     message = update.effective_message
 
     user_id, reason = extract_user_and_text(message, args)
-    reply = check_user(user_id, bot, chat)
+    reply = await check_user(user_id, bot, chat)
 
     if reply:
-        message.reply_text(reply)
+        await message.reply_text(reply)
         return ""
 
-    member = chat.get_member(user_id)
+    member = await chat.get_member(user_id)
     if message.text.startswith("/s"):
-        update.effective_message.delete()
+        await update.effective_message.delete()
     else:
         return ""
+    
     log = (
         f"<b>{html.escape(chat.title)}:</b>\n"
         f"#MUTE\n"
@@ -90,7 +91,7 @@ def mute(update: Update, context: CallbackContext) -> str:
 
     if member.can_send_messages is None or member.can_send_messages:
         chat_permissions = ChatPermissions(can_send_messages=False)
-        bot.restrict_chat_member(chat.id, user_id, chat_permissions)
+        await bot.restrict_chat_member(chat.id, user_id, permissions=chat_permissions)
         msg = f"{mention_html(member.user.id, member.user.first_name)} [<code>{member.user.id}</code>] Is now 🔇 Muted."
         if reason:
             msg += f"\nReason: {html.escape(reason)}"
@@ -104,15 +105,15 @@ def mute(update: Update, context: CallbackContext) -> str:
                 ]
             ]
         )
-        bot.sendMessage(
+        await bot.send_message(
             chat.id,
             msg,
             reply_markup=keyboard,
             parse_mode=ParseMode.HTML,
         )
         return log
-    message.reply_text("This user is already muted!")
-
+    
+    await message.reply_text("This user is already muted!")
     return ""
 
 
@@ -120,7 +121,7 @@ def mute(update: Update, context: CallbackContext) -> str:
 @bot_admin
 @user_admin
 @loggable
-def dmute(update: Update, context: CallbackContext) -> str:
+async def dmute(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     bot = context.bot
     args = context.args
 
@@ -129,20 +130,20 @@ def dmute(update: Update, context: CallbackContext) -> str:
     message = update.effective_message
 
     user_id, reason = extract_user_and_text(message, args)
-    check_user(user_id, bot, chat)
+    await check_user(user_id, bot, chat)
 
     if message.reply_to_message:
         user = update.effective_user  # type: Optional[User]
         chat = update.effective_chat  # type: Optional[Chat]
         if can_delete(chat, bot.id):
-            update.effective_message.reply_to_message.delete()
+            await update.effective_message.reply_to_message.delete()
     else:
-        message.reply_text(
+        await message.reply_text(
             "You have to reply to a message to delete it and ban the user."
         )
         return ""
 
-    member = chat.get_member(user_id)
+    member = await chat.get_member(user_id)
     log = (
         f"<b>{html.escape(chat.title)}:</b>\n"
         f"#MUTE\n"
@@ -155,8 +156,8 @@ def dmute(update: Update, context: CallbackContext) -> str:
 
     if member.can_send_messages is None or member.can_send_messages:
         chat_permissions = ChatPermissions(can_send_messages=False)
-        bot.restrict_chat_member(chat.id, user_id, chat_permissions)
-        bot.sendMessage(
+        await bot.restrict_chat_member(chat.id, user_id, permissions=chat_permissions)
+        await bot.send_message(
             chat.id,
             f"Muted <b>{html.escape(member.user.first_name)}</b> with no expiration date!",
             parse_mode=ParseMode.HTML,
@@ -164,7 +165,7 @@ def dmute(update: Update, context: CallbackContext) -> str:
         return log
 
     else:
-        message.reply_text("This user is already muted!")
+        await message.reply_text("This user is already muted!")
 
     return ""
 
@@ -173,7 +174,7 @@ def dmute(update: Update, context: CallbackContext) -> str:
 @bot_admin
 @user_admin
 @loggable
-def unmute(update: Update, context: CallbackContext) -> str:
+async def unmute(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     bot, args = context.bot, context.args
     chat = update.effective_chat
     user = update.effective_user
@@ -181,15 +182,15 @@ def unmute(update: Update, context: CallbackContext) -> str:
 
     user_id, reason = extract_user_and_text(message, args)
     if not user_id:
-        message.reply_text(
+        await message.reply_text(
             "You'll need to either give me a username to unmute, or reply to someone to be unmuted."
         )
         return ""
 
-    member = chat.get_member(int(user_id))
+    member = await chat.get_member(int(user_id))
 
     if member.status in ("kicked", "left"):
-        message.reply_text(
+        await message.reply_text(
             "This user isn't even in the chat, unmuting them won't make them talk more than they "
             "already do!",
         )
@@ -200,7 +201,7 @@ def unmute(update: Update, context: CallbackContext) -> str:
         and member.can_send_other_messages
         and member.can_add_web_page_previews
     ):
-        message.reply_text("This user already has the right to speak.")
+        await message.reply_text("This user already has the right to speak.")
     else:
         chat_permissions = ChatPermissions(
             can_send_messages=True,
@@ -213,10 +214,10 @@ def unmute(update: Update, context: CallbackContext) -> str:
             can_add_web_page_previews=True,
         )
         try:
-            bot.restrict_chat_member(chat.id, int(user_id), chat_permissions)
+            await bot.restrict_chat_member(chat.id, int(user_id), permissions=chat_permissions)
         except BadRequest:
             pass
-        bot.sendMessage(
+        await bot.send_message(
             chat.id,
             "{} [<code>{}</code>] Was 🔊 Unmuted.".format(
                 mention_html(member.user.id, member.user.first_name), member.user.id
@@ -237,23 +238,23 @@ def unmute(update: Update, context: CallbackContext) -> str:
 @can_restrict
 @user_admin
 @loggable
-def temp_mute(update: Update, context: CallbackContext) -> str:
+async def temp_mute(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     bot, args = context.bot, context.args
     chat = update.effective_chat
     user = update.effective_user
     message = update.effective_message
 
     user_id, reason = extract_user_and_text(message, args)
-    reply = check_user(user_id, bot, chat)
+    reply = await check_user(user_id, bot, chat)
 
     if reply:
-        message.reply_text(reply)
+        await message.reply_text(reply)
         return ""
 
-    member = chat.get_member(user_id)
+    member = await chat.get_member(user_id)
 
     if not reason:
-        message.reply_text("You haven't specified a time to mute this user for!")
+        await message.reply_text("You haven't specified a time to mute this user for!")
         return ""
 
     split_reason = reason.split(None, 1)
@@ -278,10 +279,10 @@ def temp_mute(update: Update, context: CallbackContext) -> str:
     try:
         if member.can_send_messages is None or member.can_send_messages:
             chat_permissions = ChatPermissions(can_send_messages=False)
-            bot.restrict_chat_member(
+            await bot.restrict_chat_member(
                 chat.id,
                 user_id,
-                chat_permissions,
+                permissions=chat_permissions,
                 until_date=mutetime,
             )
             msg = (
@@ -299,17 +300,17 @@ def temp_mute(update: Update, context: CallbackContext) -> str:
                     ]
                 ]
             )
-            bot.sendMessage(
+            await bot.send_message(
                 chat.id, msg, reply_markup=keyboard, parse_mode=ParseMode.HTML
             )
 
             return log
-        message.reply_text("This user is already muted.")
+        await message.reply_text("This user is already muted.")
 
     except BadRequest as excp:
         if excp.message == "Reply message not found":
             # Do not reply
-            message.reply_text(f"Muted for {time_val}!", quote=False)
+            await message.reply_text(f"Muted for {time_val}!", quote=False)
             return log
         LOGGER.warning(update)
         LOGGER.exception(
@@ -319,7 +320,7 @@ def temp_mute(update: Update, context: CallbackContext) -> str:
             chat.id,
             excp.message,
         )
-        message.reply_text("Well damn, I can't mute that user.")
+        await message.reply_text("Well damn, I can't mute that user.")
 
     return ""
 
@@ -327,7 +328,7 @@ def temp_mute(update: Update, context: CallbackContext) -> str:
 @user_admin_no_reply
 @bot_admin
 @loggable
-def button(update: Update, context: CallbackContext) -> str:
+async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     query: Optional[CallbackQuery] = update.callback_query
     user: Optional[User] = update.effective_user
     bot: Optional[Bot] = context.bot
@@ -335,7 +336,7 @@ def button(update: Update, context: CallbackContext) -> str:
     if match:
         user_id = match.group(1)
         chat: Optional[Chat] = update.effective_chat
-        member = chat.get_member(user_id)
+        member = await chat.get_member(user_id)
         chat_permissions = ChatPermissions(
             can_send_messages=True,
             can_invite_users=True,
@@ -346,13 +347,13 @@ def button(update: Update, context: CallbackContext) -> str:
             can_send_other_messages=True,
             can_add_web_page_previews=True,
         )
-        unmuted = bot.restrict_chat_member(chat.id, int(user_id), chat_permissions)
+        unmuted = await bot.restrict_chat_member(chat.id, int(user_id), permissions=chat_permissions)
         if unmuted:
-            update.effective_message.edit_text(
+            await update.effective_message.edit_text(
                 f"{mention_html(member.user.id, member.user.first_name)} [<code>{member.user.id}</code>] Now can 🔊 speak again.",
                 parse_mode=ParseMode.HTML,
             )
-            query.answer("Unmuted!")
+            await query.answer("Unmuted!")
             return (
                 f"<b>{html.escape(chat.title)}:</b>\n"
                 f"#UNMUTE\n"
@@ -360,7 +361,7 @@ def button(update: Update, context: CallbackContext) -> str:
                 f"<b>User:</b> {mention_html(member.user.id, member.user.first_name)}"
             )
     else:
-        update.effective_message.edit_text(
+        await update.effective_message.edit_text(
             "⚠️ This user is not muted or has left the group!"
         )
         return ""
@@ -375,17 +376,17 @@ Admins only:
  ❍ /unmute <userhandle>: unmutes a user. Can also be used as a reply, muting the replied to user.
 """
 
-MUTE_HANDLER = CommandHandler(["mute", "smute"], mute, run_async=True)
-DMUTE_HANDLER = CommandHandler("dmute", dmute, run_async=True)
-UNMUTE_HANDLER = CommandHandler("unmute", unmute, run_async=True)
-TEMPMUTE_HANDLER = CommandHandler(["tmute", "tempmute"], temp_mute, run_async=True)
+MUTE_HANDLER = CommandHandler(["mute", "smute"], mute, block=False)
+DMUTE_HANDLER = CommandHandler("dmute", dmute, block=False)
+UNMUTE_HANDLER = CommandHandler("unmute", unmute, block=False)
+TEMPMUTE_HANDLER = CommandHandler(["tmute", "tempmute"], temp_mute, block=False)
 UNMUTE_BUTTON_HANDLER = CallbackQueryHandler(button, pattern=r"unmute_")
 
-dispatcher.add_handler(MUTE_HANDLER)
-dispatcher.add_handler(DMUTE_HANDLER)
-dispatcher.add_handler(UNMUTE_HANDLER)
-dispatcher.add_handler(TEMPMUTE_HANDLER)
-dispatcher.add_handler(UNMUTE_BUTTON_HANDLER)
+application.add_handler(MUTE_HANDLER)
+application.add_handler(DMUTE_HANDLER)
+application.add_handler(UNMUTE_HANDLER)
+application.add_handler(TEMPMUTE_HANDLER)
+application.add_handler(UNMUTE_BUTTON_HANDLER)
 
 __mod_name__ = "Mute 🤐"
 __handlers__ = [MUTE_HANDLER, UNMUTE_HANDLER, TEMPMUTE_HANDLER, DMUTE_HANDLER]
