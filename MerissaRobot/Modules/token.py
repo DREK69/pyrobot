@@ -1,54 +1,62 @@
-from secrets import token_urlsafe as uls
-
+from secrets import token_urlsafe
 from pyrogram import filters
-
-from MerissaRobot import ERROR_LOG
-from MerissaRobot import pbot as app
+from MerissaRobot import ERROR_LOG, pbot as app
 from MerissaRobot.Database.mongo import leveldb
 from MerissaRobot.helpers import subscribe
 
 
-@app.on_message(
-    filters.command("token", prefixes=["/", ".", "?", "-"]) & filters.private
-)
+@app.on_message(filters.command("token", prefixes=["/", ".", "?", "-"]) & filters.private)
 @subscribe
 async def token(client, message):
-    m = await message.reply_text("Generating Token...")
+    m = await message.reply_text("🔑 Generating your Merissa API Token...")
     toggle = leveldb["myFirstDatabase"]["jsons"]
     user = leveldb["MerissaApi"]["user"]
-    word = f"{message.from_user.id}:{uls(round(message.from_user.id/6969))[:35]}"
+
+    # Check if user already has a token
     is_user = user.find_one({"user_id": message.from_user.id})
+
     if not is_user:
-        toggle.insert_one({"ID": word, "data": word})
-        user.insert_one({"user_id": message.from_user.id, "API": word})
+        # Generate a new secure token
+        new_token = f"{message.from_user.id}:{token_urlsafe(32)}"
+
+        # Store in both collections
+        toggle.insert_one({"ID": new_token, "data": new_token})
+        user.insert_one({"user_id": message.from_user.id, "API": new_token})
+
         await m.edit_text(
-            f"Your Merissa Token: `{word}`.\n\nDo not give this token to anyone else!\nKnow More - @MerissaChatbotApi"
+            f"✅ Your Merissa Token has been generated!\n\n`{new_token}`\n\n⚠️ Do **not** share this token with anyone!\nKnow More - @MerissaChatbotApi"
         )
+
+        # Log for admins
         await app.send_message(
             ERROR_LOG,
-            f"#New Merissa Token Generated\n\nUser- [{message.from_user.first_name}](tg://user?id={message.from_user.id})\nToken- `{word}`\n\n©️ MerissaRobot",
+            f"🆕 #NewToken\n\n👤 User: [{message.from_user.first_name}](tg://user?id={message.from_user.id})\n🔑 Token: `{new_token}`",
         )
+
     else:
-        MerissaAPI = is_user["API"]
+        existing_token = is_user["API"]
         await m.edit_text(
-            f"Your Merissa Token: `{MerissaAPI}`.\n\nDo not give this token to anyone else!\nKnow More - @MerissaChatbotApi"
+            f"🔑 You already have a token:\n\n`{existing_token}`\n\n⚠️ Do **not** share this token with anyone!\nKnow More - @MerissaChatbotApi"
         )
 
 
-@app.on_message(
-    filters.command("revoke", prefixes=["/", ".", "?", "-"]) & filters.private
-)
+@app.on_message(filters.command("revoke", prefixes=["/", ".", "?", "-"]) & filters.private)
 @subscribe
 async def revoke(client, message):
     toggle = leveldb["myFirstDatabase"]["jsons"]
     user = leveldb["MerissaApi"]["user"]
+
     is_user = user.find_one({"user_id": message.from_user.id})
+
+    if not is_user:
+        return await message.reply_text("❌ You don’t have any token yet. Use `/token` to generate one.")
+
     MerissaAPI = is_user["API"]
-    if is_user:
-        toggle.delete_one({"ID": MerissaAPI, "data": MerissaAPI})
-        user.delete_one({"user_id": message.from_user.id, "API": MerissaAPI})
-        await message.reply_text(
-            f"Your Merissa Token: `{MerissaAPI}` Your Merissa Api Token Revoked Successfully.\n\nYou can Generate again using /token."
-        )
-    else:
-        await message.reply_text("You don't have any token. Type /token to generate")
+
+    # Delete from both collections
+    toggle.delete_one({"ID": MerissaAPI, "data": MerissaAPI})
+    user.delete_one({"user_id": message.from_user.id})
+
+    await message.reply_text(
+        f"✅ Your Merissa Token `{MerissaAPI}` has been **revoked successfully**.\n\nUse `/token` to generate a new one."
+    )
