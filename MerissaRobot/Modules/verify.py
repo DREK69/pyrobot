@@ -1,59 +1,76 @@
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-
 from MerissaRobot import LOGGER, pbot
 
 
 @pbot.on_message(filters.command("verify") & ~filters.private, group=7)
-async def verifylink(bot, update):
-    chat = update.chat
-    uid = update.from_user.id
-    if len(update.command) < 2:
+async def verifylink(bot, message):
+    chat = message.chat
+    uid = message.from_user.id
+
+    # Get channel id
+    if len(message.command) < 2:
         try:
-            channel_id = (await bot.get_chat(int(chat.id))).linked_chat.id
+            channel_id = (await bot.get_chat(chat.id)).linked_chat.id
         except Exception:
-            print(str(Exception))
-            return await update.reply_text(
-                "You didn't have connected Channel so try /verify channelid"
+            return await message.reply_text(
+                "⚠️ This group is not linked to a channel.\n\nUsage:\n`/verify <channel_id>`"
             )
     else:
-        channel_id = int(update.text.split(None, 1)[1])
-    m = await update.reply("Processing")
+        try:
+            channel_id = int(message.text.split(None, 1)[1])
+        except ValueError:
+            return await message.reply_text("❌ Invalid channel ID.")
+
+    m = await message.reply("⏳ Processing verification...")
+
     try:
-        user = await pbot.get_chat_member(chat_id=int(channel_id), user_id=uid)
-        if user.privileges.can_post_messages != True:
-            await update.reply_text(text="You can't do that")
-            return
+        user = await bot.get_chat_member(channel_id, uid)
+        # Check if user is an admin
+        if not getattr(user, "privileges", None):
+            return await message.reply_text("❌ You must be an **admin** in the channel.")
     except Exception as e:
-        return LOGGER.critical(e)
-    link = f"https://t.me/MerissaRobot?start=verify_{chat.id}"
-    button = [
-        [
-            InlineKeyboardButton(text="VERIFY", url=link),
-        ],
-    ]
-    await pbot.send_message(
-        int(channel_id),
-        text=f"{chat.title} is being protected by @MerissaRobot\n\nClick below to verify you're human",
-        reply_markup=InlineKeyboardMarkup(button),
-    )
-    await m.edit("Done ✅")
+        LOGGER.error(f"Verify failed: {e}")
+        return await m.edit("❌ Could not check your channel privileges.")
+
+    bot_username = (await bot.get_me()).username
+    link = f"https://t.me/{bot_username}?start=verify_{chat.id}"
+
+    button = [[InlineKeyboardButton(text="✅ VERIFY", url=link)]]
+
+    try:
+        await bot.send_message(
+            channel_id,
+            text=(
+                f"🔒 **{chat.title}** is protected by @{bot_username}\n\n"
+                "Click below to verify you're human 👇"
+            ),
+            reply_markup=InlineKeyboardMarkup(button),
+        )
+        await m.edit("✅ Verification request sent to channel.")
+    except Exception as e:
+        LOGGER.error(f"Send failed: {e}")
+        await m.edit("❌ Failed to send verification link to the channel.")
 
 
-@pbot.on_callback_query(filters.regex("^verify"))
+@pbot.on_callback_query(filters.regex(r"^verify_"))
 async def verify_cb(bot, query):
-    await query.answer(
-        "Verifying You are Human 🗣️",
-        show_alert=True,
-    )
-    chat_id = query.data.split(None, 1)[1]
-    link = (await bot.create_chat_invite_link(int(chat_id), member_limit=1)).invite_link
-    button = [
-        [
-            InlineKeyboardButton(text="Join Link", url=link),
-        ],
-    ]
-    await query.edit_message_caption(
-        f"☑️ Verified with fast-pass as a trusted user, join below with the temporary link\n\n{link}\n\nThis link is a one time use and will expire",
+    await query.answer("🧾 Verifying you as human...", show_alert=True)
+
+    try:
+        chat_id = int(query.data.split("_", 1)[1])
+        link = (await bot.create_chat_invite_link(chat_id, member_limit=1)).invite_link
+    except Exception as e:
+        LOGGER.error(f"Invite creation failed: {e}")
+        return await query.edit_message_text("❌ Could not generate invite link.")
+
+    button = [[InlineKeyboardButton(text="👉 Join Chat", url=link)]]
+
+    await query.edit_message_text(
+        (
+            f"☑️ Verified successfully!\n\n"
+            f"🔗 Use the one-time invite link below:\n\n{link}\n\n"
+            "⚠️ This link is single-use and will expire after one join."
+        ),
         reply_markup=InlineKeyboardMarkup(button),
     )
