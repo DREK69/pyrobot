@@ -1,38 +1,49 @@
 import re
-
 import aiohttp
 from pyrogram import filters
-
 from MerissaRobot import pbot
 
 
-async def get_shortlink(link):
+API_KEY = "f9eb715d62213c45c33fc2f8b563846cae8a0711"  # move to config for safety
+
+
+async def get_shortlink(link: str) -> str:
     url = "https://gplinks.in/api"
-    params = {"api": "f9eb715d62213c45c33fc2f8b563846cae8a0711", "url": link}
+    params = {"api": API_KEY, "url": link}
 
     async with aiohttp.ClientSession() as session:
-        async with session.get(url, params=params, raise_for_status=True) as response:
+        async with session.get(url, params=params) as response:
+            if response.status != 200:
+                raise Exception(f"API error: {response.status}")
             data = await response.json()
+
+            if "shortenedUrl" not in data:
+                raise Exception(data.get("message", "Unknown API error"))
+
             return data["shortenedUrl"]
 
 
 @pbot.on_message(filters.command("shorturl") & filters.private & filters.incoming)
 async def link_handler(bot, message):
-    link_pattern = re.compile(
-        "https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}",
-        re.DOTALL,
-    )
-    links = re.findall(link_pattern, message.text.split(None, 1)[1])
     if len(message.command) < 2:
-        await message.reply("No links Found in this text", quote=True)
-        return
+        return await message.reply("❌ Please provide a link to shorten.", quote=True)
+
+    text = message.text.split(None, 1)[1]
+
+    # Better regex for URLs
+    link_pattern = re.compile(r"https?://[^\s]+", re.IGNORECASE)
+    links = re.findall(link_pattern, text)
+
+    if not links:
+        return await message.reply("⚠️ No valid links found in your text.", quote=True)
+
+    results = []
     for link in links:
         try:
             short_link = await get_shortlink(link)
-            await message.reply(
-                f"Here is Your Shortened Link\n\nOriginal Link: {link}\n\nShortened Link: `{short_link}`",
-                quote=True,
-                disable_web_page_preview=True,
-            )
+            results.append(f"🔗 **Original:** {link}\n➡️ **Shortened:** `{short_link}`")
         except Exception as e:
-            await message.reply(f"𝐄𝐫𝐫𝐨𝐫: `{e}`", quote=True)
+            results.append(f"❌ **Failed to shorten:** {link}\nError: `{e}`")
+
+    reply_text = "**Here are your shortened links:**\n\n" + "\n\n".join(results)
+    await message.reply(reply_text, disable_web_page_preview=True, quote=True)
