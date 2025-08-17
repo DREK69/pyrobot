@@ -3,6 +3,7 @@ import os
 import shutil
 import time
 import zipfile
+import math
 
 from pyrogram import Client, errors, filters
 from pyrogram.errors import FloodWait, MessageNotModified
@@ -10,185 +11,177 @@ from pyrogram.errors import FloodWait, MessageNotModified
 from MerissaRobot import pbot
 
 
-def humanbytes(size):
-    """Convert Bytes To Bytes So That Human Can Read It"""
+# -------- Utils -------- #
+
+def humanbytes(size: int) -> str:
+    """Convert bytes to human readable format"""
     if not size:
         return ""
     power = 2**10
-    raised_to_pow = 0
-    dict_power_n = {0: "", 1: "Ki", 2: "Mi", 3: "Gi", 4: "Ti"}
-    while size > power:
+    n = 0
+    units = ["", "Ki", "Mi", "Gi", "Ti"]
+    while size >= power and n < len(units) - 1:
         size /= power
-        raised_to_pow += 1
-    return str(round(size, 2)) + " " + dict_power_n[raised_to_pow] + "B"
+        n += 1
+    return f"{round(size, 2)} {units[n]}B"
 
 
 def time_formatter(milliseconds: int) -> str:
-    """Time Formatter"""
-    seconds, milliseconds = divmod(int(milliseconds), 1000)
+    """Format time in milliseconds to human readable"""
+    seconds, ms = divmod(int(milliseconds), 1000)
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
-    tmp = (
-        ((str(days) + " day(s), ") if days else "")
-        + ((str(hours) + " hour(s), ") if hours else "")
-        + ((str(minutes) + " minute(s), ") if minutes else "")
-        + ((str(seconds) + " second(s), ") if seconds else "")
-        + ((str(milliseconds) + " millisecond(s), ") if milliseconds else "")
+    result = (
+        (f"{days}d, " if days else "")
+        + (f"{hours}h, " if hours else "")
+        + (f"{minutes}m, " if minutes else "")
+        + (f"{seconds}s, " if seconds else "")
+        + (f"{ms}ms, " if ms else "")
     )
-    return tmp[:-2]
+    return result.strip(", ")
 
 
-async def progress(current, total, message, start, type_of_ps, file_name=None):
-    """Progress Bar For Showing Progress While Uploading / Downloading File - Normal"""
+async def progress(current, total, message, start, status, file_name=None):
+    """Progress bar for uploads/downloads"""
     now = time.time()
     diff = now - start
-    if round(diff % 10.00) == 0 or current == total:
-        percentage = current * 100 / total
-        speed = current / diff
+    if current == total or diff % 5 == 0:  # update every 5 sec
+        percent = current * 100 / total
+        speed = current / diff if diff > 0 else 0
         elapsed_time = round(diff) * 1000
-        if elapsed_time == 0:
-            return
-        time_to_completion = round((total - current) / speed) * 1000
-        estimated_total_time = elapsed_time + time_to_completion
-        progress_str = "{0}{1} {2}%\n".format(
-            "".join(["●" for i in range(math.floor(percentage / 10))]),
-            "".join(["○" for i in range(10 - math.floor(percentage / 10))]),
-            round(percentage, 2),
-        )
-        tmp = progress_str + "{0} of {1}\nETA: {2}".format(
-            humanbytes(current), humanbytes(total), time_formatter(estimated_total_time)
-        )
+        remaining = round((total - current) / speed) * 1000 if speed != 0 else 0
+        eta = time_formatter(elapsed_time + remaining)
+
+        bar = "●" * math.floor(percent / 10) + "○" * (10 - math.floor(percent / 10))
+        text = f"{status}\n\n[{bar}] {round(percent, 2)}%\n\n" \
+               f"📂 {humanbytes(current)} of {humanbytes(total)}\n" \
+               f"⚡ Speed: {humanbytes(speed)}/s\n" \
+               f"⏳ ETA: {eta}"
+
         if file_name:
-            try:
-                await message.edit(
-                    "{}\n**File Name:** `{}`\n{}".format(type_of_ps, file_name, tmp)
-                )
-            except FloodWait as e:
-                await asyncio.sleep(e.x)
-            except MessageNotModified:
-                pass
-        else:
-            try:
-                await message.edit("{}\n{}".format(type_of_ps, tmp))
-            except FloodWait as e:
-                await asyncio.sleep(e.x)
-            except MessageNotModified:
-                pass
+            text = f"**File:** `{file_name}`\n\n" + text
+
+        try:
+            await message.edit(text)
+        except FloodWait as e:
+            await asyncio.sleep(e.value)
+        except MessageNotModified:
+            pass
 
 
-@pbot.on_message(filters.command(["download"]))
+# -------- Download -------- #
+
+@pbot.on_message(filters.command("download"))
 async def download(bot, message):
-    dl = await message.reply_text("Downloading to Server..")
-    if not message.reply_to_message:
-        await dl.edit("`Reply to a message to download!")
-        return
-    if not message.reply_to_message.media:
-        await dl.edit("`Reply to a message to download!`")
-        return
-    if (
-        message.reply_to_message.media
-        or message.reply_to_message.document
-        or message.reply_to_message.photo
-    ):
-        c_time = time.time()
-        file = await message.reply_to_message.download(
-            progress=progress, progress_args=(dl, c_time, f"`Downloading This File!`")
+    if not message.reply_to_message or not message.reply_to_message.media:
+        return await message.reply_text("⚠️ Reply to a file, video, or photo to download!")
+
+    status = await message.reply_text("📥 Downloading to server...")
+    c_time = time.time()
+    try:
+        file_path = await message.reply_to_message.download(
+            progress=progress,
+            progress_args=(status, c_time, "📥 Downloading...")
         )
-    file_txt = "__Downloaded This File To__ `{}`."
-    filename = os.path.basename(file)
-    f_name = os.path.join("downloads", filename)
-    await dl.edit(file_txt.format(f_name))
+    except Exception as e:
+        return await status.edit(f"❌ Download failed: `{e}`")
+
+    filename = os.path.basename(file_path)
+    saved_path = os.path.join("downloads", filename)
+    await status.edit(f"✅ **Downloaded Successfully!**\n\n📂 Saved to: `{saved_path}`")
 
 
-@pbot.on_message(filters.command(["upload"]))
+# -------- Upload -------- #
+
+@pbot.on_message(filters.command("upload"))
 async def upload_file(c, m):
     try:
         file = m.text.split(None, 1)[1]
     except IndexError:
-        await m.reply_text("What should I upload??")
-        return
+        return await m.reply_text("⚠️ Usage: `/upload <file path>`")
 
     authorized_users = [1246467977, 1089528685]
     authorized_paths = ["downloads/", "/app/Mr.Stark/downloads/"]
 
-    if m.from_user.id not in authorized_users:
-        if not any(file.startswith(path) for path in authorized_paths):
-            await m.reply_text("You are unauthorized.")
-            return
+    if m.from_user.id not in authorized_users and not any(file.startswith(p) for p in authorized_paths):
+        return await m.reply_text("❌ You are not authorized to upload from this path.")
 
-    msg = await m.reply_text("Uploading file, please wait...")
+    status = await m.reply_text("📤 Uploading file...")
+    c_time = time.time()
+
     try:
-        c_time = time.time()
         await m.reply_document(
-            file, progress=progress, progress_args=(msg, c_time, "Uploading This File!")
+            file,
+            progress=progress,
+            progress_args=(status, c_time, "📤 Uploading...")
         )
+        await status.edit("✅ Upload complete!")
     except FileNotFoundError:
-        await msg.edit("No such file found.")
-    finally:
-        await msg.delete()
+        await status.edit("❌ File not found.")
+    except Exception as e:
+        await status.edit(f"❌ Upload failed: `{e}`")
 
+
+# -------- Unzip -------- #
 
 def unzip_file(zip_path, extract_dir):
     extracted_files = []
     with zipfile.ZipFile(zip_path, "r") as zip_ref:
         zip_ref.extractall(extract_dir)
         for file_info in zip_ref.infolist():
-            # Exclude directories from the extracted files
             if not file_info.is_dir():
                 extracted_files.append(os.path.join(extract_dir, file_info.filename))
     return extracted_files
 
 
-@Client.on_message(filters.command(["unzip"]))
+@pbot.on_message(filters.command("unzip"))
 async def unzip_files(c, m):
-    reply = m.reply_to_message if m.reply_to_message else None
+    reply = m.reply_to_message
+    if not reply or not reply.document:
+        return await m.reply_text("⚠️ Reply to a `.zip` file to unzip.")
+
+    if reply.document.mime_type != "application/zip":
+        return await m.reply_text("❌ The replied file is not a zip archive.")
+
+    status = await m.reply_text("📥 Downloading zip...")
+    c_time = time.time()
+
     try:
-        zip_file = m.text.split(None, 1)[1]
-    except IndexError:
-        zip_file = None
-    if not zipfile and reply:
-        await m.reply_text("`What should I Unzip?`")
-        return
-    if reply and reply.document:
-        document = reply.document
-        if document.mime_type == "application/zip":
-            c_time = time.time()
-            target_dir = f"downloads/unzip/{m.from_user.id}"
-            try:
-                await c.send_message(m.from_user.id, "**Files will be sent here**")
-            except errors.PeerIdInvalid:
-                await m.reply_text("**Start Me in Pm First**")
-                return
-            except errors.UserIsBlocked:
-                await m.reply_text("**Start Me in Pm First**")
-                return
-            dl = await m.reply_text("`Downloading file...`")
-            zip_file = await reply.download(
-                progress=progress, progress_args=(dl, c_time, "`Downloading File!`")
-            )
-            await dl.edit("`Downloading Done!!\nNow Unzipping it...`")
-            extracted_file_paths = unzip_file(zip_file, target_dir)
-            await dl.edit(
-                f"**Found {len(extracted_file_paths)} files**\n`Now Uploading..."
-            )
-            for index, file in enumerate(extracted_file_paths, 1):
-                try:
-                    await c.send_document(m.from_user.id, file)
-                    await dl.edit(f"**Uploaded** `{index}/{len(extracted_file_paths)}`")
-                # except errors.PeerIdInvalid:
-                #     await dl.edit("**Start Me in Pm First**")
-                # except errors.UserIsBlocked:
-                #     await dl.edit("**Start Me in Pm First**")
-                except errors.FloodWait as e:
-                    await asyncio.sleep(e.value)
-                    await m.reply_document(file)
-                except:
-                    continue
-            await dl.edit("**All files have been sent to ur PM**")
-            shutil.rmtree(target_dir)
-            os.remove(zip_file)
-        else:
-            await m.reply_text("`The replied file is not a zip.`")
-    else:
-        await m.reply_text("`Reply to a Zip File to UnZip`")
+        zip_file = await reply.download(
+            progress=progress,
+            progress_args=(status, c_time, "📥 Downloading zip...")
+        )
+    except Exception as e:
+        return await status.edit(f"❌ Download failed: `{e}`")
+
+    extract_dir = f"downloads/unzip/{m.from_user.id}"
+    os.makedirs(extract_dir, exist_ok=True)
+
+    await status.edit("📂 Extracting zip file...")
+    extracted_files = unzip_file(zip_file, extract_dir)
+
+    if not extracted_files:
+        return await status.edit("❌ No files extracted.")
+    await status.edit(f"✅ Extracted `{len(extracted_files)}` files.\n📤 Uploading...")
+
+    # Upload files privately
+    try:
+        await c.send_message(m.from_user.id, "📂 **Your extracted files:**")
+    except (errors.PeerIdInvalid, errors.UserIsBlocked):
+        return await status.edit("⚠️ Please start the bot in PM first.")
+
+    for i, file in enumerate(extracted_files, 1):
+        try:
+            await c.send_document(m.from_user.id, file)
+            await status.edit(f"📤 Uploaded `{i}/{len(extracted_files)}` files...")
+            await asyncio.sleep(0.5)
+        except FloodWait as e:
+            await asyncio.sleep(e.value)
+            await c.send_document(m.from_user.id, file)
+        except Exception:
+            continue
+
+    await status.edit("✅ All files have been uploaded to your PM.")
+    shutil.rmtree(extract_dir, ignore_errors=True)
+    os.remove(zip_file)
