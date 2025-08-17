@@ -1,19 +1,20 @@
 from gpytranslate import SyncTranslator
-from telegram import ParseMode, Update
-from telegram.ext import CallbackContext
+from telegram import Update
+from telegram.constants import ParseMode
+from telegram.ext import ContextTypes
 
-from MerissaRobot import dispatcher
+from MerissaRobot import application
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
 trans = SyncTranslator()
 
 
-def totranslate(update: Update, context: CallbackContext) -> None:
+async def totranslate(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     message = update.effective_message
     reply_msg = message.reply_to_message
     if not reply_msg:
-        message.reply_text(
-            "Reply to messages or write messages from other languages ​​for translating into the intended language\n\n"
+        await message.reply_text(
+            "Reply to messages or write messages from other languages for translating into the intended language\n\n"
             "Example: `/tr en-hi` to translate from English to Hindi\n"
             "Or use: `/tr en` for automatic detection and translating it into english.\n"
             "Click here to see [List of available Language Codes](https://t.me/DevilsHeavenMF/148391).",
@@ -21,10 +22,15 @@ def totranslate(update: Update, context: CallbackContext) -> None:
             disable_web_page_preview=True,
         )
         return
+    
     if reply_msg.caption:
         to_translate = reply_msg.caption
     elif reply_msg.text:
         to_translate = reply_msg.text
+    else:
+        await message.reply_text("No text found to translate!")
+        return
+    
     try:
         args = message.text.split()[1].lower()
         if "//" in args:
@@ -36,13 +42,16 @@ def totranslate(update: Update, context: CallbackContext) -> None:
     except IndexError:
         source = trans.detect(to_translate)
         dest = "en"
-    translation = trans(to_translate, sourcelang=source, targetlang=dest)
-    reply = (
-        f"<b>Translated from {source} to {dest}</b> :\n"
-        f"<code>{translation.text}</code>"
-    )
-
-    message.reply_text(reply, parse_mode=ParseMode.HTML)
+    
+    try:
+        translation = trans(to_translate, sourcelang=source, targetlang=dest)
+        reply = (
+            f"<b>Translated from {source} to {dest}</b> :\n"
+            f"<code>{translation.text}</code>"
+        )
+        await message.reply_text(reply, parse_mode=ParseMode.HTML)
+    except Exception as e:
+        await message.reply_text(f"Translation failed: {str(e)}")
 
 
 __help__ = """
@@ -61,9 +70,9 @@ vi,xh,yi,yo,zh,zh_CN,zh_TW,zu`
 """
 __mod_name__ = "Translator 🗣"
 
-TRANSLATE_HANDLER = DisableAbleCommandHandler(["tr", "tl"], totranslate)
+TRANSLATE_HANDLER = DisableAbleCommandHandler(["tr", "tl"], totranslate, block=False)
 
-dispatcher.add_handler(TRANSLATE_HANDLER)
+application.add_handler(TRANSLATE_HANDLER)
 
 __command_list__ = ["tr", "tl"]
 __handlers__ = [TRANSLATE_HANDLER]
