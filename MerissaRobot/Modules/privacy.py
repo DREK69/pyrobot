@@ -1,8 +1,9 @@
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.constants import ParseMode
 from telegram.error import Unauthorized
-from telegram.ext import CallbackQueryHandler, CommandHandler, run_async
+from telegram.ext import CallbackQueryHandler, CommandHandler, ContextTypes
 
-from MerissaRobot import dispatcher
+from MerissaRobot import application
 
 PRIVACY_P_TEXT = """
 * Our contact details * \n*Name*: MerissaRobot \n*Telegram*: https://t.me/MerissaxSupport
@@ -15,13 +16,12 @@ PRIVACY_STRING = """Select one of the below options for more information about h
 CANCEL_STRING = """Privacy deletion request cancelled."""
 
 
-@run_async
-def privacy(update, context):
+async def privacy(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_message.from_user
     chat = update.effective_chat  # type: Optional[Chat]
     bot = context.bot
     if chat.type == "private":
-        update.effective_message.reply_text(
+        await update.effective_message.reply_text(
             PRIVACY_STRING,
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
@@ -47,27 +47,26 @@ def privacy(update, context):
 
     else:
         try:
-            bot.send_message(
+            await bot.send_message(
                 user.id,
                 PRIVACY_STRING,
                 parse_mode=ParseMode.MARKDOWN,
                 disable_web_page_preview=True,
             )
 
-            update.effective_message.reply_text(
+            await update.effective_message.reply_text(
                 "This command can only used in private!"
             )
         except Unauthorized:
-            update.effective_message.reply_text(
+            await update.effective_message.reply_text(
                 "Contact me in pm for privacy information."
             )
 
 
-@run_async
-def greyson_policy_callback(update, context):
+async def greyson_policy_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     if query.data == "policy_":
-        query.message.edit_text(
+        await query.message.edit_text(
             text=""" * Our contact details * \n*Name*: Tianabot \n*Telegram*: https://t.me/MerissaxSupport
 \nThe bot has been made to *protect* and preserve *privacy* as best as possible. \nThe proper functioning of the bot is defined as the data required for all the commands in the /help to work as expected.
 \nOur privacy policy may change from time to time. If we make any material changes to our policies, we will place a prominent notice on https://t.me/MerissaxSupport.""",
@@ -105,7 +104,7 @@ def greyson_policy_callback(update, context):
             ),
         )
     elif query.data == "policy_wiwc":
-        query.message.edit_text(
+        await query.message.edit_text(
             text=f"* The type of personal information we collect *"
             f"\n\nWe currently collect and process the following information:"
             f"\n  • Telegram UserID, firstname, lastname, username _(Note:_ These are your public telegram details. We do not know your *real* details.)"
@@ -146,7 +145,7 @@ def greyson_policy_callback(update, context):
             ),
         )
     elif query.data == "policy_wwci":
-        query.message.edit_text(
+        await query.message.edit_text(
             text=f"* How we get the personal information and why we have it *"
             f"\n\nMost of the personal information we process is provided to us directly by you for one of the following reasons:"
             f"\n    • You've messaged the bot directly. This can be to read the complete a CAPTCHA, read the documentation, etc."
@@ -187,7 +186,7 @@ def greyson_policy_callback(update, context):
             ),
         )
     elif query.data == "policy_wwd":
-        query.message.edit_text(
+        await query.message.edit_text(
             text=f"* What we do with the personal information *"
             f"\n\nWe use the information that you have given us in order to support various bot features. This can include:"
             f"\n    • User ID/username pairing, which allows the bot to resolve usernames to valid user ids."
@@ -228,7 +227,7 @@ def greyson_policy_callback(update, context):
             ),
         )
     elif query.data == "policy_wwdnd":
-        query.message.edit_text(
+        await query.message.edit_text(
             text=f"* What we DO NOT do with the personal information *"
             f"\n\nWe *DO NOT*:"
             f"\n    • store any messages, unless explicitly saved (eg through notes, filters, welcomes etc). \n    • use technologies like beacons or unique device identifiers to identify you or your device."
@@ -269,7 +268,7 @@ def greyson_policy_callback(update, context):
             ),
         )
     elif query.data == "policy_rtp":
-        query.message.edit_text(
+        await query.message.edit_text(
             text=f"* Rights to process *"
             f"\n\nUnder the General Data Protection Regulation (GDPR), the lawful bases we rely on for processing this information are:"
             f"\n    • Your consent. You are able to remove your consent at any time. You can do this by using the tools provided to delete your data, which will delete any data that isnt critical to bot functionality. \n    • We need it to perform a public task. Namely, allowing group or channel admins to protect their chats."
@@ -310,7 +309,7 @@ def greyson_policy_callback(update, context):
             ),
         )
     elif query.data == "policy_datadel":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""Are you sure you want to delete your data?
 
 Note that this will:
@@ -338,24 +337,23 @@ This action **CANNOT** be undone.""",
             ),
         )
     elif query.data == "policy_del":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""Your data has been deleted.""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         )
     elif query.data == "policy_data":
-        query.message.edit_text(
+        await query.message.edit_text(
             text="""These feature coming soon.""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         )
 
 
-@run_async
-def greyson_cancel_callback(update, context):
+async def greyson_cancel_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     if query.data == "cancel_":
-        query.message.edit_text(
+        await query.message.edit_text(
             text=""" Privacy deletion request cancelled.""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
@@ -369,8 +367,8 @@ cancel_callback_handler = CallbackQueryHandler(
     greyson_cancel_callback, pattern=r"cancel_"
 )
 
-privacy_handler = CommandHandler("privacy", privacy)
+privacy_handler = CommandHandler("privacy", privacy, block=False)
 
-dispatcher.add_handler(privacy_handler)
-dispatcher.add_handler(cancel_callback_handler)
-dispatcher.add_handler(policy_callback_handler)
+application.add_handler(privacy_handler)
+application.add_handler(cancel_callback_handler)
+application.add_handler(policy_callback_handler)
