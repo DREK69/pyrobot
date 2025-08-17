@@ -158,9 +158,9 @@ async def list_domains(_, message: Message):
 
 __help__ = """
 You can generate Temp-Mail from MerissaRobot 
- ❍ /genmail : To get Random Temp-Mail.
- ❍ /set <email-name> : To get Tempmail of Your Name
- ❍ /domains : To check Domains List
+ ❂ /genmail : To get Random Temp-Mail.
+ ❂ /set <email-name> : To get Tempmail of Your Name
+ ❂ /domains : To check Domains List
 """
 
 __mod_name__ = "TempMail 📩"
