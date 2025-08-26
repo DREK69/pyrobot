@@ -1,3 +1,4 @@
+import signal
 import asyncio
 import html
 import importlib
