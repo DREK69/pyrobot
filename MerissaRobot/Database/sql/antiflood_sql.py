@@ -38,8 +38,9 @@ class FloodSettings(BASE):
         return f"<{self.chat_id} will executing {self.flood_type} for flood.>"
 
 
-FloodControl.__table__.create(checkfirst=True)
-FloodSettings.__table__.create(checkfirst=True)
+# Fixed: Add bind parameter to both table creations
+FloodControl.__table__.create(bind=SESSION.bind, checkfirst=True)
+FloodSettings.__table__.create(bind=SESSION.bind, checkfirst=True)
 
 INSERTION_FLOOD_LOCK = threading.RLock()
 INSERTION_FLOOD_SETTINGS_LOCK = threading.RLock()
