@@ -15,7 +15,8 @@ class GroupLogs(BASE):
         self.log_channel = str(log_channel)
 
 
-GroupLogs.__table__.create(checkfirst=True)
+# Fixed: Add bind parameter
+GroupLogs.__table__.create(bind=SESSION.bind, checkfirst=True)
 
 LOGS_INSERTION_LOCK = threading.RLock()
 
