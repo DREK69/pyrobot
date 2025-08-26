@@ -885,77 +885,56 @@ async def setup_handlers():
 
 
 
-from telegram import Update
+"""
+MerissaRobot __main__.py — unified startup runner
+"""
 
-# -------------------- Main Function --------------------
+import asyncio
+import signal
+from MerissaRobot import (
+    application,
+    init_bot,
+    setup_handlers,
+    initiate_clients,
+    graceful_shutdown,
+    LOGGER,
+)
+
 async def main():
+    # Start external clients (Pyrogram, Telethon, PyTgCalls)
+    await initiate_clients()
+
+    # Init PTB bot identity
+    await init_bot()
+
+    # Setup handlers
+    await setup_handlers()
+
+    # Run PTB in same loop (non-blocking)
+    ptb_task = asyncio.create_task(application.run_polling())
+
+    # Shutdown handling (SIGINT / SIGTERM)
+    loop = asyncio.get_running_loop()
+    stop_event = asyncio.Event()
+
+    def _stop(*_):
+        stop_event.set()
+    loop.add_signal_handler(signal.SIGINT, _stop)
+    loop.add_signal_handler(signal.SIGTERM, _stop)
+
+    LOGGER.info("🚀 MerissaRobot started successfully!")
+
+    # Wait until stop signal
+    await stop_event.wait()
+
+    # Graceful shutdown
+    LOGGER.info("🔻 Stopping MerissaRobot...")
+    await graceful_shutdown()
+    ptb_task.cancel()
     try:
-        from MerissaRobot import dirr
-        dirr()
-
-        # Init PTB
-        await application.initialize()
-        LOGGER.info("PTB initialized")
-
-        # Init other clients
-        await initiate_clients()
-
-        LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-
-        # Setup handlers
-        from MerissaRobot import setup_handlers
-        await setup_handlers()
-
-        # Start PTB
-        await application.start()
-        LOGGER.info("MerissaRobot Started Successfully")
-
-        # Send startup notification
-        try:
-            await application.bot.send_message(-1002846516370, "Merissa Started")
-        except Exception as e:
-            LOGGER.warning(f"Failed to send startup notification: {e}")
-
-        # Run polling (blocking until stopped)
-        await application.run_polling(
-            drop_pending_updates=True,
-            allowed_updates=Update.ALL_TYPES,
-        )
-
-    except Exception as e:
-        LOGGER.error(f"Error in main: {e}")
-        raise
-    finally:
-        await graceful_shutdown()
-
-
-# -------------------- Entry Point --------------------
-if __name__ == "__main__":
-
-    def signal_handler(signum, frame):
-        """Gracefully stop bot on SIGINT / SIGTERM"""
-        LOGGER.info(f"Received signal {signum}, shutting down...")
-        loop = asyncio.get_event_loop()
-        loop.create_task(graceful_shutdown())
-        loop.stop()   # stop event loop instead of sys.exit()
-
-    # Register signals
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
-
-    try:
-        LOGGER.info("Starting MerissaRobot...")
-        asyncio.run(main())   # clean run
-
-    except KeyboardInterrupt:
-        LOGGER.info("Bot stopped by user")
-
+        await ptb_task
     except asyncio.CancelledError:
-        LOGGER.info("Bot cancelled gracefully")
+        pass
 
-    except Exception as e:
-        LOGGER.error(f"Fatal error: {e}")
-        sys.exit(1)
-
-    finally:
-        LOGGER.info("Bot shutdown complete")
+if __name__ == "__main__":
+    asyncio.run(main())
