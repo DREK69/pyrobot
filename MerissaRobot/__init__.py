@@ -13,8 +13,15 @@ from logging import (
 
 import spamwatch
 from aiohttp import ClientSession
+from pyrogram import Client
+from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
+from pyrogram.errors.exceptions.flood_420 import FloodWait
+from pyrogram.types import Message
+from pyromod import listen  # ignore
+from pytgcalls import PyTgCalls
+from telethon import TelegramClient
+from telethon.sessions import MemorySession
 
-# CRITICAL: Only import what we absolutely need to avoid conflicts
 from telegram.ext import Application
 from telegram import Update
 
@@ -40,7 +47,37 @@ getLogger("telethon").setLevel(ERROR)
 getLogger("telegram").setLevel(ERROR)
 
 # ───────────────────────────────
-# SIMPLIFIED: Only PTB for main bot operations
+# CRITICAL: Create a single shared event loop for ALL frameworks
+# ───────────────────────────────
+def setup_event_loop():
+    """Setup single event loop for all frameworks"""
+    try:
+        # Try to get existing loop
+        loop = asyncio.get_event_loop()
+        if loop.is_closed():
+            raise RuntimeError("Loop is closed")
+    except RuntimeError:
+        # Create new loop
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+    
+    # Set policy for better compatibility
+    if sys.platform.startswith('win'):
+        asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+    else:
+        try:
+            import uvloop
+            asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+        except ImportError:
+            pass
+    
+    return loop
+
+# Setup event loop FIRST
+EVENT_LOOP = setup_event_loop()
+
+# ───────────────────────────────
+# PTB v22 Application
 # ───────────────────────────────
 application = (
     Application.builder()
@@ -67,89 +104,39 @@ async def init_bot():
         LOGGER.error(f"Failed to initialize bot: {e}")
         raise
 
-ASS_ID = "5249696122"
+ASS_ID = "7946751397"
 ASS_NAME = "Merissa Assistant"
-ASS_USERNAME = "MerissaAssistant"
-ASS_MENTION = "https://t.me/merissaassistant"
+ASS_USERNAME = "Cjjdjdjjdj"
+ASS_MENTION = "https://t.me/Cjjdjdjjdj"
 
 # ───────────────────────────────
-# LAZY LOADING: Initialize other clients only when needed
+# FIXED: Create clients but don't start them immediately
 # ───────────────────────────────
-_pbot = None
-_user = None
-_pytgcalls = None
-_telethn = None
 
-async def get_pbot():
-    """Get Pyrogram bot client (lazy loaded)"""
-    global _pbot
-    if _pbot is None:
-        from pyrogram import Client
-        _pbot = Client(
-            "MerissaRobot",
-            api_id=API_ID,
-            api_hash=API_HASH,
-            bot_token=TOKEN,
-            workers=10,
-            in_memory=True,
-        )
-        if not _pbot.is_connected:
-            await _pbot.start()
-    return _pbot
+# Create clients without starting
+pbot = Client(
+    "MerissaRobot",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=TOKEN,
+    workers=10,
+    in_memory=True,
+)
 
-async def get_user():
-    """Get Pyrogram user client (lazy loaded)"""
-    global _user
-    if _user is None and STRING_SESSION and STRING_SESSION.strip():
-        from pyrogram import Client
-        _user = Client(
-            "MerissaMusic",
-            api_id=API_ID,
-            api_hash=API_HASH,
-            session_string=str(STRING_SESSION),
-            in_memory=True,
-        )
-        if not _user.is_connected:
-            await _user.start()
-    return _user
+user = None
+pytgcalls = None
 
-async def get_pytgcalls():
-    """Get PyTgCalls client (lazy loaded)"""
-    global _pytgcalls
-    if _pytgcalls is None:
-        user_client = await get_user()
-        if user_client:
-            from pytgcalls import PyTgCalls
-            _pytgcalls = PyTgCalls(user_client)
-            if not _pytgcalls.is_connected:
-                await _pytgcalls.start()
-    return _pytgcalls
+if STRING_SESSION and STRING_SESSION.strip():
+    user = Client(
+        "MerissaMusic",
+        api_id=API_ID,
+        api_hash=API_HASH,
+        session_string=str(STRING_SESSION),
+        in_memory=True,
+    )
+    pytgcalls = PyTgCalls(user)
 
-async def get_telethn():
-    """Get Telethon client (lazy loaded)"""
-    global _telethn
-    if _telethn is None:
-        from telethon import TelegramClient
-        from telethon.sessions import MemorySession
-        _telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
-        if not _telethn.is_connected():
-            await _telethn.start(bot_token=TOKEN)
-    return _telethn
-
-# ───────────────────────────────
-# Compatibility aliases - async getters (NO property!)
-# ───────────────────────────────
-async def pbot():
-    return await get_pbot()
-
-async def user():
-    return await get_user()
-
-async def pytgcalls():
-    return await get_pytgcalls()
-
-async def telethn():
-    return await get_telethn()
+telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
 
 # ───────────────────────────────
 # Initialize global lists
@@ -210,6 +197,19 @@ class CustomCommandHandler(CommandHandler):
         )
         self.has_args = has_args
 
+    def check_update(self, update: object) -> Optional[bool]:
+        if not super().check_update(update):
+            return None
+            
+        if self.has_args is not None:
+            message = update.effective_message
+            if message and message.text:
+                args = message.text.split()[1:]
+                if len(args) < self.has_args:
+                    return None
+                    
+        return True
+
 class CustomMessageHandler(MessageHandler):
     """Custom Message Handler compatible with PTB v22"""
     
@@ -251,65 +251,135 @@ class CustomRegexHandler(MessageHandler):
         )
 
 # ───────────────────────────────
-# SIMPLIFIED Client Management
+# CRITICAL FIX: Client Management with Controlled Startup
 # ───────────────────────────────
+_clients_started = False
+
 async def initiate_clients():
-    """Initialize only PTB - others are lazy loaded"""
-    try:
-        # Initialize PTB application
-        await application.initialize()
-        await init_bot()
-        LOGGER.info("PTB Application initialized")
+    """Initialize all clients in controlled manner"""
+    global _clients_started
+    
+    if _clients_started:
+        return
         
-        # Send startup message using PTB
-        try:
-            await application.bot.send_message(2030709195, "Merissa Started (PTB Mode)")
-        except Exception as e:
-            LOGGER.warning(f"Failed to send startup message: {e}")
+    try:
+        LOGGER.info("Starting clients initialization...")
+        
+        # Start Pyrogram clients FIRST (they create fewer conflicts)
+        if not pbot.is_connected:
+            await pbot.start()
+            LOGGER.info("Pyrogram Bot started")
+        
+        if user and not user.is_connected:
+            await user.start()
+            LOGGER.info("Pyrogram User started")
             
+            if pytgcalls and not pytgcalls.is_connected:
+                await pytgcalls.start()
+                LOGGER.info("PyTgCalls started")
+        
+        # Start Telethon LAST
+        if not telethn.is_connected():
+            await telethn.start(bot_token=TOKEN)
+            LOGGER.info("Telethon started")
+        
+        _clients_started = True
+        LOGGER.info("All clients initialized successfully")
+        
+        # Send startup messages
+        try:
+            await pbot.send_message(-1002846516370, "Bot Started")
+            if user:
+                await user.send_message(-1002846516370, "Assistant Started")
+        except Exception as e:
+            LOGGER.warning(f"Failed to send startup messages: {e}")
+            
+    except FloodWait as e:
+        LOGGER.info(f"FloodWait: Have to wait {e.value} seconds")
+        await asyncio.sleep(e.value)
+        _clients_started = False  # Reset flag to retry
+        await initiate_clients()
     except Exception as e:
-        LOGGER.error(f"Error initializing clients: {e}")
+        LOGGER.error(f"Error starting clients: {e}")
         raise
 
 async def stop_clients():
-    """Stop all clients gracefully"""
+    """Stop all clients in reverse order"""
+    global _clients_started
+    
     try:
-        # Stop lazy-loaded clients if they exist
-        if _pytgcalls:
+        # Stop in reverse order
+        if pytgcalls and hasattr(pytgcalls, 'stop'):
             try:
-                await _pytgcalls.stop()
+                await pytgcalls.stop()
                 LOGGER.info("PyTgCalls stopped")
-            except:
-                pass
+            except Exception as e:
+                LOGGER.warning(f"Error stopping PyTgCalls: {e}")
                 
-        if _user and _user.is_connected:
+        if user and user.is_connected:
             try:
-                await _user.stop()
+                await user.stop()
                 LOGGER.info("Pyrogram User stopped")
-            except:
-                pass
+            except Exception as e:
+                LOGGER.warning(f"Error stopping User client: {e}")
                 
-        if _pbot and _pbot.is_connected:
+        if pbot.is_connected:
             try:
-                await _pbot.stop()
+                await pbot.stop()
                 LOGGER.info("Pyrogram Bot stopped")
-            except:
-                pass
+            except Exception as e:
+                LOGGER.warning(f"Error stopping Bot client: {e}")
                 
-        if _telethn and _telethn.is_connected():
+        if telethn.is_connected():
             try:
-                await _telethn.disconnect()
+                await telethn.disconnect()
                 LOGGER.info("Telethon disconnected")
-            except:
-                pass
+            except Exception as e:
+                LOGGER.warning(f"Error disconnecting Telethon: {e}")
+        
+        _clients_started = False
+        
+        # Cancel pending tasks related to pyrogram
+        try:
+            current_task = asyncio.current_task()
+            all_tasks = [t for t in asyncio.all_tasks() if t != current_task and not t.done()]
+            
+            # Filter pyrogram related tasks
+            pyrogram_tasks = [
+                t for t in all_tasks 
+                if hasattr(t.get_coro(), 'cr_code') and 
+                'pyrogram' in str(t.get_coro().cr_code.co_filename)
+            ]
+            
+            if pyrogram_tasks:
+                LOGGER.info(f"Cancelling {len(pyrogram_tasks)} pyrogram tasks...")
+                for task in pyrogram_tasks:
+                    task.cancel()
+                
+                try:
+                    await asyncio.wait_for(
+                        asyncio.gather(*pyrogram_tasks, return_exceptions=True),
+                        timeout=5.0
+                    )
+                    LOGGER.info("Pyrogram tasks cancelled successfully")
+                except asyncio.TimeoutError:
+                    LOGGER.warning("Some pyrogram tasks took too long to cancel")
+                except Exception as e:
+                    LOGGER.warning(f"Error cancelling pyrogram tasks: {e}")
+                    
+        except Exception as e:
+            LOGGER.warning(f"Error during task cleanup: {e}")
                 
     except Exception as e:
-        LOGGER.warning(f"Error stopping clients: {e}")
+        LOGGER.error(f"Error stopping clients: {e}")
 
 async def graceful_shutdown():
     """Gracefully shutdown all components"""
     try:
-        # Stop PTB application
+        # Stop clients first
+        await stop_clients()
+        
+        # Then stop PTB
         if hasattr(application, 'running') and application.running:
             await application.stop()
             LOGGER.info("PTB Application stopped")
@@ -318,8 +388,8 @@ async def graceful_shutdown():
             await application.shutdown()
             LOGGER.info("PTB Application shutdown")
         
-        # Stop other clients
-        await stop_clients()
+        # Small delay for cleanup
+        await asyncio.sleep(0.5)
         
     except Exception as e:
         LOGGER.error(f"Error during graceful shutdown: {e}")
@@ -328,7 +398,7 @@ async def graceful_shutdown():
 # Module Loading
 # ───────────────────────────────
 def load_all_modules():
-    """Load all modules"""
+    """Load all modules after clients are ready"""
     try:
         from MerissaRobot.Modules import ALL_MODULES
         LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
