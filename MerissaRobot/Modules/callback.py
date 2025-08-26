@@ -645,7 +645,7 @@ Click on below buttons and check Amazing Admin commands for Users.""",
             disable_web_page_preview=False,
         )
 
-elif query.data == "cb_sg":
+    elif query.data == "cb_sg":
         await query.message.edit_text(
             text="""──「 Help of Name History Module 」──
 
