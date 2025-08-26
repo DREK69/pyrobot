@@ -2,7 +2,7 @@ import threading
 
 from sqlalchemy import BigInteger, Boolean, Column, String, UnicodeText
 
-from MerissaRobot.Database.sql import BASE, SESSION
+from MerissaRobot.Database.sql import BASE, SESSION, ENGINE  # Add ENGINE import
 
 
 class GloballyBannedUsers(BASE):
@@ -36,8 +36,8 @@ class GbanSettings(BASE):
         return "<Gban setting {} ({})>".format(self.chat_id, self.setting)
 
 
-GloballyBannedUsers.__table__.create(checkfirst=True)
-GbanSettings.__table__.create(checkfirst=True)
+# Create tables with proper bind parameter
+BASE.metadata.create_all(bind=ENGINE, checkfirst=True)
 
 GBANNED_USERS_LOCK = threading.RLock()
 GBAN_SETTING_LOCK = threading.RLock()
