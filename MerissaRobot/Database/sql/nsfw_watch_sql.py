@@ -13,7 +13,7 @@
 
 from sqlalchemy import Column, String
 
-from MerissaRobot.Database.sql import BASE, SESSION
+from MerissaRobot.Database.sql import BASE, SESSION, ENGINE  # Add ENGINE import
 
 
 class Nsfwatch(BASE):
@@ -24,7 +24,7 @@ class Nsfwatch(BASE):
         self.chat_id = chat_id
 
 
-Nsfwatch.__table__.create(checkfirst=True)
+Nsfwatch.__table__.create(bind=ENGINE, checkfirst=True)  # Add bind=ENGINE
 
 
 def add_nsfwatch(chat_id: str):
