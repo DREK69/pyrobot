@@ -1,9 +1,9 @@
 import re
 from pyrate_limiter import (
-    BucketFullException,
     Duration,
+    RequestRate,
     Limiter,
-    Rate,
+    MemoryListBucket,   # ✅ InMemoryBucket ki jagah
 )
 from telegram import Update
 from telegram.ext import (
