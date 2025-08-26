@@ -878,12 +878,11 @@ async def setup_handlers():
     # Error handlers
     application.add_error_handler(error_handler)
 
-"""Main function to start the bot"""
 async def main():
     try:
         LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
 
-        # Initialize all clients
+        # Initialize all clients (ensure they start in current loop)
         await initiate_clients()
 
         # Setup handlers
@@ -902,11 +901,17 @@ async def main():
         except Exception as e:
             LOGGER.error(f"Failed to send startup notification: {e}")
 
-        # Run polling directly (no .updater)
-        await application.run_polling(
-            stop_signals=None,  # let asyncio handle signals
-            drop_pending_updates=True,
-            allowed_updates=Update.ALL_TYPES
+        # Run PTB + other clients concurrently on SAME loop
+        await asyncio.gather(
+            application.run_polling(
+                stop_signals=None,  # asyncio handles signals
+                drop_pending_updates=True,
+                allowed_updates=Update.ALL_TYPES,
+            ),
+            pbot.start(),     # Pyrogram bot
+            user.start(),     # Userbot
+            telethn.start(),  # Telethon
+            pytgcalls.start() # PyTgCalls
         )
 
     except Exception as e:
@@ -919,13 +924,13 @@ async def main():
                 await application.stop()
             await application.shutdown()
 
-            if hasattr(pbot, 'is_connected') and pbot.is_connected:
+            if hasattr(pbot, "is_connected") and pbot.is_connected:
                 await pbot.stop()
-            if hasattr(user, 'is_connected') and user.is_connected:
+            if hasattr(user, "is_connected") and user.is_connected:
                 await user.stop()
-            if hasattr(pytgcalls, 'stop'):
+            if hasattr(pytgcalls, "stop"):
                 await pytgcalls.stop()
-            if hasattr(telethn, 'is_connected') and telethn.is_connected():
+            if hasattr(telethn, "is_connected") and telethn.is_connected():
                 await telethn.disconnect()
 
             LOGGER.info("Bot stopped successfully")
