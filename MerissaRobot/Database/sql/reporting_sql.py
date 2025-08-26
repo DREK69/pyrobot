@@ -30,8 +30,9 @@ class ReportingChatSettings(BASE):
         return "<Chat report settings ({})>".format(self.chat_id)
 
 
-ReportingUserSettings.__table__.create(checkfirst=True)
-ReportingChatSettings.__table__.create(checkfirst=True)
+# Fixed: Add bind parameter to both table creations
+ReportingUserSettings.__table__.create(bind=SESSION.bind, checkfirst=True)
+ReportingChatSettings.__table__.create(bind=SESSION.bind, checkfirst=True)
 
 CHAT_LOCK = threading.RLock()
 USER_LOCK = threading.RLock()
@@ -69,6 +70,26 @@ def set_chat_setting(chat_id: Union[int, str], setting: bool):
 
 
 def set_user_setting(user_id: int, setting: bool):
+    with USER_LOCK:
+        user_setting = SESSION.query(ReportingUserSettings).get(user_id)
+        if not user_setting:
+            user_setting = ReportingUserSettings(user_id)
+
+        user_setting.should_report = setting
+        SESSION.add(user_setting)
+        SESSION.commit()
+
+
+def migrate_chat(old_chat_id, new_chat_id):
+    with CHAT_LOCK:
+        chat_notes = (
+            SESSION.query(ReportingChatSettings)
+            .filter(ReportingChatSettings.chat_id == str(old_chat_id))
+            .all()
+        )
+        for note in chat_notes:
+            note.chat_id = str(new_chat_id)
+        SESSION.commit()def set_user_setting(user_id: int, setting: bool):
     with USER_LOCK:
         user_setting = SESSION.query(ReportingUserSettings).get(user_id)
         if not user_setting:
