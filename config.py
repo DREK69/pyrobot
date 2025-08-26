@@ -35,7 +35,7 @@ DB_URI = DB_URL.replace("postgres://", "postgresql://", 1)
 REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", "")
 MONGO_DB_URI = os.environ.get(
     "MONGO_DB_URI",
-    "mongodb+srv://merissa:merissa@cluster0.tuhlo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "mongodb+srv://drek:drek@cluster0.hjcba3x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
 )
 DONATION_LINK = os.environ.get("DONATION_LINK", "https://t.me/noobxcoder")
 LOAD = os.environ.get("LOAD", "").split()
