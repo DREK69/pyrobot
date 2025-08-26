@@ -45,8 +45,12 @@ class Buttons(BASE):
         self.same_line = same_line
 
 
-Notes.__table__.create(checkfirst=True)
-Buttons.__table__.create(checkfirst=True)
+# Fixed table creation - use BASE.metadata.create_all() instead of individual table.create()
+try:
+    # This will create all tables defined in BASE.metadata if they don't exist
+    BASE.metadata.create_all(bind=SESSION.bind, checkfirst=True)
+except Exception as e:
+    print(f"Error creating notes tables: {e}")
 
 NOTES_INSERTION_LOCK = threading.RLock()
 BUTTONS_INSERTION_LOCK = threading.RLock()
