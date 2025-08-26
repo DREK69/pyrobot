@@ -2,7 +2,7 @@ import threading
 
 from sqlalchemy import Boolean, Column, UnicodeText
 
-from MerissaRobot.Database.sql import BASE, SESSION
+from MerissaRobot.Database.sql import BASE, SESSION, ENGINE  # Add ENGINE import
 
 
 class CleanerBlueTextChatSettings(BASE):
@@ -36,9 +36,8 @@ class CleanerBlueTextGlobal(BASE):
         self.command = command
 
 
-CleanerBlueTextChatSettings.__table__.create(checkfirst=True)
-CleanerBlueTextChat.__table__.create(checkfirst=True)
-CleanerBlueTextGlobal.__table__.create(checkfirst=True)
+# Create all tables with proper bind parameter
+BASE.metadata.create_all(bind=ENGINE, checkfirst=True)
 
 CLEANER_CHAT_SETTINGS = threading.RLock()
 CLEANER_CHAT_LOCK = threading.RLock()
@@ -130,7 +129,7 @@ def global_unignore_command(command):
             if command in GLOBAL_IGNORE_COMMANDS:
                 GLOBAL_IGNORE_COMMANDS.remove(command)
 
-            SESSION.delete(command)
+            SESSION.delete(unignored)  # Fix: Delete the object, not the string
             SESSION.commit()
             return True
 
