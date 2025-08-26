@@ -18,7 +18,7 @@ from telegram import (
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest, TelegramError
-rom telegram.ext import ContextTypes, CallbackQueryHandler
+from telegram.ext import ContextTypes, CallbackQueryHandler
 from telegram.helpers import mention_html
 
 from MerissaRobot import application
