@@ -3,8 +3,7 @@ from io import BytesIO
 from time import sleep
 
 from telegram import Update
-from telegram.error import TelegramError
-from telegram.error import BadRequest, Unauthorized
+from telegram.error import BadRequest, Forbidden, TelegramError
 from telegram.ext import ContextTypes, CommandHandler, filters, MessageHandler
 
 import MerissaRobot.Database.sql.users_sql as sql
