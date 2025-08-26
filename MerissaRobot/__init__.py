@@ -107,14 +107,15 @@ ASS_MENTION = "https://t.me/merissaassistant"
 # Pyrogram + Telethon - FIXED for Single Event Loop
 # ───────────────────────────────
 
-# CRITICAL: Create clients with no_updates=True to prevent event loop conflicts
+# CRITICAL: Create clients WITHOUT no_updates to allow proper handler registration
+# but we'll manage the event loop manually
 pbot = Client(
     "MerissaRobot",
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=TOKEN,
-    workers=50,  # Reduced workers to prevent conflicts
-    no_updates=True,  # CRITICAL: Prevents automatic update handling
+    workers=20,  # Further reduced workers
+    in_memory=True,  # Use in-memory session to prevent file conflicts
 )
 
 user = None
@@ -127,7 +128,7 @@ if STRING_SESSION and STRING_SESSION.strip():
         api_id=API_ID,
         api_hash=API_HASH,
         session_string=str(STRING_SESSION),
-        no_updates=True,  # CRITICAL: Prevents automatic update handling
+        in_memory=True,  # Use in-memory session
     )
     pytgcalls = PyTgCalls(user)
 
@@ -290,38 +291,94 @@ async def initiate_clients():
         # Don't raise - let the bot continue with available clients
 
 async def stop_clients():
-    """Properly stop all clients"""
+    """Properly stop all clients and cleanup pending tasks"""
     try:
+        # Stop PyTgCalls first
         if pytgcalls and hasattr(pytgcalls, 'stop'):
             try:
                 await pytgcalls.stop()
                 LOGGER.info("PyTgCalls stopped")
-            except:
-                pass
+            except Exception as e:
+                LOGGER.warning(f"Error stopping PyTgCalls: {e}")
                 
+        # Stop user client
         if user and user.is_connected:
             try:
                 await user.stop()
                 LOGGER.info("Pyrogram User stopped")
-            except:
-                pass
+            except Exception as e:
+                LOGGER.warning(f"Error stopping User client: {e}")
                 
+        # Stop bot client
         if pbot.is_connected:
             try:
                 await pbot.stop()
                 LOGGER.info("Pyrogram Bot stopped")
-            except:
-                pass
+            except Exception as e:
+                LOGGER.warning(f"Error stopping Bot client: {e}")
                 
+        # Stop Telethon
         if telethn.is_connected():
             try:
                 await telethn.disconnect()
                 LOGGER.info("Telethon disconnected")
-            except:
-                pass
+            except Exception as e:
+                LOGGER.warning(f"Error disconnecting Telethon: {e}")
+        
+        # CRITICAL: Cancel all pending tasks to prevent the error
+        try:
+            # Get current event loop
+            loop = asyncio.get_running_loop()
+            
+            # Get all tasks
+            pending_tasks = [task for task in asyncio.all_tasks(loop) 
+                           if not task.done() and task != asyncio.current_task()]
+            
+            if pending_tasks:
+                LOGGER.info(f"Cancelling {len(pending_tasks)} pending tasks...")
+                
+                # Cancel all pending tasks
+                for task in pending_tasks:
+                    task.cancel()
+                
+                # Wait for all tasks to be cancelled with timeout
+                try:
+                    await asyncio.wait_for(
+                        asyncio.gather(*pending_tasks, return_exceptions=True),
+                        timeout=10.0
+                    )
+                    LOGGER.info("All pending tasks cancelled successfully")
+                except asyncio.TimeoutError:
+                    LOGGER.warning("Some tasks took too long to cancel")
+                except Exception as e:
+                    LOGGER.warning(f"Error cancelling tasks: {e}")
+                    
+        except Exception as e:
+            LOGGER.warning(f"Error during task cleanup: {e}")
                 
     except Exception as e:
         LOGGER.error(f"Error stopping clients: {e}")
+
+async def graceful_shutdown():
+    """Gracefully shutdown all components"""
+    try:
+        # Stop PTB application first
+        if hasattr(application, 'running') and application.running:
+            await application.stop()
+            LOGGER.info("PTB Application stopped")
+            
+        if hasattr(application, 'shutdown'):
+            await application.shutdown()
+            LOGGER.info("PTB Application shutdown")
+            
+        # Then stop other clients
+        await stop_clients()
+        
+        # Small delay to allow cleanup
+        await asyncio.sleep(1)
+        
+    except Exception as e:
+        LOGGER.error(f"Error during graceful shutdown: {e}")
 
 # ───────────────────────────────
 # FIXED: Import after client initialization to prevent circular imports
