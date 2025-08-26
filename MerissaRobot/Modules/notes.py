@@ -2,7 +2,6 @@ import ast
 import random
 import re
 from io import BytesIO
-from telegram.constants import MAX_MESSAGE_LENGTH
 from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -27,6 +26,9 @@ from MerissaRobot.Handler.ptb.misc import build_keyboard, revert_buttons
 from MerissaRobot.Handler.ptb.msg_types import get_note_type
 from MerissaRobot.Handler.ptb.string_handling import escape_invalid_curly_brackets
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
+
+# notes.py के ऊपर डालें
+MAX_MESSAGE_LENGTH = 4096  # Telegram का maximum message length
 
 FILE_MATCHER = re.compile(r"^###file_id(!photo)?###:(.*?)(?:\s|$)")
 STICKER_MATCHER = re.compile(r"^###sticker(!photo)?###:")
