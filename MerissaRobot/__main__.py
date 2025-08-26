@@ -878,81 +878,99 @@ async def setup_handlers():
     # Error handlers
     application.add_error_handler(error_handler)
 
-"""CORRECTED Main function - Proper order and timing"""
 
+# -------------------- Graceful Shutdown --------------------
+async def graceful_shutdown():
+    LOGGER.info("Shutting down clients...")
+
+    try:
+        if hasattr(application, "stop"):
+            await application.stop()
+    except Exception as e:
+        LOGGER.warning(f"Error stopping PTB: {e}")
+
+    try:
+        # Pyrogram & Telethon clients
+        from MerissaRobot import pbot, tbot, userbot
+        if pbot.is_connected:
+            await pbot.stop()
+        if tbot.is_connected:
+            await tbot.disconnect()
+        if userbot.is_connected:
+            await userbot.disconnect()
+    except Exception as e:
+        LOGGER.warning(f"Error stopping Pyrogram clients: {e}")
+
+    LOGGER.info("All clients stopped gracefully")
+
+
+# -------------------- Main Function --------------------
 async def main():
-    """Main function with proper client initialization order"""
     try:
         # Step 1: Clean directories
         from MerissaRobot import dirr
         dirr()
-        
-        # Step 2: Initialize PTB first (no polling yet)
+
+        # Step 2: Init PTB
         await application.initialize()
         await init_bot()
         LOGGER.info("PTB initialized")
-        
-        # Step 3: Initialize other clients BEFORE loading modules
+
+        # Step 3: Init other clients (Pyrogram, Telethon, etc.)
         await initiate_clients()
-        
-        # Step 4: Load modules AFTER clients are ready
+
+        # Step 4: Load modules
         LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
 
         # Step 5: Setup handlers
+        from MerissaRobot import setup_handlers
         await setup_handlers()
 
-        # Step 6: Start PTB application
+        # Step 6: Start PTB
         await application.start()
         LOGGER.info("MerissaRobot Started Successfully")
 
-        # Step 7: Send startup notification
+        # Step 7: Startup notification
         try:
             await application.bot.send_message(-1002846516370, "Merissa Started")
         except Exception as e:
             LOGGER.warning(f"Failed to send startup notification: {e}")
 
-        # Step 8: Start polling (this blocks until shutdown)
+        # Step 8: Run polling (non-blocking loop close)
         await application.run_polling(
             drop_pending_updates=True,
-            allowed_updates=Update.ALL_TYPES
+            allowed_updates=Update.ALL_TYPES,
+            close_loop=False,   # 👈 Important
         )
 
     except Exception as e:
         LOGGER.error(f"Error in main: {e}")
         raise
     finally:
-        # Cleanup
-        try:
-            from MerissaRobot import graceful_shutdown
-            await graceful_shutdown()
-        except Exception as cleanup_error:
-            LOGGER.error(f"Error during cleanup: {cleanup_error}")
+        await graceful_shutdown()
 
 
-# Entry point - simplified and robust
+# -------------------- Entry Point --------------------
 if __name__ == "__main__":
-    import signal
-    import sys
-    
     def signal_handler(signum, frame):
         LOGGER.info(f"Received signal {signum}, shutting down...")
-        # Get current event loop and cancel all tasks
         try:
             loop = asyncio.get_event_loop()
             for task in asyncio.all_tasks(loop):
                 task.cancel()
-        except:
-            pass
+            asyncio.create_task(graceful_shutdown())
+        except Exception as e:
+            LOGGER.error(f"Signal handler error: {e}")
         sys.exit(0)
-    
-    # Register signal handlers
+
+    # Register signals
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
-    
+
     try:
         LOGGER.info("Starting MerissaRobot...")
         asyncio.run(main())
-        
+
     except KeyboardInterrupt:
         LOGGER.info("Bot stopped by user")
     except asyncio.CancelledError:
