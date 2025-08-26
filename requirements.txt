@@ -7,7 +7,7 @@ asyncio
 beautifulsoup4
 bleach
 bs4==0.0.2
-captcha==0.7.1 
+captcha==0.7.1
 cloudscraper
 dateparser
 dnspython==2.7.0
@@ -29,7 +29,6 @@ multicolorcaptcha
 opencv-python-headless
 psycopg2-binary
 Pillow==11.3.0
-pornhub-api==0.4.0
 pykeyboard
 pymongo==4.14.0
 pynewtonmath
@@ -44,14 +43,14 @@ pytube
 qrcode
 Random-Word-Generator
 regex
-requests 
+requests
 somnium
 spamwatch
 speedtest-cli
 sqlalchemy==2.0.43
 telegraph
 telethon
-pyshorteners 
+pyshorteners
 tgcrypto
 wget
 youtube_search_python==1.6.6
