@@ -43,8 +43,9 @@ class StickerSettings(BASE):
         )
 
 
-StickersFilters.__table__.create(checkfirst=True)
-StickerSettings.__table__.create(checkfirst=True)
+# Fixed: Add bind parameter to both table creations
+StickersFilters.__table__.create(bind=SESSION.bind, checkfirst=True)
+StickerSettings.__table__.create(bind=SESSION.bind, checkfirst=True)
 
 STICKERS_FILTER_INSERTION_LOCK = threading.RLock()
 STICKSET_FILTER_INSERTION_LOCK = threading.RLock()
