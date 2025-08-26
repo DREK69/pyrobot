@@ -2,7 +2,7 @@ import threading
 
 from sqlalchemy import BigInteger, Column, UnicodeText
 
-from MerissaRobot.Database.sql import BASE, SESSION
+from MerissaRobot.Database.sql import BASE, SESSION, ENGINE  # Add ENGINE import
 
 
 class UserInfo(BASE):
@@ -31,8 +31,12 @@ class UserBio(BASE):
         return "<User info %d>" % self.user_id
 
 
-UserInfo.__table__.create(checkfirst=True)
-UserBio.__table__.create(checkfirst=True)
+# Option 1: Create tables individually with bind parameter
+# UserInfo.__table__.create(bind=ENGINE, checkfirst=True)
+# UserBio.__table__.create(bind=ENGINE, checkfirst=True)
+
+# Option 2: Create all tables at once (Recommended)
+BASE.metadata.create_all(bind=ENGINE, checkfirst=True)
 
 INSERTION_LOCK = threading.RLock()
 
