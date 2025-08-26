@@ -18,7 +18,8 @@ class Disable(BASE):
         return "Disabled cmd {} in {}".format(self.command, self.chat_id)
 
 
-Disable.__table__.create(checkfirst=True)
+# Fixed: Use SESSION.bind instead of missing bind parameter
+Disable.__table__.create(bind=SESSION.bind, checkfirst=True)
 DISABLE_INSERTION_LOCK = threading.RLock()
 
 DISABLED = {}
