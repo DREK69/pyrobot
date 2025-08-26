@@ -2,7 +2,7 @@ import os
 import asyncio
 
 from telegram import Update
-from telegram.error import BadRequest, RetryAfter, Unauthorized
+from telegram.exceptions import BadRequest, RetryAfter, Unauthorized
 from telegram.ext import ContextTypes, CommandHandler, filters
 
 from MerissaRobot import OWNER_ID, application
