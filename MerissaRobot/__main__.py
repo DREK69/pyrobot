@@ -878,11 +878,12 @@ async def setup_handlers():
     # Error handlers
     application.add_error_handler(error_handler)
 
+"""Main function to start the bot - FIXED for proper task cleanup"""
 async def main():
     try:
         LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
 
-        # Initialize all clients (ensure they start in current loop)
+        # Initialize all clients
         await initiate_clients()
 
         # Setup handlers
@@ -901,50 +902,65 @@ async def main():
         except Exception as e:
             LOGGER.error(f"Failed to send startup notification: {e}")
 
-        # Run PTB + other clients concurrently on SAME loop
-        await asyncio.gather(
-            application.run_polling(
-                stop_signals=None,  # asyncio handles signals
+        # CRITICAL FIX: Use run_polling with proper error handling
+        try:
+            await application.run_polling(
+                stop_signals=None,  # let asyncio handle signals
                 drop_pending_updates=True,
-                allowed_updates=Update.ALL_TYPES,
-            ),
-            pbot.start(),     # Pyrogram bot
-            user.start(),     # Userbot
-            telethn.start(),  # Telethon
-            pytgcalls.start() # PyTgCalls
-        )
+                allowed_updates=Update.ALL_TYPES
+            )
+        except asyncio.CancelledError:
+            LOGGER.info("Bot polling cancelled")
+        except KeyboardInterrupt:
+            LOGGER.info("Bot stopped by user (Ctrl+C)")
+        except Exception as e:
+            LOGGER.error(f"Error during polling: {e}")
 
     except Exception as e:
         LOGGER.error(f"Error in main: {e}")
         raise
     finally:
-        # Cleanup
-        try:
-            if application.running:
-                await application.stop()
-            await application.shutdown()
-
-            if hasattr(pbot, "is_connected") and pbot.is_connected:
-                await pbot.stop()
-            if hasattr(user, "is_connected") and user.is_connected:
-                await user.stop()
-            if hasattr(pytgcalls, "stop"):
-                await pytgcalls.stop()
-            if hasattr(telethn, "is_connected") and telethn.is_connected():
-                await telethn.disconnect()
-
-            LOGGER.info("Bot stopped successfully")
-        except Exception as e:
-            LOGGER.error(f"Error during cleanup: {e}")
+        # CRITICAL: Import graceful shutdown from __init__
+        from MerissaRobot import graceful_shutdown
+        await graceful_shutdown()
 
 
+# FIXED: Entry point with proper signal handling
 if __name__ == "__main__":
+    # Set up signal handlers for graceful shutdown
+    import signal
+    
+    def signal_handler(sig, frame):
+        LOGGER.info(f"Received signal {sig}, shutting down gracefully...")
+        # Cancel the main task
+        for task in asyncio.all_tasks():
+            task.cancel()
+    
+    # Register signal handlers
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    
     try:
+        # Set event loop policy if needed
+        if sys.platform.startswith('win'):
+            asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+        else:
+            try:
+                import uvloop
+                asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+            except ImportError:
+                pass
+
+        LOGGER.info("Starting MerissaRobot...")
         asyncio.run(main())
+        
     except KeyboardInterrupt:
         LOGGER.info("Bot stopped by user")
+    except asyncio.CancelledError:
+        LOGGER.info("Bot cancelled gracefully")
     except Exception as e:
         LOGGER.error(f"Fatal error: {e}")
         import sys
         sys.exit(1)
-
+    finally:
+        LOGGER.info("Bot shutdown complete")
