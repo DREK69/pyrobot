@@ -1,8 +1,8 @@
 import ast
 import html
 import unicodedata as ud
-
-from telegram import ChatPermissions, MessageEntity, TelegramError, Update
+from telegram import ChatPermissions, MessageEntity, Update
+from telegram.error import TelegramError
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CommandHandler, filters, MessageHandler, ContextTypes
