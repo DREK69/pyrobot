@@ -66,9 +66,12 @@ class WarnSettings(BASE):
         return f"<{self.chat_id} has {self.warn_limit} possible warns.>"
 
 
-Warns.__table__.create(checkfirst=True)
-WarnFilters.__table__.create(checkfirst=True)
-WarnSettings.__table__.create(checkfirst=True)
+# Fixed table creation - use BASE.metadata.create_all() instead of individual table.create()
+try:
+    # This will create all tables defined in BASE.metadata if they don't exist
+    BASE.metadata.create_all(bind=SESSION.bind, checkfirst=True)
+except Exception as e:
+    print(f"Error creating tables: {e}")
 
 WARN_INSERTION_LOCK = threading.RLock()
 WARN_FILTER_INSERTION_LOCK = threading.RLock()
