@@ -878,30 +878,40 @@ async def setup_handlers():
     # Error handlers
     application.add_error_handler(error_handler)
 
-"""SIMPLIFIED Main function - PTB focused approach"""
+"""CORRECTED Main function - Proper order and timing"""
+
 async def main():
-    """Main function - simplified to avoid event loop conflicts"""
+    """Main function with proper client initialization order"""
     try:
-        # Clean directories
+        # Step 1: Clean directories
         from MerissaRobot import dirr
         dirr()
         
-        # Load modules
-        from MerissaRobot.Modules import ALL_MODULES
+        # Step 2: Initialize PTB first (no polling yet)
+        await application.initialize()
+        await init_bot()
+        LOGGER.info("PTB initialized")
+        
+        # Step 3: Initialize other clients BEFORE loading modules
+        await initiate_clients()
+        
+        # Step 4: Load modules AFTER clients are ready
         LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
 
-        # Initialize only PTB (other clients lazy-loaded)
-        from MerissaRobot import initiate_clients
-        await initiate_clients()
-
-        # Setup handlers
+        # Step 5: Setup handlers
         await setup_handlers()
 
-        # Start PTB application
+        # Step 6: Start PTB application
         await application.start()
         LOGGER.info("MerissaRobot Started Successfully")
 
-        # Run polling - this is the main event loop
+        # Step 7: Send startup notification
+        try:
+            await application.bot.send_message(-1002846516370, "Merissa Started")
+        except Exception as e:
+            LOGGER.warning(f"Failed to send startup notification: {e}")
+
+        # Step 8: Start polling (this blocks until shutdown)
         await application.run_polling(
             drop_pending_updates=True,
             allowed_updates=Update.ALL_TYPES
@@ -911,18 +921,33 @@ async def main():
         LOGGER.error(f"Error in main: {e}")
         raise
     finally:
-        # Simple cleanup
+        # Cleanup
         try:
             from MerissaRobot import graceful_shutdown
             await graceful_shutdown()
-        except:
-            pass
+        except Exception as cleanup_error:
+            LOGGER.error(f"Error during cleanup: {cleanup_error}")
 
 
-# SIMPLIFIED: Entry point
+# Entry point - simplified and robust
 if __name__ == "__main__":
     import signal
     import sys
+    
+    def signal_handler(signum, frame):
+        LOGGER.info(f"Received signal {signum}, shutting down...")
+        # Get current event loop and cancel all tasks
+        try:
+            loop = asyncio.get_event_loop()
+            for task in asyncio.all_tasks(loop):
+                task.cancel()
+        except:
+            pass
+        sys.exit(0)
+    
+    # Register signal handlers
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
     
     try:
         LOGGER.info("Starting MerissaRobot...")
@@ -930,6 +955,8 @@ if __name__ == "__main__":
         
     except KeyboardInterrupt:
         LOGGER.info("Bot stopped by user")
+    except asyncio.CancelledError:
+        LOGGER.info("Bot cancelled gracefully")
     except Exception as e:
         LOGGER.error(f"Fatal error: {e}")
         sys.exit(1)
