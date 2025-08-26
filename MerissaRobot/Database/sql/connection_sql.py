@@ -3,6 +3,7 @@ import time
 from typing import Union
 
 from sqlalchemy import BigInteger, Boolean, Column, String, UnicodeText
+from sqlalchemy.exc import OperationalError, ProgrammingError
 
 from MerissaRobot.Database.sql import BASE, SESSION
 
@@ -54,6 +55,7 @@ CONNECTION_HISTORY_LOCK = threading.RLock()
 
 # Cache for history
 HISTORY_CONNECT = {}
+HISTORY_LOADED = False
 
 
 # ------------------- Functions ------------------- #
@@ -118,6 +120,10 @@ def disconnect(user_id):
 
 def add_history_conn(user_id, chat_id, chat_name):
     global HISTORY_CONNECT
+    # Ensure history is loaded first
+    if not HISTORY_LOADED:
+        __load_user_history()
+    
     with CONNECTION_HISTORY_LOCK:
         conn_time = int(time.time())
         if HISTORY_CONNECT.get(int(user_id)):
@@ -164,6 +170,10 @@ def add_history_conn(user_id, chat_id, chat_name):
 
 
 def get_history_conn(user_id):
+    # Ensure history is loaded first
+    if not HISTORY_LOADED:
+        __load_user_history()
+        
     if not HISTORY_CONNECT.get(int(user_id)):
         HISTORY_CONNECT[int(user_id)] = {}
     return HISTORY_CONNECT[int(user_id)]
@@ -171,6 +181,10 @@ def get_history_conn(user_id):
 
 def clear_history_conn(user_id):
     global HISTORY_CONNECT
+    # Ensure history is loaded first
+    if not HISTORY_LOADED:
+        __load_user_history()
+        
     todel = list(HISTORY_CONNECT[int(user_id)])
     for x in todel:
         chat_old = HISTORY_CONNECT[int(user_id)][x]["chat_id"]
@@ -183,7 +197,7 @@ def clear_history_conn(user_id):
 
 
 def __load_user_history():
-    global HISTORY_CONNECT
+    global HISTORY_CONNECT, HISTORY_LOADED
     try:
         qall = SESSION.query(ConnectionHistory).all()
         HISTORY_CONNECT = {}
@@ -195,8 +209,24 @@ def __load_user_history():
                 "chat_name": x.chat_name,
                 "chat_id": x.chat_id,
             }
+        HISTORY_LOADED = True
+        print("[ConnectionHistory] User history loaded successfully")
+    except (OperationalError, ProgrammingError) as e:
+        print(f"[ConnectionHistory] Table doesn't exist yet, will load later: {e}")
+        HISTORY_CONNECT = {}
+        HISTORY_LOADED = False
+    except Exception as e:
+        print(f"[ConnectionHistory] Error loading history: {e}")
+        HISTORY_CONNECT = {}
+        HISTORY_LOADED = False
     finally:
         SESSION.close()
 
 
-__load_user_history()
+# Don't load history immediately when module is imported
+# __load_user_history()  # Remove this line
+
+# Instead, we'll load it when needed or create an init function
+def init_connection_history():
+    """Call this after database is fully initialized"""
+    __load_user_history()
