@@ -10,7 +10,7 @@ from pyrate_limiter import (
 rate = RequestRate(5, Duration.MINUTE)
 limiter = Limiter(rate)
 
-from pyrate_limiter.buckets.in_memory_bucket import InMemoryBucket
+from pyrate_limiter import MemoryListBucket
 from telegram import Update
 from telegram.ext import (
     CommandHandler,
