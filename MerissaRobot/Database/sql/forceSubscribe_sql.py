@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Numeric, String
 
-from MerissaRobot.Database.sql import BASE, SESSION
+from MerissaRobot.Database.sql import BASE, SESSION, ENGINE  # Add ENGINE import
 
 
 class forceSubscribe(BASE):
@@ -13,7 +13,7 @@ class forceSubscribe(BASE):
         self.channel = channel
 
 
-forceSubscribe.__table__.create(checkfirst=True)
+forceSubscribe.__table__.create(bind=ENGINE, checkfirst=True)  # Add bind=ENGINE
 
 
 def fs_settings(chat_id):
