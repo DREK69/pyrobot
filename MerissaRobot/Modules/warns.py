@@ -553,7 +553,7 @@ LIST_WARN_HANDLER = DisableAbleCommandHandler(
     admin_ok=True,
 )
 WARN_FILTER_HANDLER = MessageHandler(
-    CustomFilters.has_text & filters.ChatType.GROUPS, reply_filter
+    CustomFilters.has_text() & filters.ChatType.GROUPS, reply_filter
 )
 WARN_LIMIT_HANDLER = CommandHandler(
     "warnlimit", set_warn_limit, filters=filters.ChatType.GROUPS
