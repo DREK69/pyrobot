@@ -2,7 +2,8 @@ import asyncio
 from io import BytesIO
 from time import sleep
 
-from telegram import TelegramError, Update
+from telegram import Update
+from telegram.error import TelegramError
 from telegram.error import BadRequest, Unauthorized
 from telegram.ext import ContextTypes, CommandHandler, filters, MessageHandler
 
