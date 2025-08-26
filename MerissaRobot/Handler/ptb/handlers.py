@@ -2,10 +2,10 @@ import re
 from pyrate_limiter import (
     BucketFullException,
     Duration,
-    MemoryListBucket,
     Limiter,
     Rate,
 )
+from pyrate_limiter.buckets.in_memory_bucket import InMemoryBucket
 from telegram import Update
 from telegram.ext import (
     CommandHandler,
@@ -51,7 +51,7 @@ class AntiSpam:
             self.min_limit,
             self.hour_limit,
             self.daily_limit,
-            bucket_class=MemoryListBucket,
+            bucket_class=InMemoryBucket,
         )
 
     def check_user(self, user_id: int) -> bool:
