@@ -2,7 +2,7 @@ import re
 from pyrate_limiter import (
     BucketFullException,
     Duration,
-    InMemoryBucket,
+    MemoryListBucket,
     Limiter,
     Rate,
 )
@@ -51,7 +51,7 @@ class AntiSpam:
             self.min_limit,
             self.hour_limit,
             self.daily_limit,
-            bucket_class=InMemoryBucket,
+            bucket_class=MemoryListBucket,
         )
 
     def check_user(self, user_id: int) -> bool:
