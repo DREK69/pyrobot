@@ -4,7 +4,7 @@ from pyrate_limiter import (
     Duration,
     InMemoryBucket,
     Limiter,
-    RequestRate,
+    Rate,  # Changed from RequestRate to Rate
 )
 from telegram import Update
 from telegram.ext import (
@@ -39,11 +39,11 @@ class AntiSpam:
             + (DEMONS or [])
             + (TIGERS or [])
         )
-        Duration.CUSTOM = 15  # 15 seconds
-        self.sec_limit = RequestRate(6, Duration.CUSTOM)   # 6 per 15 sec
-        self.min_limit = RequestRate(20, Duration.MINUTE)  # 20 per minute
-        self.hour_limit = RequestRate(100, Duration.HOUR)  # 100 per hour
-        self.daily_limit = RequestRate(1000, Duration.DAY) # 1000 per day
+        # Create rate limits using available classes
+        self.sec_limit = Rate(6, 15)           # 6 per 15 seconds
+        self.min_limit = Rate(20, Duration.MINUTE)   # 20 per minute
+        self.hour_limit = Rate(100, Duration.HOUR)   # 100 per hour
+        self.daily_limit = Rate(1000, Duration.DAY)  # 1000 per day
         self.limiter = Limiter(
             self.sec_limit,
             self.min_limit,
