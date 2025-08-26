@@ -7,6 +7,7 @@ import os
 import sys
 import time
 import re
+import inspect
 from typing import List, Optional, Union
 
 import spamwatch  # noqa: F401
@@ -191,9 +192,8 @@ class CustomCommandHandler(CommandHandler):
         has_args: Optional[int] = None,
         **kwargs
     ):
-        # If no filter provided, exclude edited messages by default
         if flt is None:
-            flt = ~F.UpdateType.EDITED_MESSAGE  # uses module alias F, not param
+            flt = ~F.UpdateType.EDITED_MESSAGE
         super().__init__(command=command, callback=callback, filters=flt, block=block, **kwargs)
         self.has_args = has_args
 
@@ -232,18 +232,24 @@ async def initiate_clients():
         LOGGER.info("Starting clients initialization...")
 
         # Pyrogram Bot
-        if not pbot.is_connected:
+        if not getattr(pbot, "is_connected", False):
             await pbot.start()
             LOGGER.info("Pyrogram Bot started")
 
         # Pyrogram User + PyTgCalls
-        if user and not user.is_connected:
+        if user and not getattr(user, "is_connected", False):
             await user.start()
             LOGGER.info("Pyrogram User started")
 
-            if pytgcalls and not pytgcalls.is_connected:
+        # NOTE: PyTgCalls में is_connected नहीं होता - बस start() ट्राई करो
+        if pytgcalls:
+            try:
                 await pytgcalls.start()
                 LOGGER.info("PyTgCalls started")
+            except RuntimeError as e:
+                LOGGER.info(f"PyTgCalls already running or init issue: {e}")
+            except Exception as e:
+                LOGGER.warning(f"PyTgCalls start error: {e}")
 
         # Telethon (bot session)
         if not telethn.is_connected():
@@ -255,10 +261,11 @@ async def initiate_clients():
 
         # Optional: startup pings (safe)
         try:
-            STARTUP_CHAT = int(os.environ.get("STARTUP_CHAT", "-1002846516370"))
-            await pbot.send_message(STARTUP_CHAT, "✅ Bot Started")
-            if user:
-                await user.send_message(STARTUP_CHAT, "✅ Assistant Started")
+            STARTUP_CHAT = int(os.environ.get("STARTUP_CHAT", "0") or "0")
+            if STARTUP_CHAT:
+                await pbot.send_message(STARTUP_CHAT, "✅ Bot Started")
+                if user:
+                    await user.send_message(STARTUP_CHAT, "✅ Assistant Started")
         except Exception as e:
             LOGGER.warning(f"Failed to send startup messages: {e}")
 
@@ -284,26 +291,17 @@ async def stop_clients():
                 LOGGER.warning(f"Error stopping PyTgCalls: {e}")
 
         # Stop user (pyrogram)
-        if user and user.is_connected:
+        if user and getattr(user, "is_connected", False):
             try:
                 await user.stop()
-                # close in-memory storage if present
-                try:
-                    await user.storage.close()
-                except Exception:
-                    pass
                 LOGGER.info("Pyrogram User stopped")
             except Exception as e:
                 LOGGER.warning(f"Error stopping User client: {e}")
 
         # Stop bot (pyrogram)
-        if pbot.is_connected:
+        if getattr(pbot, "is_connected", False):
             try:
                 await pbot.stop()
-                try:
-                    await pbot.storage.close()
-                except Exception:
-                    pass
                 LOGGER.info("Pyrogram Bot stopped")
             except Exception as e:
                 LOGGER.warning(f"Error stopping Bot client: {e}")
@@ -351,13 +349,11 @@ async def graceful_shutdown():
             except Exception as e:
                 LOGGER.warning(f"Error during PTB shutdown: {e}")
 
-        # Tiny delay for cleanup
         await asyncio.sleep(0.3)
 
     except Exception as e:
         LOGGER.error(f"Error during graceful shutdown: {e}")
     finally:
-        # Final task cleanup (if anything left)
         pending = [t for t in asyncio.all_tasks() if not t.done()]
         if pending:
             LOGGER.info(f"Final cleanup: cancelling {len(pending)} tasks...")
@@ -389,10 +385,8 @@ ALL_MODULES = load_all_modules()
 async def setup_handlers():
     """
     Attach handlers to the PTB Application.
-
-    This function is intentionally lightweight so projects that
-    define richer handler wiring elsewhere can still import it.
-    If a module exposes `register_handlers(application)`, we call it.
+    If a module exposes `register_handlers(application)` OR `register_handlers()`,
+    दोनों को सपोर्ट करो (backward compatible).
     """
     try:
         from importlib import import_module
@@ -402,17 +396,17 @@ async def setup_handlers():
             try:
                 m = import_module(f"MerissaRobot.Modules.{mod}")
                 if hasattr(m, "register_handlers"):
-                    # module is responsible for adding its own handlers
-                    m.register_handlers(application)
+                    fn = m.register_handlers
+                    sig = inspect.signature(fn)
+                    if len(sig.parameters) == 0:
+                        fn()  # older modules
+                    else:
+                        fn(application)  # newer modules taking app
                     registered += 1
             except Exception as e:
                 LOGGER.error(f"Failed to register handlers from {mod}: {e}")
 
         LOGGER.info(f"setup_handlers: registered handlers from {registered} modules.")
-
-        # Optional: place to add any global fallbacks if you want.
-        # Example:
-        # application.add_handler(MessageHandler(F.StatusUpdate.MIGRATE, migrate_callback))
 
     except Exception as e:
         LOGGER.error(f"setup_handlers failed: {e}")
