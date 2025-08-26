@@ -2,7 +2,7 @@ import html
 
 from telegram import Chat, InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.constants import ParseMode
-from telegram.error import BadRequest, Unauthorized
+from telegram.error import BadRequest, Forbidden
 from telegram.ext import (
     ContextTypes,
     CallbackQueryHandler,
