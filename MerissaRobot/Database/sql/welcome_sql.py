@@ -4,7 +4,7 @@ from typing import Union
 
 from sqlalchemy import BigInteger, Boolean, Column, String, UnicodeText
 
-from MerissaRobot.Database.sql import BASE, SESSION
+from MerissaRobot.Database.sql import BASE, SESSION, ENGINE  # Add ENGINE import
 from MerissaRobot.Handler.ptb.msg_types import Types
 
 DEFAULT_WELCOME = "Hey {first}, how are you?"
@@ -31,7 +31,7 @@ DEFAULT_WELCOME_MESSAGES = [
     "{first} just slid into the chat.",
     "A {first} has spawned in the chat.",
     "Big {first} showed up!",
-    "Where’s {first}? In the chat!",
+    "Where's {first}? In the chat!",
     "{first} hopped into the chat. Kangaroo!!",
     "{first} just showed up. Hold my beer.",
     "Challenger approaching! {first} has appeared!",
@@ -83,19 +83,19 @@ DEFAULT_WELCOME_MESSAGES = [
     "{first} just joined, be at alert they could be a spy.",
     "{first} joined the group, read by Mark Zuckerberg, CIA and 35 others.",
     "Welcome {first}, Watch out for falling monkeys.",
-    "Evermerissa stop what you’re doing, We are now in the presence of {first}.",
+    "Evermerissa stop what you're doing, We are now in the presence of {first}.",
     "Hey {first}, Do you wanna know how I got these scars?",
     "Welcome {first}, drop your weapons and proceed to the spy scanner.",
     "Stay safe {first}, Keep 3 meters social distances between your messages.",  # Corona memes lmao
-    "You’re here now {first}, Resistance is futile",
+    "You're here now {first}, Resistance is futile",
     "{first} just arrived, the force is strong with this one.",
-    "{first} just joined on president’s orders.",
+    "{first} just joined on president's orders.",
     "Hi {first}, is the glass half full or half empty?",
     "Yipee Kayaye {first} arrived.",
-    "Welcome {first}, if you’re a secret agent press 1, otherwise start a conversation",
-    "{first}, I have a feeling we’re not in Kansas anymore.",
-    "They may take our lives, but they’ll never take our {first}.",
-    "Coast is clear! You can come out guys, it’s just {first}.",
+    "Welcome {first}, if you're a secret agent press 1, otherwise start a conversation",
+    "{first}, I have a feeling we're not in Kansas anymore.",
+    "They may take our lives, but they'll never take our {first}.",
+    "Coast is clear! You can come out guys, it's just {first}.",
     "Welcome {first}, Pay no attention to that guy lurking.",
     "Welcome {first}, May the force be with you.",
     "May the {first} be with you.",
@@ -146,6 +146,7 @@ DEFAULT_WELCOME_MESSAGES = [
     "Dr.{first} Famed archeologist and international explorer,\nWelcome to Jumanji!\nJumanji's Fate is up to you now.",
     "{first}, this will not be an easy mission - monkeys slow the expedition.",  # End of jumanji stuff
 ]
+
 DEFAULT_GOODBYE_MESSAGES = [
     "{first} will be missed.",
     "{first} just went offline.",
@@ -354,14 +355,8 @@ class RaidMode(BASE):
         # self.permanent = permanent
 
 
-Welcome.__table__.create(checkfirst=True)
-WelcomeButtons.__table__.create(checkfirst=True)
-GoodbyeButtons.__table__.create(checkfirst=True)
-WelcomeMute.__table__.create(checkfirst=True)
-WelcomeMuteUsers.__table__.create(checkfirst=True)
-DefenseMode.__table__.create(checkfirst=True)
-CleanServiceSetting.__table__.create(checkfirst=True)
-RaidMode.__table__.create(checkfirst=True)
+# Create all tables with proper bind parameter
+BASE.metadata.create_all(bind=ENGINE, checkfirst=True)
 
 INSERTION_LOCK = threading.RLock()
 WELC_BTN_LOCK = threading.RLock()
