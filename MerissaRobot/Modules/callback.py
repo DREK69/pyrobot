@@ -283,7 +283,7 @@ Admin commands:
             disable_web_page_preview=False,
         )
 
-elif query.data == "cb_group":
+    elif query.data == "cb_group":
         await query.message.edit_text(
             text="""──「 Help of Group Commands 」──
 
