@@ -40,7 +40,7 @@ def get_readable_time(time: int) -> str:
     return "{} hour(s)".format(t[0]) if time >= 3600 else "{} minutes".format(t[1])
 
 
-@merissacmd(command="raid", pass_args=True)
+@merissacmd(command="raid")
 @bot_admin
 @connection_status
 @loggable
@@ -96,7 +96,6 @@ async def setRaid(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Optiona
             sql.setRaidStatus(chat.id, False, time, acttime)
             try:
                 job_id = RUNNING_RAIDS.pop(chat.id)
-                # Remove job using job_queue.scheduler
                 j.scheduler.remove_job(job_id)
             except (KeyError, Exception):
                 pass
@@ -168,7 +167,7 @@ async def enable_raid_cb(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     
     try:
         oldRaid = RUNNING_RAIDS.pop(int(chat_id))
-        j.scheduler.remove_job(oldRaid)  # check if there was an old job
+        j.scheduler.remove_job(oldRaid)
     except KeyError:
         pass
 
@@ -177,7 +176,6 @@ async def enable_raid_cb(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         LOGGER.info("disabled raid mode in {}".format(chat_id))
         await context.bot.send_message(chat_id, "Raid mode has been automatically disabled!")
 
-    # Use run_once with the new async callback
     raid = j.run_once(disable_raid, time)
     RUNNING_RAIDS[int(chat_id)] = raid.job.id
     
@@ -226,7 +224,7 @@ async def disable_raid_cb(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 @user_admin_no_reply
 async def cancel_raid_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
     args = update.callback_query.data.split("=")
-    what = args[1]  # Fixed index
+    what = args[1]
     await update.effective_message.edit_text(
         f"Action cancelled, Raid mode will stay <code>{'Enabled' if what == '1' else 'Disabled'}</code>.",
         parse_mode=ParseMode.HTML,
@@ -280,7 +278,7 @@ async def raidtime(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Option
         )
 
 
-@merissacmd(command="raidactiontime", pass_args=True)
+@merissacmd(command="raidactiontime")
 @connection_status
 @user_admin(AdminPerms.CAN_CHANGE_INFO)
 @loggable
