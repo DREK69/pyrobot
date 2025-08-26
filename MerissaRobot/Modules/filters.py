@@ -675,8 +675,10 @@ RMALLFILTER_HANDLER = CommandHandler(
 )
 RMALLFILTER_CALLBACK = CallbackQueryHandler(rmall_callback, pattern=r"filters_.*")
 LIST_HANDLER = DisableAbleCommandHandler("filters", list_handlers, admin_ok=True)
+
+# Fix the CustomFilters reference - use the telegram bot's CustomFilters, not your DB model
 CUST_FILTER_HANDLER = MessageHandler(
-    CustomFilters.has_text & ~filters.UpdateType.EDITED_MESSAGE,
+    filters.TEXT & ~filters.UpdateType.EDITED_MESSAGE,  # Use filters.TEXT instead
     reply_filter,
 )
 
@@ -695,4 +697,3 @@ __handlers__ = [
     (CUST_FILTER_HANDLER, HANDLER_GROUP),
     RMALLFILTER_HANDLER,
     RMALLFILTER_CALLBACK,
-                            ]
