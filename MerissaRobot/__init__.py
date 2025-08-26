@@ -98,7 +98,10 @@ async def init_bot():
     except Exception as e:
         LOGGER.error(f"Failed to initialize bot: {e}")
         raise
-
+ASS_ID = "7946751397"
+ASS_NAME = "Merissa Assistant"
+ASS_USERNAME = "Cjjdjdjjdj"
+ASS_MENTION = "https://t.me/Cjjdjdjjdj"
 # ----------------------- Pyrogram / Telethon ------------------
 pbot = Client(
     "MerissaRobot",
