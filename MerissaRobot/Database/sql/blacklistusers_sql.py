@@ -2,7 +2,7 @@ import threading
 
 from sqlalchemy import Column, String, UnicodeText
 
-from MerissaRobot.Database.sql import BASE, SESSION
+from MerissaRobot.Database.sql import BASE, SESSION, ENGINE  # Add ENGINE import
 
 
 class BlacklistUsers(BASE):
@@ -15,7 +15,7 @@ class BlacklistUsers(BASE):
         self.reason = reason
 
 
-BlacklistUsers.__table__.create(checkfirst=True)
+BlacklistUsers.__table__.create(bind=ENGINE, checkfirst=True)  # Add bind=ENGINE
 
 BLACKLIST_LOCK = threading.RLock()
 BLACKLIST_USERS = set()
