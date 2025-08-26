@@ -883,26 +883,25 @@ async def setup_handlers():
 async def graceful_shutdown():
     LOGGER.info("Shutting down clients...")
 
-    # Stop PTB (python-telegram-bot)
+    # Stop PTB
     try:
-        if hasattr(application, "stop"):
+        if application.running:
             await application.stop()
+            await application.shutdown()
             LOGGER.info("PTB stopped")
     except Exception as e:
         LOGGER.warning(f"Error stopping PTB: {e}")
 
-    # Stop Pyrogram & Telethon clients
+    # Stop Pyrogram & Telethon
     try:
         from MerissaRobot import pbot, userbot, telethn
 
         if pbot.is_connected:
             await pbot.stop()
-            await pbot.storage.close()
             LOGGER.info("Pyrogram Bot stopped")
 
-        if userbot.is_connected:
+        if userbot and userbot.is_connected:
             await userbot.stop()
-            await userbot.storage.close()
             LOGGER.info("Pyrogram User stopped")
 
         if telethn.is_connected():
@@ -938,7 +937,8 @@ async def main():
         await application.initialize()
         LOGGER.info("PTB initialized")
 
-        # Step 3: Init other clients (Pyrogram, Telethon, etc.)
+        # Step 3: Init other clients
+        from MerissaRobot import initiate_clients
         await initiate_clients()
 
         # Step 4: Load modules
@@ -953,17 +953,18 @@ async def main():
         await application.start()
         LOGGER.info("MerissaRobot Started Successfully")
 
-        # Step 7: Startup notification
+        # Step 7: Startup notification (optional channel)
         try:
-            await application.bot.send_message(-1002846516370, "Merissa Started")
+            STARTUP_CHAT = int(os.environ.get("STARTUP_CHAT", "-1002846516370"))
+            await application.bot.send_message(STARTUP_CHAT, "Merissa Started")
         except Exception as e:
             LOGGER.warning(f"Failed to send startup notification: {e}")
 
-        # Step 8: Run polling (non-blocking loop close)
+        # Step 8: Run polling
         await application.run_polling(
             drop_pending_updates=True,
             allowed_updates=Update.ALL_TYPES,
-            close_loop=False,   # 👈 keep event loop alive
+            close_loop=False,  # don’t close the event loop, we manage it
         )
 
     except Exception as e:
