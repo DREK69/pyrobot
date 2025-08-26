@@ -13,30 +13,26 @@ ENGINE = create_engine(DB_URI, client_encoding="utf8")
 BASE = declarative_base()
 SESSION = scoped_session(sessionmaker(bind=ENGINE, autoflush=False))
 
-# IMPORTANT: Import all your models here BEFORE create_all()
-from MerissaRobot.Database.sql.connection_sql import (
-    ChatAccessConnectionSettings, 
-    Connection, 
-    ConnectionHistory
-)
-
-# Import any other models you have
-# from MerissaRobot.Database.sql.other_model import OtherModel
-
 try:
     log.info("[PostgreSQL] Connecting to database...")
+    
+    # Import all models BEFORE create_all() but don't run any queries yet
+    from MerissaRobot.Database.sql.connection_sql import (
+        ChatAccessConnectionSettings, 
+        Connection, 
+        ConnectionHistory
+    )
+    
+    # Create all tables
     BASE.metadata.create_all(ENGINE)
     log.info("[PostgreSQL] Tables created (if not exist).")
+    
+    # Now initialize connection history after tables are created
+    from MerissaRobot.Database.sql.connection_sql import init_connection_history
+    init_connection_history()
+    
 except Exception as e:
     log.exception(f"[PostgreSQL] Failed to connect due to {e}")
     exit()
 
 log.info("[PostgreSQL] Connection successful, session started.")
-
-# Alternative approach - if you want to import in your main bot file
-# MerissaRobot/__main__.py or wherever you start your bot
-
-# Import models before starting the bot
-import MerissaRobot.Database.sql.connection_sql  # This will register the models
-
-# Start your bot after this
