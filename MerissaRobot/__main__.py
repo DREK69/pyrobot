@@ -878,52 +878,47 @@ async def setup_handlers():
     # Error handlers
     application.add_error_handler(error_handler)
 
-
+"""Main function to start the bot"""
 async def main():
-    """Main function to start the bot"""
     try:
         LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-        
+
         # Initialize all clients
         await initiate_clients()
-        
+
         # Setup handlers
         await setup_handlers()
-        
+
         # Initialize application
         await application.initialize()
         await application.start()
-        
-        # Start polling
-        await application.updater.start_polling(
-            drop_pending_updates=True,
-            allowed_updates=Update.ALL_TYPES
-        )
-        
+
         LOGGER.info("PTB Started Successfully")
         LOGGER.info("MerissaRobot Started Successfully")
-        
+
         # Send startup notification
         try:
             await application.bot.send_message(2030709195, "Merissa Started")
         except Exception as e:
             LOGGER.error(f"Failed to send startup notification: {e}")
-        
-        # Keep running until stopped
-        await application.updater.idle()
-        
+
+        # Run polling directly (no .updater)
+        await application.run_polling(
+            stop_signals=None,  # let asyncio handle signals
+            drop_pending_updates=True,
+            allowed_updates=Update.ALL_TYPES
+        )
+
     except Exception as e:
         LOGGER.error(f"Error in main: {e}")
         raise
     finally:
         # Cleanup
         try:
-            if hasattr(application, 'updater') and application.updater.running:
-                await application.updater.stop()
             if application.running:
                 await application.stop()
             await application.shutdown()
-            
+
             if hasattr(pbot, 'is_connected') and pbot.is_connected:
                 await pbot.stop()
             if hasattr(user, 'is_connected') and user.is_connected:
@@ -932,7 +927,7 @@ async def main():
                 await pytgcalls.stop()
             if hasattr(telethn, 'is_connected') and telethn.is_connected():
                 await telethn.disconnect()
-            
+
             LOGGER.info("Bot stopped successfully")
         except Exception as e:
             LOGGER.error(f"Error during cleanup: {e}")
