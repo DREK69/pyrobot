@@ -2,9 +2,8 @@ import ast
 import random
 import re
 from io import BytesIO
-
+from telegram.constants import MAX_MESSAGE_LENGTH
 from telegram import (
-    MAX_MESSAGE_LENGTH,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     Update,
