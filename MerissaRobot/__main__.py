@@ -174,6 +174,7 @@ async def send_help(chat_id, text, keyboard=None):
         reply_markup=keyboard,
     )
 
+
 # ───────────────────────────────
 # Main Handler Functions - PTB v22
 # ───────────────────────────────
@@ -357,7 +358,6 @@ async def help_button(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except BadRequest:
         pass
 
-
 async def ghelp_button(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle group help button callbacks"""
     query = update.callback_query
@@ -422,10 +422,6 @@ async def ghelp_button(update: Update, context: ContextTypes.DEFAULT_TYPE):
         pass
 
 
-# ───────────────────────────────
-# Callback Handlers and Settings - PTB v22
-# ───────────────────────────────
-
 async def merissa_about_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle about callback queries"""
     query = update.callback_query
@@ -452,12 +448,134 @@ async def merissa_about_callback(update: Update, context: ContextTypes.DEFAULT_T
                 [[InlineKeyboardButton(text="🔙 Back", callback_data="merissa_")]]
             ),
         )
+
     elif query.data == "merissa_source":
         await query.message.reply_sticker(
             "CAACAgUAAxkBAAJRAWLx-zmJ62FNVR9gnl4w22X5qRlqAAKyBAADwEBWQxLxqPtRziMpBA"
         )
         await query.message.delete()
-    # ... (other callback handlers remain the same, just add async/await)
+
+    elif query.data == "merissa_latestup":
+        await query.message.edit_text(
+            MERISSA_UPDATE_TEXT,
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            text="🔙 Back", callback_data="merissa_back"
+                        ),
+                        InlineKeyboardButton(
+                            text="Previous ▶️", callback_data="merissa_upv2"
+                        ),
+                    ]
+                ]
+            ),
+        )
+    elif query.data == "merissa_upv1":
+        await query.message.edit_text(
+            """──「 Merissa v1.0 Update 」──
+
+- Added Anti-Language, Anti-Spam, Anti-Channel, Anti-Services
+- Added Tagalert, Tagall, Chatbot, UrlLock, Captcha, GenQR
+- Update Help Menu Bar""",
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton(text="🔙 Back", callback_data="merissa_upv2")]]
+            ),
+        )
+    elif query.data == "merissa_upv2":
+        await query.message.edit_text(
+            text="""──「 Merissa v2.0 Update 」──
+
+- Added Anti-Raid, Games, Animations, Attendance, Whisper, Rename, SessionHack, Insta, Tiktok and Movie Downloader, Mod Apk Downloader.
+- Update Chatbot, Quotly, Federation Like Rose Bot, Captcha
+- Update Afk Added Gif
+- Multi Language Bot""",
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            text="🔙 Back", callback_data="merissa_latestup"
+                        ),
+                        InlineKeyboardButton(
+                            text="Previous ▶️", callback_data="merissa_upv1"
+                        ),
+                    ]
+                ]
+            ),
+        )
+    elif query.data == "merissa_support":
+        await query.message.edit_text(
+            text=PM_SUPPORT_TEXT,
+            parse_mode=ParseMode.MARKDOWN,
+            reply_markup=PM_SUPPORT_BUTTON,
+        )
+    elif query.data == "merissa_setting":
+        await query.message.edit_text(
+            text="Choose where you want help section using below Button",
+            parse_mode=ParseMode.MARKDOWN,
+            reply_markup=GROUP_HELP_BUTTON,
+        )
+    elif query.data == "merissa_private":
+        userid = query.from_user.id
+        try:
+            await send_help(
+                userid,
+                text=HELP_STRINGS,
+            )
+            await query.answer("Help Menu Sent in Private Chat", show_alert=True)
+        except:
+            await query.answer("Unblock MerissaRobot and Try Again", show_alert=True)
+
+    elif query.data == "merissa_donate":
+        await query.message.edit_text(
+            text=PM_DONATE_TEXT,
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(text="🔙 Back", callback_data="merissa_"),
+                    ]
+                ]
+            ),
+        )
+
+
+async def Source_about_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle source callback queries"""
+    query = update.callback_query
+    if query.data == "source_":
+        await query.message.edit_text(
+            text="This advance command for Musicplayer."
+            "\n\nCommand for admins only."
+            "\n • `/reload` - For refreshing the adminlist."
+            "\n • `/pause` - To pause the playback."
+            "\n • `/resume` - To resuming the playback You've paused."
+            "\n • `/skip` - To skipping the player."
+            "\n • `/end` - For end the playback."
+            "\n • `/musicplayer <on/off>` - Toggle for turn ON or turn OFF the musicplayer."
+            "\n\nCommand for all members."
+            "\n • `/play` <query /reply audio> - Playing music via YouTube."
+            "\n • `/playlist` - To playing a playlist of groups or your personal playlist",
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton(text="Go Back", callback_data="merissa_")]]
+            ),
+        )
+    elif query.data == "source_back":
+        await query.message.edit_text(
+            PM_START_TEXT,
+            reply_markup=PM_START_BUTTON,
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=False,
+        )
 
 
 async def get_help(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -563,6 +681,123 @@ async def send_settings(chat_id, user_id, user=False):
                 "in a group chat you're admin in to find its current settings!",
                 parse_mode=ParseMode.MARKDOWN,
             )
+
+
+async def settings_button(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle settings button callbacks"""
+    query = update.callback_query
+    user = update.effective_user
+    bot = context.bot
+    mod_match = re.match(r"stngs_module\((.+?),(.+?)\)", query.data)
+    prev_match = re.match(r"stngs_prev\((.+?),(.+?)\)", query.data)
+    next_match = re.match(r"stngs_next\((.+?),(.+?)\)", query.data)
+    back_match = re.match(r"stngs_back\((.+?)\)", query.data)
+    
+    try:
+        if mod_match:
+            chat_id = mod_match.group(1)
+            module = mod_match.group(2)
+            chat = await bot.get_chat(chat_id)
+            text = "*{}* has the following settings for the *{}* module:\n\n".format(
+                escape_markdown(chat.title), CHAT_SETTINGS[module].__mod_name__
+            ) + CHAT_SETTINGS[module].__chat_settings__(chat_id, user.id)
+            await query.message.reply_text(
+                text=text,
+                parse_mode=ParseMode.MARKDOWN,
+                reply_markup=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                text="Go Back",
+                                callback_data="stngs_back({})".format(chat_id),
+                            )
+                        ]
+                    ]
+                ),
+            )
+
+        elif prev_match:
+            chat_id = prev_match.group(1)
+            curr_page = int(prev_match.group(2))
+            chat = await bot.get_chat(chat_id)
+            await query.message.reply_text(
+                text="Hi there! There are quite a few settings for {} - go ahead and pick what you're interested in.".format(
+                    chat.title
+                ),
+                reply_markup=InlineKeyboardMarkup(
+                    paginate_modules(
+                        curr_page - 1, CHAT_SETTINGS, "stngs", chat=chat_id
+                    )
+                ),
+            )
+
+        elif next_match:
+            chat_id = next_match.group(1)
+            next_page = int(next_match.group(2))
+            chat = await bot.get_chat(chat_id)
+            await query.message.reply_text(
+                text="Hi there! There are quite a few settings for {} - go ahead and pick what you're interested in.".format(
+                    chat.title
+                ),
+                reply_markup=InlineKeyboardMarkup(
+                    paginate_modules(
+                        next_page + 1, CHAT_SETTINGS, "stngs", chat=chat_id
+                    )
+                ),
+            )
+
+        elif back_match:
+            chat_id = back_match.group(1)
+            chat = await bot.get_chat(chat_id)
+            await query.message.reply_text(
+                text="Hi there! There are quite a few settings for {} - go ahead and pick what you're interested in.".format(
+                    escape_markdown(chat.title)
+                ),
+                parse_mode=ParseMode.MARKDOWN,
+                reply_markup=InlineKeyboardMarkup(
+                    paginate_modules(0, CHAT_SETTINGS, "stngs", chat=chat_id)
+                ),
+            )
+
+        # ensure no spinny white circle
+        await bot.answer_callback_query(query.id)
+        await query.message.delete()
+    except BadRequest as excp:
+        if excp.message not in [
+            "Message is not modified",
+            "Query_id_invalid",
+            "Message can't be deleted",
+        ]:
+            LOGGER.exception("Exception in settings buttons. %s", str(query.data))
+
+
+async def get_settings(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle settings command"""
+    chat = update.effective_chat
+    user = update.effective_user
+    msg = update.effective_message
+
+    # ONLY send settings in PM
+    if chat.type != chat.PRIVATE:
+        if is_user_admin(chat, user.id):
+            text = "Click here to get this chat's settings, as well as yours."
+            await msg.reply_text(
+                text,
+                reply_markup=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                text="Settings ⚙️",
+                                url="t.me/{}?start=stngs_{}".format(
+                                    context.bot.username, chat.id
+                                ),
+                            )
+                        ]
+                    ]
+                ),
+            )
+    else:
+        await send_settings(chat.id, user.id, True)
 
 
 async def migrate_chats(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -683,14 +918,20 @@ async def main():
     finally:
         # Cleanup
         try:
-            await application.updater.stop()
-            await application.stop()
+            if hasattr(application, 'updater') and application.updater.running:
+                await application.updater.stop()
+            if application.running:
+                await application.stop()
             await application.shutdown()
             
-            await pbot.stop()
-            await user.stop()
-            await pytgcalls.stop()
-            await telethn.disconnect()
+            if hasattr(pbot, 'is_connected') and pbot.is_connected:
+                await pbot.stop()
+            if hasattr(user, 'is_connected') and user.is_connected:
+                await user.stop()
+            if hasattr(pytgcalls, 'stop'):
+                await pytgcalls.stop()
+            if hasattr(telethn, 'is_connected') and telethn.is_connected():
+                await telethn.disconnect()
             
             LOGGER.info("Bot stopped successfully")
         except Exception as e:
