@@ -3,8 +3,13 @@ from pyrate_limiter import (
     BucketFullException,
     Duration,
     Limiter,
-    Rate,
+    RequestRate,
 )
+
+# Example: 5 requests per minute
+rate = RequestRate(5, Duration.MINUTE)
+limiter = Limiter(rate)
+
 from pyrate_limiter.buckets.in_memory_bucket import InMemoryBucket
 from telegram import Update
 from telegram.ext import (
