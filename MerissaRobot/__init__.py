@@ -85,6 +85,17 @@ application = (
     .build()
 )
 
+def setup_handlers():
+    """
+    Register all handlers with the global Application.
+    Import your handler functions here and add them.
+    """
+    from MerissaRobot.Handler.ptb.handlers import (
+        CustomCommandHandler,
+        CustomMessageHandler,
+        CustomRegexHandler,
+    )
+    
 BOT = application.bot
 BOT_ID = None
 BOT_USERNAME = None
