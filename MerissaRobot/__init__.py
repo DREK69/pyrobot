@@ -24,14 +24,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
 
 # Local config - must provide these in config.py
-from config import (
-    TOKEN,
-    API_ID,
-    API_HASH,
-    STRING_SESSION,
-    OWNER_ID,
-    # any other config you already use (DEV_USERS, DRAGONS, etc.)
-)
+from config import *
 
 # ───────────────────────────────
 StartTime = time.time()
