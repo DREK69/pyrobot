@@ -10,8 +10,8 @@ from sqlalchemy import (
     func,
 )
 
-from MerissaRobot import application 
-from MerissaRobot.Database.sql import BASE, SESSION
+from MerissaRobot import application
+from MerissaRobot.Database.sql import BASE, SESSION, ENGINE
 
 
 class Users(BASE):
@@ -69,16 +69,20 @@ class ChatMembers(BASE):
         )
 
 
-Users.__table__.create(checkfirst=True)
-Chats.__table__.create(checkfirst=True)
-ChatMembers.__table__.create(checkfirst=True)
+# Create tables with proper engine binding
+Users.__table__.create(bind=ENGINE, checkfirst=True)
+Chats.__table__.create(bind=ENGINE, checkfirst=True)
+ChatMembers.__table__.create(bind=ENGINE, checkfirst=True)
 
 INSERTION_LOCK = threading.RLock()
 
 
-def ensure_bot_in_db():
+async def ensure_bot_in_db():
+    """Ensure bot is registered in database - now async compatible"""
     with INSERTION_LOCK:
-        bot = Users(dispatcher.bot.id, dispatcher.bot.username)
+        # Get bot info from application
+        bot_info = await application.bot.get_me()
+        bot = Users(bot_info.id, bot_info.username)
         SESSION.merge(bot)
         SESSION.commit()
 
@@ -102,7 +106,6 @@ def update_user(user_id, username, chat_id=None, chat_name=None):
             chat = Chats(str(chat_id), chat_name)
             SESSION.add(chat)
             SESSION.flush()
-
         else:
             chat.chat_name = chat_name
 
@@ -131,7 +134,7 @@ def get_userid_by_name(username):
 
 def get_name_by_userid(user_id):
     try:
-        return SESSION.query(Users).get(Users.user_id == int(user_id)).first()
+        return SESSION.query(Users).filter(Users.user_id == int(user_id)).first()
     finally:
         SESSION.close()
 
@@ -207,21 +210,20 @@ def migrate_chat(old_chat_id, new_chat_id):
         SESSION.commit()
 
 
-ensure_bot_in_db()
-
-
 def del_user(user_id):
     with INSERTION_LOCK:
         curr = SESSION.query(Users).get(user_id)
         if curr:
             SESSION.delete(curr)
             SESSION.commit()
+            
+            # Also delete chat memberships
+            SESSION.query(ChatMembers).filter(ChatMembers.user == user_id).delete()
+            SESSION.commit()
             return True
-
-        ChatMembers.query.filter(ChatMembers.user == user_id).delete()
-        SESSION.commit()
+        
         SESSION.close()
-    return False
+        return False
 
 
 def rem_chat(chat_id):
@@ -232,3 +234,8 @@ def rem_chat(chat_id):
             SESSION.commit()
         else:
             SESSION.close()
+
+
+# Initialize bot in database - but don't call it immediately since it's async
+# You'll need to call this from your main initialization function
+# ensure_bot_in_db()
