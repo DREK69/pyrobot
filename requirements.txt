@@ -1,6 +1,5 @@
 gpytranslate==1.5.1
-pornhub-api==0.4.0
-pydantic==1.10.15
+shazamio==0.8.1
 aiofiles==23.2.1
 aiohttp
 apscheduler
