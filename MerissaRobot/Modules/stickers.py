@@ -17,7 +17,7 @@ from telegram import (
     Update,
 )
 from telegram.constants import ParseMode
-ffrom telegram.error import TelegramError,
+from telegram.error import BadRequest, TelegramError
 rom telegram.ext import ContextTypes, CallbackQueryHandler
 from telegram.helpers import mention_html
 
