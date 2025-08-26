@@ -16,7 +16,7 @@ from telegram.ext import (
 from telegram.helpers import escape_markdown, mention_html
 
 from MerissaRobot import DRAGONS, LOGGER, application
-from MerissaRobot.Database.sql import cust_filters_sql as sql
+from MerissaRobot.Database.sql.cust_filters_sql import CustomFilters as DBCustomFilters
 from MerissaRobot.Handler.ptb.alternate import send_message, typing_action
 from MerissaRobot.Handler.ptb.chat_status import user_admin
 from MerissaRobot.Handler.ptb.extraction import extract_text
