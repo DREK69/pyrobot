@@ -240,7 +240,50 @@ async def initiate_clients():
     except Exception as e:
         LOGGER.error(f"Error starting clients: {e}")
         raise
+# ---------------------- Client Stop / Shutdown ----------------------
+async def stop_clients():
+    """Stop all clients safely."""
+    global pbot, user, pytgcalls, telethn
+    try:
+        if pbot and pbot.is_connected:
+            await pbot.stop()
+            LOGGER.info("Pyrogram Bot stopped")
+    except Exception as e:
+        LOGGER.error(f"Error stopping pbot: {e}")
 
+    try:
+        if user and user.is_connected:
+            await user.stop()
+            LOGGER.info("Pyrogram User stopped")
+    except Exception as e:
+        LOGGER.error(f"Error stopping user: {e}")
+
+    try:
+        if pytgcalls and pytgcalls.is_connected:
+            await pytgcalls.stop()
+            LOGGER.info("PyTgCalls stopped")
+    except Exception as e:
+        LOGGER.error(f"Error stopping pytgcalls: {e}")
+
+    try:
+        if telethn and telethn.is_connected():
+            await telethn.disconnect()
+            LOGGER.info("Telethon stopped")
+    except Exception as e:
+        LOGGER.error(f"Error stopping telethn: {e}")
+
+
+async def graceful_shutdown():
+    """Gracefully shut down all clients and the PTB application."""
+    LOGGER.info("Shutting down MerissaRobot...")
+    await stop_clients()
+
+    try:
+        await application.shutdown()
+        await application.stop()
+        LOGGER.info("PTB Application stopped")
+    except Exception as e:
+        LOGGER.error(f"Error stopping PTB application: {e}")
 # ------------------------- Exports ----------------------------
 userbot = user
 
