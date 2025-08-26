@@ -43,6 +43,26 @@ class CustomFilters:
         )
 
 
+class AdminFilter(filters.MessageFilter):
+    """Custom admin filter for PTB v22"""
+    
+    def filter(self, message: Message) -> bool:
+        """Check if user is admin in the current chat"""
+        if not message.from_user:
+            return False
+            
+        # Always allow in private chats
+        if message.chat.type == "private":
+            return True
+            
+        # Check if user is admin in group/supergroup
+        try:
+            chat_member = message.chat.get_member(message.from_user.id)
+            return chat_member.status in ["creator", "administrator"]
+        except Exception:
+            return False
+
+
 # Create filter instances using PTB v22 syntax
 class MerissaFilters:
     """PTB v22 compatible filter instances"""
@@ -96,8 +116,8 @@ class MerissaFilters:
     chat_migration = filters.StatusUpdate.MIGRATE
     pinned_message = filters.StatusUpdate.PINNED_MESSAGE
     
-    # Admin only filter (for groups)
-    admin_filter = filters.ChatType.GROUPS & filters.User.ADMIN
+    # Admin only filter (for groups) - Fixed implementation
+    admin_filter = filters.ChatType.GROUPS & AdminFilter()
 
 
 # Backward compatibility with old CustomFilters class
