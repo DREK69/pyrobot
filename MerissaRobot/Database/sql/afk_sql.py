@@ -24,7 +24,13 @@ class AFK(BASE):
         return "afk_status for {}".format(self.user_id)
 
 
-AFK.__table__.create(checkfirst=True)
+# Fixed table creation - use BASE.metadata.create_all() instead of individual table.create()
+try:
+    # This will create all tables defined in BASE.metadata if they don't exist
+    BASE.metadata.create_all(bind=SESSION.bind, checkfirst=True)
+except Exception as e:
+    print(f"Error creating AFK table: {e}")
+
 INSERTION_LOCK = threading.RLock()
 
 AFK_USERS = {}
