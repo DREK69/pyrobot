@@ -21,8 +21,9 @@ class ChatGPTChats(BASE):
         self.chat_id = chat_id
 
 
-MerissaChats.__table__.create(checkfirst=True)
-ChatGPTChats.__table__.create(checkfirst=True)
+# Fixed: Add bind parameter to both table creations
+MerissaChats.__table__.create(bind=SESSION.bind, checkfirst=True)
+ChatGPTChats.__table__.create(bind=SESSION.bind, checkfirst=True)
 INSERTION_LOCK = threading.RLock()
 
 
