@@ -2,7 +2,7 @@ import threading
 
 from sqlalchemy import BigInteger, Column, String
 
-from MerissaRobot.Database.sql import BASE, SESSION
+from MerissaRobot.Database.sql import BASE, SESSION, ENGINE  # Add ENGINE import
 
 
 class Purges(BASE):
@@ -18,7 +18,7 @@ class Purges(BASE):
         return "<Purges %s>" % self.chat_id
 
 
-Purges.__table__.create(checkfirst=True)
+Purges.__table__.create(bind=ENGINE, checkfirst=True)  # Add bind=ENGINE
 
 PURGES_INSERTION_LOCK = threading.RLock()
 
