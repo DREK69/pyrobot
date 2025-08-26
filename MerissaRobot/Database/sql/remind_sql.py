@@ -3,7 +3,7 @@ import time
 
 from sqlalchemy import BigInteger, Column, Integer, String, UnicodeText
 
-from MerissaRobot.Database.sql import BASE, SESSION
+from MerissaRobot.Database.sql import BASE, SESSION, ENGINE  # Add ENGINE import
 
 
 class Reminds(BASE):
@@ -22,7 +22,7 @@ class Reminds(BASE):
 
 
 # Reminds.__table__.drop()
-Reminds.__table__.create(checkfirst=True)
+Reminds.__table__.create(bind=ENGINE, checkfirst=True)  # Add bind=ENGINE
 
 INSERTION_LOCK = threading.RLock()
 
