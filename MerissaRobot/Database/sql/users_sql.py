@@ -10,7 +10,7 @@ from sqlalchemy import (
     func,
 )
 
-from MerissaRobot import dispatcher
+from MerissaRobot import application 
 from MerissaRobot.Database.sql import BASE, SESSION
 
 
