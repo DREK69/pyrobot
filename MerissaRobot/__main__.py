@@ -879,7 +879,6 @@ async def setup_handlers():
     # Error handlers
     application.add_error_handler(error_handler)
 
-
 # -------------------- Graceful Shutdown --------------------
 async def graceful_shutdown():
     LOGGER.info("Shutting down clients...")
@@ -887,6 +886,7 @@ async def graceful_shutdown():
     try:
         if hasattr(application, "stop"):
             await application.stop()
+            LOGGER.info("PTB stopped")
     except Exception as e:
         LOGGER.warning(f"Error stopping PTB: {e}")
 
@@ -895,12 +895,29 @@ async def graceful_shutdown():
         from MerissaRobot import pbot, tbot, userbot
         if pbot.is_connected:
             await pbot.stop()
+            await pbot.storage.close()
+            LOGGER.info("Pyrogram Bot stopped")
         if tbot.is_connected:
             await tbot.disconnect()
+            LOGGER.info("Telethon stopped")
         if userbot.is_connected:
             await userbot.disconnect()
+            await userbot.storage.close()
+            LOGGER.info("Pyrogram User stopped")
     except Exception as e:
-        LOGGER.warning(f"Error stopping Pyrogram clients: {e}")
+        LOGGER.warning(f"Error stopping clients: {e}")
+
+    # Cancel leftover asyncio tasks
+    try:
+        current_task = asyncio.current_task()
+        pending = [t for t in asyncio.all_tasks() if t != current_task and not t.done()]
+        if pending:
+            LOGGER.info(f"Cancelling {len(pending)} pending tasks...")
+            for task in pending:
+                task.cancel()
+            await asyncio.gather(*pending, return_exceptions=True)
+    except Exception as e:
+        LOGGER.warning(f"Error during final task cleanup: {e}")
 
     LOGGER.info("All clients stopped gracefully")
 
@@ -921,6 +938,7 @@ async def main():
         await initiate_clients()
 
         # Step 4: Load modules
+        from MerissaRobot import ALL_MODULES
         LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
 
         # Step 5: Setup handlers
@@ -941,7 +959,7 @@ async def main():
         await application.run_polling(
             drop_pending_updates=True,
             allowed_updates=Update.ALL_TYPES,
-            close_loop=False,   # 👈 Important
+            close_loop=False,   # 👈 keep event loop alive
         )
 
     except Exception as e:
@@ -953,16 +971,13 @@ async def main():
 
 # -------------------- Entry Point --------------------
 if __name__ == "__main__":
+    import signal
+
+    loop = asyncio.get_event_loop()
+
     def signal_handler(signum, frame):
         LOGGER.info(f"Received signal {signum}, shutting down...")
-        try:
-            loop = asyncio.get_event_loop()
-            for task in asyncio.all_tasks(loop):
-                task.cancel()
-            asyncio.create_task(graceful_shutdown())
-        except Exception as e:
-            LOGGER.error(f"Signal handler error: {e}")
-        sys.exit(0)
+        asyncio.ensure_future(graceful_shutdown(), loop=loop)
 
     # Register signals
     signal.signal(signal.SIGINT, signal_handler)
@@ -970,8 +985,7 @@ if __name__ == "__main__":
 
     try:
         LOGGER.info("Starting MerissaRobot...")
-        asyncio.run(main())
-
+        loop.run_until_complete(main())
     except KeyboardInterrupt:
         LOGGER.info("Bot stopped by user")
     except asyncio.CancelledError:
@@ -981,3 +995,4 @@ if __name__ == "__main__":
         sys.exit(1)
     finally:
         LOGGER.info("Bot shutdown complete")
+        loop.close()
