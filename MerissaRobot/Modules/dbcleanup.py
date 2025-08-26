@@ -2,7 +2,7 @@ import asyncio
 from time import sleep
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.error import BadRequest, Unauthorized
+from telegram.error import BadRequest, Forbidden, RetryAfter
 from telegram.ext import ContextTypes, CallbackQueryHandler, CommandHandler
 
 import MerissaRobot.Database.sql.global_bans_sql as gban_sql
