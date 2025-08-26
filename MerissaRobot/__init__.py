@@ -76,7 +76,7 @@ def setup_event_loop():
     return loop
 
 EVENT_LOOP = setup_event_loop()
-ALL_MODULES = load_all_modules()
+
 # --------------------- PTB v22 Application --------------------
 application = (
     Application.builder()
@@ -283,7 +283,7 @@ async def stop_clients():
     except Exception as e:
         LOGGER.error(f"Error stopping telethn: {e}")
 
-
+ALL_MODULES = load_all_modules()
 async def graceful_shutdown():
     """Gracefully shut down all clients and the PTB application."""
     LOGGER.info("Shutting down MerissaRobot...")
