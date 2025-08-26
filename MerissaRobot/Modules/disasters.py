@@ -2,8 +2,12 @@ import html
 import json
 import os
 from typing import Optional
+# पुराने imports हटाएँ
+# from telegram import TelegramError, Update
 
+# नए imports
 from telegram import Update
+from telegram.error import BadRequest  # Generic error handling
 from telegram.ext import ContextTypes, CommandHandler
 from telegram.constants import ParseMode
 from telegram.helpers import mention_html
