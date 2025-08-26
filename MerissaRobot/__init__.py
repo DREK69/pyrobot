@@ -9,8 +9,8 @@ import time
 import re
 from typing import List, Optional, Union
 
-import spamwatch
-from aiohttp import ClientSession
+import spamwatch  # noqa: F401
+from aiohttp import ClientSession  # noqa: F401
 from pyrogram import Client
 from pyrogram.errors.exceptions.flood_420 import FloodWait
 from pyromod import listen  # noqa: F401  (pyromod monkeypatch)
@@ -18,8 +18,14 @@ from pytgcalls import PyTgCalls
 from telethon import TelegramClient
 from telethon.sessions import MemorySession
 
-from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, filters
 from telegram import Update
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    MessageHandler,
+    CallbackQueryHandler,
+    filters as F,  # alias to avoid name collisions
+)
 
 from logging import INFO, ERROR, StreamHandler, basicConfig, getLogger
 from logging.handlers import RotatingFileHandler
@@ -98,10 +104,12 @@ async def init_bot():
     except Exception as e:
         LOGGER.error(f"Failed to initialize bot: {e}")
         raise
+
 ASS_ID = "7946751397"
 ASS_NAME = "Merissa Assistant"
 ASS_USERNAME = "Cjjdjdjjdj"
 ASS_MENTION = "https://t.me/Cjjdjdjjdj"
+
 # ----------------------- Pyrogram / Telethon ------------------
 pbot = Client(
     "MerissaRobot",
@@ -178,14 +186,15 @@ class CustomCommandHandler(CommandHandler):
         self,
         command: Union[str, List[str]],
         callback,
-        filters=None,
+        flt=None,
         block: bool = True,
         has_args: Optional[int] = None,
         **kwargs
     ):
-        if filters is None:
-            filters = ~filters.UpdateType.EDITED_MESSAGE
-        super().__init__(command=command, callback=callback, filters=filters, block=block, **kwargs)
+        # If no filter provided, exclude edited messages by default
+        if flt is None:
+            flt = ~F.UpdateType.EDITED_MESSAGE  # uses module alias F, not param
+        super().__init__(command=command, callback=callback, filters=flt, block=block, **kwargs)
         self.has_args = has_args
 
     def check_update(self, update: object) -> Optional[bool]:
@@ -200,16 +209,16 @@ class CustomCommandHandler(CommandHandler):
         return True
 
 class CustomMessageHandler(MessageHandler):
-    def __init__(self, filters, callback, block: bool = True, **kwargs):
-        if filters is None:
-            filters = filters.ALL
-        super().__init__(filters=filters, callback=callback, block=block, **kwargs)
+    def __init__(self, flt, callback, block: bool = True, **kwargs):
+        if flt is None:
+            flt = F.ALL
+        super().__init__(filters=flt, callback=callback, block=block, **kwargs)
 
 class CustomRegexHandler(MessageHandler):
     def __init__(self, pattern: Union[str, re.Pattern], callback, block: bool = True, **kwargs):
         if isinstance(pattern, str):
             pattern = re.compile(pattern)
-        super().__init__(filters=filters.Regex(pattern), callback=callback, block=block, **kwargs)
+        super().__init__(filters=F.Regex(pattern), callback=callback, block=block, **kwargs)
 
 # ----------------------- Client Management --------------------
 _clients_started = False
@@ -363,20 +372,7 @@ async def graceful_shutdown():
 def load_all_modules():
     """
     Import the modules registry from MerissaRobot.Modules.
-    Make sure MerissaRobot/Modules/__init__.py defines ALL_MODULES.
-    Example:
-
-        # MerissaRobot/Modules/__init__.py
-        from importlib import import_module
-        ALL_MODULES = [
-            "start",
-            "help",
-            "music",
-            "ping",
-            # ...
-        ]
-        for mod in ALL_MODULES:
-            import_module(f"MerissaRobot.Modules.{mod}")
+    Make sure MerissaRobot/Modules/__init__.py defines ALL_MODULES and imports each module.
     """
     try:
         from MerissaRobot.Modules import ALL_MODULES  # noqa: F401
@@ -386,14 +382,49 @@ def load_all_modules():
         LOGGER.error(f"Failed to load modules: {e}")
         return []
 
+# Make ALL_MODULES available for `from MerissaRobot import ALL_MODULES`
+ALL_MODULES = load_all_modules()
+
+# ------------------------- Handlers Glue ----------------------
+async def setup_handlers():
+    """
+    Attach handlers to the PTB Application.
+
+    This function is intentionally lightweight so projects that
+    define richer handler wiring elsewhere can still import it.
+    If a module exposes `register_handlers(application)`, we call it.
+    """
+    try:
+        from importlib import import_module
+
+        registered = 0
+        for mod in ALL_MODULES:
+            try:
+                m = import_module(f"MerissaRobot.Modules.{mod}")
+                if hasattr(m, "register_handlers"):
+                    # module is responsible for adding its own handlers
+                    m.register_handlers(application)
+                    registered += 1
+            except Exception as e:
+                LOGGER.error(f"Failed to register handlers from {mod}: {e}")
+
+        LOGGER.info(f"setup_handlers: registered handlers from {registered} modules.")
+
+        # Optional: place to add any global fallbacks if you want.
+        # Example:
+        # application.add_handler(MessageHandler(F.StatusUpdate.MIGRATE, migrate_callback))
+
+    except Exception as e:
+        LOGGER.error(f"setup_handlers failed: {e}")
+        raise
+
 # ------------------------- Exports ----------------------------
 # Backward-compatible alias (some code imports userbot)
 userbot = user
 
-# Export commonly used symbols
 __all__ = [
     # app/bot
-    "application", "init_bot",
+    "application", "init_bot", "setup_handlers",
     # clients
     "pbot", "user", "userbot", "telethn", "pytgcalls",
     # roles (list + set)
@@ -403,7 +434,4 @@ __all__ = [
     "dirr", "initiate_clients", "stop_clients", "graceful_shutdown",
     # modules
     "ALL_MODULES", "load_all_modules",
-]
-
-# Make ALL_MODULES available for `from MerissaRobot import ALL_MODULES`
-ALL_MODULES = load_all_modules()
+        ]
