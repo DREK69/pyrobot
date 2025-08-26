@@ -76,7 +76,7 @@ def setup_event_loop():
     return loop
 
 EVENT_LOOP = setup_event_loop()
-
+ALL_MODULES = load_all_modules()
 # --------------------- PTB v22 Application --------------------
 application = (
     Application.builder()
