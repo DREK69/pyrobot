@@ -878,3 +878,73 @@ async def setup_handlers():
     # Error handlers
     application.add_error_handler(error_handler)
 
+async def main():
+    try:
+        LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+
+        # Initialize all clients (ensure they start in current loop)
+        await initiate_clients()
+
+        # Setup handlers
+        await setup_handlers()
+
+        # Initialize application
+        await application.initialize()
+        await application.start()
+
+        LOGGER.info("PTB Started Successfully")
+        LOGGER.info("MerissaRobot Started Successfully")
+
+        # Send startup notification
+        try:
+            await application.bot.send_message(2030709195, "Merissa Started")
+        except Exception as e:
+            LOGGER.error(f"Failed to send startup notification: {e}")
+
+        # Run PTB + other clients concurrently on SAME loop
+        await asyncio.gather(
+            application.run_polling(
+                stop_signals=None,  # asyncio handles signals
+                drop_pending_updates=True,
+                allowed_updates=Update.ALL_TYPES,
+            ),
+            pbot.start(),     # Pyrogram bot
+            user.start(),     # Userbot
+            telethn.start(),  # Telethon
+            pytgcalls.start() # PyTgCalls
+        )
+
+    except Exception as e:
+        LOGGER.error(f"Error in main: {e}")
+        raise
+    finally:
+        # Cleanup
+        try:
+            if application.running:
+                await application.stop()
+            await application.shutdown()
+
+            if hasattr(pbot, "is_connected") and pbot.is_connected:
+                await pbot.stop()
+            if hasattr(user, "is_connected") and user.is_connected:
+                await user.stop()
+            if hasattr(pytgcalls, "stop"):
+                await pytgcalls.stop()
+            if hasattr(telethn, "is_connected") and telethn.is_connected():
+                await telethn.disconnect()
+
+            LOGGER.info("Bot stopped successfully")
+        except Exception as e:
+            LOGGER.error(f"Error during cleanup: {e}")
+
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        LOGGER.info("Bot stopped by user")
+    except Exception as e:
+        LOGGER.error(f"Fatal error: {e}")
+        import sys
+        sys.exit(1)
+
