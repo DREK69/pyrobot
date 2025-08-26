@@ -4,11 +4,10 @@ from typing import Optional
 from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    TelegramError,
     Update,
 )
 from telegram.constants import ParseMode
-from telegram.error import BadRequest
+from telegram.error import BadRequest, TelegramError
 from telegram.ext import ContextTypes, CallbackQueryHandler, CommandHandler, filters
 from telegram.helpers import mention_html
 
