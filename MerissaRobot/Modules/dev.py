@@ -6,7 +6,7 @@ from contextlib import suppress
 from time import sleep
 
 from telegram import Update
-from telegram.error import Unauthorized, TelegramError
+from telegram.error import TelegramError, Forbidden, BadRequest
 from telegram.ext import ContextTypes, CommandHandler
 
 import MerissaRobot
