@@ -3,7 +3,7 @@ from pyrate_limiter import (
     BucketFullException,
     Duration,
     Limiter,
-    MemoryListBucket,
+    MemoryQueueBucket,  # Changed from MemoryListBucket to MemoryQueueBucket
     RequestRate,
 )
 from telegram import Update
@@ -49,7 +49,7 @@ class AntiSpam:
             self.min_limit,
             self.hour_limit,
             self.daily_limit,
-            bucket_class=MemoryListBucket,
+            bucket_class=MemoryQueueBucket,  # Changed from MemoryListBucket
         )
 
     def check_user(self, user_id: int) -> bool:
