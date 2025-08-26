@@ -47,16 +47,39 @@ getLogger("telethon").setLevel(ERROR)
 getLogger("telegram").setLevel(ERROR)
 
 # ───────────────────────────────
-# PTB v22 Application
+# CRITICAL: Set event loop policy BEFORE creating any clients
+# ───────────────────────────────
+if sys.platform.startswith('win'):
+    asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+else:
+    # For Linux/Unix - use uvloop if available for better performance
+    try:
+        import uvloop
+        asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+    except ImportError:
+        pass
+
+# Create a single event loop for all components
+try:
+    loop = asyncio.get_event_loop()
+    if loop.is_closed():
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+except RuntimeError:
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+# ───────────────────────────────
+# PTB v22 Application - Created AFTER event loop setup
 # ───────────────────────────────
 application = (
     Application.builder()
     .token(TOKEN)
-    .concurrent_updates(True)  # multi update processing
+    .concurrent_updates(True)
     .build()
 )
 
-BOT = application.bot  # bot instance after build()
+BOT = application.bot
 
 BOT_ID = None
 BOT_USERNAME = None
@@ -81,39 +104,50 @@ ASS_USERNAME = "MerissaAssistant"
 ASS_MENTION = "https://t.me/merissaassistant"
 
 # ───────────────────────────────
-# Pyrogram + Telethon - Fixed Event Loop Issue
+# Pyrogram + Telethon - FIXED for Single Event Loop
 # ───────────────────────────────
+
+# CRITICAL: Create clients with no_updates=True to prevent event loop conflicts
 pbot = Client(
     "MerissaRobot",
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=TOKEN,
-    workers=100,
+    workers=50,  # Reduced workers to prevent conflicts
+    no_updates=True,  # CRITICAL: Prevents automatic update handling
 )
 
-user = Client(
-    "MerissaMusic",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    session_string=str(STRING_SESSION),
-)
-pytgcalls = PyTgCalls(user)
+user = None
+pytgcalls = None
 
+# Only create user client if STRING_SESSION is provided
+if STRING_SESSION and STRING_SESSION.strip():
+    user = Client(
+        "MerissaMusic",
+        api_id=API_ID,
+        api_hash=API_HASH,
+        session_string=str(STRING_SESSION),
+        no_updates=True,  # CRITICAL: Prevents automatic update handling
+    )
+    pytgcalls = PyTgCalls(user)
+
+# Telethon with MemorySession to prevent file conflicts
 telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
 
+# ───────────────────────────────
+# Initialize global lists
 # ───────────────────────────────
 DEV_USERS.add(OWNER_ID)
 sw = None
 
-
 def dirr():
+    """Clean up directory and create necessary folders"""
     for file in os.listdir():
         if file.endswith((".jpg", ".jpeg")):
             os.remove(file)
     if "downloads" not in os.listdir():
         os.mkdir("downloads")
     LOGGER.info("Directories Updated.")
-
 
 DRAGONS = list(DRAGONS) + list(DEV_USERS)
 DEV_USERS = list(DEV_USERS)
@@ -127,9 +161,9 @@ TIGERS = list(TIGERS)
 from telegram.ext import (
     CommandHandler,
     MessageHandler,
+    CallbackQueryHandler,
     filters,
     ContextTypes,
-    CallbackContext
 )
 from telegram import Update
 from typing import List, Optional, Union
@@ -147,7 +181,6 @@ class CustomCommandHandler(CommandHandler):
         has_args: Optional[int] = None,
         **kwargs
     ):
-        # Convert old filter system to new filters
         if filters is None:
             filters = ~filters.UpdateType.EDITED_MESSAGE
         
@@ -161,19 +194,17 @@ class CustomCommandHandler(CommandHandler):
         self.has_args = has_args
 
     def check_update(self, update: object) -> Optional[bool]:
-        """Override check_update for custom logic"""
         if not super().check_update(update):
             return None
             
         if self.has_args is not None:
             message = update.effective_message
             if message and message.text:
-                args = message.text.split()[1:]  # Remove command
+                args = message.text.split()[1:]
                 if len(args) < self.has_args:
                     return None
                     
         return True
-
 
 class CustomMessageHandler(MessageHandler):
     """Custom Message Handler compatible with PTB v22"""
@@ -185,7 +216,6 @@ class CustomMessageHandler(MessageHandler):
         block: bool = True,
         **kwargs
     ):
-        # Ensure filters is properly converted
         if filters is None:
             filters = filters.ALL
             
@@ -195,7 +225,6 @@ class CustomMessageHandler(MessageHandler):
             block=block,
             **kwargs
         )
-
 
 class CustomRegexHandler(MessageHandler):
     """Custom Regex Handler compatible with PTB v22"""
@@ -207,7 +236,6 @@ class CustomRegexHandler(MessageHandler):
         block: bool = True,
         **kwargs
     ):
-        # Use filters.Regex for pattern matching in PTB v22
         if isinstance(pattern, str):
             pattern = re.compile(pattern)
             
@@ -218,190 +246,93 @@ class CustomRegexHandler(MessageHandler):
             **kwargs
         )
 
-
 # ───────────────────────────────
-# FIXED Main Function to Match Your __main__.py
-# ───────────────────────────────
-async def main():
-    """Main function to start the bot - Fixed to work with your existing __main__.py structure"""
-    try:
-        # Clean directories first
-        dirr()
-        
-        # Load modules dynamically (from your __main__.py)
-        from MerissaRobot.Modules import ALL_MODULES
-        LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
-
-        # Initialize all clients (using your existing function structure)
-        await initiate_clients()
-
-        # Setup handlers (using your existing function structure)
-        await setup_handlers()
-
-        # Initialize PTB application
-        await application.initialize()
-        
-        # Initialize bot info
-        await init_bot()
-        
-        # Start PTB application
-        await application.start()
-
-        LOGGER.info("PTB Started Successfully")
-        LOGGER.info("MerissaRobot Started Successfully")
-
-        # Send startup notification (using your existing notification)
-        try:
-            await application.bot.send_message(2030709195, "Merissa Started")
-        except Exception as e:
-            LOGGER.error(f"Failed to send startup notification: {e}")
-
-        # CRITICAL FIX: Use run_polling instead of updater
-        await application.run_polling(
-            stop_signals=None,  # let asyncio handle signals
-            drop_pending_updates=True,
-            allowed_updates=Update.ALL_TYPES
-        )
-
-    except Exception as e:
-        LOGGER.error(f"Error in main: {e}")
-        raise
-    finally:
-        # Cleanup - Fixed to match PTB v22
-        try:
-            if hasattr(application, 'running') and application.running:
-                await application.stop()
-            if hasattr(application, 'shutdown'):
-                await application.shutdown()
-
-            # Stop other clients
-            if hasattr(pbot, 'is_connected') and pbot.is_connected:
-                await pbot.stop()
-            if hasattr(user, 'is_connected') and user.is_connected:
-                await user.stop()
-            if hasattr(pytgcalls, 'stop'):
-                await pytgcalls.stop()
-            if hasattr(telethn, 'is_connected') and telethn.is_connected():
-                await telethn.disconnect()
-
-            LOGGER.info("Bot stopped successfully")
-        except Exception as e:
-            LOGGER.error(f"Error during cleanup: {e}")
-
-
-# ───────────────────────────────
-# Client Functions - Fixed for Event Loop Compatibility
+# Client Management Functions - FIXED
 # ───────────────────────────────
 async def initiate_clients():
-    """Initialize all clients - Fixed for event loop compatibility"""
-    from pyrogram.errors.exceptions.flood_420 import FloodWait
-    from telethon.errors.rpcerrorlist import FloodWaitError
-    
+    """Initialize all clients with proper error handling"""
     try:
-        # Start pyrogram clients
-        await pbot.start()
-        LOGGER.info("Pyrogram Started")
+        # Start pyrogram bot client
+        if not pbot.is_connected:
+            await pbot.start()
+            LOGGER.info("Pyrogram Bot Started")
         
-        if STRING_SESSION:
+        # Start user client if available
+        if user and not user.is_connected:
             await user.start()
-            LOGGER.info("Userbot Started")
+            LOGGER.info("Pyrogram User Started")
             
-            await pytgcalls.start()
-            LOGGER.info("Pytgcalls Started")
-        else:
-            LOGGER.warning("STRING_SESSION not provided, skipping user client")
+            # Start PyTgCalls only if user client is available
+            if pytgcalls and not pytgcalls.is_connected:
+                await pytgcalls.start()
+                LOGGER.info("PyTgCalls Started")
         
-        # Start telethon
-        await telethn.start(bot_token=TOKEN)
-        LOGGER.info("Telethon Started")
+        # Start Telethon
+        if not telethn.is_connected():
+            await telethn.start(bot_token=TOKEN)
+            LOGGER.info("Telethon Started")
         
         # Send startup messages
         try:
-            if hasattr(pbot, 'send_message') and pbot.is_connected:
+            if pbot.is_connected:
                 await pbot.send_message(-1001446814207, "Bot Started")
-            if hasattr(user, 'send_message') and user.is_connected and STRING_SESSION:
+            if user and user.is_connected:
                 await user.send_message(-1001446814207, "Assistant Started")
         except Exception as e:
-            LOGGER.error(f"Failed to send startup messages: {e}")
+            LOGGER.warning(f"Failed to send startup messages: {e}")
             
     except FloodWait as e:
         LOGGER.info(f"FloodWait: Have to wait {e.value} seconds")
         await asyncio.sleep(e.value)
         await initiate_clients()
-    except FloodWaitError as e:
-        LOGGER.info(f"Telethon FloodWait: Have to wait {e.seconds} seconds")
-        await asyncio.sleep(e.seconds)
-        await initiate_clients()
     except Exception as e:
         LOGGER.error(f"Error starting clients: {e}")
-        raise
+        # Don't raise - let the bot continue with available clients
 
-
-async def setup_handlers():
-    """Setup all handlers - Includes handlers from your __main__.py"""
-    # Import and setup handlers from your __main__.py structure
-    from MerissaRobot.__main__ import (
-        start, test, get_help, get_settings, error_handler,
-        help_button, ghelp_button, settings_button, 
-        merissa_about_callback, Source_about_callback, migrate_chats
-    )
-    
-    # Command handlers
-    application.add_handler(CommandHandler("test", test))
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("help", get_help))
-    application.add_handler(CommandHandler("settings", get_settings))
-    
-    # Callback query handlers
-    application.add_handler(CallbackQueryHandler(help_button, pattern=r"help_.*"))
-    application.add_handler(CallbackQueryHandler(ghelp_button, pattern=r"ghelp_.*"))
-    application.add_handler(CallbackQueryHandler(settings_button, pattern=r"stngs_"))
-    application.add_handler(CallbackQueryHandler(merissa_about_callback, pattern=r"merissa_"))
-    application.add_handler(CallbackQueryHandler(Source_about_callback, pattern=r"source_"))
-    
-    # Message handlers
-    application.add_handler(MessageHandler(filters.StatusUpdate.MIGRATE, migrate_chats))
-    
-    # Error handlers
-    application.add_error_handler(error_handler)
-    
-    LOGGER.info("All handlers setup completed")
-
-
-if __name__ == "__main__":
-    # CRITICAL: Fixed event loop management
-    if sys.platform.startswith('win'):
-        asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
-    else:
-        # For Linux/Unix - better event loop handling
-        try:
-            import uvloop
-            asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-        except ImportError:
-            pass
-    
-    # Run the bot with proper event loop management
+async def stop_clients():
+    """Properly stop all clients"""
     try:
-        LOGGER.info("Starting MerissaRobot...")
-        
-        # Create new event loop to avoid conflicts
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        
-        # Run main function
-        loop.run_until_complete(main())
-        
-    except KeyboardInterrupt:
-        LOGGER.info("Bot stopped by user")
+        if pytgcalls and hasattr(pytgcalls, 'stop'):
+            try:
+                await pytgcalls.stop()
+                LOGGER.info("PyTgCalls stopped")
+            except:
+                pass
+                
+        if user and user.is_connected:
+            try:
+                await user.stop()
+                LOGGER.info("Pyrogram User stopped")
+            except:
+                pass
+                
+        if pbot.is_connected:
+            try:
+                await pbot.stop()
+                LOGGER.info("Pyrogram Bot stopped")
+            except:
+                pass
+                
+        if telethn.is_connected():
+            try:
+                await telethn.disconnect()
+                LOGGER.info("Telethon disconnected")
+            except:
+                pass
+                
     except Exception as e:
-        LOGGER.error(f"Fatal error: {e}")
-        sys.exit(1)
-    finally:
-        # Clean up event loop
-        try:
-            loop = asyncio.get_event_loop()
-            if not loop.is_closed():
-                loop.close()
-        except:
-            pass
-        LOGGER.info("Bot shutdown complete")
+        LOGGER.error(f"Error stopping clients: {e}")
+
+# ───────────────────────────────
+# FIXED: Import after client initialization to prevent circular imports
+# ───────────────────────────────
+def load_all_modules():
+    """Load all modules after clients are initialized"""
+    try:
+        # Import ALL_MODULES after clients are ready
+        from MerissaRobot.Modules import ALL_MODULES
+        LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+        return ALL_MODULES
+    except Exception as e:
+        LOGGER.error(f"Failed to load modules: {e}")
+        return []
