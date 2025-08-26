@@ -3,7 +3,7 @@ import json
 import os
 from typing import Optional
 
-from telegram import TelegramError, Update
+from telegram import Update
 from telegram.ext import ContextTypes, CommandHandler
 from telegram.constants import ParseMode
 from telegram.helpers import mention_html
