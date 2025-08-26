@@ -136,11 +136,20 @@ async def get_telethn():
             await _telethn.start(bot_token=TOKEN)
     return _telethn
 
-# Compatibility aliases - these will return the lazy-loaded clients
-pbot = property(lambda self: asyncio.create_task(get_pbot()))
-user = property(lambda self: asyncio.create_task(get_user()))
-pytgcalls = property(lambda self: asyncio.create_task(get_pytgcalls()))
-telethn = property(lambda self: asyncio.create_task(get_telethn()))
+# ───────────────────────────────
+# Compatibility aliases - async getters (NO property!)
+# ───────────────────────────────
+async def pbot():
+    return await get_pbot()
+
+async def user():
+    return await get_user()
+
+async def pytgcalls():
+    return await get_pytgcalls()
+
+async def telethn():
+    return await get_telethn()
 
 # ───────────────────────────────
 # Initialize global lists
