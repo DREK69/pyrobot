@@ -8,13 +8,13 @@ from MerissaRobot import LOGGER as log
 if DB_URI and DB_URI.startswith("postgres://"):
     DB_URI = DB_URI.replace("postgres://", "postgresql://", 1)
 
-engine = create_engine(DB_URI, client_encoding="utf8")
+ENGINE = create_engine(DB_URI, client_encoding="utf8")   # <-- ENGINE naam se rakho
 BASE = declarative_base()
-SESSION = scoped_session(sessionmaker(bind=engine, autoflush=False))
+SESSION = scoped_session(sessionmaker(bind=ENGINE, autoflush=False))
 
 try:
     log.info("[PostgreSQL] Connecting to database...")
-    BASE.metadata.create_all(engine)   # <-- Yahi sabse important hai
+    BASE.metadata.create_all(ENGINE)
     log.info("[PostgreSQL] Tables created (if not exist).")
 except Exception as e:
     log.exception(f"[PostgreSQL] Failed to connect due to {e}")
