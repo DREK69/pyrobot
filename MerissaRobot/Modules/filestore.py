@@ -2,34 +2,27 @@ import asyncio
 import base64
 
 from pyrogram import filters
-from pyrogram.errors import ListenerCanceled
+from pyrogram.errors import RPCError  # ListenerCanceled removed in v2+
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from youtubesearchpython.__future__ import VideosSearch
 
 from MerissaRobot import BOT_NAME, pbot
 from MerissaRobot.helpers import subscribe
 
+TRACK_CHANNEL = int("-1001900195958")
+media_group_id = 0
+BATCH = []
 
 async def encode(string):
     string_bytes = string.encode("ascii")
     base64_bytes = base64.urlsafe_b64encode(string_bytes)
-    base64_string = (base64_bytes.decode("ascii")).strip("=")
-    return base64_string
-
+    return (base64_bytes.decode("ascii")).strip("=")
 
 async def decode(base64_string):
-    base64_string = base64_string.strip(
-        "="
-    )  # links generated before this commit will be having = sign, hence striping them to handle padding errors.
+    base64_string = base64_string.strip("=")
     base64_bytes = (base64_string + "=" * (-len(base64_string) % 4)).encode("ascii")
     string_bytes = base64.urlsafe_b64decode(base64_bytes)
-    string = string_bytes.decode("ascii")
-    return string
-
-
-TRACK_CHANNEL = int("-1001900195958")
-media_group_id = 0
-BATCH = []
+    return string_bytes.decode("ascii")
 
 
 @pbot.on_message(filters.command("start") & filters.private)
@@ -37,6 +30,8 @@ async def _startfile(bot, update):
     if len(update.command) != 2:
         return
     code = update.command[1]
+
+    # info_ handler
     if "info_" in code:
         m = await update.reply_text("🔎 Fetching Info!")
         videoid = code.split("info_")[1]
@@ -51,6 +46,7 @@ async def _startfile(bot, update):
             channel = result["channel"]["name"]
             link = result["link"]
             published = result["publishedTime"]
+
         searched_text = f"""
 🔍__**Video Track Information**__
 
@@ -72,29 +68,23 @@ async def _startfile(bot, update):
                         text="📥 Download ", callback_data=f"ytdown {videoid}"
                     ),
                 ],
-                [
-                    InlineKeyboardButton(text="🔄 Close", callback_data="cb_close"),
-                ],
+                [InlineKeyboardButton(text="🔄 Close", callback_data="cb_close")],
             ]
         )
         await m.delete()
-        await update.reply_photo(
-            photo=thumbnail,
-            caption=searched_text,
-            reply_markup=key,
-        )
+        await update.reply_photo(photo=thumbnail, caption=searched_text, reply_markup=key)
+
+    # verify_ handler
     elif "verify_" in code:
         chat_id = code.split("_")[1]
-        button = [
-            [
-                InlineKeyboardButton(text="VERIFY", callback_data=f"verify {chat_id}"),
-            ],
-        ]
+        button = [[InlineKeyboardButton(text="VERIFY", callback_data=f"verify {chat_id}")]]
         await update.reply_photo(
             photo="https://te.legra.ph/file/90b1aa10cf8b77d5b781b.jpg",
             caption=f"Hello Dear,\n\nClick 'VERIFY' Button to Verify you're human.",
             reply_markup=InlineKeyboardMarkup(button),
         )
+
+    # store_ / batch_ handler
     else:
         code = await decode(code)
         send_msg = await update.reply_text("Uploading Media...")
@@ -102,41 +92,22 @@ async def _startfile(bot, update):
             cmd, unique_id, msg_id = code.split("_")
             if not msg_id.isdigit():
                 return
-            try:  # If message not belong to media group raise exception
-                check_media_group = await bot.get_media_group(
-                    TRACK_CHANNEL, int(msg_id)
-                )
-                check = check_media_group[0]  # Because func return`s list obj
+            try:
+                check_media_group = await bot.get_media_group(TRACK_CHANNEL, int(msg_id))
+                check = check_media_group[0]
             except Exception:
                 check = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
 
             if check.empty:
-                await update.reply_text(
-                    "Error: [Message does not exist]\n/help for more details..."
-                )
+                await update.reply_text("Error: [Message does not exist]")
                 return
-            if check.video:
-                unique_idx = check.video.file_unique_id
-            elif check.photo:
-                unique_idx = check.photo.file_unique_id
-            elif check.audio:
-                unique_idx = check.audio.file_unique_id
-            elif check.document:
-                unique_idx = check.document.file_unique_id
-            elif check.sticker:
-                unique_idx = check.sticker.file_unique_id
-            elif check.animation:
-                unique_idx = check.animation.file_unique_id
-            elif check.voice:
-                unique_idx = check.voice.file_unique_id
-            elif check.video_note:
-                unique_idx = check.video_note.file_unique_id
+
+            unique_idx = getattr(check, "file_unique_id", None) or ""
             if unique_id != unique_idx.lower():
                 return
-            try:  # If message not belong to media group raise exception
-                await bot.copy_media_group(
-                    update.from_user.id, TRACK_CHANNEL, int(msg_id)
-                )
+
+            try:
+                await bot.copy_media_group(update.from_user.id, TRACK_CHANNEL, int(msg_id))
                 await send_msg.delete()
             except Exception:
                 await check.copy(update.from_user.id)
@@ -150,117 +121,70 @@ async def _startfile(bot, update):
                 msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
                 if msg.empty:
                     return await update.reply_text(
-                        "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner"
+                        "Sorry, Your file was deleted by File Owner or Bot owner"
                     )
                 await msg.copy(update.from_user.id)
-            return await send_msg.delete()
-
-            chat_id, msg_id = code.split("_")
-            msg = await bot.get_messages(TRACK_CHANNEL, int(msg_id))
-
-            if msg.empty:
-                return await send_msg.edit(
-                    "Sorry, Your file was deleted by File Owner or Bot Owner\n\nFor more help Contact File Owner/Bot owner."
-                )
-            caption = f"{msg.caption}" if msg.caption else ""
-            await msg.copy(update.from_user.id, caption=caption)
             await send_msg.delete()
 
 
 async def __reply(update, copied):
     ok = await update.reply_text("Downloading Media...")
-    msg_id = copied.id
-    if copied.video:
-        unique_idx = copied.video.file_unique_id
-    elif copied.photo:
-        unique_idx = copied.photo.file_unique_id
-    elif copied.audio:
-        unique_idx = copied.audio.file_unique_id
-    elif copied.document:
-        unique_idx = copied.document.file_unique_id
-    elif copied.sticker:
-        unique_idx = copied.sticker.file_unique_id
-    elif copied.animation:
-        unique_idx = copied.animation.file_unique_id
-    elif copied.voice:
-        unique_idx = copied.voice.file_unique_id
-    elif copied.video_note:
-        unique_idx = copied.video_note.file_unique_id
-    else:
+    unique_idx = getattr(copied, "file_unique_id", None)
+    if not unique_idx:
         await copied.delete()
         return
-    base64_string = await encode(f"store_{unique_idx.lower()}_{str(msg_id)}")
+    base64_string = await encode(f"store_{unique_idx.lower()}_{str(copied.id)}")
     botlink = f"https://telegram.me/MerissaRobot?start={base64_string}"
 
     await ok.edit_text(
         "Link Generated Successfully, Link Is Permanent and will not Expired\n\nShare Link with Your Friends:",
         reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "Share Url",
-                        url=f"https://t.me/share/url?url={botlink}",
-                    )
-                ]
-            ]
+            [[InlineKeyboardButton("Share Url", url=f"https://t.me/share/url?url={botlink}")]]
         ),
     )
 
 
+# Media group handler
 @pbot.on_message(~filters.media & filters.private & filters.media_group)
-async def _main_grop(bot, update):
+async def _main_group(bot, update):
     global media_group_id
-
     if int(media_group_id) != int(update.media_group_id):
         media_group_id = update.media_group_id
-        copied = (
-            await bot.copy_media_group(
-                TRACK_CHANNEL, update.from_user.id, update.message_id
-            )
-        )[0]
+        copied = (await bot.copy_media_group(TRACK_CHANNEL, update.from_user.id, update.message_id))[0]
         await __reply(update, copied)
 
-    else:
-        # This handler catch EVERY message with [update.media_group_id] param
-        # So we should ignore next >1_media_group_id messages
-        return
 
-
-@pbot.on_message(filters.command("batch") & filters.private & filters.incoming)
+# batch command handler
+@pbot.on_message(filters.command("batch") & filters.private)
 async def batch(c, m):
     BATCH.append(m.from_user.id)
     files = []
     i = 1
-
     while m.from_user.id in BATCH:
         if i == 1:
             media = await c.ask(
                 chat_id=m.from_user.id,
-                text="Send me some files or ᴠideo or photo or text or audio. if you want to cancel the process send /cancel",
+                text="Send me some files or ᴠideo or photo or text or audio. Send /cancel to stop.",
             )
             if media.text == "/cancel":
-                return await m.reply_text("Cᴀɴᴄᴇʟʟᴇᴅ Sᴜᴄᴄᴇssғᴜʟʟʏ ✌")
+                return await m.reply_text("Cancelled Successfully ✌")
             files.append(media)
         else:
             try:
-                reply_markup = InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("Done ✅", callback_data="fsdn")]]
-                )
+                reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("Done ✅", callback_data="fsdn")]])
                 media = await c.ask(
                     chat_id=m.from_user.id,
-                    text="Ok. Now send me some more files or press done to get sharable link. If you want to cancel the process send /cancel",
+                    text="Send more files or press done. /cancel to stop.",
                     reply_markup=reply_markup,
                 )
                 if media.text == "/cancel":
                     return await m.reply_text("Cancelled Successfully ✌")
                 files.append(media)
-            except ListenerCanceled:
+            except RPCError:
                 pass
             except Exception as e:
                 print(e)
-                await m.reply_text(
-                    text="Something went wrong report here @MerissaxSupport."
-                )
+                await m.reply_text("Something went wrong, report to @MerissaxSupport.")
         i += 1
 
     ok = await m.reply_text("Generating Shareable link 🔗")
@@ -278,21 +202,15 @@ async def batch(c, m):
     await ok.edit_text(
         "Link Generated Successfully, Link Is Permanent and will not Expired\n\nShare Link with Your Friends:",
         reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "Share URL",
-                        url=f"https://t.me/share/url?url={botlink}",
-                    )
-                ]
-            ]
+            [[InlineKeyboardButton("Share URL", url=f"https://t.me/share/url?url={botlink}")]]
         ),
     )
 
 
 @pbot.on_callback_query(filters.regex("^fsdn"))
 async def done_cb(c, m):
-    BATCH.remove(m.from_user.id)
+    if m.from_user.id in BATCH:
+        BATCH.remove(m.from_user.id)
     c.cancel_listener(m.from_user.id)
     await m.message.delete()
 
