@@ -7,7 +7,7 @@ from pyrate_limiter import (
 )
 
 # Example: 5 requests per minute
-rate = RequestRate(5, Duration.MINUTE)
+Rate = RequestRate(5, Duration.MINUTE)
 limiter = Limiter(rate)
 
 from pyrate_limiter import MemoryListBucket
