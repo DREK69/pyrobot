@@ -14,11 +14,11 @@ from telegram import (
     Bot,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    TelegramError,
     Update,
 )
 from telegram.constants import ParseMode
-from telegram.ext import ContextTypes, CallbackQueryHandler
+ffrom telegram.error import TelegramError,
+rom telegram.ext import ContextTypes, CallbackQueryHandler
 from telegram.helpers import mention_html
 
 from MerissaRobot import application
