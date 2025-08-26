@@ -1,3 +1,7 @@
+"""
+MerissaRobot __init__.py
+"""
+
 import asyncio
 import os
 import sys
@@ -14,22 +18,19 @@ from logging import (
 import spamwatch
 from aiohttp import ClientSession
 from pyrogram import Client
-from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInvalid
 from pyrogram.errors.exceptions.flood_420 import FloodWait
-from pyrogram.types import Message
 from pyromod import listen  # ignore
 from pytgcalls import PyTgCalls
 from telethon import TelegramClient
 from telethon.sessions import MemorySession
 
 from telegram.ext import Application
-from telegram import Update
-
 from config import *
 
 # ───────────────────────────────
+# Logging
+# ───────────────────────────────
 StartTime = time.time()
-
 LOGGER = getLogger("[MerissaRobot]")
 
 basicConfig(
@@ -47,19 +48,18 @@ getLogger("telethon").setLevel(ERROR)
 getLogger("telegram").setLevel(ERROR)
 
 # ───────────────────────────────
-# CRITICAL: Create a single shared event loop for ALL frameworks
+# Event Loop Setup
 # ───────────────────────────────
 def setup_event_loop():
-    """Setup single event loop for all frameworks"""
     try:
         loop = asyncio.get_event_loop()
         if loop.is_closed():
-            raise RuntimeError("Loop is closed")
+            raise RuntimeError("Loop closed")
     except RuntimeError:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
-    
-    if sys.platform.startswith('win'):
+
+    if sys.platform.startswith("win"):
         asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
     else:
         try:
@@ -67,10 +67,9 @@ def setup_event_loop():
             asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
         except ImportError:
             pass
-    
-    return loop
 
-# Setup event loop FIRST
+    return asyncio.get_event_loop()
+
 EVENT_LOOP = setup_event_loop()
 
 # ───────────────────────────────
@@ -101,13 +100,8 @@ async def init_bot():
         LOGGER.error(f"Failed to initialize bot: {e}")
         raise
 
-ASS_ID = "7946751397"
-ASS_NAME = "Merissa Assistant"
-ASS_USERNAME = "Cjjdjdjjdj"
-ASS_MENTION = "https://t.me/Cjjdjdjjdj"
-
 # ───────────────────────────────
-# FIXED: Create clients but don't start them immediately
+# Clients
 # ───────────────────────────────
 pbot = Client(
     "MerissaRobot",
@@ -138,7 +132,6 @@ DEV_USERS.add(OWNER_ID)
 sw = None
 
 def dirr():
-    """Clean up directory and create necessary folders"""
     for file in os.listdir():
         if file.endswith((".jpg", ".jpeg")):
             os.remove(file)
@@ -148,56 +141,6 @@ def dirr():
 
 DRAGONS = list(DRAGONS) + list(DEV_USERS)
 DEV_USERS = list(DEV_USERS)
-WOLVES = list(WOLVES)
-DEMONS = list(DEMONS)
-TIGERS = list(TIGERS)
-
-# ───────────────────────────────
-# Custom Handlers - PTB v22 Compatible
-# ───────────────────────────────
-from telegram.ext import (
-    CommandHandler,
-    MessageHandler,
-    CallbackQueryHandler,
-    filters,
-    ContextTypes,
-)
-from telegram import Update
-from typing import List, Optional, Union
-import re
-
-class CustomCommandHandler(CommandHandler):
-    """Custom Command Handler compatible with PTB v22"""
-    def __init__(self, command: Union[str, List[str]], callback, filters=None, block: bool = True, has_args: Optional[int] = None, **kwargs):
-        if filters is None:
-            filters = ~filters.UpdateType.EDITED_MESSAGE
-        super().__init__(command=command, callback=callback, filters=filters, block=block, **kwargs)
-        self.has_args = has_args
-
-    def check_update(self, update: object) -> Optional[bool]:
-        if not super().check_update(update):
-            return None
-        if self.has_args is not None:
-            message = update.effective_message
-            if message and message.text:
-                args = message.text.split()[1:]
-                if len(args) < self.has_args:
-                    return None
-        return True
-
-class CustomMessageHandler(MessageHandler):
-    """Custom Message Handler compatible with PTB v22"""
-    def __init__(self, filters, callback, block: bool = True, **kwargs):
-        if filters is None:
-            filters = filters.ALL
-        super().__init__(filters=filters, callback=callback, block=block, **kwargs)
-
-class CustomRegexHandler(MessageHandler):
-    """Custom Regex Handler compatible with PTB v22"""
-    def __init__(self, pattern: Union[str, re.Pattern], callback, block: bool = True, **kwargs):
-        if isinstance(pattern, str):
-            pattern = re.compile(pattern)
-        super().__init__(filters=filters.Regex(pattern), callback=callback, block=block, **kwargs)
 
 # ───────────────────────────────
 # Client Management
@@ -205,34 +148,36 @@ class CustomRegexHandler(MessageHandler):
 _clients_started = False
 
 async def initiate_clients():
-    """Initialize all clients in controlled manner"""
     global _clients_started
     if _clients_started:
         return
     try:
-        LOGGER.info("Starting clients initialization...")
+        LOGGER.info("Starting clients...")
         if not pbot.is_connected:
             await pbot.start()
             LOGGER.info("Pyrogram Bot started")
         if user and not user.is_connected:
             await user.start()
-            LOGGER.info("Pyrogram User started")
+            LOGGER.info("Userbot started")
             if pytgcalls and not pytgcalls.is_connected:
                 await pytgcalls.start()
                 LOGGER.info("PyTgCalls started")
         if not telethn.is_connected():
             await telethn.start(bot_token=TOKEN)
             LOGGER.info("Telethon started")
+
         _clients_started = True
-        LOGGER.info("All clients initialized successfully")
+        LOGGER.info("All clients initialized")
+
         try:
-            await pbot.send_message(-1002846516370, "Bot Started")
+            await pbot.send_message(-1002846516370, "✅ Bot Started")
             if user:
-                await user.send_message(-1002846516370, "Assistant Started")
+                await user.send_message(-1002846516370, "✅ Assistant Started")
         except Exception as e:
             LOGGER.warning(f"Failed to send startup messages: {e}")
+
     except FloodWait as e:
-        LOGGER.info(f"FloodWait: Have to wait {e.value} seconds")
+        LOGGER.info(f"FloodWait {e.value}s")
         await asyncio.sleep(e.value)
         _clients_started = False
         await initiate_clients()
@@ -241,84 +186,52 @@ async def initiate_clients():
         raise
 
 async def stop_clients():
-    """Stop all clients in reverse order and cleanup tasks"""
     global _clients_started
     try:
-        if pytgcalls and hasattr(pytgcalls, 'stop'):
-            try:
-                await pytgcalls.stop()
-                LOGGER.info("PyTgCalls stopped")
-            except Exception as e:
-                LOGGER.warning(f"Error stopping PyTgCalls: {e}")
+        if pytgcalls:
+            await pytgcalls.stop()
+            LOGGER.info("PyTgCalls stopped")
         if user and user.is_connected:
-            try:
-                await user.stop()
-                await user.storage.close()
-                LOGGER.info("Pyrogram User stopped")
-            except Exception as e:
-                LOGGER.warning(f"Error stopping User client: {e}")
+            await user.stop()
+            await user.storage.close()
+            LOGGER.info("Userbot stopped")
         if pbot.is_connected:
-            try:
-                await pbot.stop()
-                await pbot.storage.close()
-                LOGGER.info("Pyrogram Bot stopped")
-            except Exception as e:
-                LOGGER.warning(f"Error stopping Bot client: {e}")
+            await pbot.stop()
+            await pbot.storage.close()
+            LOGGER.info("Pyrogram Bot stopped")
         if telethn.is_connected():
-            try:
-                await telethn.disconnect()
-                LOGGER.info("Telethon disconnected")
-            except Exception as e:
-                LOGGER.warning(f"Error disconnecting Telethon: {e}")
+            await telethn.disconnect()
+            LOGGER.info("Telethon disconnected")
+
         _clients_started = False
-        # Cancel leftover asyncio tasks
-        current_task = asyncio.current_task()
-        all_tasks = [t for t in asyncio.all_tasks() if t != current_task and not t.done()]
-        if all_tasks:
-            LOGGER.info(f"Cancelling {len(all_tasks)} pending tasks...")
-            for task in all_tasks:
-                task.cancel()
-            try:
-                await asyncio.gather(*all_tasks, return_exceptions=True)
-                LOGGER.info("All pending tasks cancelled")
-            except Exception as e:
-                LOGGER.warning(f"Error cancelling tasks: {e}")
     except Exception as e:
         LOGGER.error(f"Error stopping clients: {e}")
 
 async def graceful_shutdown():
-    """Gracefully shutdown all components"""
     try:
         await stop_clients()
-        if hasattr(application, 'running') and application.running:
+        if hasattr(application, "running") and application.running:
             await application.stop()
-            LOGGER.info("PTB Application stopped")
-        if hasattr(application, 'shutdown'):
+            LOGGER.info("PTB stopped")
+        if hasattr(application, "shutdown"):
             await application.shutdown()
-            LOGGER.info("PTB Application shutdown")
+            LOGGER.info("PTB shutdown")
         await asyncio.sleep(0.5)
-    except Exception as e:
-        LOGGER.error(f"Error during graceful shutdown: {e}")
     finally:
-        # Final task cleanup
         pending = [t for t in asyncio.all_tasks() if not t.done()]
         if pending:
-            LOGGER.info(f"Final cleanup: cancelling {len(pending)} tasks...")
+            LOGGER.info(f"Cancelling {len(pending)} tasks...")
             for task in pending:
                 task.cancel()
-            try:
-                await asyncio.gather(*pending, return_exceptions=True)
-            except Exception:
-                pass
+            await asyncio.gather(*pending, return_exceptions=True)
 
 # ───────────────────────────────
-# Module Loading
+# Module Loader
 # ───────────────────────────────
 def load_all_modules():
-    """Load all modules after clients are ready"""
     try:
         from MerissaRobot.Modules import ALL_MODULES
-        LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+        LOGGER.info(f"Modules loaded: {ALL_MODULES}")
         return ALL_MODULES
     except Exception as e:
         LOGGER.error(f"Failed to load modules: {e}")
