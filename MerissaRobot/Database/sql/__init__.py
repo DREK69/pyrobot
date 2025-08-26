@@ -8,18 +8,14 @@ from MerissaRobot import LOGGER as log
 if DB_URI and DB_URI.startswith("postgres://"):
     DB_URI = DB_URI.replace("postgres://", "postgresql://", 1)
 
+engine = create_engine(DB_URI, client_encoding="utf8")
 BASE = declarative_base()
-
-def start():
-    global ENGINE
-    ENGINE = create_engine(DB_URI, client_encoding="utf8")
-    log.info("[PostgreSQL] Connecting to database......")
-    BASE.metadata.bind = ENGINE
-    BASE.metadata.create_all(ENGINE)
-    return scoped_session(sessionmaker(bind=ENGINE, autoflush=False))
+SESSION = scoped_session(sessionmaker(bind=engine, autoflush=False))
 
 try:
-    SESSION = start()
+    log.info("[PostgreSQL] Connecting to database...")
+    BASE.metadata.create_all(engine)   # <-- Yahi sabse important hai
+    log.info("[PostgreSQL] Tables created (if not exist).")
 except Exception as e:
     log.exception(f"[PostgreSQL] Failed to connect due to {e}")
     exit()
