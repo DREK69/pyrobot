@@ -4,7 +4,7 @@ from telegram.ext import ContextTypes, CallbackQueryHandler
 
 from MerissaRobot import application
 from MerissaRobot.Modules.misc import MARKDOWN_HELP
-from MerissaRobot.Modules.welcome import WELC_HELP_TXT
+#from MerissaRobot.Modules.welcome import WELC_HELP_TXT
 
 
 async def cb_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
