@@ -883,6 +883,7 @@ async def setup_handlers():
 async def graceful_shutdown():
     LOGGER.info("Shutting down clients...")
 
+    # Stop PTB (python-telegram-bot)
     try:
         if hasattr(application, "stop"):
             await application.stop()
@@ -890,20 +891,24 @@ async def graceful_shutdown():
     except Exception as e:
         LOGGER.warning(f"Error stopping PTB: {e}")
 
+    # Stop Pyrogram & Telethon clients
     try:
-        # Pyrogram & Telethon clients
-        from MerissaRobot import pbot, tbot, userbot
+        from MerissaRobot import pbot, userbot, telethn
+
         if pbot.is_connected:
             await pbot.stop()
             await pbot.storage.close()
             LOGGER.info("Pyrogram Bot stopped")
-        if tbot.is_connected:
-            await tbot.disconnect()
-            LOGGER.info("Telethon stopped")
+
         if userbot.is_connected:
-            await userbot.disconnect()
+            await userbot.stop()
             await userbot.storage.close()
             LOGGER.info("Pyrogram User stopped")
+
+        if telethn.is_connected():
+            await telethn.disconnect()
+            LOGGER.info("Telethon stopped")
+
     except Exception as e:
         LOGGER.warning(f"Error stopping clients: {e}")
 
@@ -931,7 +936,6 @@ async def main():
 
         # Step 2: Init PTB
         await application.initialize()
-        await init_bot()
         LOGGER.info("PTB initialized")
 
         # Step 3: Init other clients (Pyrogram, Telethon, etc.)
