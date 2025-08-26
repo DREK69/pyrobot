@@ -2,7 +2,7 @@ import threading
 
 from sqlalchemy import Column, String
 
-from MerissaRobot.Database.sql import BASE, SESSION
+from MerissaRobot.Database.sql import BASE, SESSION, ENGINE  # Add ENGINE import
 
 
 #   |----------------------------------|
@@ -17,7 +17,7 @@ class NSFWChats(BASE):
         self.chat_id = chat_id
 
 
-NSFWChats.__table__.create(checkfirst=True)
+NSFWChats.__table__.create(bind=ENGINE, checkfirst=True)  # Add bind=ENGINE
 INSERTION_LOCK = threading.RLock()
 
 
