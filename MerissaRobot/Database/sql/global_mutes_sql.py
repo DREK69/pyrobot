@@ -2,7 +2,7 @@ import threading
 
 from sqlalchemy import BigInteger, Boolean, Column, String, UnicodeText
 
-from MerissaRobot.Database.sql import BASE, SESSION
+from MerissaRobot.Database.sql import BASE, SESSION, ENGINE  # Add ENGINE import
 
 
 class GloballyMutedUsers(BASE):
@@ -36,8 +36,8 @@ class GmuteSettings(BASE):
         return "<Gmute setting {} ({})>".format(self.chat_id, self.setting)
 
 
-GloballyMutedUsers.__table__.create(checkfirst=True)
-GmuteSettings.__table__.create(checkfirst=True)
+GloballyMutedUsers.__table__.create(bind=ENGINE, checkfirst=True)  # Add bind=ENGINE
+GmuteSettings.__table__.create(bind=ENGINE, checkfirst=True)  # Add bind=ENGINE
 
 GMUTED_USERS_LOCK = threading.RLock()
 GMUTE_SETTING_LOCK = threading.RLock()
