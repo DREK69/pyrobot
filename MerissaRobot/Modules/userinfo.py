@@ -240,13 +240,14 @@ async def gifid(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.effective_message.reply_text("Please reply to a gif to get its ID.")
 
-
 async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Get comprehensive user information."""
     bot, args = context.bot, context.args
     message = update.effective_message
     chat = update.effective_chat
-    user_id = extract_user(update.effective_message, args)
+    
+    # FIXED: extract_user is async in your codebase
+    user_id = await extract_user(update.effective_message, args)
 
     if user_id:
         try:
@@ -411,6 +412,7 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
     await rep.delete()
+    
 
 async def about_me(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Get user's self-description."""
