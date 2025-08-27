@@ -19,7 +19,7 @@ from telegram.ext import (
 )
 from telegram.ext import ContextTypes
 from telegram.constants import ParseMode
-from telegram.helpers import escape_markdown
+from telegram.helpers import escape_markdown, mention_html 
 from telethon.errors.rpcerrorlist import FloodWaitError
 
 import MerissaRobot.Database.sql.users_sql as sql
