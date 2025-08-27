@@ -8,7 +8,7 @@ from platform import python_version
 from typing import Optional
 import telegram
 
-
+import asyncio
 import requests
 from psutil import boot_time, cpu_percent, disk_usage, virtual_memory
 from telegram import MessageEntity, Update
@@ -241,7 +241,6 @@ async def gifid(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.effective_message.reply_text("Please reply to a gif to get its ID.")
 
 
-
 async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Get comprehensive user information."""
     bot, args = context.bot, context.args
@@ -250,11 +249,13 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = extract_user(update.effective_message, args)
 
     if user_id:
-        user = await bot.get_chat(user_id)
-
+        try:
+            user = await bot.get_chat(user_id)
+        except BadRequest:
+            await message.reply_text("I can't find that user.")
+            return
     elif not message.reply_to_message and not args:
         user = message.from_user
-
     elif not message.reply_to_message and (
         not args
         or (
@@ -266,7 +267,6 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ):
         await message.reply_text("I can't extract a user from this.")
         return
-
     else:
         return
 
@@ -306,8 +306,16 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 pass
                 
     if user_id not in [bot.id, 777000, 1087968824]:
-        userhp = await hpmanager(user, bot)
-        text += f"\n\n<b>Health:</b> <code>{userhp['earnedhp']}/{userhp['totalhp']}</code>\n[<i>{make_bar(int(userhp['percentage']))} </i>{userhp['percentage']}%]"
+        # FIXED: Ensure hpmanager is properly awaited if it's async
+        try:
+            if asyncio.iscoroutinefunction(hpmanager):
+                userhp = await hpmanager(user, bot)
+            else:
+                userhp = hpmanager(user, bot)
+            text += f"\n\n<b>Health:</b> <code>{userhp['earnedhp']}/{userhp['totalhp']}</code>\n[<i>{make_bar(int(userhp['percentage']))} </i>{userhp['percentage']}%]"
+        except Exception as e:
+            # Skip health info if there's an issue
+            pass
 
     try:
         if sw:
@@ -337,29 +345,38 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "\n\nOwner Of A Bot. Queen Of @excrybaby. Bot Name Inspired From 'JoJo'."
         )
 
-    # Get custom title for administrators
+    # Get custom title for administrators - FIXED: Avoid mixing async/sync calls
     try:
         user_member = await chat.get_member(user.id)
         if user_member.status == "administrator":
-            result = requests.post(
-                f"https://api.telegram.org/bot{TOKEN}/getChatMember?chat_id={chat.id}&user_id={user.id}",
-                timeout=10
-            )
-            result = result.json()["result"]
-            if "custom_title" in result.keys():
-                custom_title = result["custom_title"]
-                text += f"\n\nTitle:\n<b>{custom_title}</b>"
-    except (BadRequest, requests.RequestException):
+            # Use the ChatMember object directly instead of making separate API call
+            if hasattr(user_member, 'custom_title') and user_member.custom_title:
+                text += f"\n\nTitle:\n<b>{html.escape(user_member.custom_title)}</b>"
+    except BadRequest:
         pass
 
-    # Add module-specific user information
+    # Add module-specific user information - FIXED: Handle both sync and async user info functions
     for mod in USER_INFO:
         try:
-            mod_info = mod.__user_info__(user.id).strip()
-        except TypeError:
-            mod_info = mod.__user_info__(user.id, chat.id).strip()
-        if mod_info:
-            text += "\n\n" + mod_info
+            if hasattr(mod, '__user_info__'):
+                # Check if the function is async
+                if asyncio.iscoroutinefunction(mod.__user_info__):
+                    try:
+                        mod_info = (await mod.__user_info__(user.id)).strip()
+                    except TypeError:
+                        mod_info = (await mod.__user_info__(user.id, chat.id)).strip()
+                else:
+                    # Sync function
+                    try:
+                        mod_info = mod.__user_info__(user.id).strip()
+                    except TypeError:
+                        mod_info = mod.__user_info__(user.id, chat.id).strip()
+                
+                if mod_info:
+                    text += "\n\n" + mod_info
+        except Exception as e:
+            # Skip this module if there's an error
+            continue
 
     # Handle profile picture
     if INFOPIC:
@@ -394,10 +411,6 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
     await rep.delete()
-
-
-
-
 
 async def about_me(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Get user's self-description."""
