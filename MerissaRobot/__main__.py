@@ -36,22 +36,7 @@ from MerissaRobot import (
 from MerissaRobot.Handler.ptb.chat_status import is_user_admin
 from MerissaRobot.Handler.ptb.misc import gpaginate_modules, paginate_modules
 from MerissaRobot.Modules import ALL_MODULES
-from MerissaRobot.text import (
-    GROUP_HELP_BUTTON,
-    GROUP_START_BUTTON,
-    GROUP_START_TEXT,
-    HELP_MODULE_TEXT,
-    HELP_STRINGS,
-    MERISSA_UPDATE_TEXT,
-    PM_ABOUT_BUTTON,
-    PM_ABOUT_TEXT,
-    PM_DONATE_TEXT,
-    PM_START_BUTTON,
-    PM_START_TEXT,
-    PM_SUPPORT_BUTTON,
-    PM_SUPPORT_TEXT,
-)
-
+from MerissaRobot.text import *
 # ───────────────────────────────
 # Global Variables and Setup
 # ───────────────────────────────
