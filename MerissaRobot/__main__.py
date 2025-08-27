@@ -179,7 +179,6 @@ async def test(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.effective_message.reply_text("This person edited a message")
     print(update.effective_message)
 
-
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Start command handler"""
     args = context.args
@@ -212,7 +211,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 match = re.match("stngs_(.*)", args[0].lower())
                 chat = await context.bot.get_chat(match.group(1))
 
-                if is_user_admin(chat, update.effective_user.id):
+                # FIXED: is_user_admin is async
+                if await is_user_admin(chat, update.effective_user.id):
                     await send_settings(match.group(1), update.effective_user.id, False)
                 else:
                     await send_settings(match.group(1), update.effective_user.id, True)
@@ -232,7 +232,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             parse_mode=ParseMode.HTML,
             reply_markup=GROUP_START_BUTTON,
         )
-
 
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Log the error and send a telegram message to notify the developer."""
