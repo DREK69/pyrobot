@@ -26,7 +26,7 @@ PM_START_BUTTON = InlineKeyboardMarkup(
         [
             InlineKeyboardButton(
                 text="Developer🧑‍💻",
-                url="tg://user?id=2030709195",
+                url="https://t.me/DEPSTEY",   # ✅ fixed
             ),
             InlineKeyboardButton(
                 text="🔗 Inline",
@@ -125,7 +125,10 @@ GROUP_START_TEXT = "👋 Hi, I'm Merissa. Nice to meet You."
 GROUP_START_BUTTON = InlineKeyboardMarkup(
     [
         [
-            InlineKeyboardButton(text="🧑‍💻 Developer", url="tg://user?id=2030709195"),
+            InlineKeyboardButton(
+                text="🧑‍💻 Developer",
+                url="https://t.me/DEPSTEY",   # ✅ fixed
+            ),
             InlineKeyboardButton(
                 text="Help ❓",
                 callback_data="merissa_setting",
