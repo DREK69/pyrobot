@@ -1,6 +1,5 @@
 import asyncio
 from io import BytesIO
-from time import sleep
 
 from telegram import Update
 from telegram.error import BadRequest, Forbidden, TelegramError
@@ -36,7 +35,7 @@ async def get_user_id(username):
     for user_obj in users:
         try:
             userdat = await application.bot.get_chat(user_obj.user_id)
-            if userdat.username == username:
+            if userdat.username and userdat.username.lower() == username.lower():
                 return userdat.id
 
         except BadRequest as excp:
@@ -73,7 +72,7 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     await context.bot.send_message(
                         int(chat.chat_id),
                         to_send[1],
-                        parse_mode="MARKDOWN",
+                        parse_mode="Markdown",
                         disable_web_page_preview=True,
                     )
                     await asyncio.sleep(0.1)
@@ -86,7 +85,7 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     await context.bot.send_message(
                         int(user.user_id),
                         to_send[1],
-                        parse_mode="MARKDOWN",
+                        parse_mode="Markdown",
                         disable_web_page_preview=True,
                     )
                     await asyncio.sleep(0.1)
@@ -102,9 +101,12 @@ async def log_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat
     msg = update.effective_message
 
-    sql.update_user(msg.from_user.id, msg.from_user.username, chat.id, chat.title)
+    # Log sender
+    if msg.from_user:
+        sql.update_user(msg.from_user.id, msg.from_user.username, chat.id, chat.title)
 
-    if msg.reply_to_message:
+    # Log reply target
+    if msg.reply_to_message and msg.reply_to_message.from_user:
         sql.update_user(
             msg.reply_to_message.from_user.id,
             msg.reply_to_message.from_user.username,
@@ -112,8 +114,13 @@ async def log_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
             chat.title,
         )
 
-    if msg.forward_from:
-        sql.update_user(msg.forward_from.id, msg.forward_from.username)
+    # Log forwarded origin (new in PTB v20+)
+    if msg.forward_origin:
+        if msg.forward_origin.sender_user:  # Forwarded from a user
+            sql.update_user(
+                msg.forward_origin.sender_user.id,
+                msg.forward_origin.sender_user.username,
+            )
 
 
 @sudo_plus
@@ -125,8 +132,8 @@ async def chats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for chat in all_chats:
         try:
             curr_chat = await context.bot.get_chat(chat.chat_id)
-            await curr_chat.get_member(context.bot.id)
-            chat_members = await curr_chat.get_member_count()
+            await curr_chat.get_member(context.bot.id)  # ensures bot is still in
+            chat_members = curr_chat.get_member_count  # property in PTB v22
             chatfile += "{}. {} | {} | {}\n".format(
                 P,
                 chat.chat_name,
@@ -152,7 +159,7 @@ async def chat_checker(update: Update, context: ContextTypes.DEFAULT_TYPE):
         bot_member = await update.effective_message.chat.get_member(bot.id)
         if hasattr(bot_member, 'can_send_messages') and bot_member.can_send_messages is False:
             await bot.leave_chat(update.effective_message.chat.id)
-    except Unauthorized:
+    except Forbidden:
         pass
     except Exception:
         pass
@@ -186,7 +193,7 @@ async def users_count(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"📊 **Bot Statistics:**\n"
         f"👥 Total Users: `{users}`\n"
         f"💬 Total Chats: `{chats}`",
-        parse_mode="MARKDOWN"
+        parse_mode="Markdown"
     )
 
 
@@ -220,7 +227,7 @@ async def user_info_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"👤 Name: {name}\n"
             f"🔗 Username: {username}\n"
             f"{user_info}",
-            parse_mode="MARKDOWN"
+            parse_mode="Markdown"
         )
     except Exception as e:
         await update.effective_message.reply_text(f"Error getting user info: {str(e)}")
