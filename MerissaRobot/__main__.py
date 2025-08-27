@@ -879,7 +879,7 @@ def main():
     timeout=15,         # Timeout for each polling request
     drop_pending_updates=True,
     close_loop=False
-    
+    )
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
     
