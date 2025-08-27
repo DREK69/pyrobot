@@ -6,6 +6,8 @@ import re
 import time
 from platform import python_version
 from typing import Optional
+import telegram
+
 
 import requests
 from psutil import boot_time, cpu_percent, disk_usage, virtual_memory
@@ -459,7 +461,7 @@ async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     status += "<b>• Ram usage:</b> " + str(mem[2]) + " %\n"
     status += "<b>• Storage used:</b> " + str(disk[3]) + " %\n"
     status += "<b>• Python version:</b> " + python_version() + "\n"
-    status += "<b>• Library version:</b> " + str(__version__) + "\n"
+    status += f"<b>• Library version:</b> {telegram.__version__}\n"
     status += "<b>• Bot uptime:</b> " + str(botuptime) + "\n\n"
     status += "<b>╔═━「 Merissabot Statistics 」</b>\n" + "\n".join(
         [mod.__stats__() for mod in STATS]
