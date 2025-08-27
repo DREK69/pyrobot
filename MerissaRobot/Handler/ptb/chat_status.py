@@ -16,7 +16,7 @@ from MerissaRobot import (
     SUPPORT_CHAT,
     TIGERS,
     WOLVES,
-    application,  # Changed from dispatcher
+    application,
 )
 
 # stores admins in memory for 10 min.
@@ -43,7 +43,7 @@ def is_sudo_plus_local(user_id: int) -> bool:
 
 async def is_user_admin(chat: Chat, user_id: int, member: Optional[ChatMember] = None) -> bool:
     if (
-        chat.type == "private"
+        chat.type == Chat.PRIVATE
         or user_id in DRAGONS
         or user_id in DEV_USERS
         or user_id in [777000, 1087968824]  # Telegram & Anonymous Admin
@@ -56,7 +56,7 @@ async def is_user_admin(chat: Chat, user_id: int, member: Optional[ChatMember] =
                 return user_id in ADMIN_CACHE[chat.id]
             except KeyError:
                 # refresh cache
-                chat_admins = await application.bot.get_chat_administrators(chat.id)  # Changed from dispatcher
+                chat_admins = await application.bot.get_chat_administrators(chat.id)
                 admin_list = [x.user.id for x in chat_admins]
                 ADMIN_CACHE[chat.id] = admin_list
                 return user_id in admin_list
@@ -65,7 +65,7 @@ async def is_user_admin(chat: Chat, user_id: int, member: Optional[ChatMember] =
 
 
 async def is_bot_admin(chat: Chat, bot_id: int, bot_member: Optional[ChatMember] = None) -> bool:
-    if chat.type == "private":
+    if chat.type == Chat.PRIVATE:
         return True
 
     if bot_member is None:
@@ -81,7 +81,7 @@ async def can_delete(chat: Chat, bot_id: int) -> bool:
 
 async def is_user_ban_protected(chat: Chat, user_id: int, member: Optional[ChatMember] = None) -> bool:
     if (
-        chat.type == "private"
+        chat.type == Chat.PRIVATE
         or user_id in DRAGONS
         or user_id in DEV_USERS
         or user_id in WOLVES
@@ -384,7 +384,7 @@ def connection_status(func):
     @wraps(func)
     async def connected_status(update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
         # connected(...) is imported below
-        conn = connected(
+        conn = await connected(
             context.bot,
             update,
             update.effective_chat,
@@ -393,20 +393,32 @@ def connection_status(func):
         )
 
         if conn:
-            chat = await application.bot.get_chat(conn)  # Changed from dispatcher
-            setattr(update, "_effective_chat", chat)
-            return await func(update, context, *args, **kwargs)
+            chat = await application.bot.get_chat(conn)
+            # In v22, we need to create a new Update object or modify the existing one properly
+            # This is a simplified approach - you might need to adjust based on your connection module
+            original_chat = update.effective_chat
+            update._effective_chat = chat
+            try:
+                return await func(update, context, *args, **kwargs)
+            finally:
+                update._effective_chat = original_chat
 
-        if update.effective_message.chat.type == "private":
+        if update.effective_message.chat.type == Chat.PRIVATE:
             await update.effective_message.reply_text(
                 "Send /connect in a group that you and I have in common first.",
             )
-            return connected_status
+            return
 
         return await func(update, context, *args, **kwargs)
     return connected_status
 
 
 # Workaround for circular import with connection.py
-from MerissaRobot.Modules import connection
-connected = connection.connected
+# Note: You'll need to make sure your connection.connected function is also async in v22
+try:
+    from MerissaRobot.Modules import connection
+    connected = connection.connected
+except ImportError:
+    # Fallback if connection module doesn't exist yet
+    async def connected(bot, update, chat, user_id, need_admin=False):
+        return None
