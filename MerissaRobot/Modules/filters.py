@@ -33,6 +33,12 @@ from MerissaRobot.Handler.ptb.string_handling import (
 from MerissaRobot.Modules.connection import connected
 from MerissaRobot.Modules.disable import DisableAbleCommandHandler
 
+try:
+    from MerissaRobot.Database.sql import cust_filters_sql as sql
+except ImportError as e:
+    print(f"Failed to import cust_filters_sql: {e}")
+    sql = None
+    
 HANDLER_GROUP = 10
 
 
