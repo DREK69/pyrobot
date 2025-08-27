@@ -1,4 +1,5 @@
 import re
+import asyncio
 from typing import List, Optional, Tuple
 from telegram import Message, MessageEntity
 from telegram.error import BadRequest
@@ -7,202 +8,121 @@ from MerissaRobot.Modules.users import get_user_id
 
 
 def id_from_reply(message: Message) -> Tuple[Optional[int], Optional[str]]:
-    """Extract user ID and text from reply message - this function stays sync"""
+    """Extract user ID and text from reply message (sync)."""
     prev_message = message.reply_to_message
-    if not prev_message:
+    if not prev_message or not prev_message.from_user:
         return None, None
     user_id = prev_message.from_user.id
     res = message.text.split(None, 1)
-    if len(res) < 2:
-        return user_id, ""
-    return user_id, res[1]
-
-
-async def extract_user(message: Message, args: List[str]) -> Optional[int]:
-    """Extract user ID from message arguments"""
-    return (await extract_user_and_text(message, args))
+    return user_id, (res[1] if len(res) > 1 else "")
 
 
 async def extract_user_and_text(
     message: Message, args: List[str]
 ) -> Tuple[Optional[int], Optional[str]]:
-    """Extract user ID and associated text from message"""
+    """Extract user ID and optional text from a command message."""
     prev_message = message.reply_to_message
     split_text = message.text.split(None, 1)
-
-    if len(split_text) < 2:
-        return id_from_reply(message)
-
-    text_to_parse = split_text[1]
     text = ""
 
-    # Handle text mentions
-    entities = list(message.parse_entities([MessageEntity.TEXT_MENTION]))
-    ent = entities if entities else None
+    # Case 1: reply
+    if not args and prev_message:
+        return id_from_reply(message)
 
-    if entities and ent and ent.offset == len(message.text) - len(text_to_parse):
-        user_id = ent.user.id
-        text = message.text[ent.offset + ent.length :]
+    # Case 2: text mention (explicit user object in entity)
+    entities = message.parse_entities([MessageEntity.TEXT_MENTION])
+    if entities:
+        for ent, val in entities.items():
+            if ent.user:
+                user_id = ent.user.id
+                text = message.text[ent.offset + ent.length :]
+                return user_id, text.strip()
 
-    # Handle username mentions
-    elif len(args) >= 1 and args.startswith("@"):
-        user = args
-        # Make sure get_user_id is async if it makes database calls
-        if hasattr(get_user_id, '__call__'):
-            if asyncio.iscoroutinefunction(get_user_id):
-                user_id = await get_user_id(user)
-            else:
-                user_id = get_user_id(user)
-        else:
-            user_id = get_user_id(user)
-            
+    # Case 3: @username
+    if args and args[0].startswith("@"):
+        username = args[0]
+        user_id = (
+            await get_user_id(username)
+            if asyncio.iscoroutinefunction(get_user_id)
+            else get_user_id(username)
+        )
         if not user_id:
             await message.reply_text(
-                "No idea who this user is. You'll be able to interact with them if "
-                "you reply to that person's message instead, or forward one of that user's messages."
+                "I don't know this user. Reply to a message from them or forward one of their messages."
             )
             return None, None
+        if len(args) > 1:
+            text = " ".join(args[1:])
+        return user_id, text
 
-    # Handle user ID or Telegram link
-    elif len(args) >= 1 and (
-        args[0].isdigit() or re.match(r"https://t\.me/(\w+)", args)
-    ):
-        if args.isdigit():
-            user_id = int(args)
+    # Case 4: numeric ID or t.me link
+    if args:
+        arg = args[0]
+        if arg.isdigit():
+            user_id = int(arg)
         else:
-            username = re.search(r"https://t\.me/(\w+)", args).group(1)
-            # Handle async get_user_id
-            if hasattr(get_user_id, '__call__'):
-                if asyncio.iscoroutinefunction(get_user_id):
-                    user_id = await get_user_id(f"@{username}")
-                else:
-                    user_id = get_user_id(f"@{username}")
+            m = re.match(r"https://t\.me/(\w+)", arg)
+            if m:
+                username = m.group(1)
+                user_id = (
+                    await get_user_id(f"@{username}")
+                    if asyncio.iscoroutinefunction(get_user_id)
+                    else get_user_id(f"@{username}")
+                )
             else:
-                user_id = get_user_id(f"@{username}")
-
+                user_id = None
         if not user_id:
             await message.reply_text(
-                "No idea who this user is. You'll be able to interact with them if "
-                "you reply to that person's message instead, or forward one of that user's messages."
+                "I couldn't resolve this user. Try replying to them instead."
             )
             return None, None
+        if len(args) > 1:
+            text = " ".join(args[1:])
+        return user_id, text
 
-    # Handle reply messages
-    elif prev_message:
-        user_id, text = id_from_reply(message)
+    return None, None
 
-    else:
-        return None, None
 
-    # Validate user exists - Updated for PTB v22
-    try:
-        # Use context.bot instead of message.get_bot() if you have access to context
-        # For now, keeping the existing pattern but ensuring it works with v22
-        chat_info = await message.get_bot().get_chat(user_id)
-        if chat_info.type not in ["private", "bot"]:
-            raise BadRequest("Chat is not a private chat or a bot")
-    except BadRequest as excp:
-        if excp.message in ("User_id_invalid", "Chat not found"):
-            await message.reply_text(
-                "Sorry, I could not find the user you specified. Please make sure that you "
-                "have spelled their username or user ID correctly and that they have interacted "
-                "with me before."
-            )
-        else:
-            LOGGER.exception("Exception %s on user %s", excp.message, user_id)
-            await message.reply_text(
-                "Sorry, an error occurred while processing your request. Please try again later."
-            )
-        return None, None
-
-    return user_id, text
+async def extract_user(message: Message, args: List[str]) -> Optional[int]:
+    """Wrapper to only return user_id."""
+    user_id, _ = await extract_user_and_text(message, args)
+    return user_id
 
 
 def extract_text(message: Message) -> str:
-    """Extract text from message - stays sync as it's just text processing"""
+    """Extract plain text or caption from message."""
     return (
         message.text
         or message.caption
-        or (message.sticker.emoji if message.sticker else None)
+        or (message.sticker.emoji if message.sticker else "")
     )
 
 
 async def extract_unt_fedban(
     message: Message, args: List[str]
 ) -> Tuple[Optional[int], Optional[str]]:
-    """Extract user and text for federation ban operations"""
-    prev_message = message.reply_to_message
-    split_text = message.text.split(None, 1)
+    """Special extractor for federation ban commands."""
+    user_id, text = await extract_user_and_text(message, args)
 
-    if len(split_text) < 2:
-        return id_from_reply(message)
-
-    text = ""
-    entities = list(message.parse_entities([MessageEntity.TEXT_MENTION]))
-    ent = entities[0] if entities else None
-
-    # Handle text mentions
-    if entities and ent and ent.offset == len(message.text) - len(split_text[1]):
-        user_id = ent.user.id
-        text = message.text[ent.offset + ent.length :]
-
-    # Handle username mentions
-    elif len(args) >= 1 and args.startswith("@"):
-        # Handle async get_user_id
-        if hasattr(get_user_id, '__call__'):
-            if asyncio.iscoroutinefunction(get_user_id):
-                user_id = await get_user_id(args)
-            else:
-                user_id = get_user_id(args)
-        else:
-            user_id = get_user_id(args)
-            
-        if not user_id:
-            await message.reply_text(
-                "I don't have that user in my db. "
-                "You'll be able to interact with them if you reply to that person's message instead, or forward one of that user's messages."
-            )
-            return None, None
-        res = message.text.split(None, 2)
-        if len(res) >= 3:
-            text = res[2]
-
-    # Handle user ID
-    elif len(args) >= 1 and args.isdigit():
-        user_id = int(args)
-        res = message.text.split(None, 2)
-        if len(res) >= 3:
-            text = res[2]
-
-    # Handle reply messages
-    elif prev_message:
-        user_id, text = id_from_reply(message)
-
-    else:
+    if not user_id:
         return None, None
 
-    # Validate user exists
+    # Verify user (best effort, but don't hard fail on 'Chat not found')
     try:
         await message.get_bot().get_chat(user_id)
     except BadRequest as excp:
-        if excp.message in ("User_id_invalid", "Chat not found") and not isinstance(
-            user_id, int
-        ):
+        if excp.message in ("User_id_invalid", "Chat not found"):
             await message.reply_text(
-                "I don't seem to have interacted with this user before "
-                "please forward a message from them to give me control!"
+                "I haven't seen this user before. Forward one of their messages so I can identify them."
             )
             return None, None
-        if excp.message != "Chat not found":
-            LOGGER.exception("Exception %s on user %s", excp.message, user_id)
-            return None, None
-        if not isinstance(user_id, int):
-            return None, None
+        LOGGER.exception("Exception %s on user %s", excp.message, user_id)
+        return None, None
 
     return user_id, text
 
 
 async def extract_user_fban(message: Message, args: List[str]) -> Optional[int]:
-    """Extract user ID for federation ban operations"""
-    return (await extract_unt_fedban(message, args))[0]
-    
+    """Wrapper for federation ban use-case (only ID)."""
+    user_id, _ = await extract_unt_fedban(message, args)
+    return user_id
