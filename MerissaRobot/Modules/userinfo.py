@@ -174,43 +174,58 @@ def make_bar(per: int) -> str:
     return "■" * done + "□" * (10 - done)
 
 
+
 async def get_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Get user or chat ID."""
     bot, args = context.bot, context.args
-    message = update.effective_message
-    chat = update.effective_chat
     msg = update.effective_message
+    chat = update.effective_chat
+
     user_id = extract_user(msg, args)
 
     if user_id:
-        if msg.reply_to_message and msg.reply_to_message.forward_from:
-            user1 = message.reply_to_message.from_user
-            user2 = message.reply_to_message.forward_from
+        # Case: replied message with forward
+        if msg.reply_to_message and msg.reply_to_message.forward_origin:
+            user1 = msg.reply_to_message.from_user
+            forward_origin = msg.reply_to_message.forward_origin
 
-            await msg.reply_text(
-                f"<b>Telegram ID:</b>\n"
-                f"• {html.escape(user2.first_name)} - <code>{user2.id}</code>.\n"
-                f"• {html.escape(user1.first_name)} - <code>{user1.id}</code>.",
-                parse_mode=ParseMode.HTML,
-            )
+            if forward_origin.sender_user:  # forwarded from a user
+                user2 = forward_origin.sender_user
+                await msg.reply_text(
+                    f"<b>Telegram ID:</b>\n"
+                    f"• {html.escape(user2.first_name)} - <code>{user2.id}</code>.\n"
+                    f"• {html.escape(user1.first_name)} - <code>{user1.id}</code>.",
+                    parse_mode="HTML",
+                )
+            else:
+                # Forwarded from a channel/chat
+                origin_chat = getattr(forward_origin, "chat", None)
+                if origin_chat:
+                    await msg.reply_text(
+                        f"<b>Forwarded from chat:</b>\n"
+                        f"• {html.escape(origin_chat.title)} - <code>{origin_chat.id}</code>.\n"
+                        f"• {html.escape(user1.first_name)} - <code>{user1.id}</code>.",
+                        parse_mode="HTML",
+                    )
 
         else:
+            # Normal case
             user = await bot.get_chat(user_id)
             await msg.reply_text(
                 f"{html.escape(user.first_name)}'s id is <code>{user.id}</code>.",
-                parse_mode=ParseMode.HTML,
+                parse_mode="HTML",
             )
 
     elif chat.type == "private":
         await msg.reply_text(
             f"Your id is <code>{chat.id}</code>.",
-            parse_mode=ParseMode.HTML,
+            parse_mode="HTML",
         )
 
     else:
         await msg.reply_text(
             f"This group's id is <code>{chat.id}</code>.",
-            parse_mode=ParseMode.HTML,
+            parse_mode="HTML",
         )
 
 
@@ -226,19 +241,20 @@ async def gifid(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.effective_message.reply_text("Please reply to a gif to get its ID.")
 
 
+
 async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Get comprehensive user information."""
     bot, args = context.bot, context.args
     message = update.effective_message
     chat = update.effective_chat
-    user_id = extract_user(update.effective_message, args)
+
+    user_id = extract_user(message, args)
+    user = None
 
     if user_id:
         user = await bot.get_chat(user_id)
-
     elif not message.reply_to_message and not args:
         user = message.from_user
-
     elif not message.reply_to_message and (
         not args
         or (
@@ -250,27 +266,28 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ):
         await message.reply_text("I can't extract a user from this.")
         return
-
     else:
         return
 
-    rep = await message.reply_text("<code>Getting info...</code>", parse_mode=ParseMode.HTML)
+    rep = await message.reply_text("<code>Getting info...</code>", parse_mode="HTML")
 
+    # Base info
     text = (
         f"╔═━「<b> Appraisal results:</b> 」\n"
         f"✪ ID: <code>{user.id}</code>\n"
         f"✪ First Name: {html.escape(user.first_name)}"
     )
 
-    if user.last_name:
+    if getattr(user, "last_name", None):
         text += f"\n✪ Last Name: {html.escape(user.last_name)}"
 
-    if user.username:
+    if getattr(user, "username", None):
         text += f"\n✪ Username: @{html.escape(user.username)}"
 
     text += f"\n✪ Userlink: {mention_html(user.id, 'link')}"
 
-    if chat.type != "private" and user_id != bot.id:
+    # Presence in chat
+    if chat.type != "private" and user.id != bot.id:
         _stext = "\n✪ Presence: <code>{}</code>"
 
         afk_st = is_afk(user.id)
@@ -280,30 +297,38 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
             try:
                 status = await bot.get_chat_member(chat.id, user.id)
                 if status:
-                    if status.status in {"left", "kicked"}:
+                    if status.status in {ChatMemberStatus.LEFT, ChatMemberStatus.KICKED}:
                         text += _stext.format("Not here")
-                    elif status.status == "member":
+                    elif status.status == ChatMemberStatus.MEMBER:
                         text += _stext.format("Detected")
-                    elif status.status in {"administrator", "creator"}:
+                    elif status.status in {ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER}:
                         text += _stext.format("Admin")
             except BadRequest:
                 pass
-                
-    if user_id not in [bot.id, 777000, 1087968824]:
-        userhp = await hpmanager(user, bot)
-        text += f"\n\n<b>Health:</b> <code>{userhp['earnedhp']}/{userhp['totalhp']}</code>\n[<i>{make_bar(int(userhp['percentage']))} </i>{userhp['percentage']}%]"
 
+    # Health points
+    if user.id not in [bot.id, 777000, 1087968824]:
+        try:
+            userhp = await hpmanager(user, bot)
+            text += (
+                f"\n\n<b>Health:</b> <code>{userhp['earnedhp']}/{userhp['totalhp']}</code>\n"
+                f"[<i>{make_bar(int(userhp['percentage']))} </i>{userhp['percentage']}%]"
+            )
+        except Exception:
+            pass
+
+    # SpamWatch check
     try:
         if sw:
             spamwtc = sw.get_ban(int(user.id))
             if spamwtc:
                 text += "\n\n<b>This person is Spamwatched!</b>"
-                text += f"\nReason: <pre>{spamwtc.reason}</pre>"
+                text += f"\nReason: <pre>{html.escape(spamwtc.reason)}</pre>"
                 text += "\nAppeal at @SpamWatchSupport"
     except Exception:
-        pass  # don't crash if api is down somehow...
+        pass
 
-    # Add disaster level information
+    # Disaster levels
     if user.id == OWNER_ID:
         text += "\n\nThe Disaster level of this person is 'King'."
     elif user.id in DEV_USERS:
@@ -321,22 +346,15 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "\n\nOwner Of A Bot. Queen Of @excrybaby. Bot Name Inspired From 'JoJo'."
         )
 
-    # Get custom title for administrators
+    # Custom admin title
     try:
-        user_member = await chat.get_member(user.id)
-        if user_member.status == "administrator":
-            result = requests.post(
-                f"https://api.telegram.org/bot{TOKEN}/getChatMember?chat_id={chat.id}&user_id={user.id}",
-                timeout=10
-            )
-            result = result.json()["result"]
-            if "custom_title" in result.keys():
-                custom_title = result["custom_title"]
-                text += f"\n\nTitle:\n<b>{custom_title}</b>"
-    except (BadRequest, requests.RequestException):
+        member = await bot.get_chat_member(chat.id, user.id)
+        if member.status == ChatMemberStatus.ADMINISTRATOR and getattr(member, "custom_title", None):
+            text += f"\n\nTitle:\n<b>{html.escape(member.custom_title)}</b>"
+    except BadRequest:
         pass
 
-    # Add module-specific user information
+    # Module-specific info
     for mod in USER_INFO:
         try:
             mod_info = mod.__user_info__(user.id).strip()
@@ -345,39 +363,28 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if mod_info:
             text += "\n\n" + mod_info
 
-    # Handle profile picture
+    # Profile photo
     if INFOPIC:
         try:
-            profile_photos = await context.bot.get_user_profile_photos(user.id)
-            if profile_photos.photos:
-                profile = profile_photos.photos[0][-1]
-                _file = await bot.get_file(profile.file_id)
-                await _file.download_to_drive(f"{user.id}.png")
-
-                with open(f"{user.id}.png", "rb") as photo_file:
-                    await message.reply_document(
-                        document=photo_file,
-                        caption=text,
-                        parse_mode=ParseMode.HTML,
-                    )
-
-                os.remove(f"{user.id}.png")
-            else:
-                # User doesn't have profile pic, send normal text
-                await message.reply_text(
-                    text, parse_mode=ParseMode.HTML, disable_web_page_preview=True
+            photos = await bot.get_user_profile_photos(user.id, limit=1)
+            if photos.photos:
+                photo_file_id = photos.photos[0][-1].file_id
+                await message.reply_photo(
+                    photo=photo_file_id,
+                    caption=text,
+                    parse_mode="HTML",
                 )
-        except (IndexError, BadRequest):
-            await message.reply_text(
-                text, parse_mode=ParseMode.HTML, disable_web_page_preview=True
-            )
+            else:
+                await message.reply_text(text, parse_mode="HTML", disable_web_page_preview=True)
+        except BadRequest:
+            await message.reply_text(text, parse_mode="HTML", disable_web_page_preview=True)
     else:
-        await message.reply_text(
-            text,
-            parse_mode=ParseMode.HTML,
-        )
+        await message.reply_text(text, parse_mode="HTML")
 
     await rep.delete()
+
+
+
 
 
 async def about_me(update: Update, context: ContextTypes.DEFAULT_TYPE):
