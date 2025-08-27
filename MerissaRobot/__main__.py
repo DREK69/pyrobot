@@ -1,4 +1,3 @@
-import signal
 import asyncio
 import html
 import importlib
@@ -6,38 +5,29 @@ import json
 import re
 import time
 import traceback
-import sys
+
 from pyrogram.errors.exceptions.flood_420 import FloodWait
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.error import (
-    BadRequest,
-    ChatMigrated,
-    NetworkError,
-    TelegramError,
-    TimedOut,
-)
+from telegram.error import BadRequest
 from telegram.ext import (
     Application,
-    ContextTypes,
+    CallbackContext,
     CallbackQueryHandler,
     CommandHandler,
     MessageHandler,
     filters,
 )
+from telegram.ext import ContextTypes
 from telegram.constants import ParseMode
 from telegram.helpers import escape_markdown
 from telethon.errors.rpcerrorlist import FloodWaitError
 
 import MerissaRobot.Database.sql.users_sql as sql
 from MerissaRobot import (
-    initiate_clients, graceful_shutdown,
-    setup_handlers, ALL_MODULES, dirr
-)
-from MerissaRobot import (
     LOGGER,
     OWNER_ID,
     TOKEN,
-    application,  # Changed from dispatcher
+    application,
     pbot,
     pytgcalls,
     telethn,
