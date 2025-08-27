@@ -863,9 +863,6 @@ def main():
     application.add_handler(MessageHandler(filters.StatusUpdate.MIGRATE, migrate_chats))
     
     # Add error handler
-    application.add_error_handler(error_handler)
-
-    # Set bot info after application is built
     async def post_init(app):
         global BOT_ID, BOT_USERNAME, BOT_NAME
         BOT_ID = app.bot.id
@@ -878,11 +875,11 @@ def main():
     LOGGER.info("Using long polling.")
     # PTB v22 uses run_polling instead of start_polling
     application.run_polling(
-        timeout=15,
-        read_timeout=4,
-        drop_pending_updates=True,
-        close_loop=False
-    )
+    poll_interval=1.0,  # Time between polling requests
+    timeout=15,         # Timeout for each polling request
+    drop_pending_updates=True,
+    close_loop=False
+    
     LOGGER.info("PTB Started")
     LOGGER.info("MerissaRobot Started Successfully")
     
@@ -893,3 +890,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
