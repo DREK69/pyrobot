@@ -242,68 +242,159 @@ async def gifid(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 
-
 async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Get comprehensive user information."""
     bot, args = context.bot, context.args
     message = update.effective_message
     chat = update.effective_chat
-
-    user_id = await extract_user(message, args)  # ✅ FIXED
-    user = None
+    user_id = extract_user(update.effective_message, args)
 
     if user_id:
         user = await bot.get_chat(user_id)
+
     elif not message.reply_to_message and not args:
         user = message.from_user
-    else:
+
+    elif not message.reply_to_message and (
+        not args
+        or (
+            len(args) >= 1
+            and not args[0].startswith("@")
+            and not args[0].isdigit()
+            and not message.entities
+        )
+    ):
         await message.reply_text("I can't extract a user from this.")
         return
 
-    rep = await message.reply_text("<code>Getting info...</code>", parse_mode="HTML")
+    else:
+        return
 
-    # Base info
+    rep = await message.reply_text("<code>Getting info...</code>", parse_mode=ParseMode.HTML)
+
     text = (
         f"╔═━「<b> Appraisal results:</b> 」\n"
         f"✪ ID: <code>{user.id}</code>\n"
         f"✪ First Name: {html.escape(user.first_name)}"
     )
-    if getattr(user, "last_name", None):
+
+    if user.last_name:
         text += f"\n✪ Last Name: {html.escape(user.last_name)}"
-    if getattr(user, "username", None):
+
+    if user.username:
         text += f"\n✪ Username: @{html.escape(user.username)}"
+
     text += f"\n✪ Userlink: {mention_html(user.id, 'link')}"
 
-    # Presence in chat
-    if chat.type != "private" and user.id != bot.id:
+    if chat.type != "private" and user_id != bot.id:
+        _stext = "\n✪ Presence: <code>{}</code>"
+
+        afk_st = is_afk(user.id)
+        if afk_st:
+            text += _stext.format("AFK")
+        else:
+            try:
+                status = await bot.get_chat_member(chat.id, user.id)
+                if status:
+                    if status.status in {"left", "kicked"}:
+                        text += _stext.format("Not here")
+                    elif status.status == "member":
+                        text += _stext.format("Detected")
+                    elif status.status in {"administrator", "creator"}:
+                        text += _stext.format("Admin")
+            except BadRequest:
+                pass
+                
+    if user_id not in [bot.id, 777000, 1087968824]:
+        userhp = await hpmanager(user, bot)
+        text += f"\n\n<b>Health:</b> <code>{userhp['earnedhp']}/{userhp['totalhp']}</code>\n[<i>{make_bar(int(userhp['percentage']))} </i>{userhp['percentage']}%]"
+
+    try:
+        if sw:
+            spamwtc = sw.get_ban(int(user.id))
+            if spamwtc:
+                text += "\n\n<b>This person is Spamwatched!</b>"
+                text += f"\nReason: <pre>{spamwtc.reason}</pre>"
+                text += "\nAppeal at @SpamWatchSupport"
+    except Exception:
+        pass  # don't crash if api is down somehow...
+
+    # Add disaster level information
+    if user.id == OWNER_ID:
+        text += "\n\nThe Disaster level of this person is 'King'."
+    elif user.id in DEV_USERS:
+        text += "\n\nThis user is member of 'Prince'."
+    elif user.id in DRAGONS:
+        text += "\n\nThe Disaster level of this person is 'Emperor'."
+    elif user.id in DEMONS:
+        text += "\n\nThe Disaster level of this person is 'Governor'."
+    elif user.id in TIGERS:
+        text += "\n\nThe Disaster level of this person is 'Captain'."
+    elif user.id in WOLVES:
+        text += "\n\nThe Disaster level of this person is 'Soldier'."
+    elif user.id == 1829047705:
+        text += (
+            "\n\nOwner Of A Bot. Queen Of @excrybaby. Bot Name Inspired From 'JoJo'."
+        )
+
+    # Get custom title for administrators
+    try:
+        user_member = await chat.get_member(user.id)
+        if user_member.status == "administrator":
+            result = requests.post(
+                f"https://api.telegram.org/bot{TOKEN}/getChatMember?chat_id={chat.id}&user_id={user.id}",
+                timeout=10
+            )
+            result = result.json()["result"]
+            if "custom_title" in result.keys():
+                custom_title = result["custom_title"]
+                text += f"\n\nTitle:\n<b>{custom_title}</b>"
+    except (BadRequest, requests.RequestException):
+        pass
+
+    # Add module-specific user information
+    for mod in USER_INFO:
         try:
-            status = await bot.get_chat_member(chat.id, user.id)
-            if status.status in {ChatMemberStatus.LEFT, ChatMemberStatus.KICKED}:
-                text += "\n✪ Presence: <code>Not here</code>"
-            elif status.status == ChatMemberStatus.MEMBER:
-                text += "\n✪ Presence: <code>Detected</code>"
-            elif status.status in {ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER}:
-                text += "\n✪ Presence: <code>Admin</code>"
-        except BadRequest:
-            pass
+            mod_info = mod.__user_info__(user.id).strip()
+        except TypeError:
+            mod_info = mod.__user_info__(user.id, chat.id).strip()
+        if mod_info:
+            text += "\n\n" + mod_info
 
-    # Extra checks (afk, hpmanager, spamwatch, disaster levels, etc.) — keep as in your version
-
-    # Profile photo
+    # Handle profile picture
     if INFOPIC:
         try:
-            photos = await bot.get_user_profile_photos(user.id, limit=1)
-            if photos.photos:
-                photo_file_id = photos.photos[0][-1].file_id
-                await message.reply_photo(photo=photo_file_id, caption=text, parse_mode="HTML")
+            profile_photos = await context.bot.get_user_profile_photos(user.id)
+            if profile_photos.photos:
+                profile = profile_photos.photos[0][-1]
+                _file = await bot.get_file(profile.file_id)
+                await _file.download_to_drive(f"{user.id}.png")
+
+                with open(f"{user.id}.png", "rb") as photo_file:
+                    await message.reply_document(
+                        document=photo_file,
+                        caption=text,
+                        parse_mode=ParseMode.HTML,
+                    )
+
+                os.remove(f"{user.id}.png")
             else:
-                await message.reply_text(text, parse_mode="HTML", disable_web_page_preview=True)
-        except BadRequest:
-            await message.reply_text(text, parse_mode="HTML", disable_web_page_preview=True)
+                # User doesn't have profile pic, send normal text
+                await message.reply_text(
+                    text, parse_mode=ParseMode.HTML, disable_web_page_preview=True
+                )
+        except (IndexError, BadRequest):
+            await message.reply_text(
+                text, parse_mode=ParseMode.HTML, disable_web_page_preview=True
+            )
     else:
-        await message.reply_text(text, parse_mode="HTML")
+        await message.reply_text(
+            text,
+            parse_mode=ParseMode.HTML,
+        )
 
     await rep.delete()
+
 
 
 
