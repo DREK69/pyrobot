@@ -19,18 +19,24 @@ CMD_STARTERS = tuple(CMD_STARTERS)
 
 FILENAME = __name__.rsplit(".", 1)[-1]
 
+# Initialize variables that will be used regardless
+DISABLE_CMDS = []
+DISABLE_OTHER = []
+ADMIN_CMDS = []
+sql = None  # Initialize sql as None
+
 # If module is due to be loaded, then setup all the magical handlers
 if is_module_loaded(FILENAME):
-    from MerissaRobot.Database.sql import disable_sql as sql
-    from MerissaRobot.Handler.ptb.chat_status import (
-        connection_status,
-        is_user_admin,
-        user_admin,
-    )
-
-    DISABLE_CMDS = []
-    DISABLE_OTHER = []
-    ADMIN_CMDS = []
+    try:
+        from MerissaRobot.Database.sql import disable_sql as sql
+        from MerissaRobot.Handler.ptb.chat_status import (
+            connection_status,
+            is_user_admin,
+            user_admin,
+        )
+    except ImportError as e:
+        print(f"Failed to import required modules: {e}")
+        sql = None
 
     class DisableAbleCommandHandler(CommandHandler):
         def __init__(self, command, callback, admin_ok=False, **kwargs):
@@ -56,11 +62,18 @@ if is_module_loaded(FILENAME):
                     ):
                         args = message.text.split()[1:]
                         command = fst_word[1:].split("@")
-                        command.append(message.bot.username)
+                        
+                        # Fixed: Use update.get_bot() instead of message.bot
+                        bot = update.get_bot()
+                        if bot and bot.username:
+                            command.append(bot.username)
+                        else:
+                            # Fallback if bot username is not available
+                            command.append("")
 
                         if not (
                             command[0].lower() in self.command
-                            and command[1].lower() == message.bot.username.lower()
+                            and (len(command) < 2 or command[1].lower() == (bot.username.lower() if bot and bot.username else ""))
                         ):
                             return None
                         
@@ -77,7 +90,8 @@ if is_module_loaded(FILENAME):
                         filter_result = self.filters.check_update(update) if self.filters else True
                         if filter_result:
                             # disabled, admincmd, user admin
-                            if sql.is_command_disabled(chat.id, command[0].lower()):
+                            # Check if sql is available before using it
+                            if sql and sql.is_command_disabled(chat.id, command[0].lower()):
                                 # check if command was disabled
                                 is_disabled = command[0] in ADMIN_CMDS and is_user_admin(chat, user.id)
                                 if not is_disabled:
@@ -108,7 +122,8 @@ if is_module_loaded(FILENAME):
                 args = []
 
             if super().check_update(update):
-                if sql.is_command_disabled(chat.id, self.friendly):
+                # Check if sql is available before using it
+                if sql and sql.is_command_disabled(chat.id, self.friendly):
                     return False
                 return args, filter_result
 
@@ -128,7 +143,8 @@ if is_module_loaded(FILENAME):
         def check_update(self, update):
             chat = update.effective_chat
             if super().check_update(update):
-                if sql.is_command_disabled(chat.id, self.friendly):
+                # Check if sql is available before using it
+                if sql and sql.is_command_disabled(chat.id, self.friendly):
                     return False
                 return True
 
@@ -143,11 +159,16 @@ if is_module_loaded(FILENAME):
                 disable_cmd = disable_cmd[1:]
 
             if disable_cmd in set(DISABLE_CMDS + DISABLE_OTHER):
-                sql.disable_command(chat.id, str(disable_cmd).lower())
-                await update.effective_message.reply_text(
-                    f"✅ **Disabled** the use of `{disable_cmd}`",
-                    parse_mode=ParseMode.MARKDOWN,
-                )
+                if sql:
+                    sql.disable_command(chat.id, str(disable_cmd).lower())
+                    await update.effective_message.reply_text(
+                        f"✅ **Disabled** the use of `{disable_cmd}`",
+                        parse_mode=ParseMode.MARKDOWN,
+                    )
+                else:
+                    await update.effective_message.reply_text(
+                        "❌ Database not available"
+                    )
             else:
                 await update.effective_message.reply_text(
                     "❌ That command can't be disabled"
@@ -188,8 +209,11 @@ if is_module_loaded(FILENAME):
                     disable_cmd = disable_cmd[1:]
 
                 if disable_cmd in set(DISABLE_CMDS + DISABLE_OTHER):
-                    sql.disable_command(chat.id, str(disable_cmd).lower())
-                    disabled_cmds.append(disable_cmd)
+                    if sql:
+                        sql.disable_command(chat.id, str(disable_cmd).lower())
+                        disabled_cmds.append(disable_cmd)
+                    else:
+                        failed_disabled_cmds.append(disable_cmd)
                 else:
                     failed_disabled_cmds.append(disable_cmd)
 
@@ -202,10 +226,15 @@ if is_module_loaded(FILENAME):
 
             if failed_disabled_cmds:
                 failed_disabled_cmds_string = ", ".join(failed_disabled_cmds)
-                await update.effective_message.reply_text(
-                    f"❌ Commands `{failed_disabled_cmds_string}` can't be disabled",
-                    parse_mode=ParseMode.MARKDOWN,
-                )
+                if sql:
+                    await update.effective_message.reply_text(
+                        f"❌ Commands `{failed_disabled_cmds_string}` can't be disabled",
+                        parse_mode=ParseMode.MARKDOWN,
+                    )
+                else:
+                    await update.effective_message.reply_text(
+                        "❌ Database not available"
+                    )
 
         else:
             await update.effective_message.reply_text("❓ What should I disable?")
@@ -220,15 +249,14 @@ if is_module_loaded(FILENAME):
             if enable_cmd.startswith(CMD_STARTERS):
                 enable_cmd = enable_cmd[1:]
 
-            if sql.enable_command(chat.id, enable_cmd):
+            if sql and sql.enable_command(chat.id, enable_cmd):
                 await update.effective_message.reply_text(
                     f"✅ **Enabled** the use of `{enable_cmd}`",
                     parse_mode=ParseMode.MARKDOWN,
                 )
             else:
-                await update.effective_message.reply_text(
-                    "❓ Is that even disabled?"
-                )
+                message = "❌ Database not available" if not sql else "❓ Is that even disabled?"
+                await update.effective_message.reply_text(message)
 
         else:
             await update.effective_message.reply_text("❓ What should I enable?")
@@ -265,7 +293,7 @@ if is_module_loaded(FILENAME):
                 if enable_cmd.startswith(CMD_STARTERS):
                     enable_cmd = enable_cmd[1:]
 
-                if sql.enable_command(chat.id, enable_cmd):
+                if sql and sql.enable_command(chat.id, enable_cmd):
                     enabled_cmds.append(enable_cmd)
                 else:
                     failed_enabled_cmds.append(enable_cmd)
@@ -279,10 +307,15 @@ if is_module_loaded(FILENAME):
 
             if failed_enabled_cmds:
                 failed_enabled_cmds_string = ", ".join(failed_enabled_cmds)
-                await update.effective_message.reply_text(
-                    f"❓ Are the commands `{failed_enabled_cmds_string}` even disabled?",
-                    parse_mode=ParseMode.MARKDOWN,
-                )
+                if sql:
+                    await update.effective_message.reply_text(
+                        f"❓ Are the commands `{failed_enabled_cmds_string}` even disabled?",
+                        parse_mode=ParseMode.MARKDOWN,
+                    )
+                else:
+                    await update.effective_message.reply_text(
+                        "❌ Database not available"
+                    )
 
         else:
             await update.effective_message.reply_text("❓ What should I enable?")
@@ -305,6 +338,9 @@ if is_module_loaded(FILENAME):
 
     # do not async - utility function
     def build_curr_disabled(chat_id: Union[str, int]) -> str:
+        if not sql:
+            return "❌ **Database not available**"
+            
         disabled = sql.get_all_disabled(chat_id)
         if not disabled:
             return "✅ **No commands are disabled!**"
@@ -323,10 +359,13 @@ if is_module_loaded(FILENAME):
         )
 
     def __stats__():
+        if not sql:
+            return "Database not available"
         return f"× {sql.num_disabled()} disabled items, across {sql.num_chats()} chats."
 
     def __migrate__(old_chat_id, new_chat_id):
-        sql.migrate_chat(old_chat_id, new_chat_id)
+        if sql:
+            sql.migrate_chat(old_chat_id, new_chat_id)
 
     def __chat_settings__(chat_id, user_id):
         return build_curr_disabled(chat_id)
@@ -358,19 +397,21 @@ if is_module_loaded(FILENAME):
 *Note:* Some critical commands cannot be disabled for security reasons.
 """
 
-    DISABLE_HANDLER = CommandHandler("disable", disable)
-    DISABLE_MODULE_HANDLER = CommandHandler("disablemodule", disable_module)
-    ENABLE_HANDLER = CommandHandler("enable", enable)
-    ENABLE_MODULE_HANDLER = CommandHandler("enablemodule", enable_module)
-    COMMANDS_HANDLER = CommandHandler(["cmds", "disabled"], commands)
-    TOGGLE_HANDLER = CommandHandler("listcmds", list_cmds)
+    # Only add handlers if sql is available
+    if sql:
+        DISABLE_HANDLER = CommandHandler("disable", disable)
+        DISABLE_MODULE_HANDLER = CommandHandler("disablemodule", disable_module)
+        ENABLE_HANDLER = CommandHandler("enable", enable)
+        ENABLE_MODULE_HANDLER = CommandHandler("enablemodule", enable_module)
+        COMMANDS_HANDLER = CommandHandler(["cmds", "disabled"], commands)
+        TOGGLE_HANDLER = CommandHandler("listcmds", list_cmds)
 
-    application.add_handler(DISABLE_HANDLER)
-    application.add_handler(DISABLE_MODULE_HANDLER)
-    application.add_handler(ENABLE_HANDLER)
-    application.add_handler(ENABLE_MODULE_HANDLER)
-    application.add_handler(COMMANDS_HANDLER)
-    application.add_handler(TOGGLE_HANDLER)
+        application.add_handler(DISABLE_HANDLER)
+        application.add_handler(DISABLE_MODULE_HANDLER)
+        application.add_handler(ENABLE_HANDLER)
+        application.add_handler(ENABLE_MODULE_HANDLER)
+        application.add_handler(COMMANDS_HANDLER)
+        application.add_handler(TOGGLE_HANDLER)
 
     __mod_name__ = "Disabling ⛔️"
 
