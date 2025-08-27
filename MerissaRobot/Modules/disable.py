@@ -42,11 +42,14 @@ if is_module_loaded(FILENAME):
         def __init__(self, command, callback, admin_ok=False, **kwargs):
             super().__init__(command, callback, **kwargs)
             self.admin_ok = admin_ok
+            # Store commands for later use in check_update - FIXED: Use self.commands instead of self.command
             if isinstance(command, str):
+                self.commands = [command]
                 DISABLE_CMDS.append(command)
                 if admin_ok:
                     ADMIN_CMDS.append(command)
             else:
+                self.commands = list(command)
                 DISABLE_CMDS.extend(command)
                 if admin_ok:
                     ADMIN_CMDS.extend(command)
@@ -71,8 +74,9 @@ if is_module_loaded(FILENAME):
                             # Fallback if bot username is not available
                             command.append("")
 
+                        # FIXED: Use self.commands instead of self.command
                         if not (
-                            command[0].lower() in self.command
+                            command[0].lower() in self.commands
                             and (len(command) < 2 or command[1].lower() == (bot.username.lower() if bot and bot.username else ""))
                         ):
                             return None
