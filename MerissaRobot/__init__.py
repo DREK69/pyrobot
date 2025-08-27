@@ -54,10 +54,10 @@ BOT_ID = None  # Will be set after bot starts
 BOT_USERNAME = None  # Will be set after bot starts
 BOT_NAME = None  # Will be set after bot starts
 BOT_MENTION = "https://t.me/MerissaRobot"
-ASS_ID = "5249696122"
+ASS_ID = "7946751397"
 ASS_NAME = "Merissa Assistant"
-ASS_USERNAME = "MerissaAssistant"
-ASS_MENTION = "https://t.me/merissaassistant"
+ASS_USERNAME = "Cjjdjdjjdj"
+ASS_MENTION = "https://t.me/Cjjdjdjjdj"
 
 pbot = Client(
     "MerissaRobot", api_id=API_ID, api_hash=API_HASH, bot_token=TOKEN, workers=100
