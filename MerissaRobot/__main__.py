@@ -806,8 +806,7 @@ async def get_settings(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def migrate_chats(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handle chat migration"""
-    msg = update.effective_message
+    msg = update.effective_message  # type: Optional[Message]
     if msg.migrate_to_chat_id:
         old_chat = update.effective_chat.id
         new_chat = msg.migrate_to_chat_id
@@ -822,119 +821,85 @@ async def migrate_chats(update: Update, context: ContextTypes.DEFAULT_TYPE):
         mod.__migrate__(old_chat, new_chat)
 
     LOGGER.info("Successfully migrated!")
+    raise DispatcherHandlerStop
 
 
-# ───────────────────────────────
-# Bot Initialization and Main Function
-# ───────────────────────────────
-
-async def initiate_clients():
-    """Initialize all clients"""
+async def initiate_bot():
     try:
-        # Start pyrogram clients
         await pbot.start()
-        LOGGER.info("Pyrogram Started")
-        
-        await user.start()
-        LOGGER.info("Userbot Started")
-        
-        await pytgcalls.start()
-        LOGGER.info("Pytgcalls Started")
-        
-        # Start telethon
-        await telethn.start(bot_token=TOKEN)
-        LOGGER.info("Telethon Started")
-        
-        # Send startup messages
-        try:
-            await pbot.send_message(-1001446814207, "Bot Started")
-            await user.send_message(-1001446814207, "Assistant Started")
-        except Exception as e:
-            LOGGER.error(f"Failed to send startup messages: {e}")
-            
     except FloodWait as e:
-        LOGGER.info(f"FloodWait: Have to wait {e.value} seconds")
-        await asyncio.sleep(e.value)
-        await initiate_clients()
+        LOGGER.info(
+            f"[Pyrogram: FloodWaitError] Have to wait {e.value} seconds due to FloodWait."
+        )
+        time.sleep(e.value)
+        await pbot.start()
+
+    await pbot.send_message(-1002846516370, "Bot Started")
+    LOGGER.info("Pyrogram Started")
+    await user.start()
+    await user.send_message(-1002846516370, "Assistant Started")
+    LOGGER.info("Userbot Started")
+    await pytgcalls.start()
+    LOGGER.info("Pytgcalls Started")
+
+
+def main():
+    LOGGER.info("Successfully loaded Modules: " + str(ALL_MODULES))
+    
+    # Start all async components first
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(initiate_bot())
+    
+    try:
+        telethn.start(bot_token=TOKEN)
+        LOGGER.info("Telethon Started")
     except FloodWaitError as e:
-        LOGGER.info(f"Telethon FloodWait: Have to wait {e.seconds} seconds")
-        await asyncio.sleep(e.seconds)
-        await initiate_clients()
+        LOGGER.info(
+            f"[Telethon: FloodWaitError] Have to wait {e.seconds} seconds due to FloodWait."
+        )
+        time.sleep(e.seconds)
+        telethn.start(bot_token=TOKEN)
 
-
-async def setup_handlers():
-    """Setup all handlers"""
-    # Command handlers
+    # Add handlers to application (PTB v22)
     application.add_handler(CommandHandler("test", test))
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", get_help))
-    application.add_handler(CommandHandler("settings", get_settings))
-    
-    # Callback query handlers
     application.add_handler(CallbackQueryHandler(help_button, pattern=r"help_.*"))
     application.add_handler(CallbackQueryHandler(ghelp_button, pattern=r"ghelp_.*"))
+    application.add_handler(CommandHandler("settings", get_settings))
     application.add_handler(CallbackQueryHandler(settings_button, pattern=r"stngs_"))
     application.add_handler(CallbackQueryHandler(merissa_about_callback, pattern=r"merissa_"))
     application.add_handler(CallbackQueryHandler(Source_about_callback, pattern=r"source_"))
-    
-    # Message handlers
     application.add_handler(MessageHandler(filters.StatusUpdate.MIGRATE, migrate_chats))
     
-    # Error handlers
+    # Add error handler
     application.add_error_handler(error_handler)
 
+    # Set bot info after application is built
+    async def post_init(app):
+        global BOT_ID, BOT_USERNAME, BOT_NAME
+        BOT_ID = app.bot.id
+        BOT_USERNAME = app.bot.username
+        BOT_NAME = app.bot.first_name
+        await app.bot.send_message(-1002846516370, "Merissa Started")
 
+    application.post_init = post_init
 
-"""
-MerissaRobot __main__.py — unified startup runner
-"""
+    LOGGER.info("Using long polling.")
+    # PTB v22 uses run_polling instead of start_polling
+    application.run_polling(
+        timeout=15,
+        read_timeout=4,
+        drop_pending_updates=True,
+        close_loop=False
+    )
+    LOGGER.info("PTB Started")
+    LOGGER.info("MerissaRobot Started Successfully")
+    
+    # Run telethon in separate thread or handle differently
+    # For now, keeping the structure similar
+    telethn.run_until_disconnected()
 
-import asyncio
-import signal
-from MerissaRobot import (
-    application,
-    init_bot,
-    setup_handlers,
-    initiate_clients,
-    graceful_shutdown,
-    LOGGER,
-)
-
-async def main():
-    # Start external clients (Pyrogram, Telethon, PyTgCalls)
-    await initiate_clients()
-
-    # Init PTB bot identity
-    await init_bot()
-
-    # Setup handlers
-    await setup_handlers()
-
-    # Run PTB in same loop (non-blocking)
-    ptb_task = asyncio.create_task(application.run_polling())
-
-    # Shutdown handling (SIGINT / SIGTERM)
-    loop = asyncio.get_running_loop()
-    stop_event = asyncio.Event()
-
-    def _stop(*_):
-        stop_event.set()
-    loop.add_signal_handler(signal.SIGINT, _stop)
-    loop.add_signal_handler(signal.SIGTERM, _stop)
-
-    LOGGER.info("🚀 MerissaRobot started successfully!")
-
-    # Wait until stop signal
-    await stop_event.wait()
-
-    # Graceful shutdown
-    LOGGER.info("🔻 Stopping MerissaRobot...")
-    await graceful_shutdown()
-    ptb_task.cancel()
-    try:
-        await ptb_task
-    except asyncio.CancelledError:
-        pass
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
