@@ -3,7 +3,6 @@ from pyrate_limiter import (
     BucketFullException,
     Duration,
     Limiter,
-    MemoryListBucket,
 )
 from telegram import Update
 from telegram.ext import (
