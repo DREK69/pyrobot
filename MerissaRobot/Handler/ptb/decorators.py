@@ -7,8 +7,15 @@ from telegram.ext import (
     MessageHandler,
     filters,
 )
-# Add the missing import for RequestRate and Duration
-from telegram.ext.utils.ratelimiter import RequestRate, Duration
+
+# Add the missing imports for RequestRate and Duration
+try:
+    from telegram.ext.utils.ratelimiter import RequestRate, Duration
+except ImportError:
+    try:
+        from telegram.ext import RequestRate, Duration
+    except ImportError:
+        from telegram.utils.ratelimiter import RequestRate, Duration
 
 from MerissaRobot import LOGGER, application  # use application, not dispatcher
 from MerissaRobot.Modules.disable import (
@@ -17,11 +24,16 @@ from MerissaRobot.Modules.disable import (
 )
 
 
+class AntiSpam:
+    def __init__(self):
+        # Rate limiting configuration
+        self.sec_limit = RequestRate(6, Duration.SECOND * 15)     # 6 per 15 seconds
+        # Add any other initialization code for your AntiSpam class here
+
+
 class MerissaHandler:
     def __init__(self, app: Application):
         self._application = app
-        # Add the rate limiting configuration that was causing the error
-        self.sec_limit = RequestRate(6, Duration.SECOND * 15)     # 6 per 15 seconds
 
     def command(
         self,
@@ -121,3 +133,6 @@ merissacmd = MerissaHandler(application).command
 merissamsg = MerissaHandler(application).message
 merissacallback = MerissaHandler(application).callbackquery
 merissainline = MerissaHandler(application).inlinequery
+
+# Create AntiSpam instance (this was causing the error)
+SpamChecker = AntiSpam()
