@@ -7,6 +7,8 @@ from telegram.ext import (
     MessageHandler,
     filters,
 )
+# Add the missing import for RequestRate and Duration
+from telegram.ext.utils.ratelimiter import RequestRate, Duration
 
 from MerissaRobot import LOGGER, application  # use application, not dispatcher
 from MerissaRobot.Modules.disable import (
@@ -18,6 +20,8 @@ from MerissaRobot.Modules.disable import (
 class MerissaHandler:
     def __init__(self, app: Application):
         self._application = app
+        # Add the rate limiting configuration that was causing the error
+        self.sec_limit = RequestRate(6, Duration.SECOND * 15)     # 6 per 15 seconds
 
     def command(
         self,
