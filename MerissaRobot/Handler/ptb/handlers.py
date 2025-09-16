@@ -1,7 +1,6 @@
 import re
 from pyrate_limiter import (
     BucketFullException,
-    Duration,
     Limiter,
     Rate,
 )
@@ -40,12 +39,12 @@ class AntiSpam:
         )
 
         # Rate(limit, interval_in_seconds)
-        self.limiter = Limiter(
-            Rate(6, 15),      # 6 requests per 15 seconds
-            Rate(20, 60),     # 20 requests per minute
-            Rate(100, 3600),  # 100 requests per hour
-            Rate(1000, 86400) # 1000 requests per day
-        )
+        self.limiter = Limiter([
+            Rate(6, 15),       # 6 requests per 15 seconds
+            Rate(20, 60),      # 20 requests per minute
+            Rate(100, 3600),   # 100 requests per hour
+            Rate(1000, 86400)  # 1000 requests per day
+        ])
 
     def check_user(self, user_id: int) -> bool:
         """Return True if user is to be ignored else False"""
