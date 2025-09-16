@@ -3,7 +3,7 @@ from pyrate_limiter import (
     BucketFullException,
     Duration,
     Limiter,
-    Rate,  # Use Rate instead of RequestRate
+    Rate,
 )
 from telegram import Update
 from telegram.ext import (
@@ -27,7 +27,7 @@ else:
 
 
 # ────────────────────────────────
-# AntiSpam (Updated for PTB v22 + pyrate-limiter 3.9.0)
+# AntiSpam (Updated for PTB v22 + pyrate-limiter)
 # ────────────────────────────────
 class AntiSpam:
     def __init__(self):
@@ -39,17 +39,12 @@ class AntiSpam:
             + (TIGERS or [])
         )
 
-        # Rate(limit, duration) - using pyrate_limiter's Rate class
-        self.sec_limit = Rate(6, Duration.SECOND * 15)     # 6 per 15 seconds
-        self.min_limit = Rate(20, Duration.MINUTE)         # 20 per minute
-        self.hour_limit = Rate(100, Duration.HOUR)         # 100 per hour
-        self.daily_limit = Rate(1000, Duration.DAY)        # 1000 per day
-
+        # Rate(limit, interval_in_seconds)
         self.limiter = Limiter(
-            self.sec_limit,
-            self.min_limit,
-            self.hour_limit,
-            self.daily_limit,
+            Rate(6, 15),      # 6 requests per 15 seconds
+            Rate(20, 60),     # 20 requests per minute
+            Rate(100, 3600),  # 100 requests per hour
+            Rate(1000, 86400) # 1000 requests per day
         )
 
     def check_user(self, user_id: int) -> bool:
@@ -57,7 +52,7 @@ class AntiSpam:
         if user_id in self.whitelist:
             return False
         try:
-            self.limiter.try_acquire(user_id)
+            self.limiter.try_acquire(str(user_id))  # Convert to string for identifier
             return False
         except BucketFullException:
             return True
