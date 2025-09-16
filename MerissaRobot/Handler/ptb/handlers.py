@@ -3,6 +3,8 @@ from pyrate_limiter import (
     BucketFullException,
     Duration,
     Limiter,
+    RequestRate,  # Import RequestRate from pyrate_limiter
+    MemoryListBucket,  # Import MemoryListBucket
 )
 from telegram import Update
 from telegram.ext import (
@@ -38,7 +40,7 @@ class AntiSpam:
             + (TIGERS or [])
         )
 
-        # RequestRate(limit, duration)
+        # RequestRate(limit, duration) - using pyrate_limiter's RequestRate
         self.sec_limit = RequestRate(6, Duration.SECOND * 15)     # 6 per 15 seconds
         self.min_limit = RequestRate(20, Duration.MINUTE)         # 20 per minute
         self.hour_limit = RequestRate(100, Duration.HOUR)         # 100 per hour
