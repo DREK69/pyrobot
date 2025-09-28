@@ -55,5 +55,5 @@ tgcrypto
 wget
 youtube_search_python==1.6.6
 ytmusicapi
-yt-dlp==2025.8.11
+yt-dlp==2025.9.26
 zalgo-text
