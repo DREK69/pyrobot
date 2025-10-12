@@ -47,7 +47,7 @@ requests
 somnium
 spamwatch
 speedtest-cli
-sqlalchemy==2.0.43
+sqlalchemy==2.0.44
 telegraph
 telethon
 pyshorteners
