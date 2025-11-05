@@ -29,7 +29,7 @@ OWNER_USERNAME = os.environ.get("OWNER_USERNAME", "DEPSTEY")
 FORCE_CHANNEL = int(os.environ.get("FORCE_CHANNEL", "-1001703270696"))
 DB_URL = os.environ.get(
     "DATABASE_URL",
-    "postgresql+asyncpg://sahil_user:sahil123@localhost:5432/sahil",
+    "postgresql://sahil_user:sahil123@localhost:5432/sahil",
 )
 DB_URI = DB_URL.replace("postgres://", "postgresql://", 1)
 REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", "")
