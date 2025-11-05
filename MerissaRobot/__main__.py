@@ -29,9 +29,7 @@ from MerissaRobot import (
     TOKEN,
     application,
     pbot,
-    pytgcalls,
     telethn,
-    user,
 )
 from MerissaRobot.Handler.ptb.chat_status import is_user_admin
 from MerissaRobot.Handler.ptb.misc import gpaginate_modules, paginate_modules
