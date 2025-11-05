@@ -24,7 +24,7 @@ from pyrogram.errors.exceptions.bad_request_400 import ChannelInvalid, PeerIdInv
 from pyrogram.errors.exceptions.flood_420 import FloodWait
 from pyrogram.types import Message
 from pyromod import listen  # ignore
-from pytgcalls import PyTgCalls
+#from pytgcalls import PyTgCalls
 from telethon import TelegramClient
 from telethon.sessions import MemorySession, StringSession
 
@@ -63,13 +63,7 @@ pbot = Client(
     "MerissaRobot", api_id=API_ID, api_hash=API_HASH, bot_token=TOKEN, workers=100
 )
 
-user = Client(
-    "MerissaMusic",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    session_string=str(STRING_SESSION),
-)
-pytgcalls = PyTgCalls(user)
+#pytgcalls = PyTgCalls(user)
 
 telethn = TelegramClient(MemorySession(), API_ID, API_HASH)
 
