@@ -810,10 +810,10 @@ async def initiate_bot():
 
     await pbot.send_message(-1002846516370, "Bot Started")
     LOGGER.info("Pyrogram Started")
-    await user.start()
-    await user.send_message(-1002846516370, "Assistant Started")
-    LOGGER.info("Userbot Started")
-    await pytgcalls.start()
+    #await user.start()
+  #  await user.send_message(-1002846516370, "Assistant Started")
+    #LOGGER.info("Userbot Started")
+   # await pytgcalls.start()
     LOGGER.info("Pytgcalls Started")
 
 
