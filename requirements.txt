@@ -30,7 +30,7 @@ opencv-python-headless
 psycopg2-binary
 Pillow==11.3.0
 pykeyboard
-pymongo==4.14.0
+pymongo==4.15.4
 pynewtonmath
 pyrate-limiter==3.9.0
 pyrogram==2.0.106
