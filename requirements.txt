@@ -32,7 +32,7 @@ Pillow==11.3.0
 pykeyboard
 pymongo==4.14.0
 pynewtonmath
-pyrate-limiter==3.9.0
+pyrate-limiter==4.0.2
 pyrogram==2.0.106
 pyromod==3.1.6
 py-tgcalls==1.2.7
