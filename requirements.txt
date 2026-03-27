@@ -1,6 +1,6 @@
 gpytranslate==1.5.1
 shazamio==0.8.1
-aiofiles==23.2.1
+aiofiles==25.1.0
 aiohttp
 apscheduler
 asyncio
